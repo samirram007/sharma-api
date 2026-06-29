@@ -17,6 +17,7 @@ interface FreightServiceInterface
     public function deliveryNoteZoneWiseReport(): Collection;
     public function deliveryNoteGodownWiseReport(?int $zoneId = null, ?int $godownId = null): Collection;
     public function transporterWiseReport(): Collection;
+    public function transporterItemWiseReport(): Collection;
     public function vehicleWiseReport(): Collection;
     public function voucherWiseReport(): Collection;
     public function billingPreferenceReport(): Collection;

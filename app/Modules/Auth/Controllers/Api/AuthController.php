@@ -128,7 +128,7 @@ class AuthController extends Controller
         Log::info(' cookie', ['cookie' => $cookie]);
 
         return response()->json([
-            // 'token' => $token,
+           'token' => $token,
             'status' => 'success',
             'message' => $message,
         ])->withCookie($cookie);

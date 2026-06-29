@@ -27,7 +27,7 @@ class DayBookController extends Controller
 
     public function index(Request $request): SuccessCollection
     {
-        $params = $request->only(['search', 'voucher_type_id', 'page', 'per_page']);
+        $params = $request->only(['search', 'voucher_type_id', 'billing_preference', 'status', 'sort_by', 'sort_order', 'page', 'per_page']);
         $data = $this->service->getAll($params);
 
         return new VoucherCollection($data);
@@ -35,7 +35,7 @@ class DayBookController extends Controller
 
     public function dayBooksSelf(Request $request): SuccessCollection
     {
-        $params = $request->only(['search', 'voucher_type_id', 'page', 'per_page']);
+        $params = $request->only(['search', 'voucher_type_id', 'billing_preference', 'status', 'sort_by', 'sort_order', 'page', 'per_page']);
         $data = $this->service->dayBooksSelf($params);
 
         return new VoucherCollection($data);

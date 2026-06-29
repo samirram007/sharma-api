@@ -628,6 +628,106 @@ class FreightService implements FreightServiceInterface
         return $vouchers->map(fn($voucher) => $this->voucherService->attachLedgerInfo($voucher));
 
     }
+
+    public function transporterItemWiseReport(): Collection
+    {
+        // Get freight vouchers with referenced delivery note data including stock journal items and dispatch details
+        $freightVouchers = $this->getFreightVouchersWithReferencedData();
+        $transporterData = [];
+
+        foreach ($freightVouchers as $freightVoucher) {
+            // Each freight voucher references exactly one delivery note via voucher_references
+            $reference = $freightVoucher->voucher_references->first();
+            if (!$reference) {
+                continue;
+            }
+
+            $deliveryNote = $reference->reference_voucher;
+            if (!$deliveryNote || !$deliveryNote->stock_journal) {
+                continue;
+            }
+
+            $dispatch = $deliveryNote->voucher_dispatch_detail;
+            $transporterName = $dispatch?->carrier_name ?? 'Unknown';
+            $vehicleNumber = $dispatch?->motor_vehicle_no ?? '';
+            $source = $dispatch?->source ?? '';
+            $destination = $dispatch?->destination ?? '';
+            $voucherId = $freightVoucher->id;
+            $voucherNo = $freightVoucher->voucher_no;
+            $voucherDate = $freightVoucher->voucher_date?->format('Y-m-d');
+            $partyName = $freightVoucher->voucher_party?->name ?? $deliveryNote->voucher_party?->name ?? '';
+            $paymentStatus = $freightVoucher->payment_status;
+            $totalFare = (float) ($dispatch?->total_fare ?? 0);
+
+            $stockJournal = $deliveryNote->stock_journal;
+
+            foreach ($stockJournal->stock_journal_entries as $entry) {
+                $itemName = $entry->stock_item?->name ?? 'Unknown';
+                $unitCode = $entry->stock_unit?->code ?? '';
+                $noOfDecimalPlaces = $entry->stock_unit?->no_of_decimal_places ?? 2;
+                $actualQuantity = (float) ($entry->actual_quantity ?? 0);
+                $billingQuantity = (float) ($entry->billing_quantity ?? 0);
+                $amount = (float) ($entry->amount ?? 0);
+
+                // Group by transporter name
+                $transporterKey = $transporterName;
+
+                if (!isset($transporterData[$transporterKey])) {
+                    $transporterData[$transporterKey] = [
+                        'transporterName' => $transporterName,
+                        'vehicleNumber' => $vehicleNumber,
+                        'totalVouchers' => 0,
+                        'totalQuantity' => 0,
+                        'totalAmount' => 0,
+                        'entries' => [],
+                    ];
+                }
+
+                $transporterData[$transporterKey]['totalQuantity'] += $actualQuantity;
+                $transporterData[$transporterKey]['totalAmount'] += $amount;
+
+                // Each stock journal entry becomes a flat row with item name visible
+                $transporterData[$transporterKey]['entries'][] = [
+                    'voucherId' => $voucherId,
+                    'voucherNo' => $voucherNo,
+                    'voucherDate' => $voucherDate,
+                    'partyName' => $partyName,
+                    'source' => $source,
+                    'destination' => $destination,
+                    'vehicleNumber' => $vehicleNumber,
+                    'carrierName' => $transporterName,
+                    'itemName' => $itemName,
+                    'unitCode' => $unitCode,
+                    'noOfDecimalPlaces' => $noOfDecimalPlaces,
+                    'actualQuantity' => $actualQuantity,
+                    'billingQuantity' => $billingQuantity,
+                    'amount' => $amount,
+                    'paymentStatus' => $paymentStatus,
+                    'totalFare' => $totalFare,
+                ];
+            }
+        }
+
+        // Sort entries by voucher within each transporter so items from same invoice stay together
+        $result = [];
+        foreach ($transporterData as $key => $data) {
+            // Sort entries by voucher no so items from same invoice are adjacent
+            usort($data['entries'], function ($a, $b) {
+                return strcmp($a['voucherNo'] ?? '', $b['voucherNo'] ?? '');
+            });
+
+            // Count unique vouchers
+            $seenVouchers = [];
+            foreach ($data['entries'] as $entry) {
+                $seenVouchers[$entry['voucherNo']] = true;
+            }
+            $data['totalVouchers'] = count($seenVouchers);
+            $data['entries'] = array_values($data['entries']);
+            $result[] = $data;
+        }
+
+        return new Collection($result);
+    }
     public function vehicleWiseReport(): Collection
     {
         // Implement the logic for vehicle wise report

@@ -15,6 +15,7 @@ Route::get('/freights_zone_wise', [FreightController::class, 'zone_wise'])->midd
 Route::get('/freights_delivery_note_zone_wise', [FreightController::class, 'delivery_note_zone_wise'])->middleware(['jwt.cookies']);
 Route::get('/freights_delivery_note_godown_wise', [FreightController::class, 'delivery_note_godown_wise'])->middleware(['jwt.cookies']);
 Route::get('/freights_transporter_wise', [FreightController::class, 'transporter_wise'])->middleware(['jwt.cookies']);
+Route::get('/freights_transporter_item_wise', [FreightController::class, 'transporter_item_wise'])->middleware(['jwt.cookies']);
 Route::get('/freights_vehicle_wise', [FreightController::class, 'vehicle_wise'])->middleware(['jwt.cookies']);
 Route::get('/freights_billing_preference', [FreightController::class, 'billing_preference'])->middleware(['jwt.cookies']);
 Route::get('/freights_voucher_wise', [FreightController::class, 'voucher_wise'])->middleware(['jwt.cookies']);

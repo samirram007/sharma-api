@@ -71,6 +71,11 @@ class FreightController extends Controller
         $data = $this->service->transporterWiseReport();
         return new VoucherCollection($data);
     }
+    public function transporter_item_wise(): SuccessCollection
+    {
+        $data = $this->service->transporterItemWiseReport();
+        return new SuccessCollection($data);
+    }
     public function vehicle_wise(): SuccessCollection
     {
         $data = $this->service->vehicleWiseReport();

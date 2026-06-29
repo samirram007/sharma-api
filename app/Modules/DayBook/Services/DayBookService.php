@@ -69,6 +69,72 @@ class DayBookService implements DayBookServiceInterface
             $query->whereIn('voucher_type_id', $voucherTypeIds);
         }
 
+        // Billing preference filter
+        if (!empty($params['billing_preference'])) {
+            $preferences = is_array($params['billing_preference'])
+                ? $params['billing_preference']
+                : explode(',', $params['billing_preference']);
+            $query->whereHas('voucher_dispatch_detail', function ($q) use ($preferences) {
+                $q->whereIn('billing_preference', $preferences);
+            });
+        }
+
+        // Status filter
+        if (!empty($params['status'])) {
+            $statuses = is_array($params['status'])
+                ? $params['status']
+                : explode(',', $params['status']);
+
+            $query->where(function ($q) use ($statuses) {
+                // Subquery: total paid amount via payment references
+                $paidAmountSql = '(SELECT COALESCE(SUM(COALESCE(pv.amount, 0)), 0)
+                    FROM voucher_references vr
+                    JOIN vouchers pv ON pv.id = vr.voucher_id
+                    WHERE vr.ref_voucher_id = vouchers.id
+                    AND vr.type IN (\'payment\', \'freight_payment\'))';
+
+                // Subquery: total voucher amount from entries
+                $totalAmountSql = '(SELECT COALESCE(SUM(COALESCE(ve.debit, 0) + COALESCE(ve.credit, 0)), 0)
+                    FROM voucher_entries ve
+                    WHERE ve.voucher_id = vouchers.id)';
+
+                if (in_array('paid', $statuses)) {
+                    $q->orWhereRaw("{$paidAmountSql} >= {$totalAmountSql}");
+                }
+                if (in_array('partially_paid', $statuses)) {
+                    $q->orWhereRaw("{$paidAmountSql} > 0 AND {$paidAmountSql} < {$totalAmountSql}");
+                }
+                if (in_array('unpaid', $statuses)) {
+                    $q->orWhereRaw("{$paidAmountSql} = 0");
+                }
+                if (in_array('freight_done', $statuses)) {
+                    $q->orWhere(function ($sq) {
+                        $sq->where('voucher_type_id', 2001)
+                           ->whereHas('referenced_by', fn($r) => $r->where('type', 'freight'));
+                    });
+                }
+                if (in_array('no_freight', $statuses)) {
+                    $q->orWhere(function ($sq) {
+                        $sq->where('voucher_type_id', 2001)
+                           ->whereDoesntHave('referenced_by', fn($r) => $r->where('type', 'freight'));
+                    });
+                }
+            });
+        }
+
+        // Sorting
+        if (!empty($params['sort_by'])) {
+            $sortOrder = !empty($params['sort_order']) && strtolower($params['sort_order']) === 'desc' ? 'desc' : 'asc';
+
+            match ($params['sort_by']) {
+                'billing_preference' => $query->leftJoin('voucher_dispatch_details AS vdd_sort', 'vouchers.id', '=', 'vdd_sort.voucher_id')
+                    ->reorder()
+                    ->orderBy('vdd_sort.billing_preference', $sortOrder)
+                    ->select('vouchers.*'),
+                default => null,
+            };
+        }
+
         $perPage = $params['per_page'] ?? 10;
 
         $vouchers = $query->paginate($perPage);
@@ -111,6 +177,70 @@ class DayBookService implements DayBookServiceInterface
                 ? $params['voucher_type_id']
                 : explode(',', $params['voucher_type_id']);
             $query->whereIn('voucher_type_id', $voucherTypeIds);
+        }
+
+        // Billing preference filter
+        if (!empty($params['billing_preference'])) {
+            $preferences = is_array($params['billing_preference'])
+                ? $params['billing_preference']
+                : explode(',', $params['billing_preference']);
+            $query->whereHas('voucher_dispatch_detail', function ($q) use ($preferences) {
+                $q->whereIn('billing_preference', $preferences);
+            });
+        }
+
+        // Status filter
+        if (!empty($params['status'])) {
+            $statuses = is_array($params['status'])
+                ? $params['status']
+                : explode(',', $params['status']);
+
+            $query->where(function ($q) use ($statuses) {
+                $paidAmountSql = '(SELECT COALESCE(SUM(COALESCE(pv.amount, 0)), 0)
+                    FROM voucher_references vr
+                    JOIN vouchers pv ON pv.id = vr.voucher_id
+                    WHERE vr.ref_voucher_id = vouchers.id
+                    AND vr.type IN (\'payment\', \'freight_payment\'))';
+
+                $totalAmountSql = '(SELECT COALESCE(SUM(COALESCE(ve.debit, 0) + COALESCE(ve.credit, 0)), 0)
+                    FROM voucher_entries ve
+                    WHERE ve.voucher_id = vouchers.id)';
+
+                if (in_array('paid', $statuses)) {
+                    $q->orWhereRaw("{$paidAmountSql} >= {$totalAmountSql}");
+                }
+                if (in_array('partially_paid', $statuses)) {
+                    $q->orWhereRaw("{$paidAmountSql} > 0 AND {$paidAmountSql} < {$totalAmountSql}");
+                }
+                if (in_array('unpaid', $statuses)) {
+                    $q->orWhereRaw("{$paidAmountSql} = 0");
+                }
+                if (in_array('freight_done', $statuses)) {
+                    $q->orWhere(function ($sq) {
+                        $sq->where('voucher_type_id', 2001)
+                           ->whereHas('referenced_by', fn($r) => $r->where('type', 'freight'));
+                    });
+                }
+                if (in_array('no_freight', $statuses)) {
+                    $q->orWhere(function ($sq) {
+                        $sq->where('voucher_type_id', 2001)
+                           ->whereDoesntHave('referenced_by', fn($r) => $r->where('type', 'freight'));
+                    });
+                }
+            });
+        }
+
+        // Sorting
+        if (!empty($params['sort_by'])) {
+            $sortOrder = !empty($params['sort_order']) && strtolower($params['sort_order']) === 'desc' ? 'desc' : 'asc';
+
+            match ($params['sort_by']) {
+                'billing_preference' => $query->leftJoin('voucher_dispatch_details AS vdd_sort', 'vouchers.id', '=', 'vdd_sort.voucher_id')
+                    ->reorder()
+                    ->orderBy('vdd_sort.billing_preference', $sortOrder)
+                    ->select('vouchers.*'),
+                default => null,
+            };
         }
 
         $perPage = $params['per_page'] ?? 10;
