@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Vendor\Controllers\Api;
+namespace Modules\Vendor\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Vendor\Contracts\VendorServiceInterface;
-use App\Modules\Vendor\Resources\VendorResource;
-use App\Modules\Vendor\Resources\VendorCollection;
-use App\Modules\Vendor\Requests\VendorRequest;
+use Modules\Vendor\Contracts\VendorServiceInterface;
+use Modules\Vendor\Resources\VendorResource;
+use Modules\Vendor\Resources\VendorCollection;
+use Modules\Vendor\Requests\VendorRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

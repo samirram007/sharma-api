@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\PhysicalStockCount\Contracts;
+namespace Modules\PhysicalStockCount\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\PhysicalStockCount\Models\PhysicalStockCount;
+use Modules\PhysicalStockCount\Models\PhysicalStockCount;
 
 interface PhysicalStockCountServiceInterface
 {

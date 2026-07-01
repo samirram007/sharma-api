@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Auth\Database\Seeders;
+namespace Modules\Auth\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Auth\Models\Auth;
+use Modules\Auth\Models\Auth;
 
 class AuthSeeder extends Seeder
 {

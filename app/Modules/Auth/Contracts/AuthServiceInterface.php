@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Auth\Contracts;
+namespace Modules\Auth\Contracts;
 
-use App\Modules\User\Models\User;
+use Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Auth\Models\Auth;
+use Modules\Auth\Models\Auth;
 
 interface AuthServiceInterface
 {
@@ -19,4 +19,5 @@ interface AuthServiceInterface
 
     public function profile(): User; // or array
     public function changePassword(array $data): void;
+    public function menuTree(): array;
 }

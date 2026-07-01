@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Modules\StockItem\Models;
+namespace Modules\StockItem\Models;
 
 use App\Enums\CostingMethod;
 use App\Enums\MarketValuationMethod;
 use App\Enums\TypeOfSupply;
 use App\Models\BaseModel;
-use App\Modules\StockCategory\Models\StockCategory;
-use App\Modules\StockGroup\Models\StockGroup;
-use App\Modules\StockItemPrice\Models\StockItemPrice;
-use App\Modules\StockJournal\Models\StockJournal;
-use App\Modules\StockJournalEntry\Models\StockJournalEntry;
-use App\Modules\StockUnit\Models\StockUnit;
-use App\Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
+use Modules\StockCategory\Models\StockCategory;
+use Modules\StockGroup\Models\StockGroup;
+use Modules\StockItemPrice\Models\StockItemPrice;
+use Modules\StockJournal\Models\StockJournal;
+use Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\StockUnit\Models\StockUnit;
+use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

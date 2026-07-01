@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Journal\Database\Seeders;
+namespace Modules\Journal\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Journal\Models\Journal;
+use Modules\Journal\Models\Journal;
 
 class JournalSeeder extends Seeder
 {

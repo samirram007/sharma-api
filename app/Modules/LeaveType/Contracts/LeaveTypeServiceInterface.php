@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\LeaveType\Contracts;
+namespace Modules\LeaveType\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\LeaveType\Models\LeaveType;
+use Modules\LeaveType\Models\LeaveType;
 
 interface LeaveTypeServiceInterface
 {

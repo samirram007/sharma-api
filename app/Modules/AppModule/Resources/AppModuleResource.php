@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AppModule\Resources;
+namespace Modules\AppModule\Resources;
 
-use App\Modules\AppModuleFeature\Models\AppModuleFeature;
-use App\Modules\AppModuleFeature\Resources\AppModuleFeatureResource;
+use Modules\AppModuleFeature\Models\AppModuleFeature;
+use Modules\AppModuleFeature\Resources\AppModuleFeatureResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

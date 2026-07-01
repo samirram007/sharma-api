@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemGodown\Contracts;
+namespace Modules\StockItemGodown\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\StockItemGodown\Models\StockItemGodown;
+use Modules\StockItemGodown\Models\StockItemGodown;
 
 interface StockItemGodownServiceInterface
 {

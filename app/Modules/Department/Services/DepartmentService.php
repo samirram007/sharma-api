@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Department\Services;
+namespace Modules\Department\Services;
 
-use App\Modules\Department\Contracts\DepartmentServiceInterface;
-use App\Modules\Department\Models\Department;
+use Modules\Department\Contracts\DepartmentServiceInterface;
+use Modules\Department\Models\Department;
 use Illuminate\Database\Eloquent\Collection;
 
 class DepartmentService implements DepartmentServiceInterface

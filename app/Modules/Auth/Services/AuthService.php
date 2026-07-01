@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Auth\Services;
+namespace Modules\Auth\Services;
 
-use App\Modules\Auth\Contracts\AuthServiceInterface;
-
-use App\Modules\User\Models\User;
+use Modules\Auth\Contracts\AuthServiceInterface;
+use Modules\Menu\Models\Menu;
+use Modules\User\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -119,4 +119,89 @@ class AuthService implements AuthServiceInterface
         $user->save();
     }
 
+    public function menuTree(): array
+    {
+        $user = Auth::user();
+        if (!$user) {
+            throw new AuthenticationException('Unauthenticated.');
+        }
+
+        // Collect all allowed feature IDs across the user's roles
+        $allowedFeatureIds = collect();
+        foreach ($user->roles as $role) {
+            $allowedFeatureIds = $allowedFeatureIds->merge(
+                $role->permissions
+                    ->where('is_allowed', true)
+                    ->pluck('app_module_feature_id')
+            );
+        }
+        $allowedFeatureIds = $allowedFeatureIds->unique()->values()->toArray();
+
+        if (empty($allowedFeatureIds)) {
+            return [];
+        }
+
+        // Fetch root-level menu groups that the user has permission for
+        // Load up to 3 levels of children to cover the full hierarchy
+        $rootMenus = Menu::with([
+            'children' => function ($query) use ($allowedFeatureIds) {
+                $query->whereIn('app_module_feature_id', $allowedFeatureIds)
+                    ->where('status', 'active')
+                    ->where('is_visible', true)
+                    ->orderBy('sort_order');
+            },
+            'children.feature',
+            'children.children' => function ($query) use ($allowedFeatureIds) {
+                $query->whereIn('app_module_feature_id', $allowedFeatureIds)
+                    ->where('status', 'active')
+                    ->where('is_visible', true)
+                    ->orderBy('sort_order');
+            },
+            'children.children.feature',
+            'children.children.children' => function ($query) use ($allowedFeatureIds) {
+                $query->whereIn('app_module_feature_id', $allowedFeatureIds)
+                    ->where('status', 'active')
+                    ->where('is_visible', true)
+                    ->orderBy('sort_order');
+            },
+            'children.children.children.feature',
+            'feature',
+        ])
+            ->whereNull('parent_id')
+            ->whereIn('app_module_feature_id', $allowedFeatureIds)
+            ->where('status', 'active')
+            ->where('is_visible', true)
+            ->orderBy('sort_order')
+            ->get();
+
+        // Build the hierarchical tree
+        return $this->buildMenuTree($rootMenus);
+    }
+
+    /**
+     * Recursively build a menu tree array from Eloquent models.
+     */
+    private function buildMenuTree($menus): array
+    {
+        $tree = [];
+        foreach ($menus as $menu) {
+            $node = [
+                'id'          => $menu->id,
+                'menuName'    => $menu->menu_name,
+                'route'       => $menu->route,
+                'icon'        => $menu->icon,
+                'isGroup'     => $menu->is_group,
+                'sortOrder'   => $menu->sort_order,
+                'featureCode' => $menu->feature?->code,
+                'children'    => [],
+            ];
+
+            if ($menu->relationLoaded('children') && $menu->children->isNotEmpty()) {
+                $node['children'] = $this->buildMenuTree($menu->children);
+            }
+
+            $tree[] = $node;
+        }
+        return $tree;
+    }
 }

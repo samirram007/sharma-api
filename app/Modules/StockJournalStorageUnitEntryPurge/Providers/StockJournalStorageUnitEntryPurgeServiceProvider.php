@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockJournalStorageUnitEntryPurge\Providers;
+namespace Modules\StockJournalStorageUnitEntryPurge\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockJournalStorageUnitEntryPurge\Contracts\StockJournalStorageUnitEntryPurgeServiceInterface;
-use App\Modules\StockJournalStorageUnitEntryPurge\Services\StockJournalStorageUnitEntryPurgeService;
+use Modules\StockJournalStorageUnitEntryPurge\Contracts\StockJournalStorageUnitEntryPurgeServiceInterface;
+use Modules\StockJournalStorageUnitEntryPurge\Services\StockJournalStorageUnitEntryPurgeService;
 
 class StockJournalStorageUnitEntryPurgeServiceProvider extends ServiceProvider
 {

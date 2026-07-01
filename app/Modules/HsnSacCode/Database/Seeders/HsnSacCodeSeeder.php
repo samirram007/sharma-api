@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\HsnSacCode\Database\Seeders;
+namespace Modules\HsnSacCode\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\HsnSacCode\Models\HsnSacCode;
+use Modules\HsnSacCode\Models\HsnSacCode;
 
 class HsnSacCodeSeeder extends Seeder
 {

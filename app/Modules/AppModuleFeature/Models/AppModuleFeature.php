@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Modules\AppModuleFeature\Models;
+namespace Modules\AppModuleFeature\Models;
 
-use App\Modules\AppModule\Models\AppModule;
-use App\Modules\RolePermission\Models\RolePermission;
+use Modules\AppModule\Models\AppModule;
+use Modules\Menu\Models\Menu;
+use Modules\RolePermission\Models\RolePermission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,5 +36,13 @@ class AppModuleFeature extends Model
     public function role_permissions(): HasMany
     {
         return $this->hasMany(RolePermission::class, 'app_module_feature_id', 'id');
+    }
+
+    /**
+     * Menu entries linked to this feature.
+     */
+    public function feature_menus(): HasMany
+    {
+        return $this->hasMany(Menu::class, 'app_module_feature_id');
     }
 }

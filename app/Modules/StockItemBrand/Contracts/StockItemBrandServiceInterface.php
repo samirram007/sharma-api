@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemBrand\Contracts;
+namespace Modules\StockItemBrand\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\StockItemBrand\Models\StockItemBrand;
+use Modules\StockItemBrand\Models\StockItemBrand;
 
 interface StockItemBrandServiceInterface
 {

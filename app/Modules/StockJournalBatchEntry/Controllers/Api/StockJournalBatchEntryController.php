@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockJournalBatchEntry\Controllers\Api;
+namespace Modules\StockJournalBatchEntry\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StockJournalBatchEntry\Contracts\StockJournalBatchEntryServiceInterface;
-use App\Modules\StockJournalBatchEntry\Resources\StockJournalBatchEntryResource;
-use App\Modules\StockJournalBatchEntry\Resources\StockJournalBatchEntryCollection;
-use App\Modules\StockJournalBatchEntry\Requests\StockJournalBatchEntryRequest;
+use Modules\StockJournalBatchEntry\Contracts\StockJournalBatchEntryServiceInterface;
+use Modules\StockJournalBatchEntry\Resources\StockJournalBatchEntryResource;
+use Modules\StockJournalBatchEntry\Resources\StockJournalBatchEntryCollection;
+use Modules\StockJournalBatchEntry\Requests\StockJournalBatchEntryRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

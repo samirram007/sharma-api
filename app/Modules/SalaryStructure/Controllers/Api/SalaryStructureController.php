@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\SalaryStructure\Controllers\Api;
+namespace Modules\SalaryStructure\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\SalaryStructure\Contracts\SalaryStructureServiceInterface;
-use App\Modules\SalaryStructure\Resources\SalaryStructureResource;
-use App\Modules\SalaryStructure\Resources\SalaryStructureCollection;
-use App\Modules\SalaryStructure\Requests\SalaryStructureRequest;
+use Modules\SalaryStructure\Contracts\SalaryStructureServiceInterface;
+use Modules\SalaryStructure\Resources\SalaryStructureResource;
+use Modules\SalaryStructure\Resources\SalaryStructureCollection;
+use Modules\SalaryStructure\Requests\SalaryStructureRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

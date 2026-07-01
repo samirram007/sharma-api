@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\UniqueQuantityCode\Controllers\Api;
+namespace Modules\UniqueQuantityCode\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\UniqueQuantityCode\Contracts\UniqueQuantityCodeServiceInterface;
-use App\Modules\UniqueQuantityCode\Resources\UniqueQuantityCodeResource;
-use App\Modules\UniqueQuantityCode\Resources\UniqueQuantityCodeCollection;
-use App\Modules\UniqueQuantityCode\Requests\UniqueQuantityCodeRequest;
+use Modules\UniqueQuantityCode\Contracts\UniqueQuantityCodeServiceInterface;
+use Modules\UniqueQuantityCode\Resources\UniqueQuantityCodeResource;
+use Modules\UniqueQuantityCode\Resources\UniqueQuantityCodeCollection;
+use Modules\UniqueQuantityCode\Requests\UniqueQuantityCodeRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\RolePermission\Controllers\Api;
+namespace Modules\RolePermission\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\RolePermission\Contracts\RolePermissionServiceInterface;
-use App\Modules\RolePermission\Resources\RolePermissionResource;
-use App\Modules\RolePermission\Resources\RolePermissionCollection;
-use App\Modules\RolePermission\Requests\RolePermissionRequest;
+use Modules\RolePermission\Contracts\RolePermissionServiceInterface;
+use Modules\RolePermission\Resources\RolePermissionResource;
+use Modules\RolePermission\Resources\RolePermissionCollection;
+use Modules\RolePermission\Requests\RolePermissionRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

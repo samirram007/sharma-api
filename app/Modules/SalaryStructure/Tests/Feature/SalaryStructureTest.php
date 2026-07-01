@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\SalaryStructure\Tests\Feature;
+namespace Modules\SalaryStructure\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\SalaryStructure\Models\SalaryStructure;
+use Modules\SalaryStructure\Models\SalaryStructure;
 
 class SalaryStructureTest extends TestCase
 {

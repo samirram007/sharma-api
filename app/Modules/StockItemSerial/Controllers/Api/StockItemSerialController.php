@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockItemSerial\Controllers\Api;
+namespace Modules\StockItemSerial\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StockItemSerial\Contracts\StockItemSerialServiceInterface;
-use App\Modules\StockItemSerial\Resources\StockItemSerialResource;
-use App\Modules\StockItemSerial\Resources\StockItemSerialCollection;
-use App\Modules\StockItemSerial\Requests\StockItemSerialRequest;
+use Modules\StockItemSerial\Contracts\StockItemSerialServiceInterface;
+use Modules\StockItemSerial\Resources\StockItemSerialResource;
+use Modules\StockItemSerial\Resources\StockItemSerialCollection;
+use Modules\StockItemSerial\Requests\StockItemSerialRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\TestItem\Resources;
+namespace Modules\TestItem\Resources;
 
-use App\Modules\StockUnit\Resources\StockUnitResource;
+use Modules\StockUnit\Resources\StockUnitResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\VoucherNo\Controllers\Api;
+namespace Modules\VoucherNo\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\VoucherNo\Contracts\VoucherNoServiceInterface;
-use App\Modules\VoucherNo\Resources\VoucherNoResource;
-use App\Modules\VoucherNo\Resources\VoucherNoCollection;
-use App\Modules\VoucherNo\Requests\VoucherNoRequest;
+use Modules\VoucherNo\Contracts\VoucherNoServiceInterface;
+use Modules\VoucherNo\Resources\VoucherNoResource;
+use Modules\VoucherNo\Resources\VoucherNoCollection;
+use Modules\VoucherNo\Requests\VoucherNoRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

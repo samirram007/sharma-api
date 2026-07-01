@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\AccountNature\Controllers\Api;
+namespace Modules\AccountNature\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessCollection;
-use App\Modules\AccountNature\Contracts\AccountNatureServiceInterface;
-use App\Modules\AccountNature\Resources\AccountNatureResource;
-use App\Modules\AccountNature\Resources\AccountNatureCollection;
-use App\Modules\AccountNature\Requests\AccountNatureRequest;
+use Modules\AccountNature\Contracts\AccountNatureServiceInterface;
+use Modules\AccountNature\Resources\AccountNatureResource;
+use Modules\AccountNature\Resources\AccountNatureCollection;
+use Modules\AccountNature\Requests\AccountNatureRequest;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;

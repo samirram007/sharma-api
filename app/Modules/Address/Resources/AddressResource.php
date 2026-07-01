@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Address\Resources;
+namespace Modules\Address\Resources;
 
 use App\Enums\AddressType;
 use Illuminate\Http\Request;

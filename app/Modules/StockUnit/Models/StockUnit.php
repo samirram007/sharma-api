@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockUnit\Models;
+namespace Modules\StockUnit\Models;
 
 use App\Enums\QuantityType;
 use App\Enums\UnitType;
-use App\Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
+use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

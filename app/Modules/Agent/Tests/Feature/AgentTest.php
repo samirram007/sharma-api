@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Agent\Tests\Feature;
+namespace Modules\Agent\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Agent\Models\Agent;
+use Modules\Agent\Models\Agent;
 
 class AgentTest extends TestCase
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournalEntryPurge\Database\Seeders;
+namespace Modules\StockJournalEntryPurge\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StockJournalEntryPurge\Models\StockJournalEntryPurge;
+use Modules\StockJournalEntryPurge\Models\StockJournalEntryPurge;
 
 class StockJournalEntryPurgeSeeder extends Seeder
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Uqc\Controllers\Api;
+namespace Modules\Uqc\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Uqc\Contracts\UqcServiceInterface;
-use App\Modules\Uqc\Resources\UqcResource;
-use App\Modules\Uqc\Resources\UqcCollection;
-use App\Modules\Uqc\Requests\UqcRequest;
+use Modules\Uqc\Contracts\UqcServiceInterface;
+use Modules\Uqc\Resources\UqcResource;
+use Modules\Uqc\Resources\UqcCollection;
+use Modules\Uqc\Requests\UqcRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\AccountLedger\Services;
+namespace Modules\AccountLedger\Services;
 
-use App\Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\User\Models\User;
-use App\Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
-use App\Modules\UserFiscalYear\Services\UserFiscalYearService;
+use Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\User\Models\User;
+use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
+use Modules\UserFiscalYear\Services\UserFiscalYearService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 

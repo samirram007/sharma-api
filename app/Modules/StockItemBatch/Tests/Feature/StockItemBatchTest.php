@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockItemBatch\Tests\Feature;
+namespace Modules\StockItemBatch\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StockItemBatch\Models\StockItemBatch;
+use Modules\StockItemBatch\Models\StockItemBatch;
 
 class StockItemBatchTest extends TestCase
 {

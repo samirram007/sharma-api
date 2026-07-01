@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\HsnSacCode\Resources;
+namespace Modules\HsnSacCode\Resources;
 
 use Illuminate\Http\Request;
 

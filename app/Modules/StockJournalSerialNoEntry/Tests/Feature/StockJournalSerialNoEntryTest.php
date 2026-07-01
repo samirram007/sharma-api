@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockJournalSerialNoEntry\Tests\Feature;
+namespace Modules\StockJournalSerialNoEntry\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StockJournalSerialNoEntry\Models\StockJournalSerialNoEntry;
+use Modules\StockJournalSerialNoEntry\Models\StockJournalSerialNoEntry;
 
 class StockJournalSerialNoEntryTest extends TestCase
 {

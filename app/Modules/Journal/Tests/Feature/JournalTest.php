@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Journal\Tests\Feature;
+namespace Modules\Journal\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Journal\Models\Journal;
+use Modules\Journal\Models\Journal;
 
 class JournalTest extends TestCase
 {

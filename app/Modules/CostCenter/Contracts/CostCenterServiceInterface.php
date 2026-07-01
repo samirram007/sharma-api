@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\CostCenter\Contracts;
+namespace Modules\CostCenter\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\CostCenter\Models\CostCenter;
+use Modules\CostCenter\Models\CostCenter;
 
 interface CostCenterServiceInterface
 {

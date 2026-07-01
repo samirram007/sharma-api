@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AppMaintenance\Providers;
+namespace Modules\AppMaintenance\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\AppMaintenance\Contracts\AppMaintenanceServiceInterface;
-use App\Modules\AppMaintenance\Services\AppMaintenanceService;
+use Modules\AppMaintenance\Contracts\AppMaintenanceServiceInterface;
+use Modules\AppMaintenance\Services\AppMaintenanceService;
 
 class AppMaintenanceServiceProvider extends ServiceProvider
 {

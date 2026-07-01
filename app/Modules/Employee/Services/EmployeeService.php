@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Employee\Services;
+namespace Modules\Employee\Services;
 
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\Employee\Contracts\EmployeeServiceInterface;
-use App\Modules\Employee\Models\Employee;
-use App\Modules\User\Models\User;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\Employee\Contracts\EmployeeServiceInterface;
+use Modules\Employee\Models\Employee;
+use Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 class EmployeeService implements EmployeeServiceInterface

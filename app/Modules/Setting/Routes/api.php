@@ -1,6 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\Setting\Controllers\Api\SettingController;
+use Modules\Setting\Controllers\Api\SettingController;
 
 Route::apiResource('settings', SettingController::class);

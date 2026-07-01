@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\CostCategory\Requests;
+namespace Modules\CostCategory\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

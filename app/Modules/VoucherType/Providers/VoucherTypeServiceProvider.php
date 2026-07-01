@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\VoucherType\Providers;
+namespace Modules\VoucherType\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\VoucherType\Contracts\VoucherTypeServiceInterface;
-use App\Modules\VoucherType\Services\VoucherTypeService;
+use Modules\VoucherType\Contracts\VoucherTypeServiceInterface;
+use Modules\VoucherType\Services\VoucherTypeService;
 
 class VoucherTypeServiceProvider extends ServiceProvider
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Vendor\Database\Seeders;
+namespace Modules\Vendor\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Vendor\Models\Vendor;
+use Modules\Vendor\Models\Vendor;
 
 class VendorSeeder extends Seeder
 {

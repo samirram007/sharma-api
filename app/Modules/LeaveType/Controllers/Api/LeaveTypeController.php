@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\LeaveType\Controllers\Api;
+namespace Modules\LeaveType\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\LeaveType\Contracts\LeaveTypeServiceInterface;
-use App\Modules\LeaveType\Resources\LeaveTypeResource;
-use App\Modules\LeaveType\Resources\LeaveTypeCollection;
-use App\Modules\LeaveType\Requests\LeaveTypeRequest;
+use Modules\LeaveType\Contracts\LeaveTypeServiceInterface;
+use Modules\LeaveType\Resources\LeaveTypeResource;
+use Modules\LeaveType\Resources\LeaveTypeCollection;
+use Modules\LeaveType\Requests\LeaveTypeRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

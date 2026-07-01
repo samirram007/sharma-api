@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\PhysicalStockCount\Resources;
+namespace Modules\PhysicalStockCount\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

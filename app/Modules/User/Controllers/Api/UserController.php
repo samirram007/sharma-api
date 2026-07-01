@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\User\Controllers\Api;
+namespace Modules\User\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\User\Contracts\UserServiceInterface;
-use App\Modules\User\Resources\UserResource;
-use App\Modules\User\Resources\UserCollection;
-use App\Modules\User\Requests\UserRequest;
-use App\Modules\User\Requests\UserNotificationPreferenceRequest;
+use Modules\User\Contracts\UserServiceInterface;
+use Modules\User\Resources\UserResource;
+use Modules\User\Resources\UserCollection;
+use Modules\User\Requests\UserRequest;
+use Modules\User\Requests\UserNotificationPreferenceRequest;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;

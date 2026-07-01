@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\DeliveryRoute\Resources;
+namespace Modules\DeliveryRoute\Resources;
 
-use App\Modules\DeliveryPlace\Resources\DeliveryPlaceResource;
-use App\Modules\Godown\Models\Godown;
-use App\Modules\Godown\Resources\GodownResource;
-use App\Modules\StockUnit\Resources\StockUnitResource;
-use App\Modules\Transporter\Resources\TransporterResource;
+use Modules\DeliveryPlace\Resources\DeliveryPlaceResource;
+use Modules\Godown\Models\Godown;
+use Modules\Godown\Resources\GodownResource;
+use Modules\StockUnit\Resources\StockUnitResource;
+use Modules\Transporter\Resources\TransporterResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

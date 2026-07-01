@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockJournalEntry\Resources;
+namespace Modules\StockJournalEntry\Resources;
 
-use App\Modules\StockItem\Resources\StockItemResource;
-use App\Modules\StockJournal\Resources\StockJournalResource;
-use App\Modules\StockJournalGodownEntry\Resources\StockJournalGodownEntryResource;
-use App\Modules\StockUnit\Resources\StockUnitResource;
+use Modules\StockItem\Resources\StockItemResource;
+use Modules\StockJournal\Resources\StockJournalResource;
+use Modules\StockJournalGodownEntry\Resources\StockJournalGodownEntryResource;
+use Modules\StockUnit\Resources\StockUnitResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Receipt\Providers;
+namespace Modules\Receipt\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Receipt\Contracts\ReceiptServiceInterface;
-use App\Modules\Receipt\Services\ReceiptService;
+use Modules\Receipt\Contracts\ReceiptServiceInterface;
+use Modules\Receipt\Services\ReceiptService;
 
 class ReceiptServiceProvider extends ServiceProvider
 {

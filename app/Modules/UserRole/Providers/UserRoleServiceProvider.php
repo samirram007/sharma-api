@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\UserRole\Providers;
+namespace Modules\UserRole\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\UserRole\Contracts\UserRoleServiceInterface;
-use App\Modules\UserRole\Services\UserRoleService;
+use Modules\UserRole\Contracts\UserRoleServiceInterface;
+use Modules\UserRole\Services\UserRoleService;
 
 class UserRoleServiceProvider extends ServiceProvider
 {

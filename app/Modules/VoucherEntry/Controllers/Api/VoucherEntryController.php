@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\VoucherEntry\Controllers\Api;
+namespace Modules\VoucherEntry\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
-use App\Modules\VoucherEntry\Resources\VoucherEntryResource;
-use App\Modules\VoucherEntry\Resources\VoucherEntryCollection;
-use App\Modules\VoucherEntry\Requests\VoucherEntryRequest;
+use Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
+use Modules\VoucherEntry\Resources\VoucherEntryResource;
+use Modules\VoucherEntry\Resources\VoucherEntryCollection;
+use Modules\VoucherEntry\Requests\VoucherEntryRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

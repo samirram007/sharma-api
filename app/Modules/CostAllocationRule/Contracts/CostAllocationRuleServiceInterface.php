@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\CostAllocationRule\Contracts;
+namespace Modules\CostAllocationRule\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\CostAllocationRule\Models\CostAllocationRule;
+use Modules\CostAllocationRule\Models\CostAllocationRule;
 
 interface CostAllocationRuleServiceInterface
 {

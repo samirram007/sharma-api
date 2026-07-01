@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\VoucherPaymentMode\Resources;
+namespace Modules\VoucherPaymentMode\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Modules\Voucher\Resources;
+namespace Modules\Voucher\Resources;
 
 use App\Http\Resources\SuccessResource;
-use App\Modules\Company\Resources\CompanyResource;
-use App\Modules\FiscalYear\Resources\FiscalYearResource;
-use App\Modules\StockJournal\Resources\StockJournalResource;
-use App\Modules\VoucherDispatchDetail\Resources\VoucherDispatchDetailResource;
-use App\Modules\VoucherEntry\Resources\VoucherEntryResource;
-use App\Modules\VoucherParty\Resources\VoucherPartyResource;
-use App\Modules\VoucherReference\Resources\VoucherReferenceResource;
-use App\Modules\VoucherType\Resources\VoucherTypeResource;
+use Modules\Company\Resources\CompanyResource;
+use Modules\FiscalYear\Resources\FiscalYearResource;
+use Modules\StockJournal\Resources\StockJournalResource;
+use Modules\VoucherDispatchDetail\Resources\VoucherDispatchDetailResource;
+use Modules\VoucherEntry\Resources\VoucherEntryResource;
+use Modules\VoucherParty\Resources\VoucherPartyResource;
+use Modules\VoucherReference\Resources\VoucherReferenceResource;
+use Modules\VoucherType\Resources\VoucherTypeResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\AccountLedger\Database\Seeders;
+namespace Modules\AccountLedger\Database\Seeders;
 
-use App\Modules\AccountGroup\Models\AccountGroup;
+use Modules\AccountGroup\Models\AccountGroup;
 use Illuminate\Database\Seeder;
-use App\Modules\AccountLedger\Models\AccountLedger;
+use Modules\AccountLedger\Models\AccountLedger;
 use Illuminate\Support\Facades\DB;
 
 class AccountLedgerSeeder extends Seeder

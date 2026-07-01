@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\VoucherType\Controllers\Api;
+namespace Modules\VoucherType\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessCollection;
-use App\Modules\VoucherType\Contracts\VoucherTypeServiceInterface;
-use App\Modules\VoucherType\Resources\VoucherTypeResource;
-use App\Modules\VoucherType\Resources\VoucherTypeCollection;
-use App\Modules\VoucherType\Requests\VoucherTypeRequest;
+use Modules\VoucherType\Contracts\VoucherTypeServiceInterface;
+use Modules\VoucherType\Resources\VoucherTypeResource;
+use Modules\VoucherType\Resources\VoucherTypeCollection;
+use Modules\VoucherType\Requests\VoucherTypeRequest;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;

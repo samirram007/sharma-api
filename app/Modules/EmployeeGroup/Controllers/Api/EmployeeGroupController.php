@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\EmployeeGroup\Controllers\Api;
+namespace Modules\EmployeeGroup\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\EmployeeGroup\Contracts\EmployeeGroupServiceInterface;
-use App\Modules\EmployeeGroup\Resources\EmployeeGroupResource;
-use App\Modules\EmployeeGroup\Resources\EmployeeGroupCollection;
-use App\Modules\EmployeeGroup\Requests\EmployeeGroupRequest;
+use Modules\EmployeeGroup\Contracts\EmployeeGroupServiceInterface;
+use Modules\EmployeeGroup\Resources\EmployeeGroupResource;
+use Modules\EmployeeGroup\Resources\EmployeeGroupCollection;
+use Modules\EmployeeGroup\Requests\EmployeeGroupRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AccountNature\Services;
+namespace Modules\AccountNature\Services;
 
-use App\Modules\AccountNature\Contracts\AccountNatureServiceInterface;
-use App\Modules\AccountNature\Models\AccountNature;
+use Modules\AccountNature\Contracts\AccountNatureServiceInterface;
+use Modules\AccountNature\Models\AccountNature;
 use Illuminate\Database\Eloquent\Collection;
 
 class AccountNatureService implements AccountNatureServiceInterface

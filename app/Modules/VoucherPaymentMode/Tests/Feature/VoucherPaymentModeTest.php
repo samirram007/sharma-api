@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\VoucherPaymentMode\Tests\Feature;
+namespace Modules\VoucherPaymentMode\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\VoucherPaymentMode\Models\VoucherPaymentMode;
+use Modules\VoucherPaymentMode\Models\VoucherPaymentMode;
 
 class VoucherPaymentModeTest extends TestCase
 {

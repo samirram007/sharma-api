@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\VoucherEntryPurge\Resources;
+namespace Modules\VoucherEntryPurge\Resources;
 
 use Illuminate\Http\Request;
 

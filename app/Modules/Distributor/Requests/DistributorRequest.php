@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Distributor\Requests;
+namespace Modules\Distributor\Requests;
 
-use App\Modules\Address\Requests\AddressRequest;
+use Modules\Address\Requests\AddressRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DistributorRequest extends FormRequest

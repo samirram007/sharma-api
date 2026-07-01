@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Department\Contracts;
+namespace Modules\Department\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Department\Models\Department;
+use Modules\Department\Models\Department;
 
 interface DepartmentServiceInterface
 {

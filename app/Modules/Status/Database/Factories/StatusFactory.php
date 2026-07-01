@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Status\Database\Factories;
+namespace Modules\Status\Database\Factories;
 
-use App\Modules\Status\Models\Status;
+use Modules\Status\Models\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

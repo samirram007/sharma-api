@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Agent\Contracts;
+namespace Modules\Agent\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Agent\Models\Agent;
+use Modules\Agent\Models\Agent;
 
 interface AgentServiceInterface
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Supplier\Controllers\Api;
+namespace Modules\Supplier\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Supplier\Contracts\SupplierServiceInterface;
-use App\Modules\Supplier\Resources\SupplierResource;
-use App\Modules\Supplier\Resources\SupplierCollection;
-use App\Modules\Supplier\Requests\SupplierRequest;
+use Modules\Supplier\Contracts\SupplierServiceInterface;
+use Modules\Supplier\Resources\SupplierResource;
+use Modules\Supplier\Resources\SupplierCollection;
+use Modules\Supplier\Requests\SupplierRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherCategory\Contracts;
+namespace Modules\VoucherCategory\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\VoucherCategory\Models\VoucherCategory;
+use Modules\VoucherCategory\Models\VoucherCategory;
 
 interface VoucherCategoryServiceInterface
 {

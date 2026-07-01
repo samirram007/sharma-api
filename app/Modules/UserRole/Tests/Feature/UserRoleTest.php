@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\UserRole\Tests\Feature;
+namespace Modules\UserRole\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\UserRole\Models\UserRole;
+use Modules\UserRole\Models\UserRole;
 
 class UserRoleTest extends TestCase
 {

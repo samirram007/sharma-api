@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DeliveryPlace\Services;
+namespace Modules\DeliveryPlace\Services;
 
-use App\Modules\DeliveryPlace\Contracts\DeliveryPlaceServiceInterface;
-use App\Modules\DeliveryPlace\Models\DeliveryPlace;
+use Modules\DeliveryPlace\Contracts\DeliveryPlaceServiceInterface;
+use Modules\DeliveryPlace\Models\DeliveryPlace;
 use Illuminate\Database\Eloquent\Collection;
 
 class DeliveryPlaceService implements DeliveryPlaceServiceInterface

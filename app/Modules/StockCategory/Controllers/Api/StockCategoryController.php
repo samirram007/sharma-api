@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockCategory\Controllers\Api;
+namespace Modules\StockCategory\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StockCategory\Contracts\StockCategoryServiceInterface;
-use App\Modules\StockCategory\Resources\StockCategoryResource;
-use App\Modules\StockCategory\Resources\StockCategoryCollection;
-use App\Modules\StockCategory\Requests\StockCategoryRequest;
+use Modules\StockCategory\Contracts\StockCategoryServiceInterface;
+use Modules\StockCategory\Resources\StockCategoryResource;
+use Modules\StockCategory\Resources\StockCategoryCollection;
+use Modules\StockCategory\Requests\StockCategoryRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Auth\Tests\Feature;
+namespace Modules\Auth\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Auth\Models\Auth;
+use Modules\Auth\Models\Auth;
 
 class AuthTest extends TestCase
 {

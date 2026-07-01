@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemPrice\Database\Seeders;
+namespace Modules\StockItemPrice\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StockItemPrice\Models\StockItemPrice;
+use Modules\StockItemPrice\Models\StockItemPrice;
 
 class StockItemPriceSeeder extends Seeder
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\OrderStockJournal\Services;
+namespace Modules\OrderStockJournal\Services;
 
-use App\Modules\OrderStockJournal\Contracts\OrderStockJournalServiceInterface;
-use App\Modules\OrderStockJournal\Models\OrderStockJournal;
+use Modules\OrderStockJournal\Contracts\OrderStockJournalServiceInterface;
+use Modules\OrderStockJournal\Models\OrderStockJournal;
 use Illuminate\Database\Eloquent\Collection;
 
 class OrderStockJournalService implements OrderStockJournalServiceInterface

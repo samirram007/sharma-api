@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Company\Services;
+namespace Modules\Company\Services;
 
-use App\Modules\Address\Requests\AddressRequest;
-use App\Modules\Company\Contracts\CompanyServiceInterface;
-use App\Modules\Company\Models\Company;
+use Modules\Address\Requests\AddressRequest;
+use Modules\Company\Contracts\CompanyServiceInterface;
+use Modules\Company\Models\Company;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;

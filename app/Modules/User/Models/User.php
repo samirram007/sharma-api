@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\User\Models;
+namespace Modules\User\Models;
 
-use App\Modules\Role\Models\Role;
-use App\Modules\UserFiscalYear\Models\UserFiscalYear;
+use Modules\Role\Models\Role;
+use Modules\UserFiscalYear\Models\UserFiscalYear;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -48,7 +48,7 @@ class User extends Authenticatable implements JWTSubject
     public function fiscal_years(): BelongsToMany
     {
         return $this->belongsToMany(
-            'App\Modules\FiscalYear\Models\FiscalYear',
+            'Modules\FiscalYear\Models\FiscalYear',
             'user_fiscal_years',
             'user_id',
             'fiscal_year_id'
@@ -56,7 +56,7 @@ class User extends Authenticatable implements JWTSubject
     }
     public function user_roles(): HasMany
     {
-        return $this->hasMany('App\Modules\UserRole\Models\UserRole', 'user_id', 'id');
+        return $this->hasMany('Modules\UserRole\Models\UserRole', 'user_id', 'id');
     }
     public function roles(): BelongsToMany
     {

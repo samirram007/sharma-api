@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AppMaintenance\Contracts;
+namespace Modules\AppMaintenance\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\AppMaintenance\Models\AppMaintenance;
+use Modules\AppMaintenance\Models\AppMaintenance;
 
 interface AppMaintenanceServiceInterface
 {

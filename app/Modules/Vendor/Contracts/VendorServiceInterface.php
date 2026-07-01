@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Vendor\Contracts;
+namespace Modules\Vendor\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Vendor\Models\Vendor;
+use Modules\Vendor\Models\Vendor;
 
 interface VendorServiceInterface
 {

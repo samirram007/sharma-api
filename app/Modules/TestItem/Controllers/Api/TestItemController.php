@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\TestItem\Controllers\Api;
+namespace Modules\TestItem\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\TestItem\Contracts\TestItemServiceInterface;
-use App\Modules\TestItem\Resources\TestItemResource;
-use App\Modules\TestItem\Resources\TestItemCollection;
-use App\Modules\TestItem\Requests\TestItemRequest;
+use Modules\TestItem\Contracts\TestItemServiceInterface;
+use Modules\TestItem\Resources\TestItemResource;
+use Modules\TestItem\Resources\TestItemCollection;
+use Modules\TestItem\Requests\TestItemRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

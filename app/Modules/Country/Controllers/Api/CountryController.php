@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Country\Controllers\Api;
+namespace Modules\Country\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Country\Contracts\CountryServiceInterface;
-use App\Modules\Country\Resources\CountryResource;
-use App\Modules\Country\Resources\CountryCollection;
-use App\Modules\Country\Requests\CountryRequest;
+use Modules\Country\Contracts\CountryServiceInterface;
+use Modules\Country\Resources\CountryResource;
+use Modules\Country\Resources\CountryCollection;
+use Modules\Country\Requests\CountryRequest;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\AppModule\Controllers\Api;
+namespace Modules\AppModule\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\AppModule\Contracts\AppModuleServiceInterface;
-use App\Modules\AppModule\Resources\AppModuleResource;
-use App\Modules\AppModule\Resources\AppModuleCollection;
-use App\Modules\AppModule\Requests\AppModuleRequest;
+use Modules\AppModule\Contracts\AppModuleServiceInterface;
+use Modules\AppModule\Resources\AppModuleResource;
+use Modules\AppModule\Resources\AppModuleCollection;
+use Modules\AppModule\Requests\AppModuleRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

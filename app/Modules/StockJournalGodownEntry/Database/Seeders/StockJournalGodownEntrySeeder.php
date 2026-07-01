@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournalGodownEntry\Database\Seeders;
+namespace Modules\StockJournalGodownEntry\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
+use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
 
 class StockJournalGodownEntrySeeder extends Seeder
 {

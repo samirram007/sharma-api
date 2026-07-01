@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemBrand\Services;
+namespace Modules\StockItemBrand\Services;
 
-use App\Modules\StockItemBrand\Contracts\StockItemBrandServiceInterface;
-use App\Modules\StockItemBrand\Models\StockItemBrand;
+use Modules\StockItemBrand\Contracts\StockItemBrandServiceInterface;
+use Modules\StockItemBrand\Models\StockItemBrand;
 use Illuminate\Database\Eloquent\Collection;
 
 class StockItemBrandService implements StockItemBrandServiceInterface

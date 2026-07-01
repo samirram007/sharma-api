@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AccountsJournal\Providers;
+namespace Modules\AccountsJournal\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\AccountsJournal\Contracts\AccountsJournalServiceInterface;
-use App\Modules\AccountsJournal\Services\AccountsJournalService;
+use Modules\AccountsJournal\Contracts\AccountsJournalServiceInterface;
+use Modules\AccountsJournal\Services\AccountsJournalService;
 
 class AccountsJournalServiceProvider extends ServiceProvider
 {

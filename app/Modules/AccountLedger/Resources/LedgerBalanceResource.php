@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\AccountLedger\Resources;
+namespace Modules\AccountLedger\Resources;
 
 use App\Http\Resources\SuccessResource;
-use App\Modules\AccountGroup\Resources\AccountGroupResource;
-use App\Modules\AccountNature\Resources\AccountNatureResource;
+use Modules\AccountGroup\Resources\AccountGroupResource;
+use Modules\AccountNature\Resources\AccountNatureResource;
 use Illuminate\Http\Request;
 use App\Traits\HasPolymorphicResource;
 

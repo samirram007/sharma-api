@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Freight\Database\Seeders;
+namespace Modules\Freight\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Freight\Models\Freight;
+use Modules\Freight\Models\Freight;
 
 class FreightSeeder extends Seeder
 {

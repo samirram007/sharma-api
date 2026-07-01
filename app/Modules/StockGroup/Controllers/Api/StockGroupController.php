@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockGroup\Controllers\Api;
+namespace Modules\StockGroup\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StockGroup\Contracts\StockGroupServiceInterface;
-use App\Modules\StockGroup\Resources\StockGroupResource;
-use App\Modules\StockGroup\Resources\StockGroupCollection;
-use App\Modules\StockGroup\Requests\StockGroupRequest;
+use Modules\StockGroup\Contracts\StockGroupServiceInterface;
+use Modules\StockGroup\Resources\StockGroupResource;
+use Modules\StockGroup\Resources\StockGroupCollection;
+use Modules\StockGroup\Requests\StockGroupRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

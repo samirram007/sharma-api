@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Post\Providers;
+namespace Modules\Post\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Post\Contracts\PostServiceInterface;
-use App\Modules\Post\Services\PostService;
+use Modules\Post\Contracts\PostServiceInterface;
+use Modules\Post\Services\PostService;
 
 class PostServiceProvider extends ServiceProvider
 {

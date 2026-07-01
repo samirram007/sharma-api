@@ -2,7 +2,7 @@
 
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\DayBook\Controllers\Api\DayBookController;
+use Modules\DayBook\Controllers\Api\DayBookController;
 
 // Route::apiResource('day_books', DayBookController::class)->middleware(['jwt.cookies']);
 

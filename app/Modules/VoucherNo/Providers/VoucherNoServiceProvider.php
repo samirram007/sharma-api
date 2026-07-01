@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\VoucherNo\Providers;
+namespace Modules\VoucherNo\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\VoucherNo\Contracts\VoucherNoServiceInterface;
-use App\Modules\VoucherNo\Services\VoucherNoService;
+use Modules\VoucherNo\Contracts\VoucherNoServiceInterface;
+use Modules\VoucherNo\Services\VoucherNoService;
 
 class VoucherNoServiceProvider extends ServiceProvider
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\HsnSacCode\Services;
+namespace Modules\HsnSacCode\Services;
 
-use App\Modules\HsnSacCode\Contracts\HsnSacCodeServiceInterface;
-use App\Modules\HsnSacCode\Models\HsnSacCode;
+use Modules\HsnSacCode\Contracts\HsnSacCodeServiceInterface;
+use Modules\HsnSacCode\Models\HsnSacCode;
 use Illuminate\Database\Eloquent\Collection;
 
 class HsnSacCodeService implements HsnSacCodeServiceInterface

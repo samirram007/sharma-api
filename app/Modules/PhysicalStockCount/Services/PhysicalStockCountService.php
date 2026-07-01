@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Modules\PhysicalStockCount\Services;
+namespace Modules\PhysicalStockCount\Services;
 
-use App\Modules\PhysicalStockCount\Contracts\PhysicalStockCountServiceInterface;
-use App\Modules\PhysicalStockCount\Models\PhysicalStockCount;
-use App\Modules\PhysicalStockCount\Models\PhysicalStockCountItem;
-use App\Modules\StockJournal\Contracts\StockJournalServiceInterface;
-use App\Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
-use App\Modules\Voucher\Contracts\VoucherServiceInterface;
-use App\Modules\Voucher\Models\Voucher;
-use App\Modules\VoucherType\Models\VoucherType;
+use Modules\PhysicalStockCount\Contracts\PhysicalStockCountServiceInterface;
+use Modules\PhysicalStockCount\Models\PhysicalStockCount;
+use Modules\PhysicalStockCount\Models\PhysicalStockCountItem;
+use Modules\StockJournal\Contracts\StockJournalServiceInterface;
+use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
+use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Models\Voucher;
+use Modules\VoucherType\Models\VoucherType;
 use App\Enums\MovementType;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;

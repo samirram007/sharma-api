@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockJournalGodownEntry\Models;
+namespace Modules\StockJournalGodownEntry\Models;
 
 use App\Enums\MovementType;
-use App\Modules\Godown\Models\Godown;
-use App\Modules\StockItem\Models\StockItem;
-use App\Modules\StockJournalEntry\Models\StockJournalEntry;
-use App\Modules\StockJournalGodownEntryPurge\Models\StockJournalGodownEntryPurge;
+use Modules\Godown\Models\Godown;
+use Modules\StockItem\Models\StockItem;
+use Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\StockJournalGodownEntryPurge\Models\StockJournalGodownEntryPurge;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

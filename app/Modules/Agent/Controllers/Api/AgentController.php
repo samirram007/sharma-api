@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Agent\Controllers\Api;
+namespace Modules\Agent\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Agent\Contracts\AgentServiceInterface;
-use App\Modules\Agent\Resources\AgentResource;
-use App\Modules\Agent\Resources\AgentCollection;
-use App\Modules\Agent\Requests\AgentRequest;
+use Modules\Agent\Contracts\AgentServiceInterface;
+use Modules\Agent\Resources\AgentResource;
+use Modules\Agent\Resources\AgentCollection;
+use Modules\Agent\Requests\AgentRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

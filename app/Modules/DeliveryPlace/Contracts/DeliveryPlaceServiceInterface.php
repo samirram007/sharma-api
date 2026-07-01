@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DeliveryPlace\Contracts;
+namespace Modules\DeliveryPlace\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\DeliveryPlace\Models\DeliveryPlace;
+use Modules\DeliveryPlace\Models\DeliveryPlace;
 
 interface DeliveryPlaceServiceInterface
 {

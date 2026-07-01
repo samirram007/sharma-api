@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\CostAllocationRule\Providers;
+namespace Modules\CostAllocationRule\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\CostAllocationRule\Contracts\CostAllocationRuleServiceInterface;
-use App\Modules\CostAllocationRule\Services\CostAllocationRuleService;
+use Modules\CostAllocationRule\Contracts\CostAllocationRuleServiceInterface;
+use Modules\CostAllocationRule\Services\CostAllocationRuleService;
 
 class CostAllocationRuleServiceProvider extends ServiceProvider
 {

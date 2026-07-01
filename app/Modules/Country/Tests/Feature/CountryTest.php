@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Country\Tests\Feature;
+namespace Modules\Country\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Country\Models\Country;
+use Modules\Country\Models\Country;
 
 class CountryTest extends TestCase
 {

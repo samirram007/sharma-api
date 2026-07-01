@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockItemBrand\Controllers\Api;
+namespace Modules\StockItemBrand\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StockItemBrand\Contracts\StockItemBrandServiceInterface;
-use App\Modules\StockItemBrand\Resources\StockItemBrandResource;
-use App\Modules\StockItemBrand\Resources\StockItemBrandCollection;
-use App\Modules\StockItemBrand\Requests\StockItemBrandRequest;
+use Modules\StockItemBrand\Contracts\StockItemBrandServiceInterface;
+use Modules\StockItemBrand\Resources\StockItemBrandResource;
+use Modules\StockItemBrand\Resources\StockItemBrandCollection;
+use Modules\StockItemBrand\Requests\StockItemBrandRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

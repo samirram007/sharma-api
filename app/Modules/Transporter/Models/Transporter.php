@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Transporter\Models;
+namespace Modules\Transporter\Models;
 
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\Address\Models\Address;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\Address\Models\Address;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphOne;

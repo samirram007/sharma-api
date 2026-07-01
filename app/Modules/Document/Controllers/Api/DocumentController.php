@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Document\Controllers\Api;
+namespace Modules\Document\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Document\Contracts\DocumentServiceInterface;
-use App\Modules\Document\Resources\DocumentResource;
-use App\Modules\Document\Resources\DocumentCollection;
-use App\Modules\Document\Requests\DocumentRequest;
+use Modules\Document\Contracts\DocumentServiceInterface;
+use Modules\Document\Resources\DocumentResource;
+use Modules\Document\Resources\DocumentCollection;
+use Modules\Document\Requests\DocumentRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

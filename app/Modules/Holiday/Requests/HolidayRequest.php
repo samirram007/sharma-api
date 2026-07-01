@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Holiday\Requests;
+namespace Modules\Holiday\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

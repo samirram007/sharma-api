@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemBatch\Database\Seeders;
+namespace Modules\StockItemBatch\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StockItemBatch\Models\StockItemBatch;
+use Modules\StockItemBatch\Models\StockItemBatch;
 
 class StockItemBatchSeeder extends Seeder
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\UserFiscalYear\Requests;
+namespace Modules\UserFiscalYear\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

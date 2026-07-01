@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\AccountingPeriod\Controllers\Api;
+namespace Modules\AccountingPeriod\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\AccountingPeriod\Contracts\AccountingPeriodServiceInterface;
-use App\Modules\AccountingPeriod\Resources\AccountingPeriodResource;
-use App\Modules\AccountingPeriod\Resources\AccountingPeriodCollection;
-use App\Modules\AccountingPeriod\Requests\AccountingPeriodRequest;
+use Modules\AccountingPeriod\Contracts\AccountingPeriodServiceInterface;
+use Modules\AccountingPeriod\Resources\AccountingPeriodResource;
+use Modules\AccountingPeriod\Resources\AccountingPeriodCollection;
+use Modules\AccountingPeriod\Requests\AccountingPeriodRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

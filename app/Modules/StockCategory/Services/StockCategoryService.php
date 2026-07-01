@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockCategory\Services;
+namespace Modules\StockCategory\Services;
 
-use App\Modules\StockCategory\Contracts\StockCategoryServiceInterface;
-use App\Modules\StockCategory\Models\StockCategory;
+use Modules\StockCategory\Contracts\StockCategoryServiceInterface;
+use Modules\StockCategory\Models\StockCategory;
 use Illuminate\Database\Eloquent\Collection;
 
 class StockCategoryService implements StockCategoryServiceInterface

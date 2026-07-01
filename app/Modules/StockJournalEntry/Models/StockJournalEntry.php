@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Modules\StockJournalEntry\Models;
+namespace Modules\StockJournalEntry\Models;
 
 use App\Enums\MovementType;
-use App\Modules\StockItem\Models\StockItem;
-use App\Modules\StockJournal\Models\StockJournal;
-use App\Modules\StockJournalEntryPurge\Models\StockJournalEntryPurge;
-use App\Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
-use App\Modules\StockUnit\Models\StockUnit;
-use App\Modules\Voucher\Models\Voucher;
+use Modules\StockItem\Models\StockItem;
+use Modules\StockJournal\Models\StockJournal;
+use Modules\StockJournalEntryPurge\Models\StockJournalEntryPurge;
+use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
+use Modules\StockUnit\Models\StockUnit;
+use Modules\Voucher\Models\Voucher;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

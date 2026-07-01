@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Modules\StockSummary\Controllers\Api;
+namespace Modules\StockSummary\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StockSummary\Contracts\StockSummaryServiceInterface;
-use App\Modules\StockSummary\Resources\StockInHandCollection;
-use App\Modules\StockSummary\Resources\StockInHandGodownResource;
-use App\Modules\StockSummary\Resources\StockInHandGodownWiseResource;
-use App\Modules\StockSummary\Resources\StockInHandItemDetailsResource;
-use App\Modules\StockSummary\Resources\StockInHandItemWiseResource;
-use App\Modules\StockSummary\Resources\StockInHandResource;
-use App\Modules\StockSummary\Resources\StockInHandVoucherWiseResource;
-use App\Modules\StockSummary\Resources\StockInHandZoneWiseResource;
-use App\Modules\StockSummary\Resources\StockSummaryResource;
-use App\Modules\StockSummary\Resources\StockSummaryCollection;
-use App\Modules\StockSummary\Requests\StockSummaryRequest;
+use Modules\StockSummary\Contracts\StockSummaryServiceInterface;
+use Modules\StockSummary\Resources\StockInHandCollection;
+use Modules\StockSummary\Resources\StockInHandGodownResource;
+use Modules\StockSummary\Resources\StockInHandGodownWiseResource;
+use Modules\StockSummary\Resources\StockInHandItemDetailsResource;
+use Modules\StockSummary\Resources\StockInHandItemWiseResource;
+use Modules\StockSummary\Resources\StockInHandResource;
+use Modules\StockSummary\Resources\StockInHandVoucherWiseResource;
+use Modules\StockSummary\Resources\StockInHandZoneWiseResource;
+use Modules\StockSummary\Resources\StockSummaryResource;
+use Modules\StockSummary\Resources\StockSummaryCollection;
+use Modules\StockSummary\Requests\StockSummaryRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

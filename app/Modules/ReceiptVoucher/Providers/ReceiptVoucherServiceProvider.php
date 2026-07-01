@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\ReceiptVoucher\Providers;
+namespace Modules\ReceiptVoucher\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\ReceiptVoucher\Contracts\ReceiptVoucherServiceInterface;
-use App\Modules\ReceiptVoucher\Services\ReceiptVoucherService;
+use Modules\ReceiptVoucher\Contracts\ReceiptVoucherServiceInterface;
+use Modules\ReceiptVoucher\Services\ReceiptVoucherService;
 
 class ReceiptVoucherServiceProvider extends ServiceProvider
 {

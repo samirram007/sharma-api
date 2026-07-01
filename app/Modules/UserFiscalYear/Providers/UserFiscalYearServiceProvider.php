@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\UserFiscalYear\Providers;
+namespace Modules\UserFiscalYear\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
-use App\Modules\UserFiscalYear\Services\UserFiscalYearService;
+use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
+use Modules\UserFiscalYear\Services\UserFiscalYearService;
 
 class UserFiscalYearServiceProvider extends ServiceProvider
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\OrderJournal\Providers;
+namespace Modules\OrderJournal\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\OrderJournal\Contracts\OrderJournalServiceInterface;
-use App\Modules\OrderJournal\Services\OrderJournalService;
+use Modules\OrderJournal\Contracts\OrderJournalServiceInterface;
+use Modules\OrderJournal\Services\OrderJournalService;
 
 class OrderJournalServiceProvider extends ServiceProvider
 {

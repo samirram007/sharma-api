@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Country\Services;
+namespace Modules\Country\Services;
 
-use App\Modules\Country\Contracts\CountryServiceInterface;
-use App\Modules\Country\Models\Country;
+use Modules\Country\Contracts\CountryServiceInterface;
+use Modules\Country\Models\Country;
 use Illuminate\Database\Eloquent\Collection;
 
 class CountryService implements CountryServiceInterface

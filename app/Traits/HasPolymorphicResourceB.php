@@ -105,8 +105,8 @@ trait HasPolymorphicResourceB
 //         if ($data instanceof Model) {
 //             $modelClass = get_class($data);
 
-//             // Example: App\Modules\Supplier\Models\Supplier
-//             // Convert to: App\Modules\Supplier\Resources\SupplierResource
+//             // Example: Modules\Supplier\Models\Supplier
+//             // Convert to: Modules\Supplier\Resources\SupplierResource
 //             $resourceClass = str_replace('\\Models\\', '\\Resources\\', $modelClass) . 'Resource';
 
 //             if (class_exists($resourceClass)) {
@@ -136,12 +136,12 @@ trait HasPolymorphicResourceB
 //     //     }
 
 //     //     $modelClass = get_class($model);
-//     //     // Example: App\Modules\Supplier\Models\Supplier
+//     //     // Example: Modules\Supplier\Models\Supplier
 
 //     //     // Convert Models → Resources
 //     //     $resourceClass = str_replace('\\Models\\', '\\Resources\\', $modelClass) . 'Resource';
 //     //     // dump($resourceClass);
-//     //     // Result: App\Modules\Supplier\Resources\SupplierResource
+//     //     // Result: Modules\Supplier\Resources\SupplierResource
 
 //     //     if (class_exists($resourceClass)) {
 //     //         return new $resourceClass($model);

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Transporter\Services;
+namespace Modules\Transporter\Services;
 
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\Transporter\Contracts\TransporterServiceInterface;
-use App\Modules\Transporter\Models\Transporter;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\Transporter\Contracts\TransporterServiceInterface;
+use Modules\Transporter\Models\Transporter;
 use Illuminate\Database\Eloquent\Collection;
 
 class TransporterService implements TransporterServiceInterface

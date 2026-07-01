@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\StockJournalGodownEntry\Resources;
+namespace Modules\StockJournalGodownEntry\Resources;
 
-use App\Modules\Godown\Resources\GodownResource;
+use Modules\Godown\Resources\GodownResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

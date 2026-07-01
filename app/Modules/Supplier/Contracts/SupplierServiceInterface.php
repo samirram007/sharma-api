@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Supplier\Contracts;
+namespace Modules\Supplier\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Supplier\Models\Supplier;
+use Modules\Supplier\Models\Supplier;
 
 interface SupplierServiceInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Uqc\Requests;
+namespace Modules\Uqc\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

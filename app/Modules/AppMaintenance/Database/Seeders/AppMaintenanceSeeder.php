@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AppMaintenance\Database\Seeders;
+namespace Modules\AppMaintenance\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\AppMaintenance\Models\AppMaintenance;
+use Modules\AppMaintenance\Models\AppMaintenance;
 
 class AppMaintenanceSeeder extends Seeder
 {

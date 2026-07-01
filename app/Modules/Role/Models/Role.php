@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Role\Models;
+namespace Modules\Role\Models;
 
-use App\Modules\RolePermission\Models\RolePermission;
-use App\Modules\User\Models\User;
+use Modules\RolePermission\Models\RolePermission;
+use Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

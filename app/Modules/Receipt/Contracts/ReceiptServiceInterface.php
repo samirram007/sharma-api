@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Receipt\Contracts;
+namespace Modules\Receipt\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Receipt\Models\Receipt;
+use Modules\Receipt\Models\Receipt;
 
 interface ReceiptServiceInterface
 {

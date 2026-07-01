@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockUnit\Services;
+namespace Modules\StockUnit\Services;
 
-use App\Modules\StockUnit\Contracts\StockUnitServiceInterface;
-use App\Modules\StockUnit\Models\StockUnit;
+use Modules\StockUnit\Contracts\StockUnitServiceInterface;
+use Modules\StockUnit\Models\StockUnit;
 use Illuminate\Database\Eloquent\Collection;
 
 class StockUnitService implements StockUnitServiceInterface

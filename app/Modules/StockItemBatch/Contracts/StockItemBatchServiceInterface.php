@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemBatch\Contracts;
+namespace Modules\StockItemBatch\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\StockItemBatch\Models\StockItemBatch;
+use Modules\StockItemBatch\Models\StockItemBatch;
 
 interface StockItemBatchServiceInterface
 {

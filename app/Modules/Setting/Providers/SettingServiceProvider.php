@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Setting\Providers;
+namespace Modules\Setting\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Setting\Contracts\SettingServiceInterface;
-use App\Modules\Setting\Services\SettingService;
+use Modules\Setting\Contracts\SettingServiceInterface;
+use Modules\Setting\Services\SettingService;
 
 class SettingServiceProvider extends ServiceProvider
 {

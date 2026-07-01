@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherReference\Database\Seeders;
+namespace Modules\VoucherReference\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\VoucherReference\Models\VoucherReference;
+use Modules\VoucherReference\Models\VoucherReference;
 
 class VoucherReferenceSeeder extends Seeder
 {

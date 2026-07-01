@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockGroup\Contracts;
+namespace Modules\StockGroup\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\StockGroup\Models\StockGroup;
+use Modules\StockGroup\Models\StockGroup;
 
 interface StockGroupServiceInterface
 {

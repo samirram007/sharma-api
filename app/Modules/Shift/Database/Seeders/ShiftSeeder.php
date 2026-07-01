@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Shift\Database\Seeders;
+namespace Modules\Shift\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Shift\Models\Shift;
+use Modules\Shift\Models\Shift;
 
 class ShiftSeeder extends Seeder
 {

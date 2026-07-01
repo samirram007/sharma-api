@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Voucher\Tests\Feature;
+namespace Modules\Voucher\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Voucher\Models\Voucher;
+use Modules\Voucher\Models\Voucher;
 
 class VoucherTest extends TestCase
 {

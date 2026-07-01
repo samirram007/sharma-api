@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherParty\Database\Seeders;
+namespace Modules\VoucherParty\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\VoucherParty\Models\VoucherParty;
+use Modules\VoucherParty\Models\VoucherParty;
 
 class VoucherPartySeeder extends Seeder
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockItemPrice\Controllers\Api;
+namespace Modules\StockItemPrice\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StockItemPrice\Contracts\StockItemPriceServiceInterface;
-use App\Modules\StockItemPrice\Resources\StockItemPriceResource;
-use App\Modules\StockItemPrice\Resources\StockItemPriceCollection;
-use App\Modules\StockItemPrice\Requests\StockItemPriceRequest;
+use Modules\StockItemPrice\Contracts\StockItemPriceServiceInterface;
+use Modules\StockItemPrice\Resources\StockItemPriceResource;
+use Modules\StockItemPrice\Resources\StockItemPriceCollection;
+use Modules\StockItemPrice\Requests\StockItemPriceRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

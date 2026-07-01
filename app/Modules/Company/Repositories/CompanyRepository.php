@@ -1,7 +1,7 @@
 <?php
-namespace App\Modules\Company\Repositories;
+namespace Modules\Company\Repositories;
 
-use App\Modules\Company\Models\Company;
+use Modules\Company\Models\Company;
 use Illuminate\Database\Eloquent\Collection;
 
 class CompanyRepository implements CompanyRepositoryInterface

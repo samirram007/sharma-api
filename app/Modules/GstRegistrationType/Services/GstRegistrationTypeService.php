@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\GstRegistrationType\Services;
+namespace Modules\GstRegistrationType\Services;
 
-use App\Modules\GstRegistrationType\Contracts\GstRegistrationTypeServiceInterface;
-use App\Modules\GstRegistrationType\Models\GstRegistrationType;
+use Modules\GstRegistrationType\Contracts\GstRegistrationTypeServiceInterface;
+use Modules\GstRegistrationType\Models\GstRegistrationType;
 use Illuminate\Database\Eloquent\Collection;
 
 class GstRegistrationTypeService implements GstRegistrationTypeServiceInterface

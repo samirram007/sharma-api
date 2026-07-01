@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\OrderStockJournal\Resources;
+namespace Modules\OrderStockJournal\Resources;
 
 use Illuminate\Http\Request;
 

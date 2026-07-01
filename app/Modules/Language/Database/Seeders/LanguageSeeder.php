@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Language\Database\Seeders;
+namespace Modules\Language\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Language\Models\Language;
+use Modules\Language\Models\Language;
 
 class LanguageSeeder extends Seeder
 {

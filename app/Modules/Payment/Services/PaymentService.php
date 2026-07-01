@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Payment\Services;
+namespace Modules\Payment\Services;
 
-use App\Modules\Payment\Contracts\PaymentServiceInterface;
-use App\Modules\Payment\Models\Payment;
-use App\Modules\VoucherReference\Models\VoucherReference;
+use Modules\Payment\Contracts\PaymentServiceInterface;
+use Modules\Payment\Models\Payment;
+use Modules\VoucherReference\Models\VoucherReference;
 use Illuminate\Database\Eloquent\Collection;
 
 class PaymentService implements PaymentServiceInterface

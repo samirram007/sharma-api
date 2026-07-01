@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherEntry\Contracts;
+namespace Modules\VoucherEntry\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\VoucherEntry\Models\VoucherEntry;
+use Modules\VoucherEntry\Models\VoucherEntry;
 
 interface VoucherEntryServiceInterface
 {

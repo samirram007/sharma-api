@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\VoucherEntryPurge\Requests;
+namespace Modules\VoucherEntryPurge\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

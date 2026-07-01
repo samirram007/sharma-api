@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Payment\Contracts;
+namespace Modules\Payment\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Payment\Models\Payment;
+use Modules\Payment\Models\Payment;
 
 interface PaymentServiceInterface
 {

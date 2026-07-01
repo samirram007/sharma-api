@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\DayBook\Tests\Feature;
+namespace Modules\DayBook\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\DayBook\Models\DayBook;
+use Modules\DayBook\Models\DayBook;
 
 class DayBookTest extends TestCase
 {

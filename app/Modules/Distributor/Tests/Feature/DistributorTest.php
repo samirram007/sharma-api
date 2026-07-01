@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Distributor\Tests\Feature;
+namespace Modules\Distributor\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Distributor\Models\Distributor;
+use Modules\Distributor\Models\Distributor;
 
 class DistributorTest extends TestCase
 {

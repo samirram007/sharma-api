@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\GstRegistrationType\Requests;
+namespace Modules\GstRegistrationType\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

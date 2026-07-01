@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournalGodownEntryPurge\Services;
+namespace Modules\StockJournalGodownEntryPurge\Services;
 
-use App\Modules\StockJournalGodownEntryPurge\Contracts\StockJournalGodownEntryPurgeServiceInterface;
-use App\Modules\StockJournalGodownEntryPurge\Models\StockJournalGodownEntryPurge;
+use Modules\StockJournalGodownEntryPurge\Contracts\StockJournalGodownEntryPurgeServiceInterface;
+use Modules\StockJournalGodownEntryPurge\Models\StockJournalGodownEntryPurge;
 use Illuminate\Database\Eloquent\Collection;
 
 class StockJournalGodownEntryPurgeService implements StockJournalGodownEntryPurgeServiceInterface

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\AccountingPeriod\Tests\Feature;
+namespace Modules\AccountingPeriod\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\AccountingPeriod\Models\AccountingPeriod;
+use Modules\AccountingPeriod\Models\AccountingPeriod;
 
 class AccountingPeriodTest extends TestCase
 {

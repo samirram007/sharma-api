@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournal\Models;
+namespace Modules\StockJournal\Models;
 
-use App\Modules\StockJournalEntry\Models\StockJournalEntry;
-use App\Modules\Voucher\Models\Voucher;
+use Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

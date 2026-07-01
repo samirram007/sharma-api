@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\VoucherClassification\Requests;
+namespace Modules\VoucherClassification\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

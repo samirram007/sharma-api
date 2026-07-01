@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\GstRegistrationType\Providers;
+namespace Modules\GstRegistrationType\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\GstRegistrationType\Contracts\GstRegistrationTypeServiceInterface;
-use App\Modules\GstRegistrationType\Services\GstRegistrationTypeService;
+use Modules\GstRegistrationType\Contracts\GstRegistrationTypeServiceInterface;
+use Modules\GstRegistrationType\Services\GstRegistrationTypeService;
 
 class GstRegistrationTypeServiceProvider extends ServiceProvider
 {

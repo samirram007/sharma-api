@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Distributor\Services;
+namespace Modules\Distributor\Services;
 
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\Distributor\Contracts\DistributorServiceInterface;
-use App\Modules\Distributor\Models\Distributor;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\Distributor\Contracts\DistributorServiceInterface;
+use Modules\Distributor\Models\Distributor;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 

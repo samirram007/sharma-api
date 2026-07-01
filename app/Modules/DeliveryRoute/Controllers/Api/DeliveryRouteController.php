@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\DeliveryRoute\Controllers\Api;
+namespace Modules\DeliveryRoute\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\DeliveryRoute\Contracts\DeliveryRouteServiceInterface;
-use App\Modules\DeliveryRoute\Resources\DeliveryRouteResource;
-use App\Modules\DeliveryRoute\Resources\DeliveryRouteCollection;
-use App\Modules\DeliveryRoute\Requests\DeliveryRouteRequest;
+use Modules\DeliveryRoute\Contracts\DeliveryRouteServiceInterface;
+use Modules\DeliveryRoute\Resources\DeliveryRouteResource;
+use Modules\DeliveryRoute\Resources\DeliveryRouteCollection;
+use Modules\DeliveryRoute\Requests\DeliveryRouteRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

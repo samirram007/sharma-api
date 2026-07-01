@@ -1,11 +1,12 @@
 <?php
-namespace App\Modules\AccountGroup\Facades;
+namespace Modules\AccountGroup\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Modules\AccountGroup\Contracts\AccountGroupServiceInterface;
 class AccountGroupFacade extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'account_group_service';
+        return AccountGroupServiceInterface::class;
     }
 }

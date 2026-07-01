@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Modules\Auth\Controllers\Api;
+namespace Modules\Auth\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Auth\Contracts\AuthServiceInterface;
-use App\Modules\Auth\Requests\ChangePasswordRequest;
-use App\Modules\Auth\Requests\LoginRequest;
-use App\Modules\Auth\Requests\RegisterRequest;
+use Modules\Auth\Contracts\AuthServiceInterface;
+use Modules\Auth\Requests\ChangePasswordRequest;
+use Modules\Auth\Requests\LoginRequest;
+use Modules\Auth\Requests\RegisterRequest;
 
-use App\Modules\User\Contracts\UserServiceInterface;
-use App\Modules\User\Resources\UserResource;
+use Modules\User\Contracts\UserServiceInterface;
+use Modules\User\Resources\UserResource;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -109,6 +110,37 @@ class AuthController extends Controller
         $token = $this->authService->refresh();
         return $this->respondWithToken($token, 'Token refreshed successfully!');
 
+    }
+
+    public function menu(): JsonResponse
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthenticated.'], 401);
+        }
+
+        $permissions = [];
+        foreach ($user->roles as $role) {
+            foreach ($role->permissions as $permission) {
+                if ($permission->is_allowed && $permission->feature) {
+                    $permissions[] = $permission->feature->code;
+                }
+            }
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => array_values(array_unique($permissions)),
+        ]);
+    }
+
+    public function menuTree(): JsonResponse
+    {
+        $tree = $this->authService->menuTree();
+        return response()->json([
+            'status' => 'success',
+            'data'   => $tree,
+        ]);
     }
 
     protected function respondWithToken(string $token, string $message = 'Authenticated successfully!')

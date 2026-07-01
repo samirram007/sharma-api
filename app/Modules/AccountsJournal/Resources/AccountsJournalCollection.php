@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\AccountsJournal\Resources;
+namespace Modules\AccountsJournal\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\VoucherEntry\Database\Seeders;
+namespace Modules\VoucherEntry\Database\Seeders;
 
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use App\Modules\VoucherEntry\Models\VoucherEntry;
+use Modules\VoucherEntry\Models\VoucherEntry;
 use Illuminate\Support\Facades\DB;
 
 class VoucherEntrySeeder extends Seeder

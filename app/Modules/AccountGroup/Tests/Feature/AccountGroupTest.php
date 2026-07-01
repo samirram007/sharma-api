@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\AccountGroup\Tests\Feature;
+namespace Modules\AccountGroup\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\AccountGroup\Models\AccountGroup;
+use Modules\AccountGroup\Models\AccountGroup;
 
 class AccountGroupTest extends TestCase
 {

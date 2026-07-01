@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Designation\Database\Seeders;
+namespace Modules\Designation\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Designation\Models\Designation;
+use Modules\Designation\Models\Designation;
 
 class DesignationSeeder extends Seeder
 {

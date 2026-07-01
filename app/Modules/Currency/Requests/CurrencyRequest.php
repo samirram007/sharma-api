@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Currency\Requests;
+namespace Modules\Currency\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

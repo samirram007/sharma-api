@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\PhysicalStockCount\Requests;
+namespace Modules\PhysicalStockCount\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

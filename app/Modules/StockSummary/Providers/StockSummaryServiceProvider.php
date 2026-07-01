@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockSummary\Providers;
+namespace Modules\StockSummary\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockSummary\Contracts\StockSummaryServiceInterface;
-use App\Modules\StockSummary\Services\StockSummaryService;
+use Modules\StockSummary\Contracts\StockSummaryServiceInterface;
+use Modules\StockSummary\Services\StockSummaryService;
 
 class StockSummaryServiceProvider extends ServiceProvider
 {

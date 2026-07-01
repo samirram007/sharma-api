@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournalEntry\Contracts;
+namespace Modules\StockJournalEntry\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\StockJournalEntry\Models\StockJournalEntry;
 
 interface StockJournalEntryServiceInterface
 {

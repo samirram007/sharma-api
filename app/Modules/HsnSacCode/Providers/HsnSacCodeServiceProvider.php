@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\HsnSacCode\Providers;
+namespace Modules\HsnSacCode\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\HsnSacCode\Contracts\HsnSacCodeServiceInterface;
-use App\Modules\HsnSacCode\Services\HsnSacCodeService;
+use Modules\HsnSacCode\Contracts\HsnSacCodeServiceInterface;
+use Modules\HsnSacCode\Services\HsnSacCodeService;
 
 class HsnSacCodeServiceProvider extends ServiceProvider
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\DistributorBook\Providers;
+namespace Modules\DistributorBook\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\DistributorBook\Contracts\DistributorBookServiceInterface;
-use App\Modules\DistributorBook\Services\DistributorBookService;
+use Modules\DistributorBook\Contracts\DistributorBookServiceInterface;
+use Modules\DistributorBook\Services\DistributorBookService;
 
 class DistributorBookServiceProvider extends ServiceProvider
 {

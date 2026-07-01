@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Purchase\Providers;
+namespace Modules\Purchase\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Purchase\Contracts\PurchaseServiceInterface;
-use App\Modules\Purchase\Services\PurchaseService;
+use Modules\Purchase\Contracts\PurchaseServiceInterface;
+use Modules\Purchase\Services\PurchaseService;
 
 class PurchaseServiceProvider extends ServiceProvider
 {

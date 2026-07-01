@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StorageUnit\Providers;
+namespace Modules\StorageUnit\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\StorageUnit\Contracts\StorageUnitServiceInterface;
-use App\Modules\StorageUnit\Services\StorageUnitService;
+use Modules\StorageUnit\Contracts\StorageUnitServiceInterface;
+use Modules\StorageUnit\Services\StorageUnitService;
 
 class StorageUnitServiceProvider extends ServiceProvider
 {

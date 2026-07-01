@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DeliveryVehicle\Services;
+namespace Modules\DeliveryVehicle\Services;
 
-use App\Modules\DeliveryVehicle\Contracts\DeliveryVehicleServiceInterface;
-use App\Modules\DeliveryVehicle\Models\DeliveryVehicle;
+use Modules\DeliveryVehicle\Contracts\DeliveryVehicleServiceInterface;
+use Modules\DeliveryVehicle\Models\DeliveryVehicle;
 use Illuminate\Database\Eloquent\Collection;
 
 class DeliveryVehicleService implements DeliveryVehicleServiceInterface

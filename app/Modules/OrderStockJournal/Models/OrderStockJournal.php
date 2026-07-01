@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\OrderStockJournal\Models;
+namespace Modules\OrderStockJournal\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

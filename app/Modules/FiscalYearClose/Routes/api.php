@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\FiscalYearClose\Controllers\Api\FiscalYearCloseController;
+use Modules\FiscalYearClose\Controllers\Api\FiscalYearCloseController;
 
 Route::middleware('jwt.cookies')->group(function () {
     Route::get('fiscal-years/{fiscalYear}/close-preview', [FiscalYearCloseController::class, 'preview']);

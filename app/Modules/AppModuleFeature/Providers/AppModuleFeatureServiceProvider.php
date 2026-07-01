@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AppModuleFeature\Providers;
+namespace Modules\AppModuleFeature\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\AppModuleFeature\Contracts\AppModuleFeatureServiceInterface;
-use App\Modules\AppModuleFeature\Services\AppModuleFeatureService;
+use Modules\AppModuleFeature\Contracts\AppModuleFeatureServiceInterface;
+use Modules\AppModuleFeature\Services\AppModuleFeatureService;
 
 class AppModuleFeatureServiceProvider extends ServiceProvider
 {

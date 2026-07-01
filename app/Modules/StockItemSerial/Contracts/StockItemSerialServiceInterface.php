@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemSerial\Contracts;
+namespace Modules\StockItemSerial\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\StockItemSerial\Models\StockItemSerial;
+use Modules\StockItemSerial\Models\StockItemSerial;
 
 interface StockItemSerialServiceInterface
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\GstRegistrationType\Controllers\Api;
+namespace Modules\GstRegistrationType\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\GstRegistrationType\Contracts\GstRegistrationTypeServiceInterface;
-use App\Modules\GstRegistrationType\Resources\GstRegistrationTypeResource;
-use App\Modules\GstRegistrationType\Resources\GstRegistrationTypeCollection;
-use App\Modules\GstRegistrationType\Requests\GstRegistrationTypeRequest;
+use Modules\GstRegistrationType\Contracts\GstRegistrationTypeServiceInterface;
+use Modules\GstRegistrationType\Resources\GstRegistrationTypeResource;
+use Modules\GstRegistrationType\Resources\GstRegistrationTypeCollection;
+use Modules\GstRegistrationType\Requests\GstRegistrationTypeRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

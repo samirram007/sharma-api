@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\TestItem\Tests\Feature;
+namespace Modules\TestItem\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\TestItem\Models\TestItem;
+use Modules\TestItem\Models\TestItem;
 
 class TestItemTest extends TestCase
 {

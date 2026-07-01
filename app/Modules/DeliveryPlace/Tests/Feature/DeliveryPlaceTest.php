@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\DeliveryPlace\Tests\Feature;
+namespace Modules\DeliveryPlace\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\DeliveryPlace\Models\DeliveryPlace;
+use Modules\DeliveryPlace\Models\DeliveryPlace;
 
 class DeliveryPlaceTest extends TestCase
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\PaymentVoucher\Database\Seeders;
+namespace Modules\PaymentVoucher\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\PaymentVoucher\Models\PaymentVoucher;
+use Modules\PaymentVoucher\Models\PaymentVoucher;
 
 class PaymentVoucherSeeder extends Seeder
 {

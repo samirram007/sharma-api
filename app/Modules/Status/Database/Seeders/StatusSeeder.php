@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Status\Database\Seeders;
+namespace Modules\Status\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Status\Models\Status;
+use Modules\Status\Models\Status;
 
 class StatusSeeder extends Seeder
 {

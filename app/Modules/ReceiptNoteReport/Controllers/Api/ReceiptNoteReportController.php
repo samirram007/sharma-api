@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\ReceiptNoteReport\Controllers\Api;
+namespace Modules\ReceiptNoteReport\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessCollection;
 
-use App\Modules\ReceiptNoteReport\Services\ReceiptNoteReportService;
-use App\Modules\Voucher\Resources\VoucherCollection;
+use Modules\ReceiptNoteReport\Services\ReceiptNoteReportService;
+use Modules\Voucher\Resources\VoucherCollection;
 
 use Illuminate\Http\Request;
 

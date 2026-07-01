@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\PaymentVoucher\Services;
+namespace Modules\PaymentVoucher\Services;
 
-use App\Modules\PaymentVoucher\Contracts\PaymentVoucherServiceInterface;
-use App\Modules\PaymentVoucher\Models\PaymentVoucher;
+use Modules\PaymentVoucher\Contracts\PaymentVoucherServiceInterface;
+use Modules\PaymentVoucher\Models\PaymentVoucher;
 use Illuminate\Database\Eloquent\Collection;
 
 class PaymentVoucherService implements PaymentVoucherServiceInterface

@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Modules\Freight\Services;
+namespace Modules\Freight\Services;
 
-use App\Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\AccountLedger\Services\AccountLedgerService;
-use App\Modules\Freight\Contracts\FreightServiceInterface;
-use App\Modules\Freight\Models\Freight;
-use App\Modules\Godown\Contracts\GodownServiceInterface;
-use App\Modules\Godown\Models\Godown;
-use App\Modules\Voucher\Contracts\VoucherServiceInterface;
-use App\Modules\Voucher\Models\Voucher;
-use App\Modules\Voucher\Requests\VoucherRequest;
-use App\Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
-use App\Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
-use App\Modules\VoucherDispatchDetail\Services\VoucherDispatchDetailService;
-use App\Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
+use Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\AccountLedger\Services\AccountLedgerService;
+use Modules\Freight\Contracts\FreightServiceInterface;
+use Modules\Freight\Models\Freight;
+use Modules\Godown\Contracts\GodownServiceInterface;
+use Modules\Godown\Models\Godown;
+use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Models\Voucher;
+use Modules\Voucher\Requests\VoucherRequest;
+use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
+use Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
+use Modules\VoucherDispatchDetail\Services\VoucherDispatchDetailService;
+use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;

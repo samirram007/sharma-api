@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Holiday\Tests\Feature;
+namespace Modules\Holiday\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Holiday\Models\Holiday;
+use Modules\Holiday\Models\Holiday;
 
 class HolidayTest extends TestCase
 {

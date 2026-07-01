@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Distributor\Resources;
+namespace Modules\Distributor\Resources;
 
-use App\Modules\AccountLedger\Resources\AccountLedgerResource;
-use App\Modules\Address\Resources\AddressResource;
-use App\Modules\GstRegistrationType\Resources\GstRegistrationTypeResource;
+use Modules\AccountLedger\Resources\AccountLedgerResource;
+use Modules\Address\Resources\AddressResource;
+use Modules\GstRegistrationType\Resources\GstRegistrationTypeResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

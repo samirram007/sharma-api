@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Status\Tests\Feature;
+namespace Modules\Status\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Status\Models\Status;
+use Modules\Status\Models\Status;
 
 class StatusTest extends TestCase
 {

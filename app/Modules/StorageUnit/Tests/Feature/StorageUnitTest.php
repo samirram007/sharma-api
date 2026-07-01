@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StorageUnit\Tests\Feature;
+namespace Modules\StorageUnit\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StorageUnit\Models\StorageUnit;
+use Modules\StorageUnit\Models\StorageUnit;
 
 class StorageUnitTest extends TestCase
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Setting\Contracts;
+namespace Modules\Setting\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Setting\Models\Setting;
+use Modules\Setting\Models\Setting;
 
 interface SettingServiceInterface
 {

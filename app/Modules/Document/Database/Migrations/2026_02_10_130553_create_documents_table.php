@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('document_status_id');
             $table->string('link')->nullable();
 
-            $table->blamable();
+            // $table->blamable();
             $table->timestamps();
         });
     }

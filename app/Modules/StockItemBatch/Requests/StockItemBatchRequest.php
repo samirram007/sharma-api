@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockItemBatch\Requests;
+namespace Modules\StockItemBatch\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\CostAllocationRule\Resources;
+namespace Modules\CostAllocationRule\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

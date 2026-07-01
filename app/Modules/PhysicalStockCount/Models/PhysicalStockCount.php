@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\PhysicalStockCount\Models;
+namespace Modules\PhysicalStockCount\Models;
 
-use App\Modules\FiscalYear\Models\FiscalYear;
-use App\Modules\Godown\Models\Godown;
-use App\Modules\PhysicalStockCount\Models\PhysicalStockCountItem;
-use App\Modules\User\Models\User;
+use Modules\FiscalYear\Models\FiscalYear;
+use Modules\Godown\Models\Godown;
+use Modules\PhysicalStockCount\Models\PhysicalStockCountItem;
+use Modules\User\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

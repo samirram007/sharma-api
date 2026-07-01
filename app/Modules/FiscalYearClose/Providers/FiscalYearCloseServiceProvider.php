@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\FiscalYearClose\Providers;
+namespace Modules\FiscalYearClose\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\FiscalYearClose\Contracts\FiscalYearCloseServiceInterface;
-use App\Modules\FiscalYearClose\Services\FiscalYearCloseService;
+use Modules\FiscalYearClose\Contracts\FiscalYearCloseServiceInterface;
+use Modules\FiscalYearClose\Services\FiscalYearCloseService;
 
 class FiscalYearCloseServiceProvider extends ServiceProvider
 {

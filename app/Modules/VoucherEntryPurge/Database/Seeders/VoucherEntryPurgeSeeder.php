@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherEntryPurge\Database\Seeders;
+namespace Modules\VoucherEntryPurge\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\VoucherEntryPurge\Models\VoucherEntryPurge;
+use Modules\VoucherEntryPurge\Models\VoucherEntryPurge;
 
 class VoucherEntryPurgeSeeder extends Seeder
 {

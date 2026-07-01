@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockItemSerial\Providers;
+namespace Modules\StockItemSerial\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockItemSerial\Contracts\StockItemSerialServiceInterface;
-use App\Modules\StockItemSerial\Services\StockItemSerialService;
+use Modules\StockItemSerial\Contracts\StockItemSerialServiceInterface;
+use Modules\StockItemSerial\Services\StockItemSerialService;
 
 class StockItemSerialServiceProvider extends ServiceProvider
 {

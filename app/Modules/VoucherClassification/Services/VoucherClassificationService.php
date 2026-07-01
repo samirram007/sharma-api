@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherClassification\Services;
+namespace Modules\VoucherClassification\Services;
 
-use App\Modules\VoucherClassification\Contracts\VoucherClassificationServiceInterface;
-use App\Modules\VoucherClassification\Models\VoucherClassification;
+use Modules\VoucherClassification\Contracts\VoucherClassificationServiceInterface;
+use Modules\VoucherClassification\Models\VoucherClassification;
 use Illuminate\Database\Eloquent\Collection;
 
 class VoucherClassificationService implements VoucherClassificationServiceInterface

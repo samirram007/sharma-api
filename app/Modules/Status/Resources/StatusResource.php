@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Status\Resources;
+namespace Modules\Status\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessResource;

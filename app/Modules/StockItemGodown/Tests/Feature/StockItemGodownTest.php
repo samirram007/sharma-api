@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockItemGodown\Tests\Feature;
+namespace Modules\StockItemGodown\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StockItemGodown\Models\StockItemGodown;
+use Modules\StockItemGodown\Models\StockItemGodown;
 
 class StockItemGodownTest extends TestCase
 {

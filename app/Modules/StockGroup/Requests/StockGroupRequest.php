@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockGroup\Requests;
+namespace Modules\StockGroup\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

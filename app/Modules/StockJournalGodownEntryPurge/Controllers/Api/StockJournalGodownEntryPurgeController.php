@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockJournalGodownEntryPurge\Controllers\Api;
+namespace Modules\StockJournalGodownEntryPurge\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StockJournalGodownEntryPurge\Contracts\StockJournalGodownEntryPurgeServiceInterface;
-use App\Modules\StockJournalGodownEntryPurge\Resources\StockJournalGodownEntryPurgeResource;
-use App\Modules\StockJournalGodownEntryPurge\Resources\StockJournalGodownEntryPurgeCollection;
-use App\Modules\StockJournalGodownEntryPurge\Requests\StockJournalGodownEntryPurgeRequest;
+use Modules\StockJournalGodownEntryPurge\Contracts\StockJournalGodownEntryPurgeServiceInterface;
+use Modules\StockJournalGodownEntryPurge\Resources\StockJournalGodownEntryPurgeResource;
+use Modules\StockJournalGodownEntryPurge\Resources\StockJournalGodownEntryPurgeCollection;
+use Modules\StockJournalGodownEntryPurge\Requests\StockJournalGodownEntryPurgeRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

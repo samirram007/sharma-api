@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Currency\Resources;
+namespace Modules\Currency\Resources;
 
 use App\Http\Resources\SuccessResource;
 use Illuminate\Http\Request;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Agent\Providers;
+namespace Modules\Agent\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Agent\Contracts\AgentServiceInterface;
-use App\Modules\Agent\Services\AgentService;
+use Modules\Agent\Contracts\AgentServiceInterface;
+use Modules\Agent\Services\AgentService;
 
 class AgentServiceProvider extends ServiceProvider
 {

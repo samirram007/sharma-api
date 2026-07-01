@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\FiscalYearOpen\Contracts;
+namespace Modules\FiscalYearOpen\Contracts;
 
 interface FiscalYearOpenServiceInterface
 {

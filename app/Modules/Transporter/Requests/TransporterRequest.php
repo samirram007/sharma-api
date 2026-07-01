@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Transporter\Requests;
+namespace Modules\Transporter\Requests;
 
-use App\Modules\Address\Requests\AddressRequest;
+use Modules\Address\Requests\AddressRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TransporterRequest extends FormRequest

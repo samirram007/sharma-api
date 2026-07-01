@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournalBatchEntry\Database\Seeders;
+namespace Modules\StockJournalBatchEntry\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StockJournalBatchEntry\Models\StockJournalBatchEntry;
+use Modules\StockJournalBatchEntry\Models\StockJournalBatchEntry;
 
 class StockJournalBatchEntrySeeder extends Seeder
 {

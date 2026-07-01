@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Agent\Database\Seeders;
+namespace Modules\Agent\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Agent\Models\Agent;
+use Modules\Agent\Models\Agent;
 
 class AgentSeeder extends Seeder
 {

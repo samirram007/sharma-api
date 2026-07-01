@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Shift\Controllers\Api;
+namespace Modules\Shift\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Shift\Contracts\ShiftServiceInterface;
-use App\Modules\Shift\Resources\ShiftResource;
-use App\Modules\Shift\Resources\ShiftCollection;
-use App\Modules\Shift\Requests\ShiftRequest;
+use Modules\Shift\Contracts\ShiftServiceInterface;
+use Modules\Shift\Resources\ShiftResource;
+use Modules\Shift\Resources\ShiftCollection;
+use Modules\Shift\Requests\ShiftRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

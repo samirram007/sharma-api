@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\GstRegistrationType\Tests\Feature;
+namespace Modules\GstRegistrationType\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\GstRegistrationType\Models\GstRegistrationType;
+use Modules\GstRegistrationType\Models\GstRegistrationType;
 
 class GstRegistrationTypeTest extends TestCase
 {

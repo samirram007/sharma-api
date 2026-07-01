@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Freight\Providers;
+namespace Modules\Freight\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Freight\Contracts\FreightServiceInterface;
-use App\Modules\Freight\Services\FreightService;
+use Modules\Freight\Contracts\FreightServiceInterface;
+use Modules\Freight\Services\FreightService;
 
 class FreightServiceProvider extends ServiceProvider
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\LeaveType\Tests\Feature;
+namespace Modules\LeaveType\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\LeaveType\Models\LeaveType;
+use Modules\LeaveType\Models\LeaveType;
 
 class LeaveTypeTest extends TestCase
 {

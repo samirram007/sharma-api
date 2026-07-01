@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\CostCategory\Providers;
+namespace Modules\CostCategory\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\CostCategory\Contracts\CostCategoryServiceInterface;
-use App\Modules\CostCategory\Services\CostCategoryService;
+use Modules\CostCategory\Contracts\CostCategoryServiceInterface;
+use Modules\CostCategory\Services\CostCategoryService;
 
 class CostCategoryServiceProvider extends ServiceProvider
 {

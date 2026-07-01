@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournalSerialNoEntry\Services;
+namespace Modules\StockJournalSerialNoEntry\Services;
 
-use App\Modules\StockJournalSerialNoEntry\Contracts\StockJournalSerialNoEntryServiceInterface;
-use App\Modules\StockJournalSerialNoEntry\Models\StockJournalSerialNoEntry;
+use Modules\StockJournalSerialNoEntry\Contracts\StockJournalSerialNoEntryServiceInterface;
+use Modules\StockJournalSerialNoEntry\Models\StockJournalSerialNoEntry;
 use Illuminate\Database\Eloquent\Collection;
 
 class StockJournalSerialNoEntryService implements StockJournalSerialNoEntryServiceInterface

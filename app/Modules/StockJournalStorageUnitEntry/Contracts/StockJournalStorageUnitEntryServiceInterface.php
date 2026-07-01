@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournalStorageUnitEntry\Contracts;
+namespace Modules\StockJournalStorageUnitEntry\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\StockJournalStorageUnitEntry\Models\StockJournalStorageUnitEntry;
+use Modules\StockJournalStorageUnitEntry\Models\StockJournalStorageUnitEntry;
 
 interface StockJournalStorageUnitEntryServiceInterface
 {

@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Modules\FiscalYearClose\Services;
+namespace Modules\FiscalYearClose\Services;
 
 use App\Enums\MovementType;
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\FiscalYear\Models\FiscalYear;
-use App\Modules\FiscalYearClose\Contracts\FiscalYearCloseServiceInterface;
-use App\Modules\StockJournal\Contracts\StockJournalServiceInterface;
-use App\Modules\StockJournal\Models\StockJournal;
-use App\Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
-use App\Modules\Voucher\Models\Voucher;
-use App\Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
-use App\Modules\VoucherType\Models\VoucherType;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\FiscalYear\Models\FiscalYear;
+use Modules\FiscalYearClose\Contracts\FiscalYearCloseServiceInterface;
+use Modules\StockJournal\Contracts\StockJournalServiceInterface;
+use Modules\StockJournal\Models\StockJournal;
+use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
+use Modules\Voucher\Models\Voucher;
+use Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
+use Modules\VoucherType\Models\VoucherType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

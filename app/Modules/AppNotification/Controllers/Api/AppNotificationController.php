@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AppNotification\Controllers\Api;
+namespace Modules\AppNotification\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\AppNotification\Contracts\AppNotificationServiceInterface;
-use App\Modules\AppNotification\Resources\AppNotificationResource;
-use App\Modules\AppNotification\Resources\AppNotificationCollection;
+use Modules\AppNotification\Contracts\AppNotificationServiceInterface;
+use Modules\AppNotification\Resources\AppNotificationResource;
+use Modules\AppNotification\Resources\AppNotificationCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournalStorageUnitEntryPurge\Contracts;
+namespace Modules\StockJournalStorageUnitEntryPurge\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\StockJournalStorageUnitEntryPurge\Models\StockJournalStorageUnitEntryPurge;
+use Modules\StockJournalStorageUnitEntryPurge\Models\StockJournalStorageUnitEntryPurge;
 
 interface StockJournalStorageUnitEntryPurgeServiceInterface
 {

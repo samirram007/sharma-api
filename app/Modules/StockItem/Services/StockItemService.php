@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockItem\Services;
+namespace Modules\StockItem\Services;
 
-use App\Modules\StockItem\Contracts\StockItemServiceInterface;
-use App\Modules\StockItem\Models\StockItem;
-use App\Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\StockItem\Contracts\StockItemServiceInterface;
+use Modules\StockItem\Models\StockItem;
+use Modules\StockJournalEntry\Models\StockJournalEntry;
 use Illuminate\Database\Eloquent\Collection;
 
 class StockItemService implements StockItemServiceInterface

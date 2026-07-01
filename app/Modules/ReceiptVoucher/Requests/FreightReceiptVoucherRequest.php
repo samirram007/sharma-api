@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\ReceiptVoucher\Requests;
+namespace Modules\ReceiptVoucher\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

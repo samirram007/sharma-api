@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Modules\Employee\Resources;
+namespace Modules\Employee\Resources;
 
-use App\Modules\AccountLedger\Resources\AccountLedgerResource;
-use App\Modules\Address\Resources\AddressResource;
-use App\Modules\Department\Resources\DepartmentResource;
-use App\Modules\Designation\Resources\DesignationResource;
-use App\Modules\EmployeeGroup\Resources\EmployeeGroupResource;
-use App\Modules\Grade\Resources\GradeResource;
-use App\Modules\Shift\Resources\ShiftResource;
-use App\Modules\User\Resources\UserResource;
+use Modules\AccountLedger\Resources\AccountLedgerResource;
+use Modules\Address\Resources\AddressResource;
+use Modules\Department\Resources\DepartmentResource;
+use Modules\Designation\Resources\DesignationResource;
+use Modules\EmployeeGroup\Resources\EmployeeGroupResource;
+use Modules\Grade\Resources\GradeResource;
+use Modules\Shift\Resources\ShiftResource;
+use Modules\User\Resources\UserResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

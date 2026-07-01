@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\LeaveType\Database\Seeders;
+namespace Modules\LeaveType\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\LeaveType\Models\LeaveType;
+use Modules\LeaveType\Models\LeaveType;
 
 class LeaveTypeSeeder extends Seeder
 {

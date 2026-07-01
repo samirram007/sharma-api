@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\DeliveryVehicle\Providers;
+namespace Modules\DeliveryVehicle\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\DeliveryVehicle\Contracts\DeliveryVehicleServiceInterface;
-use App\Modules\DeliveryVehicle\Services\DeliveryVehicleService;
+use Modules\DeliveryVehicle\Contracts\DeliveryVehicleServiceInterface;
+use Modules\DeliveryVehicle\Services\DeliveryVehicleService;
 
 class DeliveryVehicleServiceProvider extends ServiceProvider
 {

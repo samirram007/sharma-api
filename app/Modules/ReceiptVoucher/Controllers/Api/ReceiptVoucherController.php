@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Modules\ReceiptVoucher\Controllers\Api;
+namespace Modules\ReceiptVoucher\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\ReceiptVoucher\Contracts\ReceiptVoucherServiceInterface;
-use App\Modules\ReceiptVoucher\Requests\FreightReceiptVoucherRequest;
-use App\Modules\ReceiptVoucher\Resources\ReceiptVoucherResource;
+use Modules\ReceiptVoucher\Contracts\ReceiptVoucherServiceInterface;
+use Modules\ReceiptVoucher\Requests\FreightReceiptVoucherRequest;
+use Modules\ReceiptVoucher\Resources\ReceiptVoucherResource;
 
-use App\Modules\ReceiptVoucher\Requests\ReceiptVoucherRequest;
+use Modules\ReceiptVoucher\Requests\ReceiptVoucherRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 
-use App\Modules\Voucher\Resources\VoucherCollection;
-use App\Modules\Voucher\Resources\VoucherResource;
+use Modules\Voucher\Resources\VoucherCollection;
+use Modules\Voucher\Resources\VoucherResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 

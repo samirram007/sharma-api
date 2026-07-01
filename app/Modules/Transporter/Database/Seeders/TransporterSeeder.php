@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Transporter\Database\Seeders;
+namespace Modules\Transporter\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Transporter\Models\Transporter;
+use Modules\Transporter\Models\Transporter;
 
 class TransporterSeeder extends Seeder
 {

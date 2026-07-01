@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\VoucherEntry\Resources;
+namespace Modules\VoucherEntry\Resources;
 
-use App\Modules\AccountLedger\Resources\AccountLedgerResource;
+use Modules\AccountLedger\Resources\AccountLedgerResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

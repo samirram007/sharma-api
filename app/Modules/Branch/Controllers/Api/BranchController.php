@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Branch\Controllers\Api;
+namespace Modules\Branch\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Branch\Contracts\BranchServiceInterface;
-use App\Modules\Branch\Resources\BranchResource;
-use App\Modules\Branch\Resources\BranchCollection;
-use App\Modules\Branch\Requests\BranchRequest;
+use Modules\Branch\Contracts\BranchServiceInterface;
+use Modules\Branch\Resources\BranchResource;
+use Modules\Branch\Resources\BranchCollection;
+use Modules\Branch\Requests\BranchRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

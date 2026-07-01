@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\PaymentVoucher\Resources;
+namespace Modules\PaymentVoucher\Resources;
 
 use Illuminate\Http\Request;
 

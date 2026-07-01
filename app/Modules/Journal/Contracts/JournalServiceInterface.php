@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Journal\Contracts;
+namespace Modules\Journal\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Journal\Models\Journal;
+use Modules\Journal\Models\Journal;
 
 interface JournalServiceInterface
 {

@@ -15,7 +15,7 @@ This file gives Freebuff context about your project: goals, commands, convention
 - **Testing:** Pest PHP ^4.7 with `pest-plugin-laravel`; phpunit.xml uses SQLite `:memory:` for testing
 - **Database:** Custom DB connection configured in `.env` (likely MySQL/SQLite per env)
 
-### Modular structure (`app/Modules/`)
+### Modular structure (`Modules\/`)
 Each module (e.g., `Voucher`, `StockItemBrand`, `Supplier`) follows a strict convention:
 ```
 ModuleName/
@@ -27,7 +27,7 @@ ModuleName/
   Routes/        api.php
   Services/      ModuleNameService.php
 ```
-- Modules auto-register via `ModuleServiceLoader` which scans `app/Modules/*` and loads each `*ServiceProvider`.
+- Modules auto-register via `ModuleServiceLoader` which scans `Modules\/*` and loads each `*ServiceProvider`.
 - Each module has a Service Interface + Service class bound in its ServiceProvider.
 - Routes are namespaced under the module route file.
 

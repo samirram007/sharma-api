@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Voucher\Database\Seeders;
+namespace Modules\Voucher\Database\Seeders;
 
-use App\Modules\Voucher\Models\Voucher;
-use App\Modules\VoucherEntry\Models\VoucherEntry;
+use Modules\Voucher\Models\Voucher;
+use Modules\VoucherEntry\Models\VoucherEntry;
 use Illuminate\Database\Seeder;
 
 use Carbon\Carbon;

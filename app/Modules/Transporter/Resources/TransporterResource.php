@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Transporter\Resources;
+namespace Modules\Transporter\Resources;
 
-use App\Modules\AccountLedger\Resources\AccountLedgerResource;
-use App\Modules\Address\Resources\AddressResource;
+use Modules\AccountLedger\Resources\AccountLedgerResource;
+use Modules\Address\Resources\AddressResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

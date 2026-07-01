@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Language\Controllers\Api;
+namespace Modules\Language\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Language\Contracts\LanguageServiceInterface;
-use App\Modules\Language\Resources\LanguageResource;
-use App\Modules\Language\Resources\LanguageCollection;
-use App\Modules\Language\Requests\LanguageRequest;
+use Modules\Language\Contracts\LanguageServiceInterface;
+use Modules\Language\Resources\LanguageResource;
+use Modules\Language\Resources\LanguageCollection;
+use Modules\Language\Requests\LanguageRequest;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;

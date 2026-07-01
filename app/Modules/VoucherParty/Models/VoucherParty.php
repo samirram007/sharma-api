@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\VoucherParty\Models;
+namespace Modules\VoucherParty\Models;
 
-use App\Modules\Country\Models\Country;
-use App\Modules\GstRegistrationType\Models\GstRegistrationType;
-use App\Modules\State\Models\State;
-use App\Modules\Voucher\Models\Voucher;
+use Modules\Country\Models\Country;
+use Modules\GstRegistrationType\Models\GstRegistrationType;
+use Modules\State\Models\State;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

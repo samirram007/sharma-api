@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\VoucherClassification\Database\Seeders;
+namespace Modules\VoucherClassification\Database\Seeders;
 
 use DB;
 use Illuminate\Database\Seeder;
-use App\Modules\VoucherClassification\Models\VoucherClassification;
+use Modules\VoucherClassification\Models\VoucherClassification;
 
 class VoucherClassificationSeeder extends Seeder
 {

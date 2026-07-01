@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\DeliveryPlace\Providers;
+namespace Modules\DeliveryPlace\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\DeliveryPlace\Contracts\DeliveryPlaceServiceInterface;
-use App\Modules\DeliveryPlace\Services\DeliveryPlaceService;
+use Modules\DeliveryPlace\Contracts\DeliveryPlaceServiceInterface;
+use Modules\DeliveryPlace\Services\DeliveryPlaceService;
 
 class DeliveryPlaceServiceProvider extends ServiceProvider
 {

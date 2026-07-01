@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\State\Controllers\Api;
+namespace Modules\State\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\State\Contracts\StateServiceInterface;
-use App\Modules\State\Resources\StateResource;
-use App\Modules\State\Resources\StateCollection;
-use App\Modules\State\Requests\StateRequest;
+use Modules\State\Contracts\StateServiceInterface;
+use Modules\State\Resources\StateResource;
+use Modules\State\Resources\StateCollection;
+use Modules\State\Requests\StateRequest;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;

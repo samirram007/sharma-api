@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockItemSerial\Requests;
+namespace Modules\StockItemSerial\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

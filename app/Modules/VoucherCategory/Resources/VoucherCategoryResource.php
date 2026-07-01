@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherCategory\Resources;
+namespace Modules\VoucherCategory\Resources;
 
-use App\Modules\VoucherType\Resources\VoucherTypeCollection;
-use App\Modules\VoucherType\Resources\VoucherTypeResource;
+use Modules\VoucherType\Resources\VoucherTypeCollection;
+use Modules\VoucherType\Resources\VoucherTypeResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AccountLedger\Models;
+namespace Modules\AccountLedger\Models;
 
-use App\Modules\VoucherEntry\Models\VoucherEntry;
+use Modules\VoucherEntry\Models\VoucherEntry;
 use Illuminate\Database\Eloquent\Model;
-use App\Modules\AccountGroup\Models\AccountGroup;
-use App\Modules\AccountNature\Models\AccountNature;
+use Modules\AccountGroup\Models\AccountGroup;
+use Modules\AccountNature\Models\AccountNature;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;

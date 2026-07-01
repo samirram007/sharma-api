@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\StockJournalStorageUnitEntry\Resources;
+namespace Modules\StockJournalStorageUnitEntry\Resources;
 
-use App\Modules\StorageUnit\Resources\StorageUnitResource;
+use Modules\StorageUnit\Resources\StorageUnitResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

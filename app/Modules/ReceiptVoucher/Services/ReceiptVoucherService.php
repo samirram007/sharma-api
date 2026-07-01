@@ -1,12 +1,12 @@
 <?php
-namespace App\Modules\ReceiptVoucher\Services;
+namespace Modules\ReceiptVoucher\Services;
 
-use App\Modules\ReceiptVoucher\Contracts\ReceiptVoucherServiceInterface;
-use App\Modules\ReceiptVoucher\Models\ReceiptVoucher;
-use App\Modules\Voucher\Contracts\VoucherServiceInterface;
-use App\Modules\Voucher\Models\Voucher;
-use App\Modules\Voucher\Requests\VoucherRequest;
-use App\Modules\VoucherReference\Models\VoucherReference;
+use Modules\ReceiptVoucher\Contracts\ReceiptVoucherServiceInterface;
+use Modules\ReceiptVoucher\Models\ReceiptVoucher;
+use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Models\Voucher;
+use Modules\Voucher\Requests\VoucherRequest;
+use Modules\VoucherReference\Models\VoucherReference;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Validator;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StorageUnit\Controllers\Api;
+namespace Modules\StorageUnit\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StorageUnit\Contracts\StorageUnitServiceInterface;
-use App\Modules\StorageUnit\Resources\StorageUnitResource;
-use App\Modules\StorageUnit\Resources\StorageUnitCollection;
-use App\Modules\StorageUnit\Requests\StorageUnitRequest;
+use Modules\StorageUnit\Contracts\StorageUnitServiceInterface;
+use Modules\StorageUnit\Resources\StorageUnitResource;
+use Modules\StorageUnit\Resources\StorageUnitCollection;
+use Modules\StorageUnit\Requests\StorageUnitRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

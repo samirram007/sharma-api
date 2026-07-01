@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\VoucherDispatchDetail\Resources;
+namespace Modules\VoucherDispatchDetail\Resources;
 
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;
-use App\Modules\StockUnit\Resources\StockUnitResource;
+use Modules\StockUnit\Resources\StockUnitResource;
 
 class VoucherDispatchDetailResource extends SuccessResource
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Receipt\Tests\Feature;
+namespace Modules\Receipt\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Receipt\Models\Receipt;
+use Modules\Receipt\Models\Receipt;
 
 class ReceiptTest extends TestCase
 {

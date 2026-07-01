@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Godown\Resources;
+namespace Modules\Godown\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

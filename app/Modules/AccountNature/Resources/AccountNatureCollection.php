@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\AccountNature\Resources;
+namespace Modules\AccountNature\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

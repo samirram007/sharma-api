@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Employee\Providers;
+namespace Modules\Employee\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Employee\Contracts\EmployeeServiceInterface;
-use App\Modules\Employee\Services\EmployeeService;
+use Modules\Employee\Contracts\EmployeeServiceInterface;
+use Modules\Employee\Services\EmployeeService;
 
 class EmployeeServiceProvider extends ServiceProvider
 {

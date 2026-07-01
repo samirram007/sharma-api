@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockJournal\Requests;
+namespace Modules\StockJournal\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Modules\StockItem\Database\Seeders;
+namespace Modules\StockItem\Database\Seeders;
 
 
 
-use App\Modules\StockCategory\Models\StockCategory;
-use App\Modules\StockGroup\Models\StockGroup;
-use App\Modules\StockItemBrand\Models\StockItemBrand;
-use App\Modules\StockUnit\Models\StockUnit;
-use App\Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
+use Modules\StockCategory\Models\StockCategory;
+use Modules\StockGroup\Models\StockGroup;
+use Modules\StockItemBrand\Models\StockItemBrand;
+use Modules\StockUnit\Models\StockUnit;
+use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StockItem\Models\StockItem;
+use Modules\StockItem\Models\StockItem;
 
 class StockItemSeeder extends Seeder
 {

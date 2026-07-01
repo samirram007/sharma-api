@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Company\Contracts;
+namespace Modules\Company\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Company\Models\Company;
+use Modules\Company\Models\Company;
 
 interface CompanyServiceInterface
 {

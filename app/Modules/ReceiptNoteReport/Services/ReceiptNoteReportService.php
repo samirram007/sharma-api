@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\ReceiptNoteReport\Services;
+namespace Modules\ReceiptNoteReport\Services;
 
-use App\Modules\Voucher\Contracts\VoucherServiceInterface;
-use App\Modules\Voucher\Models\Voucher;
+use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;

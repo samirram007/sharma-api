@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Supplier\Tests\Feature;
+namespace Modules\Supplier\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Supplier\Models\Supplier;
+use Modules\Supplier\Models\Supplier;
 
 class SupplierTest extends TestCase
 {

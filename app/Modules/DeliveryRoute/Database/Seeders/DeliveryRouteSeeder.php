@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DeliveryRoute\Database\Seeders;
+namespace Modules\DeliveryRoute\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\DeliveryRoute\Models\DeliveryRoute;
+use Modules\DeliveryRoute\Models\DeliveryRoute;
 
 class DeliveryRouteSeeder extends Seeder
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Supplier\Requests;
+namespace Modules\Supplier\Requests;
 
 use App\Enums\AddressType;
-use App\Modules\Address\Requests\AddressRequest;
+use Modules\Address\Requests\AddressRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SupplierRequest extends FormRequest

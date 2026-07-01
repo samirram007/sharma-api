@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Language\Services;
+namespace Modules\Language\Services;
 
-use App\Modules\Language\Contracts\LanguageServiceInterface;
-use App\Modules\Language\Models\Language;
+use Modules\Language\Contracts\LanguageServiceInterface;
+use Modules\Language\Models\Language;
 use Illuminate\Database\Eloquent\Collection;
 
 class LanguageService implements LanguageServiceInterface

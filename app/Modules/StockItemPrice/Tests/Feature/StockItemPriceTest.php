@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockItemPrice\Tests\Feature;
+namespace Modules\StockItemPrice\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StockItemPrice\Models\StockItemPrice;
+use Modules\StockItemPrice\Models\StockItemPrice;
 
 class StockItemPriceTest extends TestCase
 {

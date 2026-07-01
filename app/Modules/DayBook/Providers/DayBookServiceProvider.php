@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\DayBook\Providers;
+namespace Modules\DayBook\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\DayBook\Contracts\DayBookServiceInterface;
-use App\Modules\DayBook\Services\DayBookService;
+use Modules\DayBook\Contracts\DayBookServiceInterface;
+use Modules\DayBook\Services\DayBookService;
 
 class DayBookServiceProvider extends ServiceProvider
 {

@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Modules\StockSummary\Services;
+namespace Modules\StockSummary\Services;
 
-use App\Modules\Godown\Models\Godown;
-use App\Modules\StockItem\Models\StockItem;
-use App\Modules\StockJournal\Models\StockJournal;
-use App\Modules\StockJournalEntry\Models\StockJournalEntry;
-use App\Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
-use App\Modules\StockSummary\Contracts\StockSummaryServiceInterface;
-use App\Modules\StockSummary\Models\StockSummary;
-use App\Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
-use App\Modules\UserFiscalYear\Models\UserFiscalYear;
-use App\Modules\Voucher\Models\Voucher;
+use Modules\Godown\Models\Godown;
+use Modules\StockItem\Models\StockItem;
+use Modules\StockJournal\Models\StockJournal;
+use Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
+use Modules\StockSummary\Contracts\StockSummaryServiceInterface;
+use Modules\StockSummary\Models\StockSummary;
+use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
+use Modules\UserFiscalYear\Models\UserFiscalYear;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 

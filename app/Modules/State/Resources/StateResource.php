@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\State\Resources;
+namespace Modules\State\Resources;
 
 use App\Http\Resources\SuccessResource;
 
-use App\Modules\Country\Resources\CountryResource;
+use Modules\Country\Resources\CountryResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

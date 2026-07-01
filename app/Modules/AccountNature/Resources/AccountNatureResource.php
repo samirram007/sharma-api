@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\AccountNature\Resources;
+namespace Modules\AccountNature\Resources;
 
 use App\Http\Resources\SuccessResource;
-use App\Modules\AccountGroup\Resources\AccountGroupCollection;
-use App\Modules\AccountLedger\Resources\AccountLedgerCollection;
+use Modules\AccountGroup\Resources\AccountGroupCollection;
+use Modules\AccountLedger\Resources\AccountLedgerCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\UniqueQuantityCode\Tests\Feature;
+namespace Modules\UniqueQuantityCode\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
+use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
 
 class UniqueQuantityCodeTest extends TestCase
 {

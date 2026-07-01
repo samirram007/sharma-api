@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Supplier\Services;
+namespace Modules\Supplier\Services;
 
 use App\Enums\AddressType;
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\Supplier\Contracts\SupplierServiceInterface;
-use App\Modules\Supplier\Models\Supplier;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\Supplier\Contracts\SupplierServiceInterface;
+use Modules\Supplier\Models\Supplier;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 

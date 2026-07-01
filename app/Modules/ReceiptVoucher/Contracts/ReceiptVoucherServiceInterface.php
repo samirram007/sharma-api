@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\ReceiptVoucher\Contracts;
+namespace Modules\ReceiptVoucher\Contracts;
 
-use App\Modules\Voucher\Models\Voucher;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\ReceiptVoucher\Models\ReceiptVoucher;
+use Modules\ReceiptVoucher\Models\ReceiptVoucher;
 
 interface ReceiptVoucherServiceInterface
 {

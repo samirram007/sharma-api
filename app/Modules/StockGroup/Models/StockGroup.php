@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockGroup\Models;
+namespace Modules\StockGroup\Models;
 
 use App\Enums\ActiveInactive;
 use Illuminate\Database\Eloquent\Model;

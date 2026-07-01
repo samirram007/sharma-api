@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\DeliveryPlace\Models;
+namespace Modules\DeliveryPlace\Models;
 
-use App\Modules\Address\Models\Address;
+use Modules\Address\Models\Address;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphOne;

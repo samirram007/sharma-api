@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\HsnSacCode\Controllers\Api;
+namespace Modules\HsnSacCode\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\HsnSacCode\Contracts\HsnSacCodeServiceInterface;
-use App\Modules\HsnSacCode\Resources\HsnSacCodeResource;
-use App\Modules\HsnSacCode\Resources\HsnSacCodeCollection;
-use App\Modules\HsnSacCode\Requests\HsnSacCodeRequest;
+use Modules\HsnSacCode\Contracts\HsnSacCodeServiceInterface;
+use Modules\HsnSacCode\Resources\HsnSacCodeResource;
+use Modules\HsnSacCode\Resources\HsnSacCodeCollection;
+use Modules\HsnSacCode\Requests\HsnSacCodeRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

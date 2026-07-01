@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockItemSerial\Models;
+namespace Modules\StockItemSerial\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

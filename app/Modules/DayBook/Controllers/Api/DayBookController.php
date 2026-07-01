@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Modules\DayBook\Controllers\Api;
+namespace Modules\DayBook\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\DayBook\Contracts\DayBookServiceInterface;
-use App\Modules\DayBook\Resources\DayBookResource;
-use App\Modules\DayBook\Resources\DayBookCollection;
-use App\Modules\DayBook\Requests\DayBookRequest;
+use Modules\DayBook\Contracts\DayBookServiceInterface;
+use Modules\DayBook\Resources\DayBookResource;
+use Modules\DayBook\Resources\DayBookCollection;
+use Modules\DayBook\Requests\DayBookRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
-use App\Modules\DayBook\Resources\DistributorBookCollection;
-use App\Modules\DayBook\Resources\DistributorBookResource;
-use App\Modules\Voucher\Resources\VoucherCollection;
+use Modules\DayBook\Resources\DistributorBookCollection;
+use Modules\DayBook\Resources\DistributorBookResource;
+use Modules\Voucher\Resources\VoucherCollection;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Modules\VoucherType\Resources\VoucherTypeResource;
+use Modules\VoucherType\Resources\VoucherTypeResource;
 
 class DayBookController extends Controller
 {

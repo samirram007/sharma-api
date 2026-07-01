@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Holiday\Resources;
+namespace Modules\Holiday\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockCategory\Providers;
+namespace Modules\StockCategory\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockCategory\Contracts\StockCategoryServiceInterface;
-use App\Modules\StockCategory\Services\StockCategoryService;
+use Modules\StockCategory\Contracts\StockCategoryServiceInterface;
+use Modules\StockCategory\Services\StockCategoryService;
 
 class StockCategoryServiceProvider extends ServiceProvider
 {

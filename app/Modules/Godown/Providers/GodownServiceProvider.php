@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Godown\Providers;
+namespace Modules\Godown\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Godown\Contracts\GodownServiceInterface;
-use App\Modules\Godown\Services\GodownService;
+use Modules\Godown\Contracts\GodownServiceInterface;
+use Modules\Godown\Services\GodownService;
 
 class GodownServiceProvider extends ServiceProvider
 {

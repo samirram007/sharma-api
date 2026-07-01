@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\CostCenter\Providers;
+namespace Modules\CostCenter\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\CostCenter\Contracts\CostCenterServiceInterface;
-use App\Modules\CostCenter\Services\CostCenterService;
+use Modules\CostCenter\Contracts\CostCenterServiceInterface;
+use Modules\CostCenter\Services\CostCenterService;
 
 class CostCenterServiceProvider extends ServiceProvider
 {

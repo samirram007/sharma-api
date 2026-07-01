@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\VoucherCategory\Providers;
+namespace Modules\VoucherCategory\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\VoucherCategory\Contracts\VoucherCategoryServiceInterface;
-use App\Modules\VoucherCategory\Services\VoucherCategoryService;
+use Modules\VoucherCategory\Contracts\VoucherCategoryServiceInterface;
+use Modules\VoucherCategory\Services\VoucherCategoryService;
 
 class VoucherCategoryServiceProvider extends ServiceProvider
 {

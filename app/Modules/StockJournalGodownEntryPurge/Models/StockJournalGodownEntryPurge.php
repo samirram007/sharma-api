@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournalGodownEntryPurge\Models;
+namespace Modules\StockJournalGodownEntryPurge\Models;
 
-use App\Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
-use App\Modules\User\Models\User;
+use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
+use Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

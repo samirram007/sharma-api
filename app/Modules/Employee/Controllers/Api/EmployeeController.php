@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Employee\Controllers\Api;
+namespace Modules\Employee\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Employee\Contracts\EmployeeServiceInterface;
-use App\Modules\Employee\Resources\EmployeeResource;
-use App\Modules\Employee\Resources\EmployeeCollection;
-use App\Modules\Employee\Requests\EmployeeRequest;
+use Modules\Employee\Contracts\EmployeeServiceInterface;
+use Modules\Employee\Resources\EmployeeResource;
+use Modules\Employee\Resources\EmployeeCollection;
+use Modules\Employee\Requests\EmployeeRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

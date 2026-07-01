@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockItemBatch\Providers;
+namespace Modules\StockItemBatch\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockItemBatch\Contracts\StockItemBatchServiceInterface;
-use App\Modules\StockItemBatch\Services\StockItemBatchService;
+use Modules\StockItemBatch\Contracts\StockItemBatchServiceInterface;
+use Modules\StockItemBatch\Services\StockItemBatchService;
 
 class StockItemBatchServiceProvider extends ServiceProvider
 {

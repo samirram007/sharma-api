@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockSummary\Resources;
+namespace Modules\StockSummary\Resources;
 
-use App\Modules\StockItem\Models\StockItem;
-use App\Modules\StockItem\Resources\StockItemResource;
+use Modules\StockItem\Models\StockItem;
+use Modules\StockItem\Resources\StockItemResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

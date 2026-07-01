@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Modules\AccountGroup\Controllers\Api;
+namespace Modules\AccountGroup\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessCollection;
-// use App\Modules\AccountGroup\Contracts\AccountGroupServiceInterface;
-use App\Modules\AccountGroup\Facades\AccountGroup;
-use App\Modules\AccountGroup\Facades\AccountGroupFacade;
-use App\Modules\AccountGroup\Resources\AccountGroupCollection;
-use App\Modules\AccountGroup\Resources\AccountGroupResource;
+// use Modules\AccountGroup\Contracts\AccountGroupServiceInterface;
+use Modules\AccountGroup\Facades\AccountGroup;
+use Modules\AccountGroup\Facades\AccountGroupFacade;
+use Modules\AccountGroup\Resources\AccountGroupCollection;
+use Modules\AccountGroup\Resources\AccountGroupResource;
 
-use App\Modules\AccountGroup\Requests\AccountGroupRequest;
+use Modules\AccountGroup\Requests\AccountGroupRequest;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherParty\Contracts;
+namespace Modules\VoucherParty\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\VoucherParty\Models\VoucherParty;
+use Modules\VoucherParty\Models\VoucherParty;
 
 interface VoucherPartyServiceInterface
 {

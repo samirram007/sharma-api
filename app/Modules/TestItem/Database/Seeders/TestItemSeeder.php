@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\TestItem\Database\Seeders;
+namespace Modules\TestItem\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\TestItem\Models\TestItem;
+use Modules\TestItem\Models\TestItem;
 
 class TestItemSeeder extends Seeder
 {

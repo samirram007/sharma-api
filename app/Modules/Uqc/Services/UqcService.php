@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Uqc\Services;
+namespace Modules\Uqc\Services;
 
-use App\Modules\Uqc\Contracts\UqcServiceInterface;
-use App\Modules\Uqc\Models\Uqc;
+use Modules\Uqc\Contracts\UqcServiceInterface;
+use Modules\Uqc\Models\Uqc;
 use Illuminate\Database\Eloquent\Collection;
 
 class UqcService implements UqcServiceInterface

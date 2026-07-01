@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\PhysicalStockCount\Providers;
+namespace Modules\PhysicalStockCount\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\PhysicalStockCount\Contracts\PhysicalStockCountServiceInterface;
-use App\Modules\PhysicalStockCount\Services\PhysicalStockCountService;
+use Modules\PhysicalStockCount\Contracts\PhysicalStockCountServiceInterface;
+use Modules\PhysicalStockCount\Services\PhysicalStockCountService;
 
 class PhysicalStockCountServiceProvider extends ServiceProvider
 {

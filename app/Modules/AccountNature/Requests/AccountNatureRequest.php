@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\AccountNature\Requests;
+namespace Modules\AccountNature\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

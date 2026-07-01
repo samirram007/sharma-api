@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\VoucherPaymentMode\Controllers\Api;
+namespace Modules\VoucherPaymentMode\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\VoucherPaymentMode\Contracts\VoucherPaymentModeServiceInterface;
-use App\Modules\VoucherPaymentMode\Resources\VoucherPaymentModeResource;
-use App\Modules\VoucherPaymentMode\Resources\VoucherPaymentModeCollection;
-use App\Modules\VoucherPaymentMode\Requests\VoucherPaymentModeRequest;
+use Modules\VoucherPaymentMode\Contracts\VoucherPaymentModeServiceInterface;
+use Modules\VoucherPaymentMode\Resources\VoucherPaymentModeResource;
+use Modules\VoucherPaymentMode\Resources\VoucherPaymentModeCollection;
+use Modules\VoucherPaymentMode\Requests\VoucherPaymentModeRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

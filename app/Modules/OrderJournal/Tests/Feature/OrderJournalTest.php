@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\OrderJournal\Tests\Feature;
+namespace Modules\OrderJournal\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\OrderJournal\Models\OrderJournal;
+use Modules\OrderJournal\Models\OrderJournal;
 
 class OrderJournalTest extends TestCase
 {

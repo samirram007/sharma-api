@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Shift\Tests\Feature;
+namespace Modules\Shift\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Shift\Models\Shift;
+use Modules\Shift\Models\Shift;
 
 class ShiftTest extends TestCase
 {

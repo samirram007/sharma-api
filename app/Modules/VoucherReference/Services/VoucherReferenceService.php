@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherReference\Services;
+namespace Modules\VoucherReference\Services;
 
-use App\Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
-use App\Modules\VoucherReference\Models\VoucherReference;
+use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
+use Modules\VoucherReference\Models\VoucherReference;
 use Illuminate\Database\Eloquent\Collection;
 
 class VoucherReferenceService implements VoucherReferenceServiceInterface

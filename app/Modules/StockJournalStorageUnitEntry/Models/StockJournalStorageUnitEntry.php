@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockJournalStorageUnitEntry\Models;
+namespace Modules\StockJournalStorageUnitEntry\Models;
 
-use App\Modules\StockItem\Models\StockItem;
-use App\Modules\StockJournalEntry\Models\StockJournalEntry;
-use App\Modules\StockJournalStorageUnitEntryPurge\Models\StockJournalStorageUnitEntryPurge;
-use App\Modules\StorageUnit\Models\StorageUnit;
+use Modules\StockItem\Models\StockItem;
+use Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\StockJournalStorageUnitEntryPurge\Models\StockJournalStorageUnitEntryPurge;
+use Modules\StorageUnit\Models\StorageUnit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\ReceiptVoucher\Models;
+namespace Modules\ReceiptVoucher\Models;
 
-use App\Modules\Voucher\Models\Voucher;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

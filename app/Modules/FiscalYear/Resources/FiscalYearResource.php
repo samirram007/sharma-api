@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\FiscalYear\Resources;
+namespace Modules\FiscalYear\Resources;
 
-use App\Modules\Company\Resources\CompanyResource;
+use Modules\Company\Resources\CompanyResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;
@@ -17,8 +17,9 @@ class FiscalYearResource extends SuccessResource
             'endDate' => $this->end_date?->format('Y-m-d'),
             'companyId' => $this->company_id,
             'company' => new CompanyResource($this->whenLoaded('company')),
-            'status' => $this->status
-
+            'status' => $this->status,
+            'closedAt' => $this->closed_at?->toISOString(),
+            'closedBy' => $this->closed_by,
         ];
     }
 }

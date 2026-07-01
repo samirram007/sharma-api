@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DeliveryPlace\Database\Seeders;
+namespace Modules\DeliveryPlace\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\DeliveryPlace\Models\DeliveryPlace;
+use Modules\DeliveryPlace\Models\DeliveryPlace;
 
 class DeliveryPlaceSeeder extends Seeder
 {

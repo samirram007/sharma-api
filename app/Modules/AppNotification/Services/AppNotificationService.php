@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AppNotification\Services;
+namespace Modules\AppNotification\Services;
 
 use App\Events\AppNotificationCreated;
-use App\Modules\AppNotification\Contracts\AppNotificationServiceInterface;
-use App\Modules\AppNotification\Models\AppNotification;
-use App\Modules\User\Contracts\UserServiceInterface;
+use Modules\AppNotification\Contracts\AppNotificationServiceInterface;
+use Modules\AppNotification\Models\AppNotification;
+use Modules\User\Contracts\UserServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;

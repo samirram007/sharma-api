@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DayBook\Contracts;
+namespace Modules\DayBook\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\DayBook\Models\DayBook;
+use Modules\DayBook\Models\DayBook;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface DayBookServiceInterface

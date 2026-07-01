@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\FiscalYearOpen\Controllers\Api;
+namespace Modules\FiscalYearOpen\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessResource;
-use App\Modules\FiscalYearOpen\Contracts\FiscalYearOpenServiceInterface;
+use Modules\FiscalYearOpen\Contracts\FiscalYearOpenServiceInterface;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 

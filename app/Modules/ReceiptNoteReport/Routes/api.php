@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\ReceiptNoteReport\Controllers\Api\ReceiptNoteReportController;
+use Modules\ReceiptNoteReport\Controllers\Api\ReceiptNoteReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['jwt.cookies'])->group(function () {

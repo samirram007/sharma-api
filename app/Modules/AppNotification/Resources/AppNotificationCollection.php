@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\AppNotification\Resources;
+namespace Modules\AppNotification\Resources;
 
 use App\Http\Resources\SuccessCollection;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\DayBook\Resources;
+namespace Modules\DayBook\Resources;
 
-use App\Modules\Voucher\Resources\VoucherResource;
+use Modules\Voucher\Resources\VoucherResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

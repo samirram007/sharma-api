@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Holiday\Services;
+namespace Modules\Holiday\Services;
 
-use App\Modules\Holiday\Contracts\HolidayServiceInterface;
-use App\Modules\Holiday\Models\Holiday;
+use Modules\Holiday\Contracts\HolidayServiceInterface;
+use Modules\Holiday\Models\Holiday;
 use Illuminate\Database\Eloquent\Collection;
 
 class HolidayService implements HolidayServiceInterface

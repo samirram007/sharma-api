@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Distributor\Providers;
+namespace Modules\Distributor\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Distributor\Contracts\DistributorServiceInterface;
-use App\Modules\Distributor\Services\DistributorService;
+use Modules\Distributor\Contracts\DistributorServiceInterface;
+use Modules\Distributor\Services\DistributorService;
 
 class DistributorServiceProvider extends ServiceProvider
 {

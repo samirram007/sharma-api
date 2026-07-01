@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\DeliveryVehicle\Controllers\Api;
+namespace Modules\DeliveryVehicle\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\DeliveryVehicle\Contracts\DeliveryVehicleServiceInterface;
-use App\Modules\DeliveryVehicle\Resources\DeliveryVehicleResource;
-use App\Modules\DeliveryVehicle\Resources\DeliveryVehicleCollection;
-use App\Modules\DeliveryVehicle\Requests\DeliveryVehicleRequest;
+use Modules\DeliveryVehicle\Contracts\DeliveryVehicleServiceInterface;
+use Modules\DeliveryVehicle\Resources\DeliveryVehicleResource;
+use Modules\DeliveryVehicle\Resources\DeliveryVehicleCollection;
+use Modules\DeliveryVehicle\Requests\DeliveryVehicleRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

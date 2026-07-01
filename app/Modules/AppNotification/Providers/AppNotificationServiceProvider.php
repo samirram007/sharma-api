@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AppNotification\Providers;
+namespace Modules\AppNotification\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\AppNotification\Contracts\AppNotificationServiceInterface;
-use App\Modules\AppNotification\Services\AppNotificationService;
+use Modules\AppNotification\Contracts\AppNotificationServiceInterface;
+use Modules\AppNotification\Services\AppNotificationService;
 
 class AppNotificationServiceProvider extends ServiceProvider
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockItemGodown\Models;
+namespace Modules\StockItemGodown\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

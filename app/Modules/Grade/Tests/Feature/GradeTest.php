@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Grade\Tests\Feature;
+namespace Modules\Grade\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Grade\Models\Grade;
+use Modules\Grade\Models\Grade;
 
 class GradeTest extends TestCase
 {

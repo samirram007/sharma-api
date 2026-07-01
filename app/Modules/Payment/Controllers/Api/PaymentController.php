@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Payment\Controllers\Api;
+namespace Modules\Payment\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Payment\Contracts\PaymentServiceInterface;
-use App\Modules\Payment\Resources\PaymentResource;
-use App\Modules\Payment\Resources\PaymentCollection;
-use App\Modules\Payment\Requests\PaymentRequest;
+use Modules\Payment\Contracts\PaymentServiceInterface;
+use Modules\Payment\Resources\PaymentResource;
+use Modules\Payment\Resources\PaymentCollection;
+use Modules\Payment\Requests\PaymentRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

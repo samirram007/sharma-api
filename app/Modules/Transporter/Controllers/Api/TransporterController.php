@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Transporter\Controllers\Api;
+namespace Modules\Transporter\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Transporter\Contracts\TransporterServiceInterface;
-use App\Modules\Transporter\Resources\TransporterResource;
-use App\Modules\Transporter\Resources\TransporterCollection;
-use App\Modules\Transporter\Requests\TransporterRequest;
+use Modules\Transporter\Contracts\TransporterServiceInterface;
+use Modules\Transporter\Resources\TransporterResource;
+use Modules\Transporter\Resources\TransporterCollection;
+use Modules\Transporter\Requests\TransporterRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

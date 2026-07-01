@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\VoucherClassification\Providers;
+namespace Modules\VoucherClassification\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\VoucherClassification\Contracts\VoucherClassificationServiceInterface;
-use App\Modules\VoucherClassification\Services\VoucherClassificationService;
+use Modules\VoucherClassification\Contracts\VoucherClassificationServiceInterface;
+use Modules\VoucherClassification\Services\VoucherClassificationService;
 
 class VoucherClassificationServiceProvider extends ServiceProvider
 {
@@ -29,6 +29,6 @@ class VoucherClassificationServiceProvider extends ServiceProvider
 
     private function loadMigrations(): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+       // $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\LeaveType\Providers;
+namespace Modules\LeaveType\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\LeaveType\Contracts\LeaveTypeServiceInterface;
-use App\Modules\LeaveType\Services\LeaveTypeService;
+use Modules\LeaveType\Contracts\LeaveTypeServiceInterface;
+use Modules\LeaveType\Services\LeaveTypeService;
 
 class LeaveTypeServiceProvider extends ServiceProvider
 {

@@ -1,7 +1,7 @@
 <?php
-namespace App\Modules\Company\Facades;
+namespace Modules\Company\Facades;
 
-use App\Modules\Company\Contracts\CompanyServiceInterface;
+use Modules\Company\Contracts\CompanyServiceInterface;
 use Illuminate\Support\Facades\Facade;
 
 class CompanyFacade extends Facade

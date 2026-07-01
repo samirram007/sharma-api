@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DistributorBook\Contracts;
+namespace Modules\DistributorBook\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\DistributorBook\Models\DistributorBook;
+use Modules\DistributorBook\Models\DistributorBook;
 
 interface DistributorBookServiceInterface
 {

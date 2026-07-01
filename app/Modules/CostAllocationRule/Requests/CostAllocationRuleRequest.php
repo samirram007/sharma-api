@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\CostAllocationRule\Requests;
+namespace Modules\CostAllocationRule\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

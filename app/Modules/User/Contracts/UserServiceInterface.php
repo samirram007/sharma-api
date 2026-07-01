@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\User\Contracts;
+namespace Modules\User\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\User\Models\User;
+use Modules\User\Models\User;
 
 interface UserServiceInterface
 {

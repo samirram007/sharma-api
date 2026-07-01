@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\CostCategory\Tests\Feature;
+namespace Modules\CostCategory\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\CostCategory\Models\CostCategory;
+use Modules\CostCategory\Models\CostCategory;
 
 class CostCategoryTest extends TestCase
 {

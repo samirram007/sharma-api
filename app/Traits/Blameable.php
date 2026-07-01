@@ -2,7 +2,7 @@
 namespace App\Traits;
 
 
-use App\Modules\Base\User\Models\User;
+use Modules\User\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 trait Blameable

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\AccountingPeriod\Requests;
+namespace Modules\AccountingPeriod\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

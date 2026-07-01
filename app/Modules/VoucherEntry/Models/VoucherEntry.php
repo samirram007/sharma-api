@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherEntry\Models;
+namespace Modules\VoucherEntry\Models;
 
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\Voucher\Models\Voucher;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

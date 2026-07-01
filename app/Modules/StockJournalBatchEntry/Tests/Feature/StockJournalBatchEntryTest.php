@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockJournalBatchEntry\Tests\Feature;
+namespace Modules\StockJournalBatchEntry\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StockJournalBatchEntry\Models\StockJournalBatchEntry;
+use Modules\StockJournalBatchEntry\Models\StockJournalBatchEntry;
 
 class StockJournalBatchEntryTest extends TestCase
 {

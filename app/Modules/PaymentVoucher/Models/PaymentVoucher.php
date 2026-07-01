@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\PaymentVoucher\Models;
+namespace Modules\PaymentVoucher\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockJournalStorageUnitEntryPurge\Requests;
+namespace Modules\StockJournalStorageUnitEntryPurge\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

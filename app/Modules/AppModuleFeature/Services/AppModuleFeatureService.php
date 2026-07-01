@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AppModuleFeature\Services;
+namespace Modules\AppModuleFeature\Services;
 
-use App\Modules\AppModuleFeature\Contracts\AppModuleFeatureServiceInterface;
-use App\Modules\AppModuleFeature\Models\AppModuleFeature;
+use Modules\AppModuleFeature\Contracts\AppModuleFeatureServiceInterface;
+use Modules\AppModuleFeature\Models\AppModuleFeature;
 use Illuminate\Database\Eloquent\Collection;
 
 class AppModuleFeatureService implements AppModuleFeatureServiceInterface
@@ -52,5 +52,18 @@ class AppModuleFeatureService implements AppModuleFeatureServiceInterface
         // dd($data->toArray());
         return $data;
         // return AppModuleFeature::where('app_module_id', $module_id)->get();
+    }
+
+    public function getAllWithRolePermissions(int $role_id): Collection
+    {
+        return AppModuleFeature::with([
+            'module',
+            'role_permissions' => function ($query) use ($role_id) {
+                $query->where('role_id', $role_id);
+            }
+        ])
+        ->orderBy('app_module_id')
+        ->orderBy('id')
+        ->get();
     }
 }

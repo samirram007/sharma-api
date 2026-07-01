@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\OrderJournal\Controllers\Api;
+namespace Modules\OrderJournal\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\OrderJournal\Contracts\OrderJournalServiceInterface;
-use App\Modules\OrderJournal\Resources\OrderJournalResource;
-use App\Modules\OrderJournal\Resources\OrderJournalCollection;
-use App\Modules\OrderJournal\Requests\OrderJournalRequest;
+use Modules\OrderJournal\Contracts\OrderJournalServiceInterface;
+use Modules\OrderJournal\Resources\OrderJournalResource;
+use Modules\OrderJournal\Resources\OrderJournalCollection;
+use Modules\OrderJournal\Requests\OrderJournalRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

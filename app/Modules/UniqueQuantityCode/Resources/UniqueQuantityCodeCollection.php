@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\UniqueQuantityCode\Resources;
+namespace Modules\UniqueQuantityCode\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

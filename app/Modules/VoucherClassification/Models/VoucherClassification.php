@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\VoucherClassification\Models;
+namespace Modules\VoucherClassification\Models;
 
-use App\Modules\VoucherType\Models\VoucherType;
+use Modules\VoucherType\Models\VoucherType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -46,12 +46,12 @@ class VoucherClassification extends Model
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(\App\Modules\Company\Models\Company::class);
+        return $this->belongsTo(\Modules\Company\Models\Company::class);
     }
 
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(\App\Modules\Branch\Models\Branch::class);
+        return $this->belongsTo(\Modules\Branch\Models\Branch::class);
     }
 
     public function filters(): HasMany

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Purchase\Database\Seeders;
+namespace Modules\Purchase\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Purchase\Models\Purchase;
+use Modules\Purchase\Models\Purchase;
 
 class PurchaseSeeder extends Seeder
 {

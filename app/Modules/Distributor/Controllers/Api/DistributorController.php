@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Distributor\Controllers\Api;
+namespace Modules\Distributor\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Distributor\Contracts\DistributorServiceInterface;
-use App\Modules\Distributor\Resources\DistributorResource;
-use App\Modules\Distributor\Resources\DistributorCollection;
-use App\Modules\Distributor\Requests\DistributorRequest;
+use Modules\Distributor\Contracts\DistributorServiceInterface;
+use Modules\Distributor\Resources\DistributorResource;
+use Modules\Distributor\Resources\DistributorCollection;
+use Modules\Distributor\Requests\DistributorRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

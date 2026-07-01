@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Vehicle\Services;
+namespace Modules\Vehicle\Services;
 
-use App\Modules\Vehicle\Contracts\VehicleServiceInterface;
-use App\Modules\Vehicle\Models\Vehicle;
+use Modules\Vehicle\Contracts\VehicleServiceInterface;
+use Modules\Vehicle\Models\Vehicle;
 use Illuminate\Database\Eloquent\Collection;
 
 class VehicleService implements VehicleServiceInterface

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\CompanyType\Models;
+namespace Modules\CompanyType\Models;
 
 use App\Enums\ActiveInactive;
-use App\Modules\Company\Models\Company;
+use Modules\Company\Models\Company;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;

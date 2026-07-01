@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Distributor\Models;
+namespace Modules\Distributor\Models;
 
-use App\Modules\Address\Models\Address;
-use App\Modules\GstRegistrationType\Models\GstRegistrationType;
+use Modules\Address\Models\Address;
+use Modules\GstRegistrationType\Models\GstRegistrationType;
 use Illuminate\Database\Eloquent\Model;
-use App\Modules\AccountLedger\Models\AccountLedger;
+use Modules\AccountLedger\Models\AccountLedger;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;

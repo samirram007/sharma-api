@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AppModuleFeature\Contracts;
+namespace Modules\AppModuleFeature\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\AppModuleFeature\Models\AppModuleFeature;
+use Modules\AppModuleFeature\Models\AppModuleFeature;
 
 interface AppModuleFeatureServiceInterface
 {
@@ -13,4 +13,5 @@ interface AppModuleFeatureServiceInterface
     public function update(array $data, int $id): AppModuleFeature;
     public function delete(int $id): bool;
     public function getByRoleAndModule(int $role_id, int $module_id): Collection;
+    public function getAllWithRolePermissions(int $role_id): Collection;
 }

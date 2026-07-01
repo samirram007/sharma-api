@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Salary\Database\Seeders;
+namespace Modules\Salary\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Salary\Models\Salary;
+use Modules\Salary\Models\Salary;
 
 class SalarySeeder extends Seeder
 {

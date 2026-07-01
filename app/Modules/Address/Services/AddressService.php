@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Address\Services;
+namespace Modules\Address\Services;
 
-use App\Modules\Address\Contracts\AddressServiceInterface;
-use App\Modules\Address\Models\Address;
+use Modules\Address\Contracts\AddressServiceInterface;
+use Modules\Address\Models\Address;
 use Illuminate\Database\Eloquent\Collection;
 
 class AddressService implements AddressServiceInterface

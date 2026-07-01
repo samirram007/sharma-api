@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\UniqueQuantityCode\Database\Seeders;
+namespace Modules\UniqueQuantityCode\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
+use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
 
 class UniqueQuantityCodeSeeder extends Seeder
 {

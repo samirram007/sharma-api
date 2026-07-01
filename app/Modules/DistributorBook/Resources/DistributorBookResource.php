@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\DistributorBook\Resources;
+namespace Modules\DistributorBook\Resources;
 
 use Illuminate\Http\Request;
 

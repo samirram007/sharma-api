@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\DeliveryVehicle\Resources;
+namespace Modules\DeliveryVehicle\Resources;
 
-use App\Modules\Transporter\Resources\TransporterResource;
+use Modules\Transporter\Resources\TransporterResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

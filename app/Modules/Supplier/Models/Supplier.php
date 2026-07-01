@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Supplier\Models;
+namespace Modules\Supplier\Models;
 
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\Address\Models\Address;
-use App\Modules\GstRegistrationType\Models\GstRegistrationType;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\Address\Models\Address;
+use Modules\GstRegistrationType\Models\GstRegistrationType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

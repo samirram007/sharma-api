@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\AppNotification\Contracts;
+namespace Modules\AppNotification\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Modules\AppNotification\Models\AppNotification;
+use Modules\AppNotification\Models\AppNotification;
 
 interface AppNotificationServiceInterface
 {

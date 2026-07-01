@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemBatch\Services;
+namespace Modules\StockItemBatch\Services;
 
-use App\Modules\StockItemBatch\Contracts\StockItemBatchServiceInterface;
-use App\Modules\StockItemBatch\Models\StockItemBatch;
+use Modules\StockItemBatch\Contracts\StockItemBatchServiceInterface;
+use Modules\StockItemBatch\Models\StockItemBatch;
 use Illuminate\Database\Eloquent\Collection;
 
 class StockItemBatchService implements StockItemBatchServiceInterface

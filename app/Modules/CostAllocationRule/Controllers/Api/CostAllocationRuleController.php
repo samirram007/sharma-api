@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\CostAllocationRule\Controllers\Api;
+namespace Modules\CostAllocationRule\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\CostAllocationRule\Contracts\CostAllocationRuleServiceInterface;
-use App\Modules\CostAllocationRule\Resources\CostAllocationRuleResource;
-use App\Modules\CostAllocationRule\Resources\CostAllocationRuleCollection;
-use App\Modules\CostAllocationRule\Requests\CostAllocationRuleRequest;
+use Modules\CostAllocationRule\Contracts\CostAllocationRuleServiceInterface;
+use Modules\CostAllocationRule\Resources\CostAllocationRuleResource;
+use Modules\CostAllocationRule\Resources\CostAllocationRuleCollection;
+use Modules\CostAllocationRule\Requests\CostAllocationRuleRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

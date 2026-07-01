@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\FiscalYear\Models;
+namespace Modules\FiscalYear\Models;
 
 use App\Enums\ActiveInactive;
-use App\Modules\Company\Models\Company;
+use Modules\Company\Models\Company;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,8 +21,9 @@ class FiscalYear extends Model
         'end_date',
         'status',
         'company_id',
-        'assessment_year'
-
+        'assessment_year',
+        'closed_at',
+        'closed_by',
 
     ];
 
@@ -31,6 +32,7 @@ class FiscalYear extends Model
         'updated_at' => 'datetime',
         'start_date' => 'date',
         'end_date' => 'date',
+        'closed_at' => 'datetime',
         'status' => ActiveInactive::class
     ];
 

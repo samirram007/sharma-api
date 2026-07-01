@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherEntryPurge\Models;
+namespace Modules\VoucherEntryPurge\Models;
 
-use App\Modules\User\Models\User;
-use App\Modules\VoucherEntry\Models\VoucherEntry;
+use Modules\User\Models\User;
+use Modules\VoucherEntry\Models\VoucherEntry;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

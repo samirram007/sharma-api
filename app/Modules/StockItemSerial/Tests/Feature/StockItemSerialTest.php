@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockItemSerial\Tests\Feature;
+namespace Modules\StockItemSerial\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StockItemSerial\Models\StockItemSerial;
+use Modules\StockItemSerial\Models\StockItemSerial;
 
 class StockItemSerialTest extends TestCase
 {

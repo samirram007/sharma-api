@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Shift\Contracts;
+namespace Modules\Shift\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Shift\Models\Shift;
+use Modules\Shift\Models\Shift;
 
 interface ShiftServiceInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherType\Database\Seeders;
+namespace Modules\VoucherType\Database\Seeders;
 use DB;
 use Illuminate\Database\Seeder;
-use App\Modules\VoucherType\Models\VoucherType;
+use Modules\VoucherType\Models\VoucherType;
 
 class VoucherTypeSeeder extends Seeder
 {
@@ -662,6 +662,25 @@ class VoucherTypeSeeder extends Seeder
                 'is_effecting' => true,
                 'status' => 'active',
                 'icon' => 'FaBalanceScale',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // ========= OpeningJournal — Unified Opening Entry (replaces OPNAC + OPNSK) =========
+
+            [
+                'id' => 1000,
+                'parent_id' => null,
+                'name' => 'OpeningJournal',
+                'code' => 'OPNJL',
+                'voucher_category_id' => 1,
+                'description' => 'System voucher — unified opening entry carrying forward both account balances and stock quantities into the new fiscal year. Replaces separate OPNAC and OPNSK vouchers.',
+                'is_financial' => true,
+                'is_hidden' => true,
+                'is_system' => true,
+                'is_effecting' => true,
+                'status' => 'active',
+                'icon' => 'FaDoorOpen',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

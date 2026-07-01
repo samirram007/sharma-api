@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Uqc\Contracts;
+namespace Modules\Uqc\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Uqc\Models\Uqc;
+use Modules\Uqc\Models\Uqc;
 
 interface UqcServiceInterface
 {

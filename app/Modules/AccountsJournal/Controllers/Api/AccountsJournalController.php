@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\AccountsJournal\Controllers\Api;
+namespace Modules\AccountsJournal\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\AccountsJournal\Contracts\AccountsJournalServiceInterface;
-use App\Modules\AccountsJournal\Resources\AccountsJournalResource;
-use App\Modules\AccountsJournal\Resources\AccountsJournalCollection;
-use App\Modules\AccountsJournal\Requests\AccountsJournalRequest;
+use Modules\AccountsJournal\Contracts\AccountsJournalServiceInterface;
+use Modules\AccountsJournal\Resources\AccountsJournalResource;
+use Modules\AccountsJournal\Resources\AccountsJournalCollection;
+use Modules\AccountsJournal\Requests\AccountsJournalRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Designation\Tests\Feature;
+namespace Modules\Designation\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Designation\Models\Designation;
+use Modules\Designation\Models\Designation;
 
 class DesignationTest extends TestCase
 {

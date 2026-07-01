@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Uqc\Models;
+namespace Modules\Uqc\Models;
 
-use App\Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
+use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

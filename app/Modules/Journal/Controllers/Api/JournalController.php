@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Journal\Controllers\Api;
+namespace Modules\Journal\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Journal\Contracts\JournalServiceInterface;
-use App\Modules\Journal\Resources\JournalResource;
-use App\Modules\Journal\Resources\JournalCollection;
-use App\Modules\Journal\Requests\JournalRequest;
+use Modules\Journal\Contracts\JournalServiceInterface;
+use Modules\Journal\Resources\JournalResource;
+use Modules\Journal\Resources\JournalCollection;
+use Modules\Journal\Requests\JournalRequest;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;

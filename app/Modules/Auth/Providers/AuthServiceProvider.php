@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Auth\Providers;
+namespace Modules\Auth\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Auth\Contracts\AuthServiceInterface;
-use App\Modules\Auth\Services\AuthService;
+use Modules\Auth\Contracts\AuthServiceInterface;
+use Modules\Auth\Services\AuthService;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -22,6 +22,7 @@ class AuthServiceProvider extends ServiceProvider
 
     private function loadRoutes(): void
     {
+        //\Log::info(__DIR__ . '/../Routes/api.php');
         Route::middleware('api')
             ->prefix('api')
             ->group(__DIR__ . '/../Routes/api.php');

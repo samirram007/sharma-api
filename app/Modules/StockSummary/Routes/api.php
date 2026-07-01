@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockSummary\Controllers\Api\StockSummaryController;
+use Modules\StockSummary\Controllers\Api\StockSummaryController;
 
 // Route::apiResource('stock_summaries', StockSummaryController::class)->middleware(['jwt.cookies']);
 

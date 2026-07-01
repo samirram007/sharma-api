@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\VoucherReference\Providers;
+namespace Modules\VoucherReference\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
-use App\Modules\VoucherReference\Services\VoucherReferenceService;
+use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
+use Modules\VoucherReference\Services\VoucherReferenceService;
 
 class VoucherReferenceServiceProvider extends ServiceProvider
 {

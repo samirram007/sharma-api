@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\StorageUnit\Database\Seeders;
+namespace Modules\StorageUnit\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StorageUnit\Models\StorageUnit;
+use Modules\StorageUnit\Models\StorageUnit;
 
 class StorageUnitSeeder extends Seeder
 {
-    // php artisan db:seed --class="App\Modules\StorageUnit\Database\Seeders\StorageUnitSeeder"
+    // php artisan db:seed --class="Modules\StorageUnit\Database\Seeders\StorageUnitSeeder"
 
     public function run(): void
     {

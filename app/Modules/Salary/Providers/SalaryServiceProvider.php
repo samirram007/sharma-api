@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Salary\Providers;
+namespace Modules\Salary\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Salary\Contracts\SalaryServiceInterface;
-use App\Modules\Salary\Services\SalaryService;
+use Modules\Salary\Contracts\SalaryServiceInterface;
+use Modules\Salary\Services\SalaryService;
 
 class SalaryServiceProvider extends ServiceProvider
 {

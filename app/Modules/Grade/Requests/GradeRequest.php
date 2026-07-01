@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Grade\Requests;
+namespace Modules\Grade\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

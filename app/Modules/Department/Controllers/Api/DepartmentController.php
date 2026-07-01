@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Department\Controllers\Api;
+namespace Modules\Department\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Department\Contracts\DepartmentServiceInterface;
-use App\Modules\Department\Resources\DepartmentResource;
-use App\Modules\Department\Resources\DepartmentCollection;
-use App\Modules\Department\Requests\DepartmentRequest;
+use Modules\Department\Contracts\DepartmentServiceInterface;
+use Modules\Department\Resources\DepartmentResource;
+use Modules\Department\Resources\DepartmentCollection;
+use Modules\Department\Requests\DepartmentRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

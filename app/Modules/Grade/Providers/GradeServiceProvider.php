@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Grade\Providers;
+namespace Modules\Grade\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Grade\Contracts\GradeServiceInterface;
-use App\Modules\Grade\Services\GradeService;
+use Modules\Grade\Contracts\GradeServiceInterface;
+use Modules\Grade\Services\GradeService;
 
 class GradeServiceProvider extends ServiceProvider
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\TestItem\Providers;
+namespace Modules\TestItem\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\TestItem\Contracts\TestItemServiceInterface;
-use App\Modules\TestItem\Services\TestItemService;
+use Modules\TestItem\Contracts\TestItemServiceInterface;
+use Modules\TestItem\Services\TestItemService;
 
 class TestItemServiceProvider extends ServiceProvider
 {

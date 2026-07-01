@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockJournalStorageUnitEntryPurge\Tests\Feature;
+namespace Modules\StockJournalStorageUnitEntryPurge\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StockJournalStorageUnitEntryPurge\Models\StockJournalStorageUnitEntryPurge;
+use Modules\StockJournalStorageUnitEntryPurge\Models\StockJournalStorageUnitEntryPurge;
 
 class StockJournalStorageUnitEntryPurgeTest extends TestCase
 {

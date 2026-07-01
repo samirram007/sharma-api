@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Receipt\Controllers\Api;
+namespace Modules\Receipt\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Receipt\Contracts\ReceiptServiceInterface;
-use App\Modules\Receipt\Resources\ReceiptResource;
-use App\Modules\Receipt\Resources\ReceiptCollection;
-use App\Modules\Receipt\Requests\ReceiptRequest;
+use Modules\Receipt\Contracts\ReceiptServiceInterface;
+use Modules\Receipt\Resources\ReceiptResource;
+use Modules\Receipt\Resources\ReceiptCollection;
+use Modules\Receipt\Requests\ReceiptRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

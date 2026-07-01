@@ -4,58 +4,49 @@ namespace Database\Seeders;
 
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Modules\AppModule\Database\Seeders\AppModuleSeeder;
-use App\Modules\Currency\Database\Seeders\CurrencySeeder;
-use App\Modules\Department\Database\Seeders\DepartmentSeeder;
-use App\Modules\Department\Models\Department;
-use App\Modules\Designation\Database\Seeders\DesignationSeeder;
-use App\Modules\Distributor\Database\Seeders\DistributorSeeder;
-use App\Modules\EmployeeGroup\Database\Seeders\EmployeeGroupSeeder;
-use App\Modules\Grade\Database\Seeders\GradeSeeder;
-use App\Modules\Status\Database\Seeders\StatusSeeder;
-use App\Modules\GstRegistrationType\Database\Seeders\GstRegistrationTypeSeeder;
-use App\Modules\GstRegistrationType\Models\GstRegistrationType;
-use App\Modules\Role\Database\Seeders\RoleSeeder;
-use App\Modules\Shift\Database\Seeders\ShiftSeeder;
-use App\Modules\Supplier\Database\Seeders\SupplierSeeder;
-use App\Modules\UserFiscalYear\Database\Seeders\UserFiscalYearSeeder;
-use App\Modules\Voucher\Database\Seeders\ReceiptNoteSeeder;
-use App\Modules\Voucher\Database\Seeders\VoucherDemoSeeder;
-use App\Modules\Voucher\Database\Seeders\VoucherSeeder;
-use App\Modules\VoucherEntry\Database\Seeders\VoucherEntrySeeder;
-use Illuminate\Support\Str;
-use App\Modules\Uqc\Models\Uqc;
-use Illuminate\Database\Seeder;
-use App\Modules\Unit\Models\Unit;
-use Illuminate\Support\Facades\Hash;
-use Database\Seeders\SampleDataSeeder;
-use App\Modules\StockItem\Models\StockItem;
-use App\Modules\StockGroup\Models\StockGroup;
-use App\Modules\CompanyType\Models\CompanyType;
-use App\Modules\Uqc\Database\Seeders\UqcSeeder;
-use App\Modules\Unit\Database\Seeders\UnitSeeder;
-use App\Modules\State\Database\Seeders\StateSeeder;
-use App\Modules\StockCategory\Models\StockCategory;
-use App\Modules\Godown\Database\Seeders\GodownSeeder;
-use App\Modules\Company\Database\Seeders\CompanySeeder;
-use App\Modules\Country\Database\Seeders\CountrySeeder;
-use App\Modules\Purchase\Database\Seeders\PurchaseSeeder;
-use App\Modules\StockItem\Database\Seeders\StockItemSeeder;
-use App\Modules\StockUnit\Database\Seeders\StockUnitSeeder;
-use App\Modules\FiscalYear\Database\Seeders\FiscalYearSeeder;
-use App\Modules\StockGroup\Database\Seeders\StockGroupSeeder;
-use App\Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
-use App\Modules\CompanyType\Database\Seeders\CompanyTypeSeeder;
-use App\Modules\VoucherType\Database\Seeders\VoucherTypeSeeder;
+use Modules\AppModule\Database\Seeders\AppModuleSeeder;
+use Modules\Menu\Database\Seeders\MenuSeeder;
+use Modules\Currency\Database\Seeders\CurrencySeeder;
+use Modules\Department\Database\Seeders\DepartmentSeeder;
+use Modules\Department\Models\Department;
+use Modules\Designation\Database\Seeders\DesignationSeeder;
+use Modules\Distributor\Database\Seeders\DistributorSeeder;
+use Modules\EmployeeGroup\Database\Seeders\EmployeeGroupSeeder;
+use Modules\Grade\Database\Seeders\GradeSeeder;
+use Modules\Status\Database\Seeders\StatusSeeder;
+use Modules\GstRegistrationType\Database\Seeders\GstRegistrationTypeSeeder;
+use Modules\GstRegistrationType\Models\GstRegistrationType;
+use Modules\Role\Database\Seeders\RoleSeeder;
+use Modules\Shift\Database\Seeders\ShiftSeeder;
+use Modules\Supplier\Database\Seeders\SupplierSeeder;
+use Modules\UserFiscalYear\Database\Seeders\UserFiscalYearSeeder;
 
-use App\Modules\AccountGroup\Database\Seeders\AccountGroupSeeder;
-use App\Modules\AccountLedger\Database\Seeders\AccountLedgerSeeder;
-use App\Modules\AccountNature\Database\Seeders\AccountNatureSeeder;
-use App\Modules\StockCategory\Database\Seeders\StockCategorySeeder;
-use App\Modules\VoucherClassification\Models\VoucherClassification;
-use App\Modules\VoucherCategory\Database\Seeders\VoucherCategorySeeder;
-use App\Modules\UniqueQuantityCode\Database\Seeders\UniqueQuantityCodeSeeder;
-use App\Modules\VoucherClassification\Database\Seeders\VoucherClassificationSeeder;
+use Illuminate\Database\Seeder;
+
+use Database\Seeders\SampleDataSeeder;
+
+use Modules\State\Database\Seeders\StateSeeder;
+use Modules\StockCategory\Models\StockCategory;
+use Modules\Godown\Database\Seeders\GodownSeeder;
+use Modules\Company\Database\Seeders\CompanySeeder;
+use Modules\Country\Database\Seeders\CountrySeeder;
+use Modules\Purchase\Database\Seeders\PurchaseSeeder;
+use Modules\StockItem\Database\Seeders\StockItemSeeder;
+use Modules\StockUnit\Database\Seeders\StockUnitSeeder;
+use Modules\FiscalYear\Database\Seeders\FiscalYearSeeder;
+use Modules\StockGroup\Database\Seeders\StockGroupSeeder;
+use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
+use Modules\CompanyType\Database\Seeders\CompanyTypeSeeder;
+use Modules\VoucherType\Database\Seeders\VoucherTypeSeeder;
+
+use Modules\AccountGroup\Database\Seeders\AccountGroupSeeder;
+use Modules\AccountLedger\Database\Seeders\AccountLedgerSeeder;
+use Modules\AccountNature\Database\Seeders\AccountNatureSeeder;
+use Modules\StockCategory\Database\Seeders\StockCategorySeeder;
+use Modules\VoucherClassification\Models\VoucherClassification;
+use Modules\VoucherCategory\Database\Seeders\VoucherCategorySeeder;
+use Modules\UniqueQuantityCode\Database\Seeders\UniqueQuantityCodeSeeder;
+use Modules\VoucherClassification\Database\Seeders\VoucherClassificationSeeder;
 
 
 class DatabaseSeeder extends Seeder
@@ -71,47 +62,48 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
 
-            AppModuleSeeder::class,
-            RoleSeeder::class,
+            // AppModuleSeeder::class,
+            MenuSeeder::class,
+            // RoleSeeder::class,
 
-            GstRegistrationTypeSeeder::class,
+            // GstRegistrationTypeSeeder::class,
 
-            CurrencySeeder::class,
-            CountrySeeder::class,
-            StateSeeder::class,
-            SampleDataSeeder::class,
-            AccountNatureSeeder::class,
-                // AccountGroupSeeder::class,
-                // AccountLedgerSeeder::class,
-            CompanyTypeSeeder::class,
-            FiscalYearSeeder::class,
-                // CompanySeeder::class,
+            // CurrencySeeder::class,
+            // CountrySeeder::class,
+            // StateSeeder::class,
+            // SampleDataSeeder::class,
+            // AccountNatureSeeder::class,
+            //     // AccountGroupSeeder::class,
+            //     // AccountLedgerSeeder::class,
+            // CompanyTypeSeeder::class,
+            // FiscalYearSeeder::class,
+            //     // CompanySeeder::class,
 
-            VoucherCategorySeeder::class,
-            VoucherTypeSeeder::class,
-            VoucherClassificationSeeder::class,
+            // VoucherCategorySeeder::class,
+            // VoucherTypeSeeder::class,
+            // VoucherClassificationSeeder::class,
 
-            UniqueQuantityCodeSeeder::class,
-            StockUnitSeeder::class,
-            StockGroupSeeder::class,
-            StockCategorySeeder::class,
+            // UniqueQuantityCodeSeeder::class,
+            // StockUnitSeeder::class,
+            // StockGroupSeeder::class,
+            // StockCategorySeeder::class,
 
-            StockItemSeeder::class,
-                // PurchaseSeeder::class
-            GodownSeeder::class,
-            DepartmentSeeder::class,
-            DesignationSeeder::class,
-            GradeSeeder::class,
-            StatusSeeder::class,
-                // ShiftSeeder::class,
+            // StockItemSeeder::class,
+            //     // PurchaseSeeder::class
+            // GodownSeeder::class,
+            // DepartmentSeeder::class,
+            // DesignationSeeder::class,
+            // GradeSeeder::class,
+            // StatusSeeder::class,
+            //     // ShiftSeeder::class,
 
-                // VoucherSeeder::class,
-                // VoucherEntrySeeder::class,
+            //     // VoucherSeeder::class,
+            //     // VoucherEntrySeeder::class,
 
-            EmployeeGroupSeeder::class,
-            SupplierSeeder::class,
-            DistributorSeeder::class,
-            UserFiscalYearSeeder::class,
+            // EmployeeGroupSeeder::class,
+            // SupplierSeeder::class,
+            // DistributorSeeder::class,
+            // UserFiscalYearSeeder::class,
             // VoucherDemoSeeder::class,
             // ReceiptNoteSeeder::class,
 

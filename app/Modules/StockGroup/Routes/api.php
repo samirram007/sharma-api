@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockGroup\Controllers\Api\StockGroupController;
+use Modules\StockGroup\Controllers\Api\StockGroupController;
 
 
 // Route::get('stock_groups', function ($request) {

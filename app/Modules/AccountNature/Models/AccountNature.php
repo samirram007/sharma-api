@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AccountNature\Models;
+namespace Modules\AccountNature\Models;
 
-use App\Modules\AccountLedger\Models\AccountLedger;
+use Modules\AccountLedger\Models\AccountLedger;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Modules\AccountGroup\Models\AccountGroup;
+use Modules\AccountGroup\Models\AccountGroup;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;

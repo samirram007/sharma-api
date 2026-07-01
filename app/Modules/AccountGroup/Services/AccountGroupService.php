@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AccountGroup\Services;
+namespace Modules\AccountGroup\Services;
 
-use App\Modules\AccountGroup\Contracts\AccountGroupServiceInterface;
-use App\Modules\AccountGroup\Models\AccountGroup;
+use Modules\AccountGroup\Contracts\AccountGroupServiceInterface;
+use Modules\AccountGroup\Models\AccountGroup;
 use Illuminate\Database\Eloquent\Collection;
 
 class AccountGroupService implements AccountGroupServiceInterface

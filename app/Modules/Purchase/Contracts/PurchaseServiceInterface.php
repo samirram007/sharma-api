@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Purchase\Contracts;
+namespace Modules\Purchase\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Purchase\Models\Purchase;
+use Modules\Purchase\Models\Purchase;
 
 interface PurchaseServiceInterface
 {

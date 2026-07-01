@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Transporter\Contracts;
+namespace Modules\Transporter\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Transporter\Models\Transporter;
+use Modules\Transporter\Models\Transporter;
 
 interface TransporterServiceInterface
 {

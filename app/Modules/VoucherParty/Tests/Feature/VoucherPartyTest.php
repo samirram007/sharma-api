@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\VoucherParty\Tests\Feature;
+namespace Modules\VoucherParty\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\VoucherParty\Models\VoucherParty;
+use Modules\VoucherParty\Models\VoucherParty;
 
 class VoucherPartyTest extends TestCase
 {

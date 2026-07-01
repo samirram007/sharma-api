@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Holiday\Providers;
+namespace Modules\Holiday\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Holiday\Contracts\HolidayServiceInterface;
-use App\Modules\Holiday\Services\HolidayService;
+use Modules\Holiday\Contracts\HolidayServiceInterface;
+use Modules\Holiday\Services\HolidayService;
 
 class HolidayServiceProvider extends ServiceProvider
 {

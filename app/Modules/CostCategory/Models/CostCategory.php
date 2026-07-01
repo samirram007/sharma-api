@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\CostCategory\Models;
+namespace Modules\CostCategory\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

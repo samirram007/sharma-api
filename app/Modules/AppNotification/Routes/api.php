@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\AppNotification\Controllers\Api\AppNotificationController;
+use Modules\AppNotification\Controllers\Api\AppNotificationController;
 
 Route::middleware(['jwt.cookies'])->group(function () {
     Route::get('app-notifications', [AppNotificationController::class, 'index']);

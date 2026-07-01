@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Language\Providers;
+namespace Modules\Language\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Language\Contracts\LanguageServiceInterface;
-use App\Modules\Language\Services\LanguageService;
+use Modules\Language\Contracts\LanguageServiceInterface;
+use Modules\Language\Services\LanguageService;
 
 class LanguageServiceProvider extends ServiceProvider
 {

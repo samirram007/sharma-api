@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\CostCenter\Services;
+namespace Modules\CostCenter\Services;
 
-use App\Modules\CostCenter\Contracts\CostCenterServiceInterface;
-use App\Modules\CostCenter\Models\CostCenter;
+use Modules\CostCenter\Contracts\CostCenterServiceInterface;
+use Modules\CostCenter\Models\CostCenter;
 use Illuminate\Database\Eloquent\Collection;
 
 class CostCenterService implements CostCenterServiceInterface

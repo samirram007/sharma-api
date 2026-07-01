@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Purchase\Controllers\Api;
+namespace Modules\Purchase\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Purchase\Contracts\PurchaseServiceInterface;
-use App\Modules\Purchase\Resources\PurchaseResource;
-use App\Modules\Purchase\Resources\PurchaseCollection;
-use App\Modules\Purchase\Requests\PurchaseRequest;
+use Modules\Purchase\Contracts\PurchaseServiceInterface;
+use Modules\Purchase\Resources\PurchaseResource;
+use Modules\Purchase\Resources\PurchaseCollection;
+use Modules\Purchase\Requests\PurchaseRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\State\Providers;
+namespace Modules\State\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\State\Contracts\StateServiceInterface;
-use App\Modules\State\Services\StateService;
+use Modules\State\Contracts\StateServiceInterface;
+use Modules\State\Services\StateService;
 
 class StateServiceProvider extends ServiceProvider
 {

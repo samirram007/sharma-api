@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Vehicle\Contracts;
+namespace Modules\Vehicle\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Vehicle\Models\Vehicle;
+use Modules\Vehicle\Models\Vehicle;
 
 interface VehicleServiceInterface
 {

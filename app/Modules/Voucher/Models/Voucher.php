@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Modules\Voucher\Models;
+namespace Modules\Voucher\Models;
 
-use App\Modules\AccountsJournal\Models\AccountsJournal;
-use App\Modules\Company\Models\Company;
-use App\Modules\FiscalYear\Models\FiscalYear;
-use App\Modules\StockJournal\Models\StockJournal;
-use App\Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
-use App\Modules\VoucherEntry\Models\VoucherEntry;
-use App\Modules\VoucherParty\Models\VoucherParty;
-use App\Modules\VoucherReference\Models\VoucherReference;
-use App\Modules\VoucherType\Models\VoucherType;
+use Modules\AccountsJournal\Models\AccountsJournal;
+use Modules\Company\Models\Company;
+use Modules\FiscalYear\Models\FiscalYear;
+use Modules\StockJournal\Models\StockJournal;
+use Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
+use Modules\VoucherEntry\Models\VoucherEntry;
+use Modules\VoucherParty\Models\VoucherParty;
+use Modules\VoucherReference\Models\VoucherReference;
+use Modules\VoucherType\Models\VoucherType;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

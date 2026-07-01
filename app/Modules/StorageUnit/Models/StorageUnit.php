@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StorageUnit\Models;
+namespace Modules\StorageUnit\Models;
 
-use App\Modules\Address\Models\Address;
-use App\Modules\StockUnit\Models\StockUnit;
+use Modules\Address\Models\Address;
+use Modules\StockUnit\Models\StockUnit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

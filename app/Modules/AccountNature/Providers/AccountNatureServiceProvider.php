@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AccountNature\Providers;
+namespace Modules\AccountNature\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\AccountNature\Contracts\AccountNatureServiceInterface;
-use App\Modules\AccountNature\Services\AccountNatureService;
+use Modules\AccountNature\Contracts\AccountNatureServiceInterface;
+use Modules\AccountNature\Services\AccountNatureService;
 
 class AccountNatureServiceProvider extends ServiceProvider
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Customer\Services;
+namespace Modules\Customer\Services;
 
-use App\Modules\Customer\Contracts\CustomerServiceInterface;
-use App\Modules\Customer\Models\Customer;
+use Modules\Customer\Contracts\CustomerServiceInterface;
+use Modules\Customer\Models\Customer;
 use Illuminate\Database\Eloquent\Collection;
 
 class CustomerService implements CustomerServiceInterface

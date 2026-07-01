@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Address\Providers;
+namespace Modules\Address\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Address\Contracts\AddressServiceInterface;
-use App\Modules\Address\Services\AddressService;
+use Modules\Address\Contracts\AddressServiceInterface;
+use Modules\Address\Services\AddressService;
 
 class AddressServiceProvider extends ServiceProvider
 {

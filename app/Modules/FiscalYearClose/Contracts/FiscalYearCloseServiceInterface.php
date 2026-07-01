@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\FiscalYearClose\Contracts;
+namespace Modules\FiscalYearClose\Contracts;
 
-use App\Modules\FiscalYear\Models\FiscalYear;
+use Modules\FiscalYear\Models\FiscalYear;
 
 interface FiscalYearCloseServiceInterface
 {

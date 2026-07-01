@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\RolePermission\Tests\Feature;
+namespace Modules\RolePermission\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\RolePermission\Models\RolePermission;
+use Modules\RolePermission\Models\RolePermission;
 
 class RolePermissionTest extends TestCase
 {

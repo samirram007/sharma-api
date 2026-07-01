@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Designation\Providers;
+namespace Modules\Designation\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Designation\Contracts\DesignationServiceInterface;
-use App\Modules\Designation\Services\DesignationService;
+use Modules\Designation\Contracts\DesignationServiceInterface;
+use Modules\Designation\Services\DesignationService;
 
 class DesignationServiceProvider extends ServiceProvider
 {

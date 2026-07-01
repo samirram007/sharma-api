@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Vehicle\Tests\Feature;
+namespace Modules\Vehicle\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Vehicle\Models\Vehicle;
+use Modules\Vehicle\Models\Vehicle;
 
 class VehicleTest extends TestCase
 {

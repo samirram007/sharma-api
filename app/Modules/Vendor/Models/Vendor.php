@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Vendor\Models;
+namespace Modules\Vendor\Models;
 
-use App\Modules\Address\Models\Address;
-use App\Modules\User\Models\User;
+use Modules\Address\Models\Address;
+use Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

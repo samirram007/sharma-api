@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AccountingPeriod\Services;
+namespace Modules\AccountingPeriod\Services;
 
-use App\Modules\AccountingPeriod\Contracts\AccountingPeriodServiceInterface;
-use App\Modules\AccountingPeriod\Models\AccountingPeriod;
+use Modules\AccountingPeriod\Contracts\AccountingPeriodServiceInterface;
+use Modules\AccountingPeriod\Models\AccountingPeriod;
 use Illuminate\Database\Eloquent\Collection;
 
 class AccountingPeriodService implements AccountingPeriodServiceInterface

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Transporter\Tests\Feature;
+namespace Modules\Transporter\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Transporter\Models\Transporter;
+use Modules\Transporter\Models\Transporter;
 
 class TransporterTest extends TestCase
 {

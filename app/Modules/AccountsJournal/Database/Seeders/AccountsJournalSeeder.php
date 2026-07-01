@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AccountsJournal\Database\Seeders;
+namespace Modules\AccountsJournal\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\AccountsJournal\Models\AccountsJournal;
+use Modules\AccountsJournal\Models\AccountsJournal;
 
 class AccountsJournalSeeder extends Seeder
 {

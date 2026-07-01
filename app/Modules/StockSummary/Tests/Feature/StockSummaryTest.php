@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockSummary\Tests\Feature;
+namespace Modules\StockSummary\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StockSummary\Models\StockSummary;
+use Modules\StockSummary\Models\StockSummary;
 
 class StockSummaryTest extends TestCase
 {

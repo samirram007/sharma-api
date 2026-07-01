@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\DeliveryPlace\Controllers\Api;
+namespace Modules\DeliveryPlace\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\DeliveryPlace\Contracts\DeliveryPlaceServiceInterface;
-use App\Modules\DeliveryPlace\Resources\DeliveryPlaceResource;
-use App\Modules\DeliveryPlace\Resources\DeliveryPlaceCollection;
-use App\Modules\DeliveryPlace\Requests\DeliveryPlaceRequest;
+use Modules\DeliveryPlace\Contracts\DeliveryPlaceServiceInterface;
+use Modules\DeliveryPlace\Resources\DeliveryPlaceResource;
+use Modules\DeliveryPlace\Resources\DeliveryPlaceCollection;
+use Modules\DeliveryPlace\Requests\DeliveryPlaceRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

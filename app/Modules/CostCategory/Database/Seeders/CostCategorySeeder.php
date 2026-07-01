@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\CostCategory\Database\Seeders;
+namespace Modules\CostCategory\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\CostCategory\Models\CostCategory;
+use Modules\CostCategory\Models\CostCategory;
 
 class CostCategorySeeder extends Seeder
 {

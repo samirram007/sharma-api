@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Freight\Resources;
+namespace Modules\Freight\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

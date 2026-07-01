@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\DistributorBook\Requests;
+namespace Modules\DistributorBook\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

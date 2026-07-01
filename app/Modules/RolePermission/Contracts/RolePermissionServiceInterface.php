@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\RolePermission\Contracts;
+namespace Modules\RolePermission\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\RolePermission\Models\RolePermission;
+use Modules\RolePermission\Models\RolePermission;
 
 interface RolePermissionServiceInterface
 {

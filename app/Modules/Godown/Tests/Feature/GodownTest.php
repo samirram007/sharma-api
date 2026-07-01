@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Godown\Tests\Feature;
+namespace Modules\Godown\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Godown\Models\Godown;
+use Modules\Godown\Models\Godown;
 
 class GodownTest extends TestCase
 {

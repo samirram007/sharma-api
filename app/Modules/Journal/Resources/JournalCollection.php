@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Journal\Resources;
+namespace Modules\Journal\Resources;
 
 use App\Http\Resources\SuccessCollection;
 

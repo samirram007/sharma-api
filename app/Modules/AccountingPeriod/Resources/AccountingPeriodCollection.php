@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\AccountingPeriod\Resources;
+namespace Modules\AccountingPeriod\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

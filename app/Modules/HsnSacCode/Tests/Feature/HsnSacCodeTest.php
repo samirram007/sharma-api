@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\HsnSacCode\Tests\Feature;
+namespace Modules\HsnSacCode\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\HsnSacCode\Models\HsnSacCode;
+use Modules\HsnSacCode\Models\HsnSacCode;
 
 class HsnSacCodeTest extends TestCase
 {

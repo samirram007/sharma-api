@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\SalaryStructure\Contracts;
+namespace Modules\SalaryStructure\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\SalaryStructure\Models\SalaryStructure;
+use Modules\SalaryStructure\Models\SalaryStructure;
 
 interface SalaryStructureServiceInterface
 {

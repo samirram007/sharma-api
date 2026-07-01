@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockUnit\Database\Seeders;
+namespace Modules\StockUnit\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StockUnit\Models\StockUnit;
+use Modules\StockUnit\Models\StockUnit;
 use Illuminate\Support\Facades\DB;
 
 class StockUnitSeeder extends Seeder

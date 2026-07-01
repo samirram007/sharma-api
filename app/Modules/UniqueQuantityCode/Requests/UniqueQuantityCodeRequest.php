@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\UniqueQuantityCode\Requests;
+namespace Modules\UniqueQuantityCode\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Vendor\Services;
+namespace Modules\Vendor\Services;
 
-use App\Modules\Vendor\Contracts\VendorServiceInterface;
-use App\Modules\Vendor\Models\Vendor;
+use Modules\Vendor\Contracts\VendorServiceInterface;
+use Modules\Vendor\Models\Vendor;
 use Illuminate\Database\Eloquent\Collection;
 
 class VendorService implements VendorServiceInterface

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\FiscalYear\Services;
+namespace Modules\FiscalYear\Services;
 
-use App\Modules\FiscalYear\Contracts\FiscalYearServiceInterface;
-use App\Modules\FiscalYear\Models\FiscalYear;
+use Modules\FiscalYear\Contracts\FiscalYearServiceInterface;
+use Modules\FiscalYear\Models\FiscalYear;
 use Illuminate\Database\Eloquent\Collection;
 
 class FiscalYearService implements FiscalYearServiceInterface

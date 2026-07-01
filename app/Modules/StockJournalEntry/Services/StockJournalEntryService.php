@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockJournalEntry\Services;
+namespace Modules\StockJournalEntry\Services;
 
-use App\Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
-use App\Modules\StockJournalEntry\Models\StockJournalEntry;
-use App\Modules\StockJournalGodownEntry\Contracts\StockJournalGodownEntryServiceInterface;
-use App\Modules\StockJournalGodownEntry\Requests\StockJournalGodownEntryRequest;
+use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
+use Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\StockJournalGodownEntry\Contracts\StockJournalGodownEntryServiceInterface;
+use Modules\StockJournalGodownEntry\Requests\StockJournalGodownEntryRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Validator;
 

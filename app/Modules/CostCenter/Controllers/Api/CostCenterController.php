@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\CostCenter\Controllers\Api;
+namespace Modules\CostCenter\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\CostCenter\Contracts\CostCenterServiceInterface;
-use App\Modules\CostCenter\Resources\CostCenterResource;
-use App\Modules\CostCenter\Resources\CostCenterCollection;
-use App\Modules\CostCenter\Requests\CostCenterRequest;
+use Modules\CostCenter\Contracts\CostCenterServiceInterface;
+use Modules\CostCenter\Resources\CostCenterResource;
+use Modules\CostCenter\Resources\CostCenterCollection;
+use Modules\CostCenter\Requests\CostCenterRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

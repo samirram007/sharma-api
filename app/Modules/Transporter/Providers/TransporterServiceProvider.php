@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Transporter\Providers;
+namespace Modules\Transporter\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Transporter\Contracts\TransporterServiceInterface;
-use App\Modules\Transporter\Services\TransporterService;
+use Modules\Transporter\Contracts\TransporterServiceInterface;
+use Modules\Transporter\Services\TransporterService;
 
 class TransporterServiceProvider extends ServiceProvider
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StorageUnit\Contracts;
+namespace Modules\StorageUnit\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\StorageUnit\Models\StorageUnit;
+use Modules\StorageUnit\Models\StorageUnit;
 
 interface StorageUnitServiceInterface
 {

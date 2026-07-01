@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\UserRole\Models;
+namespace Modules\UserRole\Models;
 
-use App\Modules\Role\Models\Role;
-use App\Modules\User\Models\User;
+use Modules\Role\Models\Role;
+use Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,8 +36,8 @@ class UserRole extends Model
     public function features(): HasManyThrough
     {
         return $this->hasManyThrough(
-            'App\Modules\AppModuleFeature\Models\AppModuleFeature',
-            'App\Modules\RolePermission\Models\RolePermission',
+            'Modules\AppModuleFeature\Models\AppModuleFeature',
+            'Modules\RolePermission\Models\RolePermission',
             'role_id', // Foreign key on RolePermission table...
             'id', // Foreign key on Feature table...
             'role_id', // Local key on UserRole table...

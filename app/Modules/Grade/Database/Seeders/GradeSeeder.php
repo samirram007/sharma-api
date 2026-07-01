@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Grade\Database\Seeders;
+namespace Modules\Grade\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Grade\Models\Grade;
+use Modules\Grade\Models\Grade;
 
 class GradeSeeder extends Seeder
 {

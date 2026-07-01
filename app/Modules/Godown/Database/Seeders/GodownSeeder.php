@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Godown\Database\Seeders;
+namespace Modules\Godown\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Godown\Models\Godown;
+use Modules\Godown\Models\Godown;
 
 class GodownSeeder extends Seeder
 {

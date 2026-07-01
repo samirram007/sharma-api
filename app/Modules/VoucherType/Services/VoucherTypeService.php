@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherType\Services;
+namespace Modules\VoucherType\Services;
 
-use App\Modules\VoucherType\Contracts\VoucherTypeServiceInterface;
-use App\Modules\VoucherType\Models\VoucherType;
+use Modules\VoucherType\Contracts\VoucherTypeServiceInterface;
+use Modules\VoucherType\Models\VoucherType;
 use Illuminate\Database\Eloquent\Collection;
 
 class VoucherTypeService implements VoucherTypeServiceInterface

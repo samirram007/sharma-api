@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Designation\Services;
+namespace Modules\Designation\Services;
 
-use App\Modules\Designation\Contracts\DesignationServiceInterface;
-use App\Modules\Designation\Models\Designation;
+use Modules\Designation\Contracts\DesignationServiceInterface;
+use Modules\Designation\Models\Designation;
 use Illuminate\Database\Eloquent\Collection;
 
 class DesignationService implements DesignationServiceInterface

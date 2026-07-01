@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\ReceiptNoteReport\Providers;
+namespace Modules\ReceiptNoteReport\Providers;
 
-use App\Modules\ReceiptNoteReport\Services\ReceiptNoteReportService;
+use Modules\ReceiptNoteReport\Services\ReceiptNoteReportService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -12,7 +12,7 @@ class ReceiptNoteReportServiceProvider extends ServiceProvider
     {
         $this->app->bind(ReceiptNoteReportService::class, function ($app) {
             return new ReceiptNoteReportService(
-                $app->make(\App\Modules\Voucher\Contracts\VoucherServiceInterface::class)
+                $app->make(\Modules\Voucher\Contracts\VoucherServiceInterface::class)
             );
         });
     }

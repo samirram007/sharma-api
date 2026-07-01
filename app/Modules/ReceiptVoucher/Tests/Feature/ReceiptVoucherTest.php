@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\ReceiptVoucher\Tests\Feature;
+namespace Modules\ReceiptVoucher\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\ReceiptVoucher\Models\ReceiptVoucher;
+use Modules\ReceiptVoucher\Models\ReceiptVoucher;
 
 class ReceiptVoucherTest extends TestCase
 {

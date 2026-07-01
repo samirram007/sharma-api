@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockItemBrand\Tests\Feature;
+namespace Modules\StockItemBrand\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StockItemBrand\Models\StockItemBrand;
+use Modules\StockItemBrand\Models\StockItemBrand;
 
 class StockItemBrandTest extends TestCase
 {

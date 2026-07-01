@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\GstRegistrationType\Database\Seeders;
+namespace Modules\GstRegistrationType\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\GstRegistrationType\Models\GstRegistrationType;
+use Modules\GstRegistrationType\Models\GstRegistrationType;
 
 class GstRegistrationTypeSeeder extends Seeder
 {

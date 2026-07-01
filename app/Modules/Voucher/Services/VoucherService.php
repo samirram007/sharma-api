@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Modules\Voucher\Services;
+namespace Modules\Voucher\Services;
 
-use App\Modules\StockJournal\Contracts\StockJournalServiceInterface;
-use App\Modules\StockJournal\Requests\StockJournalRequest;
+use Modules\StockJournal\Contracts\StockJournalServiceInterface;
+use Modules\StockJournal\Requests\StockJournalRequest;
 
-use App\Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
-use App\Modules\Voucher\Contracts\VoucherServiceInterface;
-use App\Modules\Voucher\Models\Voucher;
-use App\Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
-use App\Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
-use App\Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
-use App\Modules\VoucherEntry\Requests\VoucherEntryRequest;
-use App\Modules\VoucherNo\Contracts\VoucherNoServiceInterface;
-use App\Modules\VoucherParty\Contracts\VoucherPartyServiceInterface;
-use App\Modules\VoucherParty\Requests\VoucherPartyRequest;
-use App\Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
-use App\Modules\VoucherReference\Requests\VoucherReferenceRequest;
-use App\Modules\FiscalYear\Models\FiscalYear;
+use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
+use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Models\Voucher;
+use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
+use Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
+use Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
+use Modules\VoucherEntry\Requests\VoucherEntryRequest;
+use Modules\VoucherNo\Contracts\VoucherNoServiceInterface;
+use Modules\VoucherParty\Contracts\VoucherPartyServiceInterface;
+use Modules\VoucherParty\Requests\VoucherPartyRequest;
+use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
+use Modules\VoucherReference\Requests\VoucherReferenceRequest;
+use Modules\FiscalYear\Models\FiscalYear;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -203,7 +203,7 @@ class VoucherService implements VoucherServiceInterface
     protected function generateJournalNo(): string
     {
         // Implement your logic to generate a unique journal number
-        $latestJournal = \App\Modules\StockJournal\Models\StockJournal::orderBy('id', 'desc')->first();
+        $latestJournal = \Modules\StockJournal\Models\StockJournal::orderBy('id', 'desc')->first();
         $nextNumber = $latestJournal ? intval(substr($latestJournal->journal_no, -5)) + 1 : 1;
         return 'JRN-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
     }

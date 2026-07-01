@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Freight\Tests\Feature;
+namespace Modules\Freight\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Freight\Models\Freight;
+use Modules\Freight\Models\Freight;
 
 class FreightTest extends TestCase
 {

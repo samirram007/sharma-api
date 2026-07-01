@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Modules\AccountLedger\Controllers\Api;
+namespace Modules\AccountLedger\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessCollection;
-use App\Modules\AccountGroup\Resources\AccountGroupResource;
-use App\Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
-use App\Modules\AccountLedger\Resources\AccountLedgerResource;
-use App\Modules\AccountLedger\Resources\AccountLedgerCollection;
-use App\Modules\AccountLedger\Requests\AccountLedgerRequest;
+use Modules\AccountGroup\Resources\AccountGroupResource;
+use Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
+use Modules\AccountLedger\Resources\AccountLedgerResource;
+use Modules\AccountLedger\Resources\AccountLedgerCollection;
+use Modules\AccountLedger\Requests\AccountLedgerRequest;
 use App\Http\Resources\SuccessResource;
-use App\Modules\AccountLedger\Resources\LedgerBalanceResource;
+use Modules\AccountLedger\Resources\LedgerBalanceResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 

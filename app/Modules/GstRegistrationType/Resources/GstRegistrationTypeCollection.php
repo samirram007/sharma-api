@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\GstRegistrationType\Resources;
+namespace Modules\GstRegistrationType\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

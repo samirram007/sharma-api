@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Receipt\Services;
+namespace Modules\Receipt\Services;
 
-use App\Modules\Receipt\Contracts\ReceiptServiceInterface;
-use App\Modules\Receipt\Models\Receipt;
+use Modules\Receipt\Contracts\ReceiptServiceInterface;
+use Modules\Receipt\Models\Receipt;
 use Illuminate\Database\Eloquent\Collection;
 
 class ReceiptService implements ReceiptServiceInterface

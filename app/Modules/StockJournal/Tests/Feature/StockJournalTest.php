@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\StockJournal\Tests\Feature;
+namespace Modules\StockJournal\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\StockJournal\Models\StockJournal;
+use Modules\StockJournal\Models\StockJournal;
 
 class StockJournalTest extends TestCase
 {

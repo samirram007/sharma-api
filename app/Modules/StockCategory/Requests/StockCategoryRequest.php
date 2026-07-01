@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockCategory\Requests;
+namespace Modules\StockCategory\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

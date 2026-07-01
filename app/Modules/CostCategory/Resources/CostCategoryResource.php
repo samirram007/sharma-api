@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\CostCategory\Resources;
+namespace Modules\CostCategory\Resources;
 
 use Illuminate\Http\Request;
 

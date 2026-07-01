@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Grade\Contracts;
+namespace Modules\Grade\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Grade\Models\Grade;
+use Modules\Grade\Models\Grade;
 
 interface GradeServiceInterface
 {

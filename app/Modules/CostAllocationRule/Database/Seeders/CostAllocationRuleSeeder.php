@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\CostAllocationRule\Database\Seeders;
+namespace Modules\CostAllocationRule\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\CostAllocationRule\Models\CostAllocationRule;
+use Modules\CostAllocationRule\Models\CostAllocationRule;
 
 class CostAllocationRuleSeeder extends Seeder
 {

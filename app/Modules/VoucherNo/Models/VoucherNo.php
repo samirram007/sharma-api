@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\VoucherNo\Models;
+namespace Modules\VoucherNo\Models;
 
-use App\Modules\Branch\Models\Branch;
-use App\Modules\FiscalYear\Models\FiscalYear;
-use App\Modules\VoucherType\Models\VoucherType;
+use Modules\Branch\Models\Branch;
+use Modules\FiscalYear\Models\FiscalYear;
+use Modules\VoucherType\Models\VoucherType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -46,7 +46,7 @@ class VoucherNo extends Model
     }
     public function company(): BelongsTo
     {
-        return $this->belongsTo(\App\Modules\Company\Models\Company::class, 'company_id');
+        return $this->belongsTo(\Modules\Company\Models\Company::class, 'company_id');
     }
 
     public function branch(): BelongsTo

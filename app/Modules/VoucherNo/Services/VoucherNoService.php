@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\VoucherNo\Services;
+namespace Modules\VoucherNo\Services;
 
-use App\Modules\VoucherNo\Contracts\VoucherNoServiceInterface;
-use App\Modules\VoucherNo\Models\VoucherNo;
-use App\Modules\VoucherType\Models\VoucherType;
+use Modules\VoucherNo\Contracts\VoucherNoServiceInterface;
+use Modules\VoucherNo\Models\VoucherNo;
+use Modules\VoucherType\Models\VoucherType;
 use Illuminate\Database\Eloquent\Collection;
 
 class VoucherNoService implements VoucherNoServiceInterface

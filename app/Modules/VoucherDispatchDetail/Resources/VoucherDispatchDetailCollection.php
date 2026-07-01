@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\VoucherDispatchDetail\Resources;
+namespace Modules\VoucherDispatchDetail\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

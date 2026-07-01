@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\AccountsJournal\Requests;
+namespace Modules\AccountsJournal\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

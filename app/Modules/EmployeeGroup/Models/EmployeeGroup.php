@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\EmployeeGroup\Models;
+namespace Modules\EmployeeGroup\Models;
 
-use App\Modules\Employee\Models\Employee;
+use Modules\Employee\Models\Employee;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;

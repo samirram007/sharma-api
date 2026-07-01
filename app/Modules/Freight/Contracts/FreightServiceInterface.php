@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Freight\Contracts;
+namespace Modules\Freight\Contracts;
 
-use App\Modules\Voucher\Models\Voucher;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Modules\Freight\Models\Freight;
+use Modules\Freight\Models\Freight;
 
 interface FreightServiceInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Status\Services;
+namespace Modules\Status\Services;
 
-use App\Modules\Status\Contracts\StatusServiceInterface;
-use App\Modules\Status\Models\Status;
+use Modules\Status\Contracts\StatusServiceInterface;
+use Modules\Status\Models\Status;
 use Illuminate\Database\Eloquent\Collection;
 
 class StatusService implements StatusServiceInterface

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\RolePermission\Models;
+namespace Modules\RolePermission\Models;
 
-use App\Modules\AppModuleFeature\Models\AppModuleFeature;
-use App\Modules\Role\Models\Role;
+use Modules\AppModuleFeature\Models\AppModuleFeature;
+use Modules\Role\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

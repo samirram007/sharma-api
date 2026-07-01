@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DayBook\Database\Seeders;
+namespace Modules\DayBook\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\DayBook\Models\DayBook;
+use Modules\DayBook\Models\DayBook;
 
 class DayBookSeeder extends Seeder
 {

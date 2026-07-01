@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Uqc\Providers;
+namespace Modules\Uqc\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Uqc\Contracts\UqcServiceInterface;
-use App\Modules\Uqc\Services\UqcService;
+use Modules\Uqc\Contracts\UqcServiceInterface;
+use Modules\Uqc\Services\UqcService;
 
 class UqcServiceProvider extends ServiceProvider
 {

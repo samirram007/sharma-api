@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Godown\Contracts;
+namespace Modules\Godown\Contracts;
 
 
-use App\Modules\Godown\Models\Godown;
+use Modules\Godown\Models\Godown;
 use Illuminate\Support\Collection;
 
 interface GodownServiceInterface

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AppModule\Contracts;
+namespace Modules\AppModule\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\AppModule\Models\AppModule;
+use Modules\AppModule\Models\AppModule;
 
 interface AppModuleServiceInterface
 {

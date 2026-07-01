@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Branch\Providers;
+namespace Modules\Branch\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Branch\Contracts\BranchServiceInterface;
-use App\Modules\Branch\Services\BranchService;
+use Modules\Branch\Contracts\BranchServiceInterface;
+use Modules\Branch\Services\BranchService;
 
 class BranchServiceProvider extends ServiceProvider
 {

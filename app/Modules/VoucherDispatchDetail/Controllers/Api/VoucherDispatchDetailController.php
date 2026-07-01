@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\VoucherDispatchDetail\Controllers\Api;
+namespace Modules\VoucherDispatchDetail\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
-use App\Modules\VoucherDispatchDetail\Resources\VoucherDispatchDetailResource;
-use App\Modules\VoucherDispatchDetail\Resources\VoucherDispatchDetailCollection;
-use App\Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
+use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
+use Modules\VoucherDispatchDetail\Resources\VoucherDispatchDetailResource;
+use Modules\VoucherDispatchDetail\Resources\VoucherDispatchDetailCollection;
+use Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

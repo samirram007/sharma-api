@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherNo\Database\Seeders;
+namespace Modules\VoucherNo\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\VoucherNo\Models\VoucherNo;
+use Modules\VoucherNo\Models\VoucherNo;
 
 class VoucherNoSeeder extends Seeder
 {

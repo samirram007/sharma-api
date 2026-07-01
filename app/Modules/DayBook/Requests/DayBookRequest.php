@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\DayBook\Requests;
+namespace Modules\DayBook\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

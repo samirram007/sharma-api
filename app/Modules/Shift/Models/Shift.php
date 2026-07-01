@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shift\Models;
+namespace Modules\Shift\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockJournalEntry\Controllers\Api;
+namespace Modules\StockJournalEntry\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
-use App\Modules\StockJournalEntry\Resources\StockJournalEntryResource;
-use App\Modules\StockJournalEntry\Resources\StockJournalEntryCollection;
-use App\Modules\StockJournalEntry\Requests\StockJournalEntryRequest;
+use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
+use Modules\StockJournalEntry\Resources\StockJournalEntryResource;
+use Modules\StockJournalEntry\Resources\StockJournalEntryCollection;
+use Modules\StockJournalEntry\Requests\StockJournalEntryRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

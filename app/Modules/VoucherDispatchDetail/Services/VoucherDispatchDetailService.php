@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherDispatchDetail\Services;
+namespace Modules\VoucherDispatchDetail\Services;
 
-use App\Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
-use App\Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
+use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
+use Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 

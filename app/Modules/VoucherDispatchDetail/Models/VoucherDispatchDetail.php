@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\VoucherDispatchDetail\Models;
+namespace Modules\VoucherDispatchDetail\Models;
 
 use App\Enums\QuantityType;
-use App\Modules\StockUnit\Models\StockUnit;
-use App\Modules\Voucher\Models\Voucher;
+use Modules\StockUnit\Models\StockUnit;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

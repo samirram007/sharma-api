@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DeliveryRoute\Contracts;
+namespace Modules\DeliveryRoute\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\DeliveryRoute\Models\DeliveryRoute;
+use Modules\DeliveryRoute\Models\DeliveryRoute;
 
 interface DeliveryRouteServiceInterface
 {

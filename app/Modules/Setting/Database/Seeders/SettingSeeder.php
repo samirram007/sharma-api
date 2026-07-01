@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Setting\Database\Seeders;
+namespace Modules\Setting\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Setting\Models\Setting;
+use Modules\Setting\Models\Setting;
 
 class SettingSeeder extends Seeder
 {

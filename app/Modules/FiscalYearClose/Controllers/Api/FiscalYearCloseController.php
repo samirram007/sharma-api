@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\FiscalYearClose\Controllers\Api;
+namespace Modules\FiscalYearClose\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessResource;
-use App\Modules\FiscalYearClose\Contracts\FiscalYearCloseServiceInterface;
+use Modules\FiscalYearClose\Contracts\FiscalYearCloseServiceInterface;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Holiday\Database\Seeders;
+namespace Modules\Holiday\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Holiday\Models\Holiday;
+use Modules\Holiday\Models\Holiday;
 
 class HolidaySeeder extends Seeder
 {

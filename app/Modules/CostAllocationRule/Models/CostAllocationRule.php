@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\CostAllocationRule\Models;
+namespace Modules\CostAllocationRule\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

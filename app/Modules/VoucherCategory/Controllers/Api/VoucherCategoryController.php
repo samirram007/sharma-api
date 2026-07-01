@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\VoucherCategory\Controllers\Api;
+namespace Modules\VoucherCategory\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\VoucherCategory\Contracts\VoucherCategoryServiceInterface;
-use App\Modules\VoucherCategory\Resources\VoucherCategoryResource;
-use App\Modules\VoucherCategory\Resources\VoucherCategoryCollection;
-use App\Modules\VoucherCategory\Requests\VoucherCategoryRequest;
+use Modules\VoucherCategory\Contracts\VoucherCategoryServiceInterface;
+use Modules\VoucherCategory\Resources\VoucherCategoryResource;
+use Modules\VoucherCategory\Resources\VoucherCategoryCollection;
+use Modules\VoucherCategory\Requests\VoucherCategoryRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

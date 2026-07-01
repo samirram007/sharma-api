@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AccountGroup\Models;
+namespace Modules\AccountGroup\Models;
 
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\AccountNature\Models\AccountNature;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\AccountNature\Models\AccountNature;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\VoucherReference\Controllers\Api;
+namespace Modules\VoucherReference\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
-use App\Modules\VoucherReference\Resources\VoucherReferenceResource;
-use App\Modules\VoucherReference\Resources\VoucherReferenceCollection;
-use App\Modules\VoucherReference\Requests\VoucherReferenceRequest;
+use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
+use Modules\VoucherReference\Resources\VoucherReferenceResource;
+use Modules\VoucherReference\Resources\VoucherReferenceCollection;
+use Modules\VoucherReference\Requests\VoucherReferenceRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

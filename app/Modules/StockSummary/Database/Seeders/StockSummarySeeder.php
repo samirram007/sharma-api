@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockSummary\Database\Seeders;
+namespace Modules\StockSummary\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StockSummary\Models\StockSummary;
+use Modules\StockSummary\Models\StockSummary;
 
 class StockSummarySeeder extends Seeder
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StorageUnit\Resources;
+namespace Modules\StorageUnit\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

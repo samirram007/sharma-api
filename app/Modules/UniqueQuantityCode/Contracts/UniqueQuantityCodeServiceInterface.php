@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\UniqueQuantityCode\Contracts;
+namespace Modules\UniqueQuantityCode\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
+use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
 
 interface UniqueQuantityCodeServiceInterface
 {

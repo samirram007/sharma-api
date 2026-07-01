@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Modules\VoucherType\Models\VoucherType;
-use App\Modules\VoucherCategory\Models\VoucherCategory;
+use Modules\VoucherType\Models\VoucherType;
+use Modules\VoucherCategory\Models\VoucherCategory;
 use Illuminate\Database\Seeder;
 
 class FiscalYearCloseVoucherTypeSeeder extends Seeder

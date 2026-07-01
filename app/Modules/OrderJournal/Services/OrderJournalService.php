@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\OrderJournal\Services;
+namespace Modules\OrderJournal\Services;
 
-use App\Modules\OrderJournal\Contracts\OrderJournalServiceInterface;
-use App\Modules\OrderJournal\Models\OrderJournal;
+use Modules\OrderJournal\Contracts\OrderJournalServiceInterface;
+use Modules\OrderJournal\Models\OrderJournal;
 use Illuminate\Database\Eloquent\Collection;
 
 class OrderJournalService implements OrderJournalServiceInterface

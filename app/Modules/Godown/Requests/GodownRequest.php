@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Godown\Requests;
+namespace Modules\Godown\Requests;
 
-use App\Modules\Address\Requests\AddressRequest;
+use Modules\Address\Requests\AddressRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GodownRequest extends FormRequest

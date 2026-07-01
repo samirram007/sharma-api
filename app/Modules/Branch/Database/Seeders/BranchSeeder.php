@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Branch\Database\Seeders;
+namespace Modules\Branch\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Branch\Models\Branch;
+use Modules\Branch\Models\Branch;
 
 class BranchSeeder extends Seeder
 {

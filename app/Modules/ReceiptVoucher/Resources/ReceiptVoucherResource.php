@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\ReceiptVoucher\Resources;
+namespace Modules\ReceiptVoucher\Resources;
 
 use Illuminate\Http\Request;
 

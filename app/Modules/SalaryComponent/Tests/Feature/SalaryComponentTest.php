@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\SalaryComponent\Tests\Feature;
+namespace Modules\SalaryComponent\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\SalaryComponent\Models\SalaryComponent;
+use Modules\SalaryComponent\Models\SalaryComponent;
 
 class SalaryComponentTest extends TestCase
 {

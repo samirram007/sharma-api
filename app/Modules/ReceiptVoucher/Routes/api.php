@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\ReceiptVoucher\Controllers\Api\ReceiptVoucherController;
+use Modules\ReceiptVoucher\Controllers\Api\ReceiptVoucherController;
 
 Route::apiResource('receipt_vouchers', ReceiptVoucherController::class)->middleware(['jwt.cookies']);
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\AppNotification\Models;
+namespace Modules\AppNotification\Models;
 
-use App\Modules\User\Models\User;
+use Modules\User\Models\User;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

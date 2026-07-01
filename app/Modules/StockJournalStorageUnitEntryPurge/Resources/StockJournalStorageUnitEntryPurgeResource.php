@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockJournalStorageUnitEntryPurge\Resources;
+namespace Modules\StockJournalStorageUnitEntryPurge\Resources;
 
 use Illuminate\Http\Request;
 

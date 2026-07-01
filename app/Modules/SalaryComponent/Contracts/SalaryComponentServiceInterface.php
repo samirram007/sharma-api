@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\SalaryComponent\Contracts;
+namespace Modules\SalaryComponent\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\SalaryComponent\Models\SalaryComponent;
+use Modules\SalaryComponent\Models\SalaryComponent;
 
 interface SalaryComponentServiceInterface
 {

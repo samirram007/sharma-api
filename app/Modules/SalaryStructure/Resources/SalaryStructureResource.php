@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\SalaryStructure\Resources;
+namespace Modules\SalaryStructure\Resources;
 
 use Illuminate\Http\Request;
 

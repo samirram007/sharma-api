@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\AppModuleFeature\Controllers\Api;
+namespace Modules\AppModuleFeature\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\AppModuleFeature\Contracts\AppModuleFeatureServiceInterface;
-use App\Modules\AppModuleFeature\Resources\AppModuleFeatureResource;
-use App\Modules\AppModuleFeature\Resources\AppModuleFeatureCollection;
-use App\Modules\AppModuleFeature\Requests\AppModuleFeatureRequest;
+use Modules\AppModuleFeature\Contracts\AppModuleFeatureServiceInterface;
+use Modules\AppModuleFeature\Resources\AppModuleFeatureResource;
+use Modules\AppModuleFeature\Resources\AppModuleFeatureCollection;
+use Modules\AppModuleFeature\Requests\AppModuleFeatureRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;
@@ -60,6 +60,12 @@ class AppModuleFeatureController extends Controller
     {
         $data = $this->service->getByRoleAndModule($role_id, $module_id);
         //dd($data);
+        return new AppModuleFeatureCollection($data);
+    }
+
+    public function getRoleMenuPermissions(int $role_id): SuccessCollection
+    {
+        $data = $this->service->getAllWithRolePermissions($role_id);
         return new AppModuleFeatureCollection($data);
     }
 }

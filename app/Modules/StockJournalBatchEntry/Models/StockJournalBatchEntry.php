@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockJournalBatchEntry\Models;
+namespace Modules\StockJournalBatchEntry\Models;
 
 use App\Enums\MovementType;
 use Illuminate\Database\Eloquent\Model;

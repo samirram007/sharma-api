@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockJournalBatchEntry\Resources;
+namespace Modules\StockJournalBatchEntry\Resources;
 
 use Illuminate\Http\Request;
 

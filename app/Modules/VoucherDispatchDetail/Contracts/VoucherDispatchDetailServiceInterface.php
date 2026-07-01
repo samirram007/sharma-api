@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherDispatchDetail\Contracts;
+namespace Modules\VoucherDispatchDetail\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
+use Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
 
 interface VoucherDispatchDetailServiceInterface
 {

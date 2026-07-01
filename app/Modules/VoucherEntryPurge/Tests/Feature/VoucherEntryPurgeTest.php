@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\VoucherEntryPurge\Tests\Feature;
+namespace Modules\VoucherEntryPurge\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\VoucherEntryPurge\Models\VoucherEntryPurge;
+use Modules\VoucherEntryPurge\Models\VoucherEntryPurge;
 
 class VoucherEntryPurgeTest extends TestCase
 {

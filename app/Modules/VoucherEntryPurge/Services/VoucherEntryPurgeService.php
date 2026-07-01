@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherEntryPurge\Services;
+namespace Modules\VoucherEntryPurge\Services;
 
-use App\Modules\VoucherEntryPurge\Contracts\VoucherEntryPurgeServiceInterface;
-use App\Modules\VoucherEntryPurge\Models\VoucherEntryPurge;
+use Modules\VoucherEntryPurge\Contracts\VoucherEntryPurgeServiceInterface;
+use Modules\VoucherEntryPurge\Models\VoucherEntryPurge;
 use Illuminate\Database\Eloquent\Collection;
 
 class VoucherEntryPurgeService implements VoucherEntryPurgeServiceInterface

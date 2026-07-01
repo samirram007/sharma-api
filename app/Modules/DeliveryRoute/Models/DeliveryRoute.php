@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\DeliveryRoute\Models;
+namespace Modules\DeliveryRoute\Models;
 
-use App\Modules\DeliveryPlace\Models\DeliveryPlace;
-use App\Modules\Godown\Models\Godown;
-use App\Modules\StockUnit\Models\StockUnit;
-use App\Modules\Transporter\Models\Transporter;
+use Modules\DeliveryPlace\Models\DeliveryPlace;
+use Modules\Godown\Models\Godown;
+use Modules\StockUnit\Models\StockUnit;
+use Modules\Transporter\Models\Transporter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

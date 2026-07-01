@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Status\Controllers\Api;
+namespace Modules\Status\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Status\Contracts\StatusServiceInterface;
-use App\Modules\Status\Resources\StatusResource;
-use App\Modules\Status\Resources\StatusCollection;
-use App\Modules\Status\Requests\StatusRequest;
+use Modules\Status\Contracts\StatusServiceInterface;
+use Modules\Status\Resources\StatusResource;
+use Modules\Status\Resources\StatusCollection;
+use Modules\Status\Requests\StatusRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

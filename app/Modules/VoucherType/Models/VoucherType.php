@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\VoucherType\Models;
+namespace Modules\VoucherType\Models;
 
-use App\Modules\VoucherCategory\Models\VoucherCategory;
+use Modules\VoucherCategory\Models\VoucherCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,6 +45,6 @@ class VoucherType extends Model
     }
     public function voucher_classifications()
     {
-        return $this->hasMany(\App\Modules\VoucherClassification\Models\VoucherClassification::class);
+        return $this->hasMany(\Modules\VoucherClassification\Models\VoucherClassification::class);
     }
 }

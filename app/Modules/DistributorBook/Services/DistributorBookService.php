@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\DistributorBook\Services;
+namespace Modules\DistributorBook\Services;
 
-use App\Modules\DistributorBook\Contracts\DistributorBookServiceInterface;
-use App\Modules\DistributorBook\Models\DistributorBook;
-use App\Modules\Voucher\Contracts\VoucherServiceInterface;
-use App\Modules\Voucher\Models\Voucher;
-use App\Modules\VoucherEntry\Models\VoucherEntry;
+use Modules\DistributorBook\Contracts\DistributorBookServiceInterface;
+use Modules\DistributorBook\Models\DistributorBook;
+use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Models\Voucher;
+use Modules\VoucherEntry\Models\VoucherEntry;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 

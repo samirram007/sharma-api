@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\AppMaintenance\Controllers\Api;
+namespace Modules\AppMaintenance\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\AppMaintenance\Contracts\AppMaintenanceServiceInterface;
-use App\Modules\AppMaintenance\Resources\AppMaintenanceResource;
-use App\Modules\AppMaintenance\Resources\AppMaintenanceCollection;
-use App\Modules\AppMaintenance\Requests\AppMaintenanceRequest;
+use Modules\AppMaintenance\Contracts\AppMaintenanceServiceInterface;
+use Modules\AppMaintenance\Resources\AppMaintenanceResource;
+use Modules\AppMaintenance\Resources\AppMaintenanceCollection;
+use Modules\AppMaintenance\Requests\AppMaintenanceRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Grade\Controllers\Api;
+namespace Modules\Grade\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Grade\Contracts\GradeServiceInterface;
-use App\Modules\Grade\Resources\GradeResource;
-use App\Modules\Grade\Resources\GradeCollection;
-use App\Modules\Grade\Requests\GradeRequest;
+use Modules\Grade\Contracts\GradeServiceInterface;
+use Modules\Grade\Resources\GradeResource;
+use Modules\Grade\Resources\GradeCollection;
+use Modules\Grade\Requests\GradeRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

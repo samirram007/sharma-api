@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shift\Resources;
+namespace Modules\Shift\Resources;
 
 use Illuminate\Http\Request;
 

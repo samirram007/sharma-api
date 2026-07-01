@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Modules\DayBook\Services;
+namespace Modules\DayBook\Services;
 
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\DayBook\Contracts\DayBookServiceInterface;
-use App\Modules\DayBook\Models\DayBook;
-use App\Modules\Voucher\Contracts\VoucherServiceInterface;
-use App\Modules\Voucher\Models\Voucher;
-use App\Modules\VoucherEntry\Models\VoucherEntry;
-use App\Modules\VoucherType\Models\VoucherType;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\DayBook\Contracts\DayBookServiceInterface;
+use Modules\DayBook\Models\DayBook;
+use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Models\Voucher;
+use Modules\VoucherEntry\Models\VoucherEntry;
+use Modules\VoucherType\Models\VoucherType;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;

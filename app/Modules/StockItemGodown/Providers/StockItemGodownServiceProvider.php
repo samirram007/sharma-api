@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockItemGodown\Providers;
+namespace Modules\StockItemGodown\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockItemGodown\Contracts\StockItemGodownServiceInterface;
-use App\Modules\StockItemGodown\Services\StockItemGodownService;
+use Modules\StockItemGodown\Contracts\StockItemGodownServiceInterface;
+use Modules\StockItemGodown\Services\StockItemGodownService;
 
 class StockItemGodownServiceProvider extends ServiceProvider
 {

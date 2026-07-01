@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherDispatchDetail\Database\Seeders;
+namespace Modules\VoucherDispatchDetail\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
+use Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
 
 class VoucherDispatchDetailSeeder extends Seeder
 {

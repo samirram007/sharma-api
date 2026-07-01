@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\VoucherDispatchDetail\Providers;
+namespace Modules\VoucherDispatchDetail\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
-use App\Modules\VoucherDispatchDetail\Services\VoucherDispatchDetailService;
+use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
+use Modules\VoucherDispatchDetail\Services\VoucherDispatchDetailService;
 
 class VoucherDispatchDetailServiceProvider extends ServiceProvider
 {

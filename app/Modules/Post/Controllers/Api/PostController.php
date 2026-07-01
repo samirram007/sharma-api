@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Post\Controllers\Api;
+namespace Modules\Post\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Post\Contracts\PostServiceInterface;
-use App\Modules\Post\Resources\PostResource;
-use App\Modules\Post\Resources\PostCollection;
-use App\Modules\Post\Requests\PostRequest;
+use Modules\Post\Contracts\PostServiceInterface;
+use Modules\Post\Resources\PostResource;
+use Modules\Post\Resources\PostCollection;
+use Modules\Post\Requests\PostRequest;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;

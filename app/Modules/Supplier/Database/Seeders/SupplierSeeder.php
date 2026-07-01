@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Supplier\Database\Seeders;
+namespace Modules\Supplier\Database\Seeders;
 
-use App\Modules\Supplier\Requests\SupplierRequest;
-use App\Modules\Supplier\Services\SupplierService;
+use Modules\Supplier\Requests\SupplierRequest;
+use Modules\Supplier\Services\SupplierService;
 use Illuminate\Database\Seeder;
-use App\Modules\Supplier\Models\Supplier;
+use Modules\Supplier\Models\Supplier;
 use Illuminate\Support\Facades\Validator;
 
 class SupplierSeeder extends Seeder

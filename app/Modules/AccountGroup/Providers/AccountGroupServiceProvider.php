@@ -1,20 +1,18 @@
 <?php
 
-namespace App\Modules\AccountGroup\Providers;
+namespace Modules\AccountGroup\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\AccountGroup\Contracts\AccountGroupServiceInterface;
-use App\Modules\AccountGroup\Services\AccountGroupService;
+use Modules\AccountGroup\Contracts\AccountGroupServiceInterface;
+use Modules\AccountGroup\Services\AccountGroupService;
 
 class AccountGroupServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(AccountGroupServiceInterface::class, AccountGroupService::class);
-        $this->app->singleton('account_group_service', function ($app) {
-            return $app->make(AccountGroupServiceInterface::class);
-        });
+        $this->app->singleton(AccountGroupServiceInterface::class, AccountGroupService::class);
+       
     }
 
     public function boot(): void

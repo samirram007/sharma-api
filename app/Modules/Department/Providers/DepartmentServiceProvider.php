@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Department\Providers;
+namespace Modules\Department\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Department\Contracts\DepartmentServiceInterface;
-use App\Modules\Department\Services\DepartmentService;
+use Modules\Department\Contracts\DepartmentServiceInterface;
+use Modules\Department\Services\DepartmentService;
 
 class DepartmentServiceProvider extends ServiceProvider
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\DeliveryRoute\Tests\Feature;
+namespace Modules\DeliveryRoute\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\DeliveryRoute\Models\DeliveryRoute;
+use Modules\DeliveryRoute\Models\DeliveryRoute;
 
 class DeliveryRouteTest extends TestCase
 {

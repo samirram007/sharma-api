@@ -1,8 +1,8 @@
 <?php
-namespace App\Modules\VoucherCategory\Database\Seeders;
+namespace Modules\VoucherCategory\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\VoucherCategory\Models\VoucherCategory;
+use Modules\VoucherCategory\Models\VoucherCategory;
 
 
 class VoucherCategorySeeder extends Seeder

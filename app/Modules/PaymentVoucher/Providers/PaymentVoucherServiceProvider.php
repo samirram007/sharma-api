@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\PaymentVoucher\Providers;
+namespace Modules\PaymentVoucher\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\PaymentVoucher\Contracts\PaymentVoucherServiceInterface;
-use App\Modules\PaymentVoucher\Services\PaymentVoucherService;
+use Modules\PaymentVoucher\Contracts\PaymentVoucherServiceInterface;
+use Modules\PaymentVoucher\Services\PaymentVoucherService;
 
 class PaymentVoucherServiceProvider extends ServiceProvider
 {

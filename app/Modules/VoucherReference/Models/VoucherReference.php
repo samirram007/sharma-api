@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\VoucherReference\Models;
+namespace Modules\VoucherReference\Models;
 
-use App\Modules\Voucher\Models\Voucher;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

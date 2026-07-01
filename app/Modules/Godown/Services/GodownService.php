@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Godown\Services;
+namespace Modules\Godown\Services;
 
-use App\Modules\Godown\Contracts\GodownServiceInterface;
-use App\Modules\Godown\Models\Godown;
-use App\Modules\StockItem\Models\StockItem;
+use Modules\Godown\Contracts\GodownServiceInterface;
+use Modules\Godown\Models\Godown;
+use Modules\StockItem\Models\StockItem;
 use Illuminate\Support\Collection;
 
 

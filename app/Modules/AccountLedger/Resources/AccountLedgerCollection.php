@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\AccountLedger\Resources;
+namespace Modules\AccountLedger\Resources;
 
 use App\Http\Resources\SuccessCollection;
 use Illuminate\Http\Request;

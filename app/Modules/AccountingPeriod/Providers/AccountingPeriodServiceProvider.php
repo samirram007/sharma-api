@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\AccountingPeriod\Providers;
+namespace Modules\AccountingPeriod\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\AccountingPeriod\Contracts\AccountingPeriodServiceInterface;
-use App\Modules\AccountingPeriod\Services\AccountingPeriodService;
+use Modules\AccountingPeriod\Contracts\AccountingPeriodServiceInterface;
+use Modules\AccountingPeriod\Services\AccountingPeriodService;
 
 class AccountingPeriodServiceProvider extends ServiceProvider
 {

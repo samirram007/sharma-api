@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\VoucherClassification\Controllers\Api;
+namespace Modules\VoucherClassification\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\VoucherClassification\Contracts\VoucherClassificationServiceInterface;
-use App\Modules\VoucherClassification\Resources\VoucherClassificationResource;
-use App\Modules\VoucherClassification\Resources\VoucherClassificationCollection;
-use App\Modules\VoucherClassification\Requests\VoucherClassificationRequest;
+use Modules\VoucherClassification\Contracts\VoucherClassificationServiceInterface;
+use Modules\VoucherClassification\Resources\VoucherClassificationResource;
+use Modules\VoucherClassification\Resources\VoucherClassificationCollection;
+use Modules\VoucherClassification\Requests\VoucherClassificationRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockItemPrice\Providers;
+namespace Modules\StockItemPrice\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockItemPrice\Contracts\StockItemPriceServiceInterface;
-use App\Modules\StockItemPrice\Services\StockItemPriceService;
+use Modules\StockItemPrice\Contracts\StockItemPriceServiceInterface;
+use Modules\StockItemPrice\Services\StockItemPriceService;
 
 class StockItemPriceServiceProvider extends ServiceProvider
 {

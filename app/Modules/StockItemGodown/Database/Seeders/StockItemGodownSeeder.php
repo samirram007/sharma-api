@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemGodown\Database\Seeders;
+namespace Modules\StockItemGodown\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StockItemGodown\Models\StockItemGodown;
+use Modules\StockItemGodown\Models\StockItemGodown;
 
 class StockItemGodownSeeder extends Seeder
 {

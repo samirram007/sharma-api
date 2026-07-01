@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Status\Contracts;
+namespace Modules\Status\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Status\Models\Status;
+use Modules\Status\Models\Status;
 
 interface StatusServiceInterface
 {

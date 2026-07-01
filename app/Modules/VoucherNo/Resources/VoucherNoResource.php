@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\VoucherNo\Resources;
+namespace Modules\VoucherNo\Resources;
 
 use Illuminate\Http\Request;
 

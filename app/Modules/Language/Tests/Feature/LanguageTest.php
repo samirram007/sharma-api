@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Language\Tests\Feature;
+namespace Modules\Language\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Language\Models\Language;
+use Modules\Language\Models\Language;
 
 class LanguageTest extends TestCase
 {

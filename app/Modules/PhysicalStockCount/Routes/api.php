@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\PhysicalStockCount\Controllers\Api\PhysicalStockCountController;
+use Modules\PhysicalStockCount\Controllers\Api\PhysicalStockCountController;
 
 Route::middleware('jwt.cookies')->group(function () {
     Route::apiResource('physical-stock-counts', PhysicalStockCountController::class);

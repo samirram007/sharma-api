@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Vehicle\Controllers\Api;
+namespace Modules\Vehicle\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Vehicle\Contracts\VehicleServiceInterface;
-use App\Modules\Vehicle\Resources\VehicleResource;
-use App\Modules\Vehicle\Resources\VehicleCollection;
-use App\Modules\Vehicle\Requests\VehicleRequest;
+use Modules\Vehicle\Contracts\VehicleServiceInterface;
+use Modules\Vehicle\Resources\VehicleResource;
+use Modules\Vehicle\Resources\VehicleCollection;
+use Modules\Vehicle\Requests\VehicleRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

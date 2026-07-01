@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockJournalBatchEntry\Providers;
+namespace Modules\StockJournalBatchEntry\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockJournalBatchEntry\Contracts\StockJournalBatchEntryServiceInterface;
-use App\Modules\StockJournalBatchEntry\Services\StockJournalBatchEntryService;
+use Modules\StockJournalBatchEntry\Contracts\StockJournalBatchEntryServiceInterface;
+use Modules\StockJournalBatchEntry\Services\StockJournalBatchEntryService;
 
 class StockJournalBatchEntryServiceProvider extends ServiceProvider
 {

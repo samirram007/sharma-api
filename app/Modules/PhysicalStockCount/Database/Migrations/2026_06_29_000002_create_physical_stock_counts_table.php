@@ -39,7 +39,7 @@ return new class extends Migration
             $table->integer('entry_order')->default(0);
             $table->timestamps();
 
-            $table->index(['physical_stock_count_id', 'stock_item_id']);
+            $table->index(['physical_stock_count_id', 'stock_item_id'])->name('psc_item_unique');
         });
     }
 

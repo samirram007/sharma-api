@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherType\Resources;
+namespace Modules\VoucherType\Resources;
 
 use App\Http\Resources\SuccessResource;
-use App\Modules\VoucherCategory\Resources\VoucherCategoryResource;
+use Modules\VoucherCategory\Resources\VoucherCategoryResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +22,7 @@ class VoucherTypeResource extends SuccessResource
             'voucherCategoryId' => $this->voucher_category_id,
             'voucherCategory' => new VoucherCategoryResource($this->whenLoaded('voucher_category')),
             'voucherClassificationId' => $this->voucher_classification_id,
-            'voucherClassifications' => \App\Modules\VoucherClassification\Resources\VoucherClassificationResource::collection($this->whenLoaded('voucher_classifications')),
+            'voucherClassifications' => \Modules\VoucherClassification\Resources\VoucherClassificationResource::collection($this->whenLoaded('voucher_classifications')),
 
         ];
     }

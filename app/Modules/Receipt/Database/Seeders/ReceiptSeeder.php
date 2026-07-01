@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Receipt\Database\Seeders;
+namespace Modules\Receipt\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Receipt\Models\Receipt;
+use Modules\Receipt\Models\Receipt;
 
 class ReceiptSeeder extends Seeder
 {

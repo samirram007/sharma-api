@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\VoucherParty\Resources;
+namespace Modules\VoucherParty\Resources;
 
-use App\Modules\Country\Resources\CountryResource;
-use App\Modules\State\Resources\StateResource;
-use App\Modules\Voucher\Resources\VoucherResource;
+use Modules\Country\Resources\CountryResource;
+use Modules\State\Resources\StateResource;
+use Modules\Voucher\Resources\VoucherResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

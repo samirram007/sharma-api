@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Modules\Employee\Models;
+namespace Modules\Employee\Models;
 
-use App\Modules\AccountLedger\Models\AccountLedger;
-use App\Modules\Address\Models\Address;
-use App\Modules\Department\Models\Department;
-use App\Modules\Designation\Models\Designation;
-use App\Modules\EmployeeGroup\Models\EmployeeGroup;
-use App\Modules\Grade\Models\Grade;
-use App\Modules\Shift\Models\Shift;
-use App\Modules\User\Models\User;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\Address\Models\Address;
+use Modules\Department\Models\Department;
+use Modules\Designation\Models\Designation;
+use Modules\EmployeeGroup\Models\EmployeeGroup;
+use Modules\Grade\Models\Grade;
+use Modules\Shift\Models\Shift;
+use Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

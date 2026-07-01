@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Modules\PhysicalStockCount\Controllers\Api;
+namespace Modules\PhysicalStockCount\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
-use App\Modules\PhysicalStockCount\Contracts\PhysicalStockCountServiceInterface;
-use App\Modules\PhysicalStockCount\Resources\PhysicalStockCountResource;
-use App\Modules\PhysicalStockCount\Resources\PhysicalStockCountCollection;
-use App\Modules\PhysicalStockCount\Requests\PhysicalStockCountRequest;
+use Modules\PhysicalStockCount\Contracts\PhysicalStockCountServiceInterface;
+use Modules\PhysicalStockCount\Resources\PhysicalStockCountResource;
+use Modules\PhysicalStockCount\Resources\PhysicalStockCountCollection;
+use Modules\PhysicalStockCount\Requests\PhysicalStockCountRequest;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

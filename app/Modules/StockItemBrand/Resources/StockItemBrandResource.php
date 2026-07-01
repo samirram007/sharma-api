@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockItemBrand\Resources;
+namespace Modules\StockItemBrand\Resources;
 
 use Illuminate\Http\Request;
 

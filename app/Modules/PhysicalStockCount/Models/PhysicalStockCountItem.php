@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\PhysicalStockCount\Models;
+namespace Modules\PhysicalStockCount\Models;
 
-use App\Modules\PhysicalStockCount\Models\PhysicalStockCount;
-use App\Modules\StockItem\Models\StockItem;
-use App\Modules\StockUnit\Models\StockUnit;
+use Modules\PhysicalStockCount\Models\PhysicalStockCount;
+use Modules\StockItem\Models\StockItem;
+use Modules\StockUnit\Models\StockUnit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

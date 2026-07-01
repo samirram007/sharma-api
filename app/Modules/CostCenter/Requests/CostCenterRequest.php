@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\CostCenter\Requests;
+namespace Modules\CostCenter\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

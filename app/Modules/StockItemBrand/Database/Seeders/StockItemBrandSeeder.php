@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemBrand\Database\Seeders;
+namespace Modules\StockItemBrand\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\StockItemBrand\Models\StockItemBrand;
+use Modules\StockItemBrand\Models\StockItemBrand;
 
 class StockItemBrandSeeder extends Seeder
 {

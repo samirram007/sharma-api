@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\CostCategory\Contracts;
+namespace Modules\CostCategory\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\CostCategory\Models\CostCategory;
+use Modules\CostCategory\Models\CostCategory;
 
 interface CostCategoryServiceInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Holiday\Contracts;
+namespace Modules\Holiday\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Holiday\Models\Holiday;
+use Modules\Holiday\Models\Holiday;
 
 interface HolidayServiceInterface
 {

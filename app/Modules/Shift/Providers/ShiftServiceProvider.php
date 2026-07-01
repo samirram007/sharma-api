@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Shift\Providers;
+namespace Modules\Shift\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Shift\Contracts\ShiftServiceInterface;
-use App\Modules\Shift\Services\ShiftService;
+use Modules\Shift\Contracts\ShiftServiceInterface;
+use Modules\Shift\Services\ShiftService;
 
 class ShiftServiceProvider extends ServiceProvider
 {

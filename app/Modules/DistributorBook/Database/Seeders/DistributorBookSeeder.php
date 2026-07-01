@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DistributorBook\Database\Seeders;
+namespace Modules\DistributorBook\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\DistributorBook\Models\DistributorBook;
+use Modules\DistributorBook\Models\DistributorBook;
 
 class DistributorBookSeeder extends Seeder
 {

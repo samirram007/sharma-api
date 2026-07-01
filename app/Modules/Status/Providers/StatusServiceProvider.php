@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Status\Providers;
+namespace Modules\Status\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Status\Contracts\StatusServiceInterface;
-use App\Modules\Status\Services\StatusService;
+use Modules\Status\Contracts\StatusServiceInterface;
+use Modules\Status\Services\StatusService;
 
 class StatusServiceProvider extends ServiceProvider
 {

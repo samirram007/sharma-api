@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Purchase\Tests\Feature;
+namespace Modules\Purchase\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Purchase\Models\Purchase;
+use Modules\Purchase\Models\Purchase;
 
 class PurchaseTest extends TestCase
 {

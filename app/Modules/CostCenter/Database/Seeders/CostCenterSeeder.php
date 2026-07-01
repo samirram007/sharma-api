@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\CostCenter\Database\Seeders;
+namespace Modules\CostCenter\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\CostCenter\Models\CostCenter;
+use Modules\CostCenter\Models\CostCenter;
 
 class CostCenterSeeder extends Seeder
 {

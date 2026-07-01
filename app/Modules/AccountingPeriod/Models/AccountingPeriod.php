@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\AccountingPeriod\Models;
+namespace Modules\AccountingPeriod\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

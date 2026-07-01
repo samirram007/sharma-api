@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\DeliveryPlace\Resources;
+namespace Modules\DeliveryPlace\Resources;
 
-use App\Modules\Address\Resources\AddressResource;
+use Modules\Address\Resources\AddressResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

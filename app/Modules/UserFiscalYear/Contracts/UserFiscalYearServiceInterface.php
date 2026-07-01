@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\UserFiscalYear\Contracts;
+namespace Modules\UserFiscalYear\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\UserFiscalYear\Models\UserFiscalYear;
+use Modules\UserFiscalYear\Models\UserFiscalYear;
 
 interface UserFiscalYearServiceInterface
 {

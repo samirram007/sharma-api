@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\CostCategory\Controllers\Api;
+namespace Modules\CostCategory\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\CostCategory\Contracts\CostCategoryServiceInterface;
-use App\Modules\CostCategory\Resources\CostCategoryResource;
-use App\Modules\CostCategory\Resources\CostCategoryCollection;
-use App\Modules\CostCategory\Requests\CostCategoryRequest;
+use Modules\CostCategory\Contracts\CostCategoryServiceInterface;
+use Modules\CostCategory\Resources\CostCategoryResource;
+use Modules\CostCategory\Resources\CostCategoryCollection;
+use Modules\CostCategory\Requests\CostCategoryRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

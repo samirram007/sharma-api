@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Branch\Services;
+namespace Modules\Branch\Services;
 
-use App\Modules\Branch\Contracts\BranchServiceInterface;
-use App\Modules\Branch\Models\Branch;
+use Modules\Branch\Contracts\BranchServiceInterface;
+use Modules\Branch\Models\Branch;
 use Illuminate\Database\Eloquent\Collection;
 
 class BranchService implements BranchServiceInterface

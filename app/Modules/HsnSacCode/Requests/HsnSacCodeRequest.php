@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\HsnSacCode\Requests;
+namespace Modules\HsnSacCode\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

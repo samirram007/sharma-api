@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherEntry\Services;
+namespace Modules\VoucherEntry\Services;
 
-use App\Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
-use App\Modules\VoucherEntry\Models\VoucherEntry;
+use Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
+use Modules\VoucherEntry\Models\VoucherEntry;
 use Illuminate\Database\Eloquent\Collection;
 
 class VoucherEntryService implements VoucherEntryServiceInterface

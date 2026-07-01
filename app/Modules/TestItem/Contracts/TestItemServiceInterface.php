@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\TestItem\Contracts;
+namespace Modules\TestItem\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\TestItem\Models\TestItem;
+use Modules\TestItem\Models\TestItem;
 
 interface TestItemServiceInterface
 {

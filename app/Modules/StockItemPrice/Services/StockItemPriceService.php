@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockItemPrice\Services;
+namespace Modules\StockItemPrice\Services;
 
-use App\Modules\StockItemPrice\Contracts\StockItemPriceServiceInterface;
-use App\Modules\StockItemPrice\Models\StockItemPrice;
+use Modules\StockItemPrice\Contracts\StockItemPriceServiceInterface;
+use Modules\StockItemPrice\Models\StockItemPrice;
 use Illuminate\Database\Eloquent\Collection;
 
 class StockItemPriceService implements StockItemPriceServiceInterface

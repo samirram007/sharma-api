@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\UniqueQuantityCode\Models;
+namespace Modules\UniqueQuantityCode\Models;
 
 use App\Enums\QuantityType;
 use Illuminate\Database\Eloquent\Model;

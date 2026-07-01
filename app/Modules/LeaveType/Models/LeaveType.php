@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\LeaveType\Models;
+namespace Modules\LeaveType\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

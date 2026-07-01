@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\VoucherClassification\Models;
+namespace Modules\VoucherClassification\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

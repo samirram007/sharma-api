@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\AccountsJournal\Resources;
+namespace Modules\AccountsJournal\Resources;
 
-use App\Modules\AccountLedger\Resources\AccountLedgerResource;
+use Modules\AccountLedger\Resources\AccountLedgerResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

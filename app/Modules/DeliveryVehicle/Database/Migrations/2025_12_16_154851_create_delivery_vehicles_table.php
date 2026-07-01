@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Transporter\Models\Transporter;
+use Modules\Transporter\Models\Transporter;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\StockJournalSerialNoEntry\Providers;
+namespace Modules\StockJournalSerialNoEntry\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\StockJournalSerialNoEntry\Contracts\StockJournalSerialNoEntryServiceInterface;
-use App\Modules\StockJournalSerialNoEntry\Services\StockJournalSerialNoEntryService;
+use Modules\StockJournalSerialNoEntry\Contracts\StockJournalSerialNoEntryServiceInterface;
+use Modules\StockJournalSerialNoEntry\Services\StockJournalSerialNoEntryService;
 
 class StockJournalSerialNoEntryServiceProvider extends ServiceProvider
 {

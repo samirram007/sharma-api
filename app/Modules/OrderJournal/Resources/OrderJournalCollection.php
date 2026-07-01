@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\OrderJournal\Resources;
+namespace Modules\OrderJournal\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

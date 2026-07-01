@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Godown\Controllers\Api;
+namespace Modules\Godown\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Godown\Contracts\GodownServiceInterface;
-use App\Modules\Godown\Resources\GodownResource;
-use App\Modules\Godown\Resources\GodownCollection;
-use App\Modules\Godown\Requests\GodownRequest;
+use Modules\Godown\Contracts\GodownServiceInterface;
+use Modules\Godown\Resources\GodownResource;
+use Modules\Godown\Resources\GodownCollection;
+use Modules\Godown\Requests\GodownRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

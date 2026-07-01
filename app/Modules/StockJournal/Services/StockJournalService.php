@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockJournal\Services;
+namespace Modules\StockJournal\Services;
 
-use App\Modules\StockJournal\Contracts\StockJournalServiceInterface;
-use App\Modules\StockJournal\Models\StockJournal;
-use App\Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
-use App\Modules\StockJournalEntry\Requests\StockJournalEntryRequest;
-use App\Modules\StockJournalEntry\Services\StockJournalEntryService;
+use Modules\StockJournal\Contracts\StockJournalServiceInterface;
+use Modules\StockJournal\Models\StockJournal;
+use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
+use Modules\StockJournalEntry\Requests\StockJournalEntryRequest;
+use Modules\StockJournalEntry\Services\StockJournalEntryService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -67,7 +67,7 @@ class StockJournalService implements StockJournalServiceInterface
     protected function generateJournalNo(): string
     {
         // Implement your logic to generate a unique journal number
-        $latestJournal = \App\Modules\StockJournal\Models\StockJournal::orderBy('id', 'desc')->first();
+        $latestJournal = \Modules\StockJournal\Models\StockJournal::orderBy('id', 'desc')->first();
         $nextNumber = $latestJournal ? intval(substr($latestJournal->journal_no, -5)) + 1 : 1;
         return 'JRN-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
     }

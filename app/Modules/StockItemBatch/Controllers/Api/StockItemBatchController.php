@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\StockItemBatch\Controllers\Api;
+namespace Modules\StockItemBatch\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\StockItemBatch\Contracts\StockItemBatchServiceInterface;
-use App\Modules\StockItemBatch\Resources\StockItemBatchResource;
-use App\Modules\StockItemBatch\Resources\StockItemBatchCollection;
-use App\Modules\StockItemBatch\Requests\StockItemBatchRequest;
+use Modules\StockItemBatch\Contracts\StockItemBatchServiceInterface;
+use Modules\StockItemBatch\Resources\StockItemBatchResource;
+use Modules\StockItemBatch\Resources\StockItemBatchCollection;
+use Modules\StockItemBatch\Requests\StockItemBatchRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

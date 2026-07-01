@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\StockJournal\Resources;
+namespace Modules\StockJournal\Resources;
 
-use App\Modules\StockJournalEntry\Resources\StockJournalEntryResource;
+use Modules\StockJournalEntry\Resources\StockJournalEntryResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

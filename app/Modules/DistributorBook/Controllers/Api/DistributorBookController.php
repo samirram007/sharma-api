@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Modules\DistributorBook\Controllers\Api;
+namespace Modules\DistributorBook\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\DistributorBook\Contracts\DistributorBookServiceInterface;
-use App\Modules\DistributorBook\Resources\DistributorBookResource;
-use App\Modules\DistributorBook\Resources\DistributorBookCollection;
-use App\Modules\DistributorBook\Requests\DistributorBookRequest;
+use Modules\DistributorBook\Contracts\DistributorBookServiceInterface;
+use Modules\DistributorBook\Resources\DistributorBookResource;
+use Modules\DistributorBook\Resources\DistributorBookCollection;
+use Modules\DistributorBook\Requests\DistributorBookRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
-use App\Modules\Voucher\Resources\VoucherCollection;
+use Modules\Voucher\Resources\VoucherCollection;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 

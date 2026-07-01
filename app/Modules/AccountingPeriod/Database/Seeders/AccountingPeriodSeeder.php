@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AccountingPeriod\Database\Seeders;
+namespace Modules\AccountingPeriod\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\AccountingPeriod\Models\AccountingPeriod;
+use Modules\AccountingPeriod\Models\AccountingPeriod;
 
 class AccountingPeriodSeeder extends Seeder
 {

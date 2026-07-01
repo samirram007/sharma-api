@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\Voucher\Controllers\Api;
+namespace Modules\Voucher\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Voucher\Contracts\VoucherServiceInterface;
-use App\Modules\Voucher\Resources\VoucherPrintResource;
-use App\Modules\Voucher\Resources\VoucherResource;
-use App\Modules\Voucher\Resources\VoucherCollection;
-use App\Modules\Voucher\Requests\VoucherRequest;
+use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Resources\VoucherPrintResource;
+use Modules\Voucher\Resources\VoucherResource;
+use Modules\Voucher\Resources\VoucherCollection;
+use Modules\Voucher\Requests\VoucherRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

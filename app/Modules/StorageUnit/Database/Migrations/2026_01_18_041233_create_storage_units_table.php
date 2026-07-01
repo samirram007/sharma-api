@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        // php artisan migrate --path="app/Modules/StorageUnit/Database/Migrations/2026_01_18_041233_create_storage_units_table.php"
+        // php artisan migrate --path="Modules\/StorageUnit/Database/Migrations/2026_01_18_041233_create_storage_units_table.php"
 
         Schema::create('storage_units', function (Blueprint $table) {
             $table->id();

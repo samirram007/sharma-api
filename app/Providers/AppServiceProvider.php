@@ -4,17 +4,17 @@ namespace App\Providers;
 
 
 use Illuminate\Support\ServiceProvider;
-use App\Modules\Agent\Models\Agent;
-use App\Modules\Company\Models\Company;
-use App\Modules\Customer\Models\Customer;
-use App\Modules\DeliveryPlace\Models\DeliveryPlace;
-use App\Modules\Distributor\Models\Distributor;
-use App\Modules\Employee\Models\Employee;
-use App\Modules\Godown\Models\Godown;
-use App\Modules\StorageUnit\Models\StorageUnit;
-use App\Modules\Supplier\Models\Supplier;
-use App\Modules\Transporter\Models\Transporter;
-use App\Modules\Vendor\Models\Vendor;
+use Modules\Agent\Models\Agent;
+use Modules\Company\Models\Company;
+use Modules\Customer\Models\Customer;
+use Modules\DeliveryPlace\Models\DeliveryPlace;
+use Modules\Distributor\Models\Distributor;
+use Modules\Employee\Models\Employee;
+use Modules\Godown\Models\Godown;
+use Modules\StorageUnit\Models\StorageUnit;
+use Modules\Supplier\Models\Supplier;
+use Modules\Transporter\Models\Transporter;
+use Modules\Vendor\Models\Vendor;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 

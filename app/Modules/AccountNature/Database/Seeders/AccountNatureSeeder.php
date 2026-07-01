@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\AccountNature\Database\Seeders;
+namespace Modules\AccountNature\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\AccountNature\Models\AccountNature;
+use Modules\AccountNature\Models\AccountNature;
 
 class AccountNatureSeeder extends Seeder
 {

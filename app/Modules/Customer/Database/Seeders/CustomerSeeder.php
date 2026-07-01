@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Customer\Database\Seeders;
+namespace Modules\Customer\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Customer\Models\Customer;
+use Modules\Customer\Models\Customer;
 
 class CustomerSeeder extends Seeder
 {

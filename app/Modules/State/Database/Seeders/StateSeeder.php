@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\State\Database\Seeders;
+namespace Modules\State\Database\Seeders;
 
-use App\Modules\Country\Models\Country;
+use Modules\Country\Models\Country;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use App\Modules\State\Models\State;
+use Modules\State\Models\State;
 use Illuminate\Support\Facades\DB;
 
 class StateSeeder extends Seeder

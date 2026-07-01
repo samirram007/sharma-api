@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Holiday\Controllers\Api;
+namespace Modules\Holiday\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Holiday\Contracts\HolidayServiceInterface;
-use App\Modules\Holiday\Resources\HolidayResource;
-use App\Modules\Holiday\Resources\HolidayCollection;
-use App\Modules\Holiday\Requests\HolidayRequest;
+use Modules\Holiday\Contracts\HolidayServiceInterface;
+use Modules\Holiday\Resources\HolidayResource;
+use Modules\Holiday\Resources\HolidayCollection;
+use Modules\Holiday\Requests\HolidayRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

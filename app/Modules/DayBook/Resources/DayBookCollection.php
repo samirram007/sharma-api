@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\DayBook\Resources;
+namespace Modules\DayBook\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\OrderStockJournal\Controllers\Api;
+namespace Modules\OrderStockJournal\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\OrderStockJournal\Contracts\OrderStockJournalServiceInterface;
-use App\Modules\OrderStockJournal\Resources\OrderStockJournalResource;
-use App\Modules\OrderStockJournal\Resources\OrderStockJournalCollection;
-use App\Modules\OrderStockJournal\Requests\OrderStockJournalRequest;
+use Modules\OrderStockJournal\Contracts\OrderStockJournalServiceInterface;
+use Modules\OrderStockJournal\Resources\OrderStockJournalResource;
+use Modules\OrderStockJournal\Resources\OrderStockJournalCollection;
+use Modules\OrderStockJournal\Requests\OrderStockJournalRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\VoucherClassification\Resources;
+namespace Modules\VoucherClassification\Resources;
 
-use App\Modules\VoucherType\Resources\VoucherTypeResource;
+use Modules\VoucherType\Resources\VoucherTypeResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\SuccessResource;

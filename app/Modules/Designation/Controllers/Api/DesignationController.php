@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Designation\Controllers\Api;
+namespace Modules\Designation\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Designation\Contracts\DesignationServiceInterface;
-use App\Modules\Designation\Resources\DesignationResource;
-use App\Modules\Designation\Resources\DesignationCollection;
-use App\Modules\Designation\Requests\DesignationRequest;
+use Modules\Designation\Contracts\DesignationServiceInterface;
+use Modules\Designation\Resources\DesignationResource;
+use Modules\Designation\Resources\DesignationCollection;
+use Modules\Designation\Requests\DesignationRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
 use App\Traits\ApiResponseTrait;

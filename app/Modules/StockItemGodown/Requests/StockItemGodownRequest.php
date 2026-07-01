@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockItemGodown\Requests;
+namespace Modules\StockItemGodown\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

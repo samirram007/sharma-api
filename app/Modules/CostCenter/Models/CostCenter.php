@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\CostCenter\Models;
+namespace Modules\CostCenter\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

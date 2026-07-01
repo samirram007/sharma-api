@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockJournalBatchEntry\Services;
+namespace Modules\StockJournalBatchEntry\Services;
 
-use App\Modules\StockJournalBatchEntry\Contracts\StockJournalBatchEntryServiceInterface;
-use App\Modules\StockJournalBatchEntry\Models\StockJournalBatchEntry;
+use Modules\StockJournalBatchEntry\Contracts\StockJournalBatchEntryServiceInterface;
+use Modules\StockJournalBatchEntry\Models\StockJournalBatchEntry;
 use Illuminate\Database\Eloquent\Collection;
 
 class StockJournalBatchEntryService implements StockJournalBatchEntryServiceInterface

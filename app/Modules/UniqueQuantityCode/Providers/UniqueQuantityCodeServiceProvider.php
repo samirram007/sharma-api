@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\UniqueQuantityCode\Providers;
+namespace Modules\UniqueQuantityCode\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\UniqueQuantityCode\Contracts\UniqueQuantityCodeServiceInterface;
-use App\Modules\UniqueQuantityCode\Services\UniqueQuantityCodeService;
+use Modules\UniqueQuantityCode\Contracts\UniqueQuantityCodeServiceInterface;
+use Modules\UniqueQuantityCode\Services\UniqueQuantityCodeService;
 
 class UniqueQuantityCodeServiceProvider extends ServiceProvider
 {

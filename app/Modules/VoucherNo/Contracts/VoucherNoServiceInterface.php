@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\VoucherNo\Contracts;
+namespace Modules\VoucherNo\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\VoucherNo\Models\VoucherNo;
+use Modules\VoucherNo\Models\VoucherNo;
 
 interface VoucherNoServiceInterface
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Voucher\Database\Seeders;
+namespace Modules\Voucher\Database\Seeders;
 
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use App\Modules\Voucher\Models\Voucher;
+use Modules\Voucher\Models\Voucher;
 use Illuminate\Support\Facades\DB;
 
 

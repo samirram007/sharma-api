@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Country\Models;
+namespace Modules\Country\Models;
 
-use App\Modules\State\Models\State;
+use Modules\State\Models\State;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;

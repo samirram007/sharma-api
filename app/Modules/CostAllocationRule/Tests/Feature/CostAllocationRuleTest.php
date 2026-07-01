@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\CostAllocationRule\Tests\Feature;
+namespace Modules\CostAllocationRule\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\CostAllocationRule\Models\CostAllocationRule;
+use Modules\CostAllocationRule\Models\CostAllocationRule;
 
 class CostAllocationRuleTest extends TestCase
 {

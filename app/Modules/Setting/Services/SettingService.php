@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Setting\Services;
+namespace Modules\Setting\Services;
 
-use App\Modules\Setting\Contracts\SettingServiceInterface;
-use App\Modules\Setting\Models\Setting;
+use Modules\Setting\Contracts\SettingServiceInterface;
+use Modules\Setting\Models\Setting;
 use Illuminate\Database\Eloquent\Collection;
 
 class SettingService implements SettingServiceInterface

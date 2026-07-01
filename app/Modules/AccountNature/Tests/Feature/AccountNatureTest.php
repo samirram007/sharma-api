@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\AccountNature\Tests\Feature;
+namespace Modules\AccountNature\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\AccountNature\Models\AccountNature;
+use Modules\AccountNature\Models\AccountNature;
 
 class AccountNatureTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StockItemGodown\Resources;
+namespace Modules\StockItemGodown\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;

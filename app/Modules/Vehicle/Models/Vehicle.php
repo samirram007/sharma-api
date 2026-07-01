@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Vehicle\Models;
+namespace Modules\Vehicle\Models;
 
-use App\Modules\Transporter\Models\Transporter;
+use Modules\Transporter\Models\Transporter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

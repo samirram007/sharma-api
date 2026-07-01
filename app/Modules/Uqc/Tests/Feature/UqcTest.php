@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Uqc\Tests\Feature;
+namespace Modules\Uqc\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Uqc\Models\Uqc;
+use Modules\Uqc\Models\Uqc;
 
 class UqcTest extends TestCase
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\User\Services;
+namespace Modules\User\Services;
 
-use App\Modules\User\Contracts\UserServiceInterface;
-use App\Modules\User\Models\User;
-use App\Modules\User\Models\UserNotificationPreference;
+use Modules\User\Contracts\UserServiceInterface;
+use Modules\User\Models\User;
+use Modules\User\Models\UserNotificationPreference;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 

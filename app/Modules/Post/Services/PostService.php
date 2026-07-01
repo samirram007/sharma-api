@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Post\Services;
+namespace Modules\Post\Services;
 
-use App\Modules\Post\Contracts\PostServiceInterface;
-use App\Modules\Post\Models\Post;
+use Modules\Post\Contracts\PostServiceInterface;
+use Modules\Post\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
 
 class PostService implements PostServiceInterface

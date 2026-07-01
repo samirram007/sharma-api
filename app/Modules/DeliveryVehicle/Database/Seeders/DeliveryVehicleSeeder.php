@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\DeliveryVehicle\Database\Seeders;
+namespace Modules\DeliveryVehicle\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\DeliveryVehicle\Models\DeliveryVehicle;
+use Modules\DeliveryVehicle\Models\DeliveryVehicle;
 
 class DeliveryVehicleSeeder extends Seeder
 {

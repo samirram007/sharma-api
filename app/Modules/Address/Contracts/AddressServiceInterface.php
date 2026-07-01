@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Address\Contracts;
+namespace Modules\Address\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Address\Models\Address;
+use Modules\Address\Models\Address;
 
 interface AddressServiceInterface
 {

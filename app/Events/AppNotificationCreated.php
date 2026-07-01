@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Modules\AppNotification\Models\AppNotification;
+use Modules\AppNotification\Models\AppNotification;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;

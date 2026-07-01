@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\Freight\Controllers\Api\FreightController;
+use Modules\Freight\Controllers\Api\FreightController;
 
 // Route::apiResource('freights', FreightController::class)->middleware(['jwt.cookies']);
 Route::post('freights', [FreightController::class, 'store'])->middleware(['jwt.cookies']);

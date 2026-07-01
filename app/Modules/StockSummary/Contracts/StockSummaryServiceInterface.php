@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\StockSummary\Contracts;
+namespace Modules\StockSummary\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\StockSummary\Models\StockSummary;
+use Modules\StockSummary\Models\StockSummary;
 
 interface StockSummaryServiceInterface
 {

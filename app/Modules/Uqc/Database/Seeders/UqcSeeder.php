@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Uqc\Database\Seeders;
+namespace Modules\Uqc\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Modules\Uqc\Models\Uqc;
+use Modules\Uqc\Models\Uqc;
 use Illuminate\Support\Facades\DB;
 
 class UqcSeeder extends Seeder

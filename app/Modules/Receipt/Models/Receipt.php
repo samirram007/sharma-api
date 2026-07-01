@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Receipt\Models;
+namespace Modules\Receipt\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

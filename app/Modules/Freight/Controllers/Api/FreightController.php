@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Modules\Freight\Controllers\Api;
+namespace Modules\Freight\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Freight\Contracts\FreightServiceInterface;
-use App\Modules\Freight\Resources\FreightResource;
-use App\Modules\Freight\Resources\FreightCollection;
-use App\Modules\Freight\Requests\FreightRequest;
+use Modules\Freight\Contracts\FreightServiceInterface;
+use Modules\Freight\Resources\FreightResource;
+use Modules\Freight\Resources\FreightCollection;
+use Modules\Freight\Requests\FreightRequest;
 use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
-use App\Modules\Voucher\Resources\VoucherCollection;
-use App\Modules\Voucher\Resources\VoucherResource;
+use Modules\Voucher\Resources\VoucherCollection;
+use Modules\Voucher\Resources\VoucherResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

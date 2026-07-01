@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Journal\Providers;
+namespace Modules\Journal\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Journal\Contracts\JournalServiceInterface;
-use App\Modules\Journal\Services\JournalService;
+use Modules\Journal\Contracts\JournalServiceInterface;
+use Modules\Journal\Services\JournalService;
 
 class JournalServiceProvider extends ServiceProvider
 {

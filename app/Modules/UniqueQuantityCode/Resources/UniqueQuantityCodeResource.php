@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\UniqueQuantityCode\Resources;
+namespace Modules\UniqueQuantityCode\Resources;
 
 use App\Enums\QuantityType;
 use Illuminate\Http\Request;

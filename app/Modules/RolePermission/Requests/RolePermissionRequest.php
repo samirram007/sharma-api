@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\RolePermission\Requests;
+namespace Modules\RolePermission\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

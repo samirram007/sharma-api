@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Branch\Tests\Feature;
+namespace Modules\Branch\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Modules\Branch\Models\Branch;
+use Modules\Branch\Models\Branch;
 
 class BranchTest extends TestCase
 {

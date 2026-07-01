@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Post\Contracts;
+namespace Modules\Post\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
-use App\Modules\Post\Models\Post;
+use Modules\Post\Models\Post;
 
 interface PostServiceInterface
 {

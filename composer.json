@@ -17,6 +17,7 @@
         "php-open-source-saver/jwt-auth": "^2.9"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.7",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
@@ -30,6 +31,7 @@
         "psr-4": {
             "App\\": "app/",
             "App\\Helpers\\": "app/Helpers/",
+            "Modules\\": "app/Modules/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
