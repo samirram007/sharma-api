@@ -3,14 +3,14 @@
 namespace Modules\Transporter\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Transporter\Contracts\TransporterServiceInterface;
-use Modules\Transporter\Resources\TransporterResource;
-use Modules\Transporter\Resources\TransporterCollection;
-use Modules\Transporter\Requests\TransporterRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\Transporter\Contracts\TransporterServiceInterface;
+use Modules\Transporter\Requests\TransporterRequest;
+use Modules\Transporter\Resources\TransporterCollection;
+use Modules\Transporter\Resources\TransporterResource;
 
 class TransporterController extends Controller
 {
@@ -21,35 +21,33 @@ class TransporterController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new TransporterCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new TransporterResource($data);
+
+        return new TransporterResource($data);
     }
 
     public function store(TransporterRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new TransporterResource($data, $messages='Transporter created successfully');
+
+        return new TransporterResource($data, $messages = 'Transporter created successfully');
     }
 
     public function update(TransporterRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new TransporterResource($data, $messages='Transporter updated successfully');
+
+        return new TransporterResource($data, $messages = 'Transporter updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'Transporter deleted successfully':'Transporter not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'Transporter');
     }
 }

@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('godowns', function (Blueprint $table) {
@@ -23,7 +24,6 @@ return new class extends Migration {
              * Classification
              * =============================== */
             $table->string('storage_unit_type')->default('godown');        // StorageUnitType enum
-
 
             $table->timestamps();
         });

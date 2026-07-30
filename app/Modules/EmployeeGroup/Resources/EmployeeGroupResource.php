@@ -2,17 +2,17 @@
 
 namespace Modules\EmployeeGroup\Resources;
 
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class EmployeeGroupResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'code' => $this->code
-        ];
+
+        return $this->toCamelCaseArray($request);
     }
 }

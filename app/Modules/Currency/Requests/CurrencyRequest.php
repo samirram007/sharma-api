@@ -31,8 +31,8 @@ class CurrencyRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('currency');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:currencies,name,' . $id];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:currencies,code,' . $id];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:currencies,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:currencies,code,'.$id];
 
         }
 

@@ -2,39 +2,41 @@
 
 namespace Modules\VoucherClassification\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\VoucherClassification\Contracts\VoucherClassificationServiceInterface;
 use Modules\VoucherClassification\Models\VoucherClassification;
-use Illuminate\Database\Eloquent\Collection;
 
-class VoucherClassificationService implements VoucherClassificationServiceInterface
+class VoucherClassificationService extends BaseService implements VoucherClassificationServiceInterface
 {
-    protected $resource = ['voucher_type'];
+    protected string $modelClass = VoucherClassification::class;
+
+    protected array $defaultResource = [
+        'voucher_type',
+    ];
 
     public function getAll(): Collection
     {
-        return VoucherClassification::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?VoucherClassification
     {
-        return VoucherClassification::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): VoucherClassification
     {
-        return VoucherClassification::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): VoucherClassification
     {
-        $record = VoucherClassification::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = VoucherClassification::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

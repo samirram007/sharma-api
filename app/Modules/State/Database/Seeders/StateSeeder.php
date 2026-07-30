@@ -2,11 +2,10 @@
 
 namespace Modules\State\Database\Seeders;
 
-use Modules\Country\Models\Country;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Modules\State\Models\State;
 use Illuminate\Support\Facades\DB;
+use Modules\Country\Models\Country;
 
 class StateSeeder extends Seeder
 {
@@ -55,7 +54,6 @@ class StateSeeder extends Seeder
             ['name' => 'Others Territory', 'code' => 'OT', 'gst_code' => '97'],
             ['name' => 'Center Jurisdiction', 'code' => 'CJ', 'gst_code' => '99'],
         ];
-
 
         $countryId = Country::where('name', 'India')->pluck('id')->first();
         foreach ($states as $state) {

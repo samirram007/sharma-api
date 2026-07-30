@@ -15,6 +15,7 @@ trait ApiResponseTrait
             'code' => $code,
             'message' => $message,
             'data' => $data,
+
         ], $code);
     }
 
@@ -45,5 +46,17 @@ trait ApiResponseTrait
         return (new SuccessCollection($collection))
             ->response()
             ->setStatusCode($code);
+    }
+
+    /**
+     * Return a standardized JSON response for delete operations.
+     */
+    protected function deletedResponse(bool $result, string $entityName = 'Record'): JsonResponse
+    {
+        return response()->json([
+            'success' => $result,
+            'code' => $result ? 200 : 404,
+            'message' => $result ? "{$entityName} deleted successfully" : "{$entityName} not found",
+        ], $result ? 200 : 404);
     }
 }

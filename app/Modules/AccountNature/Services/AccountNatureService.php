@@ -2,38 +2,37 @@
 
 namespace Modules\AccountNature\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\AccountNature\Contracts\AccountNatureServiceInterface;
 use Modules\AccountNature\Models\AccountNature;
-use Illuminate\Database\Eloquent\Collection;
 
-class AccountNatureService implements AccountNatureServiceInterface
+class AccountNatureService extends BaseService implements AccountNatureServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = AccountNature::class;
+
     public function getAll(): Collection
     {
-        return AccountNature::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?AccountNature
     {
-        return AccountNature::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): AccountNature
     {
-        return AccountNature::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): AccountNature
     {
-        $record = AccountNature::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = AccountNature::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

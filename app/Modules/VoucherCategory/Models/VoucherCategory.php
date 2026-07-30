@@ -2,16 +2,17 @@
 
 namespace Modules\VoucherCategory\Models;
 
-use Modules\VoucherType\Models\VoucherType;
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\VoucherType\Models\VoucherType;
+
 class VoucherCategory extends Model
 {
     use HasFactory;
 
     protected $table = 'voucher_categories';
+
     protected $fillable = [
         'name',
         'code',
@@ -21,6 +22,7 @@ class VoucherCategory extends Model
         'icon',
 
     ];
+
     protected $casts = [
 
     ];
@@ -29,5 +31,4 @@ class VoucherCategory extends Model
     {
         return $this->hasMany(VoucherType::class);
     }
-
 }

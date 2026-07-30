@@ -2,39 +2,42 @@
 
 namespace Modules\Department\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
+use Modules\Department\Contracts\DepartmentRepositoryInterface;
 use Modules\Department\Contracts\DepartmentServiceInterface;
 use Modules\Department\Models\Department;
-use Illuminate\Database\Eloquent\Collection;
 
-class DepartmentService implements DepartmentServiceInterface
+class DepartmentService extends BaseService implements DepartmentServiceInterface
 {
-    protected $resource=[];
+    public function __construct(
+        protected DepartmentRepositoryInterface $departmentRepository
+    ) {}
+
+    protected string $modelClass = Department::class;
 
     public function getAll(): Collection
     {
-        return Department::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Department
     {
-        return Department::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Department
     {
-        return Department::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Department
     {
-        $record = Department::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Department::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

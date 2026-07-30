@@ -2,6 +2,7 @@
 
 namespace Modules\Auth\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
@@ -17,12 +18,12 @@ class LoginRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     /**
      * Get the validation rules that apply to the login request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -31,15 +32,13 @@ class LoginRequest extends FormRequest
             'password' => 'required',
         ];
     }
+
     public function messages(): array
     {
         return [
             'email.required' => 'Email is required',
             'email.exists' => 'Email does not exist',
-            'password.required' => 'Password is required'
+            'password.required' => 'Password is required',
         ];
     }
-
 }
-
-

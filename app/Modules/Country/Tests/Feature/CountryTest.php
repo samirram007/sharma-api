@@ -2,9 +2,9 @@
 
 namespace Modules\Country\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Country\Models\Country;
+use Tests\TestCase;
 
 class CountryTest extends TestCase
 {
@@ -14,77 +14,77 @@ class CountryTest extends TestCase
     {
         $response = $this->getJson('/api/countries');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_Country(): void
+    public function test_can_create_country(): void
     {
         $data = ['name' => 'Test Country'];
 
         $response = $this->postJson('/api/countries', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('countries', $data);
     }
 
-    public function test_can_show_Country(): void
+    public function test_can_show_country(): void
     {
         $Country = Country::factory()->create();
 
-        $response = $this->getJson('/api/countries/' . $Country->id);
+        $response = $this->getJson('/api/countries/'.$Country->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_Country(): void
+    public function test_can_update_country(): void
     {
         $Country = Country::factory()->create();
         $data = ['name' => 'Updated Country'];
 
-        $response = $this->putJson('/api/countries/' . $Country->id, $data);
+        $response = $this->putJson('/api/countries/'.$Country->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('countries', $data);
     }
 
-    public function test_can_delete_Country(): void
+    public function test_can_delete_country(): void
     {
         $Country = Country::factory()->create();
 
-        $response = $this->deleteJson('/api/countries/' . $Country->id);
+        $response = $this->deleteJson('/api/countries/'.$Country->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('countries', ['id' => $Country->id]);
     }
@@ -93,6 +93,6 @@ class CountryTest extends TestCase
     {
         $response = $this->postJson('/api/countries', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

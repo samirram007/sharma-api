@@ -8,9 +8,13 @@ use Modules\PhysicalStockCount\Models\PhysicalStockCount;
 interface PhysicalStockCountServiceInterface
 {
     public function getAll(): Collection;
+
     public function getById(int $id): ?PhysicalStockCount;
+
     public function store(array $data): PhysicalStockCount;
+
     public function update(array $data, int $id): PhysicalStockCount;
+
     public function delete(int $id): bool;
 
     /**

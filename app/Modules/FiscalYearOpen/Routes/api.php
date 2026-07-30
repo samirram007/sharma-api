@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\FiscalYearOpen\Controllers\Api\FiscalYearOpenController;
-
 use Modules\FiscalYearOpen\Controllers\Api\OpeningEntryReportController;
 
 Route::middleware('jwt.cookies')->group(function () {

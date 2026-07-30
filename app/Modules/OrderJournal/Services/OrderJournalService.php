@@ -2,39 +2,37 @@
 
 namespace Modules\OrderJournal\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\OrderJournal\Contracts\OrderJournalServiceInterface;
 use Modules\OrderJournal\Models\OrderJournal;
-use Illuminate\Database\Eloquent\Collection;
 
-class OrderJournalService implements OrderJournalServiceInterface
+class OrderJournalService extends BaseService implements OrderJournalServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = OrderJournal::class;
 
     public function getAll(): Collection
     {
-        return OrderJournal::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?OrderJournal
     {
-        return OrderJournal::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): OrderJournal
     {
-        return OrderJournal::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): OrderJournal
     {
-        $record = OrderJournal::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = OrderJournal::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

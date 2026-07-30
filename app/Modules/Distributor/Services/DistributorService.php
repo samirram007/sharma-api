@@ -2,11 +2,11 @@
 
 namespace Modules\Distributor\Services;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Distributor\Contracts\DistributorServiceInterface;
 use Modules\Distributor\Models\Distributor;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Arr;
 
 class DistributorService implements DistributorServiceInterface
 {
@@ -24,7 +24,7 @@ class DistributorService implements DistributorServiceInterface
 
     public function store(array $data): Distributor
     {
-        //dump($data);
+        // dump($data);
         $clean = Arr::except($data, ['account_group_id', 'address', 'account_ledger', 'is_edit']);
         $distributor = Distributor::create($clean);
 
@@ -60,7 +60,7 @@ class DistributorService implements DistributorServiceInterface
         $baseName = trim($name);
         $uniqueName = $baseName;
         $counter = 1;
-        //dd(AccountLedger::ledgerNameExists($uniqueName));
+        // dd(AccountLedger::ledgerNameExists($uniqueName));
         // Check for uniqueness
         while (AccountLedger::ledgerNameExists($uniqueName)) {
             // dd($uniqueName);
@@ -71,7 +71,6 @@ class DistributorService implements DistributorServiceInterface
         return $uniqueName;
 
     }
-
 
     public function update(array $data, int $id): Distributor
     {
@@ -85,7 +84,7 @@ class DistributorService implements DistributorServiceInterface
             $data['address']['address_type'] = 'office';
             $data['address']['addressable_type'] = 'distributor';
             $data['address']['addressable_id'] = $distributor->id;
-            if (!empty($data['address']['id'])) {
+            if (! empty($data['address']['id'])) {
                 $address = $distributor->address()->find($data['address']['id']);
                 // dd($address);
                 $address?->update($data['address']);
@@ -120,6 +119,7 @@ class DistributorService implements DistributorServiceInterface
     public function delete(int $id): bool
     {
         $record = Distributor::findOrFail($id);
+
         return $record->delete();
     }
 }

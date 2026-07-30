@@ -2,42 +2,48 @@
 
 namespace Modules\StockUnit\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
+use Modules\StockUnit\Contracts\StockUnitRepositoryInterface;
 use Modules\StockUnit\Contracts\StockUnitServiceInterface;
 use Modules\StockUnit\Models\StockUnit;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockUnitService implements StockUnitServiceInterface
+class StockUnitService extends BaseService implements StockUnitServiceInterface
 {
-    protected $resource = ['primary_stock_unit', 'secondary_stock_unit', 'unique_quantity_code'];
+    protected string $modelClass = StockUnit::class;
+
+    protected array $defaultResource = [
+        'primary_stock_unit',
+        'secondary_stock_unit',
+        'unique_quantity_code',
+    ];
+
+    public function __construct(
+        protected StockUnitRepositoryInterface $stockUnitRepository
+    ) {}
 
     public function getAll(): Collection
     {
-        return StockUnit::with($this->resource)
-            ->orderBy('code')
-            ->orderBy('name')
-            ->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockUnit
     {
-        return StockUnit::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockUnit
     {
-        return StockUnit::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockUnit
     {
-        $record = StockUnit::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockUnit::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

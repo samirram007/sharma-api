@@ -3,14 +3,14 @@
 namespace Modules\StockItemGodown\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\StockItemGodown\Contracts\StockItemGodownServiceInterface;
-use Modules\StockItemGodown\Resources\StockItemGodownResource;
-use Modules\StockItemGodown\Resources\StockItemGodownCollection;
-use Modules\StockItemGodown\Requests\StockItemGodownRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\StockItemGodown\Contracts\StockItemGodownServiceInterface;
+use Modules\StockItemGodown\Requests\StockItemGodownRequest;
+use Modules\StockItemGodown\Resources\StockItemGodownCollection;
+use Modules\StockItemGodown\Resources\StockItemGodownResource;
 
 class StockItemGodownController extends Controller
 {
@@ -21,35 +21,33 @@ class StockItemGodownController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new StockItemGodownCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new StockItemGodownResource($data);
+
+        return new StockItemGodownResource($data);
     }
 
     public function store(StockItemGodownRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new StockItemGodownResource($data, $messages='StockItemGodown created successfully');
+
+        return new StockItemGodownResource($data, $messages = 'StockItemGodown created successfully');
     }
 
     public function update(StockItemGodownRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new StockItemGodownResource($data, $messages='StockItemGodown updated successfully');
+
+        return new StockItemGodownResource($data, $messages = 'StockItemGodown updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'StockItemGodown deleted successfully':'StockItemGodown not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'StockItemGodown');
     }
 }

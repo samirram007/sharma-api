@@ -2,20 +2,17 @@
 
 namespace Modules\Status\Resources;
 
-use Illuminate\Http\Request;
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
 
 class StatusResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'code' => $this->code,
-            'description' => $this->description,
-            'color' => $this->color,
-            'status' => $this->status,
-        ];
+
+        return $this->toCamelCaseArray($request);
     }
 }

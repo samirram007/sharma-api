@@ -2,9 +2,9 @@
 
 namespace Modules\DeliveryVehicle\Models;
 
-use Modules\Transporter\Models\Transporter;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Modules\Transporter\Models\Transporter;
 
 class DeliveryVehicle extends Model
 {
@@ -33,5 +33,4 @@ class DeliveryVehicle extends Model
     {
         return $this->belongsTo(Transporter::class, 'transporter_id', 'id');
     }
-
 }

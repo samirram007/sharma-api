@@ -24,7 +24,6 @@ class StockJournalGodownEntryPurgeRequest extends FormRequest
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('stock_journal_godown_entry_purge');
 
-
         }
 
         return $rules;

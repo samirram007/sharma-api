@@ -22,7 +22,7 @@ class CountryRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('country');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:countries,name,' . $id];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:countries,name,'.$id];
             // $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:countries,code,' . $id];
 
         }

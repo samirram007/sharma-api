@@ -3,13 +3,12 @@
 namespace Modules\Setting\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Setting\Contracts\SettingServiceInterface;
-use Modules\Setting\Resources\SettingResource;
-use Modules\Setting\Resources\SettingCollection;
-use Modules\Setting\Requests\SettingRequest;
-use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\Setting\Contracts\SettingServiceInterface;
+use Modules\Setting\Requests\SettingRequest;
+use Modules\Setting\Resources\SettingCollection;
+use Modules\Setting\Resources\SettingResource;
 
 class SettingController extends Controller
 {
@@ -20,12 +19,14 @@ class SettingController extends Controller
     public function index(): JsonResponse
     {
         $data = $this->service->getAll();
+
         return (new SettingCollection($data))->response();
     }
 
     public function show(int $id): JsonResponse
     {
         $data = $this->service->getById($id);
+
         return $this->resourceResponse(
             new SettingResource($data),
             'Setting retrieved successfully'
@@ -35,6 +36,7 @@ class SettingController extends Controller
     public function store(SettingRequest $request): JsonResponse
     {
         $data = $this->service->store($request->validated());
+
         return $this->resourceResponse(
             new SettingResource($data),
             'Setting created successfully',
@@ -45,6 +47,7 @@ class SettingController extends Controller
     public function update(SettingRequest $request, int $id): JsonResponse
     {
         $data = $this->service->update($request->validated(), $id);
+
         return $this->resourceResponse(
             new SettingResource($data),
             'Setting updated successfully'
@@ -53,11 +56,6 @@ class SettingController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-       $result = $this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result ? 'Setting deleted successfully' : 'Setting not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'Setting');
     }
 }

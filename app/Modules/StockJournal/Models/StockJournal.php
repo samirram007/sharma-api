@@ -2,13 +2,13 @@
 
 namespace Modules\StockJournal\Models;
 
-use Modules\StockJournalEntry\Models\StockJournalEntry;
-use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\Voucher\Models\Voucher;
 
 class StockJournal extends Model
 {
@@ -39,6 +39,7 @@ class StockJournal extends Model
                 ->orderBy('journal_no', 'asc');
         });
     }
+
     public function stock_journal_entries(): HasMany
     {
         return $this->hasMany(StockJournalEntry::class, 'stock_journal_id');

@@ -3,18 +3,23 @@
 namespace Modules\AccountLedger\Resources;
 
 use App\Http\Resources\SuccessResource;
+use App\Traits\HasPolymorphicResource;
+use Illuminate\Http\Request;
 use Modules\AccountGroup\Resources\AccountGroupResource;
 use Modules\AccountNature\Resources\AccountNatureResource;
-use Illuminate\Http\Request;
-use App\Traits\HasPolymorphicResource;
 
 class AccountLedgerResource extends SuccessResource
 {
+    use App\Support\Traits\CamelCaseResource;
+    use CamelCaseResource;
     use HasPolymorphicResource;
+
     public function toArray(Request $request): array
     {
-        //dd($this->resolveResource($this->ledgerable)::class);
-        return [
+        // dd($this->resolveResource($this->ledgerable)::class);
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -29,12 +34,14 @@ class AccountLedgerResource extends SuccessResource
 
             'ledgerable' => $this->whenLoaded(
                 'ledgerable',
-                fn() => $this->resolveResource($this->ledgerable)
+                fn () => $this->resolveResource($this->ledgerable)
             ),
             // 'accountGroupId' => $this->account_group_id,
             // 'accountGroup' => $this->whenLoaded('account_group', fn() => $this->resolveRelations($this->account_group, ['account_nature'])),
             // 'accountNature' => $this->whenLoaded('account_nature', fn() => $this->resolveResource($this->account_nature)),
             // 'ledgerable' => $this->whenLoaded('ledgerable', fn() => $this->resolveRelations($this->ledgerable, ['address' => fn($resolved) => $resolved instanceof \Illuminate\Database\Eloquent\Model ? $resolved->load(['state', 'country']) : $resolved])),
-        ];
+
+        ]);
+
     }
 }

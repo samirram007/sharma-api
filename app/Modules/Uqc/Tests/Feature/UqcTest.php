@@ -2,9 +2,9 @@
 
 namespace Modules\Uqc\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Uqc\Models\Uqc;
+use Tests\TestCase;
 
 class UqcTest extends TestCase
 {
@@ -14,77 +14,77 @@ class UqcTest extends TestCase
     {
         $response = $this->getJson('/api/uqcs');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_Uqc(): void
+    public function test_can_create_uqc(): void
     {
         $data = ['name' => 'Test Uqc'];
 
         $response = $this->postJson('/api/uqcs', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('uqcs', $data);
     }
 
-    public function test_can_show_Uqc(): void
+    public function test_can_show_uqc(): void
     {
         $Uqc = Uqc::factory()->create();
 
-        $response = $this->getJson('/api/uqcs/' . $Uqc->id);
+        $response = $this->getJson('/api/uqcs/'.$Uqc->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_Uqc(): void
+    public function test_can_update_uqc(): void
     {
         $Uqc = Uqc::factory()->create();
         $data = ['name' => 'Updated Uqc'];
 
-        $response = $this->putJson('/api/uqcs/' . $Uqc->id, $data);
+        $response = $this->putJson('/api/uqcs/'.$Uqc->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('uqcs', $data);
     }
 
-    public function test_can_delete_Uqc(): void
+    public function test_can_delete_uqc(): void
     {
         $Uqc = Uqc::factory()->create();
 
-        $response = $this->deleteJson('/api/uqcs/' . $Uqc->id);
+        $response = $this->deleteJson('/api/uqcs/'.$Uqc->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('uqcs', ['id' => $Uqc->id]);
     }
@@ -93,6 +93,6 @@ class UqcTest extends TestCase
     {
         $response = $this->postJson('/api/uqcs', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

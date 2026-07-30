@@ -2,9 +2,9 @@
 
 namespace Modules\OrderJournal\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\OrderJournal\Models\OrderJournal;
+use Tests\TestCase;
 
 class OrderJournalTest extends TestCase
 {
@@ -14,77 +14,77 @@ class OrderJournalTest extends TestCase
     {
         $response = $this->getJson('/api/order_journals');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_OrderJournal(): void
+    public function test_can_create_order_journal(): void
     {
         $data = ['name' => 'Test OrderJournal'];
 
         $response = $this->postJson('/api/order_journals', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('order_journals', $data);
     }
 
-    public function test_can_show_OrderJournal(): void
+    public function test_can_show_order_journal(): void
     {
         $OrderJournal = OrderJournal::factory()->create();
 
-        $response = $this->getJson('/api/order_journals/' . $OrderJournal->id);
+        $response = $this->getJson('/api/order_journals/'.$OrderJournal->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_OrderJournal(): void
+    public function test_can_update_order_journal(): void
     {
         $OrderJournal = OrderJournal::factory()->create();
         $data = ['name' => 'Updated OrderJournal'];
 
-        $response = $this->putJson('/api/order_journals/' . $OrderJournal->id, $data);
+        $response = $this->putJson('/api/order_journals/'.$OrderJournal->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('order_journals', $data);
     }
 
-    public function test_can_delete_OrderJournal(): void
+    public function test_can_delete_order_journal(): void
     {
         $OrderJournal = OrderJournal::factory()->create();
 
-        $response = $this->deleteJson('/api/order_journals/' . $OrderJournal->id);
+        $response = $this->deleteJson('/api/order_journals/'.$OrderJournal->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('order_journals', ['id' => $OrderJournal->id]);
     }
@@ -93,6 +93,6 @@ class OrderJournalTest extends TestCase
     {
         $response = $this->postJson('/api/order_journals', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

@@ -2,9 +2,7 @@
 
 namespace Modules\AccountGroup\Database\Seeders;
 
-use Modules\AccountNature\Models\AccountNature;
 use Illuminate\Database\Seeder;
-use Modules\AccountGroup\Models\AccountGroup;
 use Illuminate\Support\Facades\DB;
 
 class AccountGroupSeeder extends Seeder
@@ -32,7 +30,6 @@ class AccountGroupSeeder extends Seeder
             ['id' => 10009, 'name' => 'Stock-in-Hand', 'code' => 'SIH', 'parent_id' => 10003, 'account_nature_id' => 1, 'description' => 'Inventory and closing stock', 'status' => 'active', 'is_system' => true, 'is_hidden' => false, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 10010, 'name' => 'Misc Expenses (Asset)', 'code' => 'MEA', 'parent_id' => 10003, 'account_nature_id' => 1, 'description' => 'Prepaid or deferred expenses', 'status' => 'active', 'is_system' => true, 'is_hidden' => true, 'created_at' => $now, 'updated_at' => $now],
 
-
             // ==============================
             // 🟥 LIABILITIES (20000–29999)
             // ==============================
@@ -47,14 +44,12 @@ class AccountGroupSeeder extends Seeder
             ['id' => 20008, 'name' => 'Unsecured Loans', 'code' => 'UL', 'parent_id' => 20006, 'account_nature_id' => 2, 'description' => 'Unsecured borrowings', 'status' => 'active', 'is_system' => true, 'is_hidden' => false, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 20009, 'name' => 'Suspense Account', 'code' => 'SUS', 'parent_id' => 20001, 'account_nature_id' => 2, 'description' => 'Temporary adjustment account', 'status' => 'active', 'is_system' => true, 'is_hidden' => true, 'created_at' => $now, 'updated_at' => $now],
 
-
             // ==============================
             // 🟨 EQUITY (50000–59999)
             // ==============================
             ['id' => 50001, 'name' => 'Capital Account', 'code' => 'CAP', 'parent_id' => null, 'account_nature_id' => 5, 'description' => 'Owners and partners capital', 'status' => 'active', 'is_system' => true, 'is_hidden' => false, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 50002, 'name' => 'Reserves & Surplus', 'code' => 'RS', 'parent_id' => 50001, 'account_nature_id' => 5, 'description' => 'Retained earnings and reserves', 'status' => 'active', 'is_system' => true, 'is_hidden' => false, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 50003, 'name' => 'Drawings', 'code' => 'DR', 'parent_id' => 50001, 'account_nature_id' => 5, 'description' => 'Withdrawals by owner', 'status' => 'active', 'is_system' => true, 'is_hidden' => false, 'created_at' => $now, 'updated_at' => $now],
-
 
             // ==============================
             // 🟦 INCOME (30000–39999)
@@ -64,7 +59,6 @@ class AccountGroupSeeder extends Seeder
             ['id' => 30003, 'name' => 'Indirect Income', 'code' => 'II', 'parent_id' => 30001, 'account_nature_id' => 3, 'description' => 'Non-operational income', 'status' => 'active', 'is_system' => true, 'is_hidden' => false, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 30004, 'name' => 'Sales Accounts', 'code' => 'SA', 'parent_id' => 30002, 'account_nature_id' => 3, 'description' => 'Sales ledgers', 'status' => 'active', 'is_system' => true, 'is_hidden' => false, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 30005, 'name' => 'Other Income', 'code' => 'OI', 'parent_id' => 30003, 'account_nature_id' => 3, 'description' => 'Interest, commission, rent, etc.', 'status' => 'active', 'is_system' => true, 'is_hidden' => false, 'created_at' => $now, 'updated_at' => $now],
-
 
             // ==============================
             // 🟧 EXPENSES (40000–49999)

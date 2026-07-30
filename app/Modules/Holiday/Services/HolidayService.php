@@ -2,39 +2,37 @@
 
 namespace Modules\Holiday\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Holiday\Contracts\HolidayServiceInterface;
 use Modules\Holiday\Models\Holiday;
-use Illuminate\Database\Eloquent\Collection;
 
-class HolidayService implements HolidayServiceInterface
+class HolidayService extends BaseService implements HolidayServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = Holiday::class;
 
     public function getAll(): Collection
     {
-        return Holiday::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Holiday
     {
-        return Holiday::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Holiday
     {
-        return Holiday::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Holiday
     {
-        $record = Holiday::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Holiday::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

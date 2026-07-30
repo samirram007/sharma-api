@@ -3,14 +3,14 @@
 namespace Modules\Vendor\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Vendor\Contracts\VendorServiceInterface;
-use Modules\Vendor\Resources\VendorResource;
-use Modules\Vendor\Resources\VendorCollection;
-use Modules\Vendor\Requests\VendorRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\Vendor\Contracts\VendorServiceInterface;
+use Modules\Vendor\Requests\VendorRequest;
+use Modules\Vendor\Resources\VendorCollection;
+use Modules\Vendor\Resources\VendorResource;
 
 class VendorController extends Controller
 {
@@ -21,35 +21,33 @@ class VendorController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new VendorCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new VendorResource($data);
+
+        return new VendorResource($data);
     }
 
     public function store(VendorRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new VendorResource($data, $messages='Vendor created successfully');
+
+        return new VendorResource($data, $messages = 'Vendor created successfully');
     }
 
     public function update(VendorRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new VendorResource($data, $messages='Vendor updated successfully');
+
+        return new VendorResource($data, $messages = 'Vendor updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'Vendor deleted successfully':'Vendor not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'Vendor');
     }
 }

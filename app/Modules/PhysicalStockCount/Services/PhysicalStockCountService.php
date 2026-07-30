@@ -2,19 +2,18 @@
 
 namespace Modules\PhysicalStockCount\Services;
 
-use Modules\PhysicalStockCount\Contracts\PhysicalStockCountServiceInterface;
-use Modules\PhysicalStockCount\Models\PhysicalStockCount;
-use Modules\PhysicalStockCount\Models\PhysicalStockCountItem;
-use Modules\StockJournal\Contracts\StockJournalServiceInterface;
-use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
-use Modules\Voucher\Contracts\VoucherServiceInterface;
-use Modules\Voucher\Models\Voucher;
-use Modules\VoucherType\Models\VoucherType;
 use App\Enums\MovementType;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\PhysicalStockCount\Contracts\PhysicalStockCountServiceInterface;
+use Modules\PhysicalStockCount\Models\PhysicalStockCount;
+use Modules\PhysicalStockCount\Models\PhysicalStockCountItem;
+use Modules\StockJournal\Contracts\StockJournalServiceInterface;
+use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
+use Modules\Voucher\Models\Voucher;
+use Modules\VoucherType\Models\VoucherType;
 
 class PhysicalStockCountService implements PhysicalStockCountServiceInterface
 {
@@ -47,7 +46,7 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
         $count = PhysicalStockCount::create($data);
 
         // If items are included, store them
-        if (!empty($data['items'])) {
+        if (! empty($data['items'])) {
             foreach ($data['items'] as $itemData) {
                 $count->items()->create($itemData);
             }
@@ -66,18 +65,18 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
 
         $record->update($data);
 
-        if (!empty($data['items'])) {
+        if (! empty($data['items'])) {
             // Delete removed items
             $existingIds = $record->items()->pluck('id')->toArray();
             $incomingIds = collect($data['items'])->pluck('id')->filter()->toArray();
             $toDelete = array_diff($existingIds, $incomingIds);
-            if (!empty($toDelete)) {
+            if (! empty($toDelete)) {
                 PhysicalStockCountItem::whereIn('id', $toDelete)->delete();
             }
 
             // Upsert items
             foreach ($data['items'] as $itemData) {
-                if (!empty($itemData['id'])) {
+                if (! empty($itemData['id'])) {
                     PhysicalStockCountItem::find($itemData['id'])?->update($itemData);
                 } else {
                     $record->items()->create($itemData);
@@ -161,7 +160,7 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
         $count = PhysicalStockCount::with('items', 'fiscal_year', 'godown')->findOrFail($countId);
 
         if ($count->status !== 'draft') {
-            throw new \Exception('Count sheet is already ' . $count->status . '.');
+            throw new \Exception('Count sheet is already '.$count->status.'.');
         }
 
         // Ensure all items have physical quantities entered
@@ -195,7 +194,7 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
 
             // Create StockJournal for adjustment
             $stockJournal = $this->stockJournalService->store([
-                'journal_no' => 'SKADJ-' . $count->id . '-' . now()->format('Ymd'),
+                'journal_no' => 'SKADJ-'.$count->id.'-'.now()->format('Ymd'),
                 'journal_date' => now(),
                 'type' => 'ADJUSTMENT',
                 'remarks' => "Stock adjustment from physical count #{$count->id} at {$count->godown->name}",
@@ -228,7 +227,7 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
 
             // Create Voucher linking to adjustment StockJournal
             Voucher::create([
-                'voucher_no' => 'SKADJ-' . $count->id . '-' . now()->format('Ymd'),
+                'voucher_no' => 'SKADJ-'.$count->id.'-'.now()->format('Ymd'),
                 'voucher_date' => now(),
                 'voucher_type_id' => $voucherType->id,
                 'fiscal_year_id' => $count->fiscal_year_id,
@@ -246,7 +245,7 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('PhysicalStockAdjustment failed: ' . $e->getMessage(), [
+            Log::error('PhysicalStockAdjustment failed: '.$e->getMessage(), [
                 'count_id' => $countId,
                 'trace' => $e->getTraceAsString(),
             ]);

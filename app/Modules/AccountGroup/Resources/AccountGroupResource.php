@@ -3,18 +3,20 @@
 namespace Modules\AccountGroup\Resources;
 
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
 use Modules\AccountLedger\Resources\AccountLedgerCollection;
 use Modules\AccountNature\Resources\AccountNatureResource;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
-
-
 
 class AccountGroupResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -25,6 +27,7 @@ class AccountGroupResource extends SuccessResource
             'accountNature' => new AccountNatureResource($this->whenLoaded('account_nature')),
             'accountLedgers' => new AccountLedgerCollection($this->whenLoaded('account_ledgers')),
 
-        ];
+        ]);
+
     }
 }

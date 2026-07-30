@@ -21,8 +21,8 @@ class UserRoleRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('user_role');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:user_roles,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:user_roles,code,' . $id,];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:user_roles,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:user_roles,code,'.$id];
 
         }
 

@@ -2,18 +2,23 @@
 
 namespace Modules\StockJournalEntry\Resources;
 
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
 use Modules\StockItem\Resources\StockItemResource;
 use Modules\StockJournal\Resources\StockJournalResource;
 use Modules\StockJournalGodownEntry\Resources\StockJournalGodownEntryResource;
 use Modules\StockUnit\Resources\StockUnitResource;
-use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class StockJournalEntryResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'stockJournalId' => $this->stock_journal_id,
             'stockItemId' => $this->stock_item_id,
@@ -40,6 +45,7 @@ class StockJournalEntryResource extends SuccessResource
             'alternateUnit' => StockUnitResource::make($this->whenLoaded('alternate_unit')),
             'stockInHand' => $this->stock_in_hand,
 
-        ];
+        ]);
+
     }
 }

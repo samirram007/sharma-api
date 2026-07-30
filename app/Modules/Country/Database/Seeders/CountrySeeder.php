@@ -4,7 +4,6 @@ namespace Modules\Country\Database\Seeders;
 
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Modules\Country\Models\Country;
 use Illuminate\Support\Facades\DB;
 
 class CountrySeeder extends Seeder

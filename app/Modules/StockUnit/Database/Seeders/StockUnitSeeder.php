@@ -3,7 +3,6 @@
 namespace Modules\StockUnit\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\StockUnit\Models\StockUnit;
 use Illuminate\Support\Facades\DB;
 
 class StockUnitSeeder extends Seeder
@@ -79,7 +78,7 @@ class StockUnitSeeder extends Seeder
                 'conversion_factor' => 50.0,
                 'created_at' => now(),
                 'updated_at' => now(),
-                'no_of_decimal_places' => 2
+                'no_of_decimal_places' => 2,
             ],
         ]);
     }

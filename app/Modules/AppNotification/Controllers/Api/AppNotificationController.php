@@ -3,22 +3,19 @@
 namespace Modules\AppNotification\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\AppNotification\Contracts\AppNotificationServiceInterface;
-use Modules\AppNotification\Resources\AppNotificationResource;
-use Modules\AppNotification\Resources\AppNotificationCollection;
-use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\AppNotification\Contracts\AppNotificationServiceInterface;
+use Modules\AppNotification\Resources\AppNotificationCollection;
+use Modules\AppNotification\Resources\AppNotificationResource;
 
 class AppNotificationController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected AppNotificationServiceInterface $service)
-    {
-    }
+    public function __construct(protected AppNotificationServiceInterface $service) {}
 
     /**
      * Get paginated list of all notifications
@@ -26,6 +23,7 @@ class AppNotificationController extends Controller
     public function index(Request $request): JsonResponse
     {
         $data = $this->service->getAll($request->only(['per_page', 'is_read', 'type']));
+
         return (new AppNotificationCollection($data))->response();
     }
 
@@ -35,6 +33,7 @@ class AppNotificationController extends Controller
     public function show(int $id): JsonResponse
     {
         $data = $this->service->getById($id);
+
         return $this->resourceResponse(
             new AppNotificationResource($data),
             'Notification retrieved successfully'
@@ -58,6 +57,7 @@ class AppNotificationController extends Controller
         ]);
 
         $data = $this->service->store($validated);
+
         return $this->resourceResponse(
             new AppNotificationResource($data),
             'Notification created successfully',
@@ -72,6 +72,7 @@ class AppNotificationController extends Controller
     {
         $userId = Auth::id();
         $data = $this->service->getForUser($userId, $request->only(['per_page', 'is_read', 'type']));
+
         return (new AppNotificationCollection($data))->response();
     }
 
@@ -81,8 +82,8 @@ class AppNotificationController extends Controller
     public function unreadCount(): JsonResponse
     {
         $count = $this->service->getUnreadCount(Auth::id());
+
         return response()->json([
-            'status' => true,
             'success' => true,
             'data' => ['count' => $count],
         ]);
@@ -94,6 +95,7 @@ class AppNotificationController extends Controller
     public function forVoucher(int $voucherId): JsonResponse
     {
         $data = $this->service->getForVoucher($voucherId);
+
         return (new AppNotificationCollection($data))->response();
     }
 
@@ -115,7 +117,6 @@ class AppNotificationController extends Controller
         );
 
         return response()->json([
-            'status' => 'success',
             'success' => true,
             'data' => $notifications,
         ]);
@@ -127,6 +128,7 @@ class AppNotificationController extends Controller
     public function markAsRead(int $id): JsonResponse
     {
         $this->service->markAsRead($id);
+
         return $this->successResponse(null, 'Notification marked as read');
     }
 
@@ -136,6 +138,7 @@ class AppNotificationController extends Controller
     public function markAllAsRead(): JsonResponse
     {
         $this->service->markAllAsRead(Auth::id());
+
         return $this->successResponse(null, 'All notifications marked as read');
     }
 
@@ -144,11 +147,6 @@ class AppNotificationController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->service->delete($id);
-        return new JsonResponse([
-            'status' => true,
-            'code' => 204,
-            'message' => 'Notification deleted successfully',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'Notification');
     }
 }

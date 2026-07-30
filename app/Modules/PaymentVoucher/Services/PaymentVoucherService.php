@@ -2,39 +2,37 @@
 
 namespace Modules\PaymentVoucher\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\PaymentVoucher\Contracts\PaymentVoucherServiceInterface;
 use Modules\PaymentVoucher\Models\PaymentVoucher;
-use Illuminate\Database\Eloquent\Collection;
 
-class PaymentVoucherService implements PaymentVoucherServiceInterface
+class PaymentVoucherService extends BaseService implements PaymentVoucherServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = PaymentVoucher::class;
 
     public function getAll(): Collection
     {
-        return PaymentVoucher::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?PaymentVoucher
     {
-        return PaymentVoucher::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): PaymentVoucher
     {
-        return PaymentVoucher::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): PaymentVoucher
     {
-        $record = PaymentVoucher::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = PaymentVoucher::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

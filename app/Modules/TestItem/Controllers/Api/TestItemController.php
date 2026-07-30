@@ -3,14 +3,14 @@
 namespace Modules\TestItem\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\TestItem\Contracts\TestItemServiceInterface;
-use Modules\TestItem\Resources\TestItemResource;
-use Modules\TestItem\Resources\TestItemCollection;
-use Modules\TestItem\Requests\TestItemRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\TestItem\Contracts\TestItemServiceInterface;
+use Modules\TestItem\Requests\TestItemRequest;
+use Modules\TestItem\Resources\TestItemCollection;
+use Modules\TestItem\Resources\TestItemResource;
 
 class TestItemController extends Controller
 {
@@ -21,35 +21,33 @@ class TestItemController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new TestItemCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new TestItemResource($data);
+
+        return new TestItemResource($data);
     }
 
     public function store(TestItemRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new TestItemResource($data, $messages='TestItem created successfully');
+
+        return new TestItemResource($data, $messages = 'TestItem created successfully');
     }
 
     public function update(TestItemRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new TestItemResource($data, $messages='TestItem updated successfully');
+
+        return new TestItemResource($data, $messages = 'TestItem updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'TestItem deleted successfully':'TestItem not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'TestItem');
     }
 }

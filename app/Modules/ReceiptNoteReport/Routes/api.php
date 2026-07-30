@@ -1,7 +1,7 @@
 <?php
 
-use Modules\ReceiptNoteReport\Controllers\Api\ReceiptNoteReportController;
 use Illuminate\Support\Facades\Route;
+use Modules\ReceiptNoteReport\Controllers\Api\ReceiptNoteReportController;
 
 Route::middleware(['jwt.cookies'])->group(function () {
     Route::get('receipt_note_report', [ReceiptNoteReportController::class, 'index']);

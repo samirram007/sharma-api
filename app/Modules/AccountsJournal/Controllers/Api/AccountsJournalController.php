@@ -3,14 +3,14 @@
 namespace Modules\AccountsJournal\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\AccountsJournal\Contracts\AccountsJournalServiceInterface;
-use Modules\AccountsJournal\Resources\AccountsJournalResource;
-use Modules\AccountsJournal\Resources\AccountsJournalCollection;
-use Modules\AccountsJournal\Requests\AccountsJournalRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\AccountsJournal\Contracts\AccountsJournalServiceInterface;
+use Modules\AccountsJournal\Requests\AccountsJournalRequest;
+use Modules\AccountsJournal\Resources\AccountsJournalCollection;
+use Modules\AccountsJournal\Resources\AccountsJournalResource;
 
 class AccountsJournalController extends Controller
 {
@@ -21,35 +21,33 @@ class AccountsJournalController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new AccountsJournalCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new AccountsJournalResource($data);
+
+        return new AccountsJournalResource($data);
     }
 
     public function store(AccountsJournalRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new AccountsJournalResource($data, $messages='AccountsJournal created successfully');
+
+        return new AccountsJournalResource($data, $messages = 'AccountsJournal created successfully');
     }
 
     public function update(AccountsJournalRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new AccountsJournalResource($data, $messages='AccountsJournal updated successfully');
+
+        return new AccountsJournalResource($data, $messages = 'AccountsJournal updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'AccountsJournal deleted successfully':'AccountsJournal not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'AccountsJournal');
     }
 }

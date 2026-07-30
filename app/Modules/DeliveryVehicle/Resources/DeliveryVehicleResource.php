@@ -2,15 +2,20 @@
 
 namespace Modules\DeliveryVehicle\Resources;
 
-use Modules\Transporter\Resources\TransporterResource;
-use Illuminate\Http\Request;
-
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
+use Modules\Transporter\Resources\TransporterResource;
+
 class DeliveryVehicleResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'transporterId' => $this->transporter_id,
             'vehicleNumber' => $this->vehicle_number,
@@ -20,6 +25,8 @@ class DeliveryVehicleResource extends SuccessResource
             'driverContact' => $this->driver_contact,
             'status' => $this->status,
             'transporter' => new TransporterResource($this->whenLoaded('transporter')),
-        ];
+
+        ]);
+
     }
 }

@@ -23,8 +23,7 @@ class DeliveryVehicleRequest extends FormRequest
                 'max:255',
                 Rule::unique('delivery_vehicles')
                     ->where(
-                        fn($query) =>
-                        $query->where('transporter_id', $this->transporter_id)
+                        fn ($query) => $query->where('transporter_id', $this->transporter_id)
                     ),
             ],
             'vehicle_type' => ['sometimes', 'required', 'string', 'max:255'],
@@ -43,7 +42,7 @@ class DeliveryVehicleRequest extends FormRequest
                 'string',
                 'max:255',
                 Rule::unique('delivery_vehicles')->ignore($id)
-                    ->where(fn($query) => $query->where('transporter_id', $this->transporter_id)),
+                    ->where(fn ($query) => $query->where('transporter_id', $this->transporter_id)),
             ];
 
         }

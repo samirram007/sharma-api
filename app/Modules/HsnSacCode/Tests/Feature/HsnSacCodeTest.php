@@ -2,9 +2,9 @@
 
 namespace Modules\HsnSacCode\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\HsnSacCode\Models\HsnSacCode;
+use Tests\TestCase;
 
 class HsnSacCodeTest extends TestCase
 {
@@ -14,77 +14,77 @@ class HsnSacCodeTest extends TestCase
     {
         $response = $this->getJson('/api/hsn_sac_codes');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_HsnSacCode(): void
+    public function test_can_create_hsn_sac_code(): void
     {
         $data = ['name' => 'Test HsnSacCode'];
 
         $response = $this->postJson('/api/hsn_sac_codes', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('hsn_sac_codes', $data);
     }
 
-    public function test_can_show_HsnSacCode(): void
+    public function test_can_show_hsn_sac_code(): void
     {
         $HsnSacCode = HsnSacCode::factory()->create();
 
-        $response = $this->getJson('/api/hsn_sac_codes/' . $HsnSacCode->id);
+        $response = $this->getJson('/api/hsn_sac_codes/'.$HsnSacCode->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_HsnSacCode(): void
+    public function test_can_update_hsn_sac_code(): void
     {
         $HsnSacCode = HsnSacCode::factory()->create();
         $data = ['name' => 'Updated HsnSacCode'];
 
-        $response = $this->putJson('/api/hsn_sac_codes/' . $HsnSacCode->id, $data);
+        $response = $this->putJson('/api/hsn_sac_codes/'.$HsnSacCode->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('hsn_sac_codes', $data);
     }
 
-    public function test_can_delete_HsnSacCode(): void
+    public function test_can_delete_hsn_sac_code(): void
     {
         $HsnSacCode = HsnSacCode::factory()->create();
 
-        $response = $this->deleteJson('/api/hsn_sac_codes/' . $HsnSacCode->id);
+        $response = $this->deleteJson('/api/hsn_sac_codes/'.$HsnSacCode->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('hsn_sac_codes', ['id' => $HsnSacCode->id]);
     }
@@ -93,6 +93,6 @@ class HsnSacCodeTest extends TestCase
     {
         $response = $this->postJson('/api/hsn_sac_codes', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

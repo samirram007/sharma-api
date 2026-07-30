@@ -6,7 +6,7 @@ use App\Http\Resources\SuccessCollection;
 
 class AuthCollection extends SuccessCollection
 {
-    public function __construct($resource, string $message = null)
+    public function __construct($resource, ?string $message = null)
     {
         parent::__construct(
             AuthResource::collection($resource),

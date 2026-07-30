@@ -2,24 +2,21 @@
 
 namespace Modules\StockJournalEntry\Services;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Validator;
 use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
 use Modules\StockJournalEntry\Models\StockJournalEntry;
 use Modules\StockJournalGodownEntry\Contracts\StockJournalGodownEntryServiceInterface;
 use Modules\StockJournalGodownEntry\Requests\StockJournalGodownEntryRequest;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Validator;
 
 class StockJournalEntryService implements StockJournalEntryServiceInterface
 {
     protected $resource = ['rate_unit'];
 
-
-
     public function __construct(
         protected StockJournalGodownEntryServiceInterface $stockJournalGodownEntryService,
-    ) {
+    ) {}
 
-    }
     public function getAll(): Collection
     {
         return StockJournalEntry::with($this->resource)->get();
@@ -33,16 +30,17 @@ class StockJournalEntryService implements StockJournalEntryServiceInterface
     public function store(array $data): StockJournalEntry
     {
         $stockJournalEntry = StockJournalEntry::create($data);
-        if (!empty($data['stock_journal_godown_entries'])) {
+        if (! empty($data['stock_journal_godown_entries'])) {
             foreach ($data['stock_journal_godown_entries'] as $key => $entryData) {
 
                 $entryData['stock_journal_entry_id'] = $stockJournalEntry->id;
-                $rules = (new StockJournalGodownEntryRequest())->rules();
+                $rules = (new StockJournalGodownEntryRequest)->rules();
                 $validatedStockJournalGodownEntry = Validator::make($entryData, $rules)->validate();
                 // dump($validatedStockJournalGodownEntry);
                 $data['stock_journal_godown_entries'][$key] = $this->stockJournalGodownEntryService->store($validatedStockJournalGodownEntry);
             }
         }
+
         return $stockJournalEntry;
     }
 
@@ -51,15 +49,15 @@ class StockJournalEntryService implements StockJournalEntryServiceInterface
         $record = StockJournalEntry::findOrFail($id);
         $record->update($data);
 
-        if (!empty($data['stock_journal_godown_entries'])) {
+        if (! empty($data['stock_journal_godown_entries'])) {
             $this->checkDelete($data['stock_journal_godown_entries'], $record);
 
-            $rules = (new StockJournalGodownEntryRequest())->rules();
+            $rules = (new StockJournalGodownEntryRequest)->rules();
 
             foreach ($data['stock_journal_godown_entries'] as $godownData) {
 
                 // dump($godownData);
-                //This is added because while updating stock journal entry godown entries
+                // This is added because while updating stock journal entry godown entries
                 // need to have stock_journal_entry_id
                 $godownData['stock_journal_entry_id'] = $record->id;
                 $validatedGodownEntry = Validator::make(
@@ -67,7 +65,7 @@ class StockJournalEntryService implements StockJournalEntryServiceInterface
                     $rules
                 )->validate();
 
-                if (!empty($godownData['id'])) {
+                if (! empty($godownData['id'])) {
 
                     $this->stockJournalGodownEntryService->update(
                         $validatedGodownEntry,
@@ -96,6 +94,7 @@ class StockJournalEntryService implements StockJournalEntryServiceInterface
     public function delete(int $id): bool
     {
         $record = StockJournalEntry::findOrFail($id);
+
         return $record->delete();
     }
 
@@ -116,10 +115,9 @@ class StockJournalEntryService implements StockJournalEntryServiceInterface
                 }
             }
 
-            if (!$found) {
+            if (! $found) {
                 $this->stockJournalGodownEntryService->delete($existingEntry->id);
             }
         }
     }
-
 }

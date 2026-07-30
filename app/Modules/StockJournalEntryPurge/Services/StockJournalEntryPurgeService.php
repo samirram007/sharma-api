@@ -2,39 +2,37 @@
 
 namespace Modules\StockJournalEntryPurge\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StockJournalEntryPurge\Contracts\StockJournalEntryPurgeServiceInterface;
 use Modules\StockJournalEntryPurge\Models\StockJournalEntryPurge;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockJournalEntryPurgeService implements StockJournalEntryPurgeServiceInterface
+class StockJournalEntryPurgeService extends BaseService implements StockJournalEntryPurgeServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = StockJournalEntryPurge::class;
 
     public function getAll(): Collection
     {
-        return StockJournalEntryPurge::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockJournalEntryPurge
     {
-        return StockJournalEntryPurge::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockJournalEntryPurge
     {
-        return StockJournalEntryPurge::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockJournalEntryPurge
     {
-        $record = StockJournalEntryPurge::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockJournalEntryPurge::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

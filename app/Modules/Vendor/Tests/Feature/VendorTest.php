@@ -2,9 +2,9 @@
 
 namespace Modules\Vendor\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Vendor\Models\Vendor;
+use Tests\TestCase;
 
 class VendorTest extends TestCase
 {
@@ -14,77 +14,77 @@ class VendorTest extends TestCase
     {
         $response = $this->getJson('/api/vendors');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_Vendor(): void
+    public function test_can_create_vendor(): void
     {
         $data = ['name' => 'Test Vendor'];
 
         $response = $this->postJson('/api/vendors', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('vendors', $data);
     }
 
-    public function test_can_show_Vendor(): void
+    public function test_can_show_vendor(): void
     {
         $Vendor = Vendor::factory()->create();
 
-        $response = $this->getJson('/api/vendors/' . $Vendor->id);
+        $response = $this->getJson('/api/vendors/'.$Vendor->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_Vendor(): void
+    public function test_can_update_vendor(): void
     {
         $Vendor = Vendor::factory()->create();
         $data = ['name' => 'Updated Vendor'];
 
-        $response = $this->putJson('/api/vendors/' . $Vendor->id, $data);
+        $response = $this->putJson('/api/vendors/'.$Vendor->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('vendors', $data);
     }
 
-    public function test_can_delete_Vendor(): void
+    public function test_can_delete_vendor(): void
     {
         $Vendor = Vendor::factory()->create();
 
-        $response = $this->deleteJson('/api/vendors/' . $Vendor->id);
+        $response = $this->deleteJson('/api/vendors/'.$Vendor->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('vendors', ['id' => $Vendor->id]);
     }
@@ -93,6 +93,6 @@ class VendorTest extends TestCase
     {
         $response = $this->postJson('/api/vendors', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace Modules\Customer\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Customer\Contracts\CustomerServiceInterface;
 use Modules\Customer\Models\Customer;
-use Illuminate\Database\Eloquent\Collection;
 
 class CustomerService implements CustomerServiceInterface
 {
-    protected $resource=[];
+    protected $resource = [];
 
     public function getAll(): Collection
     {
@@ -29,12 +29,14 @@ class CustomerService implements CustomerServiceInterface
     {
         $record = Customer::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = Customer::findOrFail($id);
+
         return $record->delete();
     }
 }

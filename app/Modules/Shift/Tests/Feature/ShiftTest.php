@@ -2,9 +2,9 @@
 
 namespace Modules\Shift\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Shift\Models\Shift;
+use Tests\TestCase;
 
 class ShiftTest extends TestCase
 {
@@ -14,77 +14,77 @@ class ShiftTest extends TestCase
     {
         $response = $this->getJson('/api/shifts');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_Shift(): void
+    public function test_can_create_shift(): void
     {
         $data = ['name' => 'Test Shift'];
 
         $response = $this->postJson('/api/shifts', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('shifts', $data);
     }
 
-    public function test_can_show_Shift(): void
+    public function test_can_show_shift(): void
     {
         $Shift = Shift::factory()->create();
 
-        $response = $this->getJson('/api/shifts/' . $Shift->id);
+        $response = $this->getJson('/api/shifts/'.$Shift->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_Shift(): void
+    public function test_can_update_shift(): void
     {
         $Shift = Shift::factory()->create();
         $data = ['name' => 'Updated Shift'];
 
-        $response = $this->putJson('/api/shifts/' . $Shift->id, $data);
+        $response = $this->putJson('/api/shifts/'.$Shift->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('shifts', $data);
     }
 
-    public function test_can_delete_Shift(): void
+    public function test_can_delete_shift(): void
     {
         $Shift = Shift::factory()->create();
 
-        $response = $this->deleteJson('/api/shifts/' . $Shift->id);
+        $response = $this->deleteJson('/api/shifts/'.$Shift->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('shifts', ['id' => $Shift->id]);
     }
@@ -93,6 +93,6 @@ class ShiftTest extends TestCase
     {
         $response = $this->postJson('/api/shifts', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

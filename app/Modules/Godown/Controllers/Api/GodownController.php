@@ -3,58 +3,53 @@
 namespace Modules\Godown\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Godown\Contracts\GodownServiceInterface;
-use Modules\Godown\Resources\GodownResource;
-use Modules\Godown\Resources\GodownCollection;
-use Modules\Godown\Requests\GodownRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\Godown\Contracts\GodownServiceInterface;
+use Modules\Godown\Requests\GodownRequest;
+use Modules\Godown\Resources\GodownCollection;
+use Modules\Godown\Resources\GodownResource;
 
 class GodownController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected GodownServiceInterface $service)
-    {
-    }
+    public function __construct(protected GodownServiceInterface $service) {}
 
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new GodownCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
+
         return new GodownResource($data);
     }
 
     public function store(GodownRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
+
         return new GodownResource($data, $messages = 'Godown created successfully');
     }
 
     public function update(GodownRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
+
         return new GodownResource($data, $messages = 'Godown updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-
-        $result = $this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result ? 'Godown deleted successfully' : 'Godown not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'Godown');
     }
-
 
     public function godown_item_stocks(int $item_id): SuccessCollection
     {
@@ -62,6 +57,7 @@ class GodownController extends Controller
 
         return new SuccessCollection($data);
     }
+
     public function godown_item_batches(int $item_id, int $godown_id): SuccessCollection
     {
         $data = $this->service->getGodownItemBatches($item_id, $godown_id);

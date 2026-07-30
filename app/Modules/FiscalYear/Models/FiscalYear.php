@@ -3,11 +3,10 @@
 namespace Modules\FiscalYear\Models;
 
 use App\Enums\ActiveInactive;
-use Modules\Company\Models\Company;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Company\Models\Company;
 
 class FiscalYear extends Model
 {
@@ -33,7 +32,7 @@ class FiscalYear extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'closed_at' => 'datetime',
-        'status' => ActiveInactive::class
+        'status' => ActiveInactive::class,
     ];
 
     public function company(): BelongsTo

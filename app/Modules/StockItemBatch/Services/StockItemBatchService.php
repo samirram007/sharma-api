@@ -2,39 +2,37 @@
 
 namespace Modules\StockItemBatch\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StockItemBatch\Contracts\StockItemBatchServiceInterface;
 use Modules\StockItemBatch\Models\StockItemBatch;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockItemBatchService implements StockItemBatchServiceInterface
+class StockItemBatchService extends BaseService implements StockItemBatchServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = StockItemBatch::class;
 
     public function getAll(): Collection
     {
-        return StockItemBatch::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockItemBatch
     {
-        return StockItemBatch::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockItemBatch
     {
-        return StockItemBatch::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockItemBatch
     {
-        $record = StockItemBatch::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockItemBatch::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

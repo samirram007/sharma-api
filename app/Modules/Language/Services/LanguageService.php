@@ -2,37 +2,37 @@
 
 namespace Modules\Language\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Language\Contracts\LanguageServiceInterface;
 use Modules\Language\Models\Language;
-use Illuminate\Database\Eloquent\Collection;
 
-class LanguageService implements LanguageServiceInterface
+class LanguageService extends BaseService implements LanguageServiceInterface
 {
+    protected string $modelClass = Language::class;
+
     public function getAll(): Collection
     {
-        return Language::all();
+        return $this->getAllRecords();
     }
 
-    public function getById(int $id): Language
+    public function getById(int $id): ?Language
     {
-        return Language::findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Language
     {
-        return Language::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Language
     {
-        $record = Language::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Language::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

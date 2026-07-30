@@ -2,13 +2,12 @@
 
 namespace Modules\UserRole\Resources;
 
-use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;
+use Illuminate\Http\Request;
 
 class UserRoleCollection extends SuccessCollection
 {
-
-         /**
+    /**
      * Transform the resource collection into an array.
      *
      * @return array<int|string, mixed>

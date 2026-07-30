@@ -2,9 +2,9 @@
 
 namespace Modules\AccountingPeriod\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\AccountingPeriod\Models\AccountingPeriod;
+use Tests\TestCase;
 
 class AccountingPeriodTest extends TestCase
 {
@@ -14,77 +14,77 @@ class AccountingPeriodTest extends TestCase
     {
         $response = $this->getJson('/api/accounting_periods');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_AccountingPeriod(): void
+    public function test_can_create_accounting_period(): void
     {
         $data = ['name' => 'Test AccountingPeriod'];
 
         $response = $this->postJson('/api/accounting_periods', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('accounting_periods', $data);
     }
 
-    public function test_can_show_AccountingPeriod(): void
+    public function test_can_show_accounting_period(): void
     {
         $AccountingPeriod = AccountingPeriod::factory()->create();
 
-        $response = $this->getJson('/api/accounting_periods/' . $AccountingPeriod->id);
+        $response = $this->getJson('/api/accounting_periods/'.$AccountingPeriod->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_AccountingPeriod(): void
+    public function test_can_update_accounting_period(): void
     {
         $AccountingPeriod = AccountingPeriod::factory()->create();
         $data = ['name' => 'Updated AccountingPeriod'];
 
-        $response = $this->putJson('/api/accounting_periods/' . $AccountingPeriod->id, $data);
+        $response = $this->putJson('/api/accounting_periods/'.$AccountingPeriod->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('accounting_periods', $data);
     }
 
-    public function test_can_delete_AccountingPeriod(): void
+    public function test_can_delete_accounting_period(): void
     {
         $AccountingPeriod = AccountingPeriod::factory()->create();
 
-        $response = $this->deleteJson('/api/accounting_periods/' . $AccountingPeriod->id);
+        $response = $this->deleteJson('/api/accounting_periods/'.$AccountingPeriod->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('accounting_periods', ['id' => $AccountingPeriod->id]);
     }
@@ -93,6 +93,6 @@ class AccountingPeriodTest extends TestCase
     {
         $response = $this->postJson('/api/accounting_periods', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

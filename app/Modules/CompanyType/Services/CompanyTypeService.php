@@ -2,38 +2,41 @@
 
 namespace Modules\CompanyType\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\CompanyType\Contracts\CompanyTypeServiceInterface;
 use Modules\CompanyType\Models\CompanyType;
-use Illuminate\Database\Eloquent\Collection;
 
-class CompanyTypeService implements CompanyTypeServiceInterface
+class CompanyTypeService extends BaseService implements CompanyTypeServiceInterface
 {
-    protected $resource=['companies'];
+    protected string $modelClass = CompanyType::class;
+
+    protected array $defaultResource = [
+        'companies',
+    ];
+
     public function getAll(): Collection
     {
-        return CompanyType::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
-    public function getById(int $id): CompanyType
+    public function getById(int $id): ?CompanyType
     {
-        return CompanyType::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): CompanyType
     {
-        return CompanyType::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): CompanyType
     {
-        $record = CompanyType::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = CompanyType::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

@@ -2,15 +2,20 @@
 
 namespace Modules\TestItem\Resources;
 
-use Modules\StockUnit\Resources\StockUnitResource;
-use Illuminate\Http\Request;
-
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
+use Modules\StockUnit\Resources\StockUnitResource;
+
 class TestItemResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -59,11 +64,10 @@ class TestItemResource extends SuccessResource
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
 
-
             'stockUnit' => StockUnitResource::make($this->whenLoaded('stock_unit')),
-            'alternateStockUnit' => StockUnitResource::make($this->whenLoaded('alternate_stock_unit'))
+            'alternateStockUnit' => StockUnitResource::make($this->whenLoaded('alternate_stock_unit')),
 
+        ]);
 
-        ];
     }
 }

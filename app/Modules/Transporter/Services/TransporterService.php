@@ -2,10 +2,10 @@
 
 namespace Modules\Transporter\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Transporter\Contracts\TransporterServiceInterface;
 use Modules\Transporter\Models\Transporter;
-use Illuminate\Database\Eloquent\Collection;
 
 class TransporterService implements TransporterServiceInterface
 {
@@ -30,7 +30,7 @@ class TransporterService implements TransporterServiceInterface
             $data['address']['address_type'] = 'office';
             $data['address']['addressable_type'] = 'transporter';
             $data['address']['addressable_id'] = $transporter->id;
-            //dump($data['address']);
+            // dump($data['address']);
             $transporter->address()->create($data['address']);
             // dd($data['address']);
         }
@@ -41,7 +41,7 @@ class TransporterService implements TransporterServiceInterface
             $data['account_ledger']['account_group_id'] = $data['account_group_id'];
             $data['account_ledger']['ledgerable_type'] = 'transporter';
             $data['account_ledger']['ledgerable_id'] = $transporter->id;
-            //dump($data['address']);
+            // dump($data['address']);
             $transporter->account_ledger()->create($data['account_ledger']);
             // dd($data['address']);
         }
@@ -62,7 +62,7 @@ class TransporterService implements TransporterServiceInterface
             $data['address']['address_type'] = 'office';
             $data['address']['addressable_type'] = 'transporter';
             $data['address']['addressable_id'] = $transporter->id;
-            if (!empty($data['address']['id'])) {
+            if (! empty($data['address']['id'])) {
                 $address = $transporter->address()->find($data['address']['id']);
                 $address?->update($data['address']);
             } else {
@@ -96,6 +96,7 @@ class TransporterService implements TransporterServiceInterface
     public function delete(int $id): bool
     {
         $record = Transporter::findOrFail($id);
+
         return $record->delete();
     }
 }

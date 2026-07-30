@@ -2,39 +2,41 @@
 
 namespace Modules\EmployeeGroup\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\EmployeeGroup\Contracts\EmployeeGroupServiceInterface;
 use Modules\EmployeeGroup\Models\EmployeeGroup;
-use Illuminate\Database\Eloquent\Collection;
 
-class EmployeeGroupService implements EmployeeGroupServiceInterface
+class EmployeeGroupService extends BaseService implements EmployeeGroupServiceInterface
 {
-    protected $resource = ['employees'];
+    protected string $modelClass = EmployeeGroup::class;
+
+    protected array $defaultResource = [
+        'employees',
+    ];
 
     public function getAll(): Collection
     {
-        return EmployeeGroup::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?EmployeeGroup
     {
-        return EmployeeGroup::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): EmployeeGroup
     {
-        return EmployeeGroup::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): EmployeeGroup
     {
-        $record = EmployeeGroup::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = EmployeeGroup::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

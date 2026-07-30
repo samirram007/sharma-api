@@ -5,11 +5,11 @@ namespace Modules\FiscalYearOpen\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Support\Facades\DB;
 use Modules\FiscalYear\Models\FiscalYear;
 use Modules\Voucher\Models\Voucher;
 use Modules\VoucherType\Models\VoucherType;
-use App\Traits\ApiResponseTrait;
-use Illuminate\Support\Facades\DB;
 
 class OpeningEntryReportController extends Controller
 {
@@ -27,7 +27,7 @@ class OpeningEntryReportController extends Controller
 
         $openingJournalVoucherType = VoucherType::where('code', 'OPNJL')->first();
 
-        if (!$openingJournalVoucherType) {
+        if (! $openingJournalVoucherType) {
             return new SuccessResource([], 'No OpeningJournal voucher type found.');
         }
 
@@ -55,6 +55,7 @@ class OpeningEntryReportController extends Controller
                     'createdAt' => $voucher->created_at,
                     'voucherEntries' => $voucher->voucher_entries->map(function ($entry) {
                         $nature = $entry->account_ledger?->account_group?->account_nature;
+
                         return [
                             'id' => $entry->id,
                             'entryOrder' => $entry->entry_order,
@@ -67,8 +68,8 @@ class OpeningEntryReportController extends Controller
                             'remarks' => $entry->remarks,
                         ];
                     }),
-                    'totalDebit' => (float) $voucher->voucher_entries->sum(fn($e) => $e->debit ?? 0),
-                    'totalCredit' => (float) $voucher->voucher_entries->sum(fn($e) => $e->credit ?? 0),
+                    'totalDebit' => (float) $voucher->voucher_entries->sum(fn ($e) => $e->debit ?? 0),
+                    'totalCredit' => (float) $voucher->voucher_entries->sum(fn ($e) => $e->credit ?? 0),
                     'stockJournal' => $voucher->stock_journal ? [
                         'id' => $voucher->stock_journal->id,
                         'journalNo' => $voucher->stock_journal->journal_no,
@@ -133,7 +134,7 @@ class OpeningEntryReportController extends Controller
             ->orderByDesc('net_balance')
             ->get();
 
-        $data = $grouped->map(fn($row) => [
+        $data = $grouped->map(fn ($row) => [
             'ledgerId' => $row->id,
             'ledgerName' => $row->name,
             'voucherCount' => (int) $row->voucher_count,

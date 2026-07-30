@@ -2,15 +2,20 @@
 
 namespace Modules\StockJournalGodownEntry\Resources;
 
-use Modules\Godown\Resources\GodownResource;
-use Illuminate\Http\Request;
-
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
+use Modules\Godown\Resources\GodownResource;
+
 class StockJournalGodownEntryResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'stockJournalEntryId' => $this->stock_journal_entry_id,
             'godownId' => $this->godown_id,
@@ -30,6 +35,7 @@ class StockJournalGodownEntryResource extends SuccessResource
             'createdAt' => $this->created_at?->toISOString(),
             'updatedAt' => $this->updated_at?->toISOString(),
 
-        ];
+        ]);
+
     }
 }

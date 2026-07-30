@@ -7,7 +7,6 @@ use Modules\AccountNature\Models\AccountNature;
 
 class AccountNatureSeeder extends Seeder
 {
-
     public function run(): void
     {
         $types = [
@@ -60,5 +59,4 @@ class AccountNatureSeeder extends Seeder
             );
         }
     }
-
 }

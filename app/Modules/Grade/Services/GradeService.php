@@ -2,39 +2,37 @@
 
 namespace Modules\Grade\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Grade\Contracts\GradeServiceInterface;
 use Modules\Grade\Models\Grade;
-use Illuminate\Database\Eloquent\Collection;
 
-class GradeService implements GradeServiceInterface
+class GradeService extends BaseService implements GradeServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = Grade::class;
 
     public function getAll(): Collection
     {
-        return Grade::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Grade
     {
-        return Grade::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Grade
     {
-        return Grade::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Grade
     {
-        $record = Grade::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Grade::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

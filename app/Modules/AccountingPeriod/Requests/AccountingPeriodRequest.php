@@ -22,8 +22,8 @@ class AccountingPeriodRequest extends FormRequest
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:accounting_periods,name,' . $this->route('accounting_period'),];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:accounting_periods,code,' . $this->route('accounting_period'),];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:accounting_periods,name,'.$this->route('accounting_period')];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:accounting_periods,code,'.$this->route('accounting_period')];
 
         }
 

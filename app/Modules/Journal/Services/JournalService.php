@@ -2,37 +2,37 @@
 
 namespace Modules\Journal\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Journal\Contracts\JournalServiceInterface;
 use Modules\Journal\Models\Journal;
-use Illuminate\Database\Eloquent\Collection;
 
-class JournalService implements JournalServiceInterface
+class JournalService extends BaseService implements JournalServiceInterface
 {
+    protected string $modelClass = Journal::class;
+
     public function getAll(): Collection
     {
-        return Journal::all();
+        return $this->getAllRecords();
     }
 
-    public function getById(int $id): Journal
+    public function getById(int $id): ?Journal
     {
-        return Journal::findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Journal
     {
-        return Journal::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Journal
     {
-        $record = Journal::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Journal::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

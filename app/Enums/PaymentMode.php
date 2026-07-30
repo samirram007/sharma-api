@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Enums;
 
 enum PaymentMode: string
@@ -11,10 +12,8 @@ enum PaymentMode: string
     case UPI = 'upi';
     case OTHER = 'other';
 
-
     public static function getValues(): array
     {
-        return array_map(fn($case) => $case->value, self::cases());
+        return array_map(fn ($case) => $case->value, self::cases());
     }
-
 }

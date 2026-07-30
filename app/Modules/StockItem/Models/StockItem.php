@@ -6,24 +6,20 @@ use App\Enums\CostingMethod;
 use App\Enums\MarketValuationMethod;
 use App\Enums\TypeOfSupply;
 use App\Models\BaseModel;
-use Modules\StockCategory\Models\StockCategory;
-use Modules\StockGroup\Models\StockGroup;
-use Modules\StockItemPrice\Models\StockItemPrice;
-use Modules\StockJournal\Models\StockJournal;
-use Modules\StockJournalEntry\Models\StockJournalEntry;
-use Modules\StockUnit\Models\StockUnit;
-use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\StockCategory\Models\StockCategory;
+use Modules\StockGroup\Models\StockGroup;
+use Modules\StockItemPrice\Models\StockItemPrice;
+use Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\StockUnit\Models\StockUnit;
+use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
 
 class StockItem extends BaseModel
 {
     use HasFactory;
-
-
 
     protected $table = 'stock_items';
 
@@ -72,7 +68,6 @@ class StockItem extends BaseModel
         'icon',
         'status',
 
-
     ];
 
     protected static array $baseCasts = [
@@ -91,8 +86,8 @@ class StockItem extends BaseModel
         'market_valuation_method' => MarketValuationMethod::class,
         'has_bom' => 'boolean',
         'reorder_level' => 'float',
-        'minimumStock' => 'float',
-        'maximumStock' => 'float',
+        'minimum_stock' => 'float',
+        'maximum_stock' => 'float',
         'is_gst_applicable' => 'boolean',
         'is_gst_inclusive' => 'boolean',
         'is_sales_as_new_manufacture' => 'boolean',
@@ -100,32 +95,38 @@ class StockItem extends BaseModel
         'is_rejection_as_scrap' => 'boolean',
     ];
 
- protected static function booted(): void
+    protected static function booted(): void
     {
         static::addGlobalScope('orderByName', function (Builder $builder) {
             $builder->orderBy('name');
         });
     }
+
     public function stock_item_prices(): HasMany
     {
         return $this->hasMany(StockItemPrice::class);
     }
+
     public function stock_category(): BelongsTo
     {
         return $this->belongsTo(StockCategory::class, 'stock_category_id', 'id');
     }
+
     public function stock_group(): BelongsTo
     {
         return $this->belongsTo(StockGroup::class, 'stock_group_id', 'id');
     }
+
     public function stock_unit(): BelongsTo
     {
         return $this->belongsTo(StockUnit::class, 'stock_unit_id', 'id');
     }
+
     public function alternate_stock_unit(): BelongsTo
     {
         return $this->belongsTo(StockUnit::class, 'alternate_stock_unit_id', 'id');
     }
+
     public function unique_quantity_code(): BelongsTo
     {
         return $this->belongsTo(UniqueQuantityCode::class, 'unique_quantity_code_id', 'id');

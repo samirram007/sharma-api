@@ -2,14 +2,13 @@
 
 namespace Modules\User\Resources;
 
-use Modules\Role\Resources\RoleResource;
-use Modules\UserFiscalYear\Resources\UserFiscalYearResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Role\Resources\RoleResource;
+use Modules\UserFiscalYear\Resources\UserFiscalYearResource;
 
 class UserResource extends JsonResource
 {
-
     public function toArray(Request $request): array
     {
         return [
@@ -25,7 +24,7 @@ class UserResource extends JsonResource
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'roleIds' => $this->whenLoaded(
                 'roles',
-                fn() => $this->roles->pluck('id')->values()
+                fn () => $this->roles->pluck('id')->values()
             ),
         ];
     }

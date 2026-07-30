@@ -31,8 +31,8 @@ class VoucherPartyRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('voucher_party');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:voucher_parties,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:voucher_parties,code,' . $id,];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:voucher_parties,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:voucher_parties,code,'.$id];
 
         }
 

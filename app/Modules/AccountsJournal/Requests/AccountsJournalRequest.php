@@ -21,7 +21,6 @@ class AccountsJournalRequest extends FormRequest
             'credit' => ['sometimes', 'nullable', 'numeric'],
             'remarks' => ['sometimes', 'required', 'string', 'max:255'],
 
-
         ];
 
         // For update requests, make validation more flexible

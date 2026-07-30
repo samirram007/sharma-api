@@ -2,9 +2,9 @@
 
 namespace Modules\Menu\Database\Seeders;
 
-
-use Modules\Menu\Models\Menu;
 use Illuminate\Database\Seeder;
+use Modules\AppModuleFeature\Models\AppModuleFeature;
+use Modules\Menu\Models\Menu;
 
 class MenuSeeder extends Seeder
 {
@@ -13,83 +13,83 @@ class MenuSeeder extends Seeder
 
     public function run(): void
     {
-        // Build feature code → ID lookup
-        $this->featureIds = Menu::pluck('id', 'code')->toArray();
-
         // Clear existing entries so the seeder is idempotent
         Menu::truncate();
 
+        // Build feature code → ID lookup from app_module_features
+        $this->featureIds = AppModuleFeature::pluck('id', 'code')->toArray();
+
         // ── General ──────────────────────────────────────────────
         $general = $this->create([
-            'menu_name'               => 'General',
+            'menu_name' => 'General',
             'app_module_feature_code' => 'GENERAL_MENU_VIEW',
-            'icon'                    => 'LayoutDashboard',
-            'sort_order'              => 10,
-            'is_group'                => true,
+            'icon' => 'LayoutDashboard',
+            'sort_order' => 10,
+            'is_group' => true,
         ]);
 
         $this->create([
-            'menu_name'               => 'Dashboard',
-            'route'                   => '/',
+            'menu_name' => 'Dashboard',
+            'route' => '/',
             'app_module_feature_code' => 'DASHBOARD_MENU_VIEW',
-            'icon'                    => 'LayoutDashboard',
-            'parent'                  => $general,
-            'sort_order'              => 10,
+            'icon' => 'LayoutDashboard',
+            'parent' => $general,
+            'sort_order' => 10,
         ]);
 
         // ── Transactions ─────────────────────────────────────────
         $transactions = $this->create([
-            'menu_name'               => 'Transactions',
+            'menu_name' => 'Transactions',
             'app_module_feature_code' => 'TRANSACTION_MENU_VIEW',
-            'icon'                    => 'Book',
-            'sort_order'              => 20,
-            'is_group'                => true,
+            'icon' => 'Book',
+            'sort_order' => 20,
+            'is_group' => true,
         ]);
 
         $accountsInTrans = $this->create([
-            'menu_name'               => 'Accounts',
+            'menu_name' => 'Accounts',
             'app_module_feature_code' => 'ACCOUNTS_MENU_VIEW',
-            'icon'                    => 'Book',
-            'parent'                  => $transactions,
-            'sort_order'              => 10,
-            'is_group'                => true,
+            'icon' => 'Book',
+            'parent' => $transactions,
+            'sort_order' => 10,
+            'is_group' => true,
         ]);
 
         $this->create([
-            'menu_name'               => 'Vouchers',
-            'route'                   => '/transactions/vouchers',
+            'menu_name' => 'Vouchers',
+            'route' => '/transactions/vouchers',
             'app_module_feature_code' => 'VOUCHERS_MENU_VIEW',
-            'icon'                    => 'ClipboardList',
-            'parent'                  => $accountsInTrans,
-            'sort_order'              => 10,
+            'icon' => 'ClipboardList',
+            'parent' => $accountsInTrans,
+            'sort_order' => 10,
         ]);
 
         $this->create([
-            'menu_name'               => 'Day Book',
-            'route'                   => '/reports/day_book',
+            'menu_name' => 'Day Book',
+            'route' => '/reports/day_book',
             'app_module_feature_code' => 'DAYBOOK_MENU_VIEW',
-            'icon'                    => 'Book',
-            'parent'                  => $accountsInTrans,
-            'sort_order'              => 20,
+            'icon' => 'Book',
+            'parent' => $accountsInTrans,
+            'sort_order' => 20,
         ]);
 
         // ── Masters ──────────────────────────────────────────────
         $masters = $this->create([
-            'menu_name'               => 'Masters',
+            'menu_name' => 'Masters',
             'app_module_feature_code' => 'MASTER_MENU_VIEW',
-            'icon'                    => 'NotebookTabs',
-            'sort_order'              => 30,
-            'is_group'                => true,
+            'icon' => 'NotebookTabs',
+            'sort_order' => 30,
+            'is_group' => true,
         ]);
 
         // Organization
         $org = $this->create([
-            'menu_name'               => 'Organization',
+            'menu_name' => 'Organization',
             'app_module_feature_code' => 'ORGANIZATION_MENU_VIEW',
-            'icon'                    => 'Building2',
-            'parent'                  => $masters,
-            'sort_order'              => 10,
-            'is_group'                => true,
+            'icon' => 'Building2',
+            'parent' => $masters,
+            'sort_order' => 10,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Company', 'route' => '/masters/organization/company', 'app_module_feature_code' => 'COMPANY_MENU_VIEW', 'icon' => 'Building2', 'parent' => $org, 'sort_order' => 10]);
@@ -101,12 +101,12 @@ class MenuSeeder extends Seeder
 
         // Accounts
         $accts = $this->create([
-            'menu_name'               => 'Accounts',
+            'menu_name' => 'Accounts',
             'app_module_feature_code' => 'ACCOUNTS_MENU_VIEW',
-            'icon'                    => 'NotebookTabs',
-            'parent'                  => $masters,
-            'sort_order'              => 20,
-            'is_group'                => true,
+            'icon' => 'NotebookTabs',
+            'parent' => $masters,
+            'sort_order' => 20,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Chart of Accounts', 'route' => '/masters/accounts/account_group', 'app_module_feature_code' => 'CHART_OF_ACCOUNTS_MENU_VIEW', 'icon' => 'ListDetails', 'parent' => $accts, 'sort_order' => 10]);
@@ -115,12 +115,12 @@ class MenuSeeder extends Seeder
 
         // Party
         $party = $this->create([
-            'menu_name'               => 'Party',
+            'menu_name' => 'Party',
             'app_module_feature_code' => 'PARTY_MENU_VIEW',
-            'icon'                    => 'Users',
-            'parent'                  => $masters,
-            'sort_order'              => 30,
-            'is_group'                => true,
+            'icon' => 'Users',
+            'parent' => $masters,
+            'sort_order' => 30,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Distributor', 'route' => '/masters/party/distributor', 'app_module_feature_code' => 'DISTRIBUTOR_MENU_VIEW', 'icon' => 'TruckDelivery', 'parent' => $party, 'sort_order' => 10]);
@@ -129,12 +129,12 @@ class MenuSeeder extends Seeder
 
         // Inventory
         $inv = $this->create([
-            'menu_name'               => 'Inventory',
+            'menu_name' => 'Inventory',
             'app_module_feature_code' => 'INVENTORY_MENU_VIEW',
-            'icon'                    => 'WarehouseIcon',
-            'parent'                  => $masters,
-            'sort_order'              => 40,
-            'is_group'                => true,
+            'icon' => 'WarehouseIcon',
+            'parent' => $masters,
+            'sort_order' => 40,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Stock Item', 'route' => '/masters/inventory/stock_item', 'app_module_feature_code' => 'STOCK_ITEM_MENU_VIEW', 'icon' => 'Packages', 'parent' => $inv, 'sort_order' => 10]);
@@ -145,12 +145,12 @@ class MenuSeeder extends Seeder
 
         // Payroll
         $payroll = $this->create([
-            'menu_name'               => 'Payroll',
+            'menu_name' => 'Payroll',
             'app_module_feature_code' => 'PAYROLL_MENU_VIEW',
-            'icon'                    => 'HandCoinsIcon',
-            'parent'                  => $masters,
-            'sort_order'              => 50,
-            'is_group'                => true,
+            'icon' => 'HandCoinsIcon',
+            'parent' => $masters,
+            'sort_order' => 50,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Employee', 'route' => '/masters/payroll/employee', 'app_module_feature_code' => 'EMPLOYEE_MENU_VIEW', 'icon' => 'Users', 'parent' => $payroll, 'sort_order' => 10]);
@@ -159,12 +159,12 @@ class MenuSeeder extends Seeder
 
         // Statutory
         $statutory = $this->create([
-            'menu_name'               => 'Statutory',
+            'menu_name' => 'Statutory',
             'app_module_feature_code' => 'STATUTORY_MENU_VIEW',
-            'icon'                    => 'LandmarkIcon',
-            'parent'                  => $masters,
-            'sort_order'              => 60,
-            'is_group'                => true,
+            'icon' => 'LandmarkIcon',
+            'parent' => $masters,
+            'sort_order' => 60,
+            'is_group' => true,
         ]);
 
         // Statutory items reuse same routes as Inventory but under Statutory group
@@ -176,12 +176,12 @@ class MenuSeeder extends Seeder
 
         // Miscellaneous
         $misc = $this->create([
-            'menu_name'               => 'Miscellaneous',
+            'menu_name' => 'Miscellaneous',
             'app_module_feature_code' => 'MISCELLANEOUS_MENU_VIEW',
-            'icon'                    => 'MichelinStar',
-            'parent'                  => $masters,
-            'sort_order'              => 70,
-            'is_group'                => true,
+            'icon' => 'MichelinStar',
+            'parent' => $masters,
+            'sort_order' => 70,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Delivery Places', 'route' => '/masters/miscellaneous/delivery_places', 'app_module_feature_code' => 'DELIVERY_PLACES_MENU_VIEW', 'icon' => 'LocationBolt', 'parent' => $misc, 'sort_order' => 10]);
@@ -190,11 +190,11 @@ class MenuSeeder extends Seeder
 
         // ── Administration ───────────────────────────────────────
         $admin = $this->create([
-            'menu_name'               => 'Administration',
+            'menu_name' => 'Administration',
             'app_module_feature_code' => 'ADMINISTRATION_MENU_VIEW',
-            'icon'                    => 'Settings',
-            'sort_order'              => 40,
-            'is_group'                => true,
+            'icon' => 'Settings',
+            'sort_order' => 40,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'User', 'route' => '/administration/user', 'app_module_feature_code' => 'USER_MENU_VIEW', 'icon' => 'Users', 'parent' => $admin, 'sort_order' => 10]);
@@ -206,21 +206,21 @@ class MenuSeeder extends Seeder
 
         // ── Reports ──────────────────────────────────────────────
         $reports = $this->create([
-            'menu_name'               => 'Reports',
+            'menu_name' => 'Reports',
             'app_module_feature_code' => 'REPORTS_MENU_VIEW',
-            'icon'                    => 'ChartBar',
-            'sort_order'              => 50,
-            'is_group'                => true,
+            'icon' => 'ChartBar',
+            'sort_order' => 50,
+            'is_group' => true,
         ]);
 
         // Financial Statements
         $fin = $this->create([
-            'menu_name'               => 'Financial Statements',
+            'menu_name' => 'Financial Statements',
             'app_module_feature_code' => 'BALANCE_SHEET_MENU_VIEW',
-            'icon'                    => 'ChartBar',
-            'parent'                  => $reports,
-            'sort_order'              => 10,
-            'is_group'                => true,
+            'icon' => 'ChartBar',
+            'parent' => $reports,
+            'sort_order' => 10,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Balance Sheet', 'route' => '/reports/balance_sheet', 'app_module_feature_code' => 'BALANCE_SHEET_MENU_VIEW', 'icon' => 'Scale', 'parent' => $fin, 'sort_order' => 10]);
@@ -228,12 +228,12 @@ class MenuSeeder extends Seeder
 
         // Day Book & Registers
         $daybook = $this->create([
-            'menu_name'               => 'Day Book & Registers',
+            'menu_name' => 'Day Book & Registers',
             'app_module_feature_code' => 'DAYBOOK_MENU_VIEW',
-            'icon'                    => 'Book',
-            'parent'                  => $reports,
-            'sort_order'              => 20,
-            'is_group'                => true,
+            'icon' => 'Book',
+            'parent' => $reports,
+            'sort_order' => 20,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Day Book', 'route' => '/reports/day_book', 'app_module_feature_code' => 'DAYBOOK_MENU_VIEW', 'icon' => 'Notebook', 'parent' => $daybook, 'sort_order' => 10]);
@@ -243,12 +243,12 @@ class MenuSeeder extends Seeder
 
         // Stock & Inventory
         $stock = $this->create([
-            'menu_name'               => 'Stock & Inventory',
+            'menu_name' => 'Stock & Inventory',
             'app_module_feature_code' => 'STOCKSUMMARY_MENU_VIEW',
-            'icon'                    => 'Packages',
-            'parent'                  => $reports,
-            'sort_order'              => 30,
-            'is_group'                => true,
+            'icon' => 'Packages',
+            'parent' => $reports,
+            'sort_order' => 30,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Stock In Hand (Item Summary)', 'route' => '/reports/stock_summary/stock-in-hand', 'app_module_feature_code' => 'STOCKSUMMARY_MENU_VIEW', 'icon' => 'Report', 'parent' => $stock, 'sort_order' => 10]);
@@ -260,12 +260,12 @@ class MenuSeeder extends Seeder
 
         // Freight & Logistics
         $freight = $this->create([
-            'menu_name'               => 'Freight & Logistics',
+            'menu_name' => 'Freight & Logistics',
             'app_module_feature_code' => 'FREIGHT_MENU_VIEW',
-            'icon'                    => 'Truck',
-            'parent'                  => $reports,
-            'sort_order'              => 40,
-            'is_group'                => true,
+            'icon' => 'Truck',
+            'parent' => $reports,
+            'sort_order' => 40,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Delivery Note (Zone Wise)', 'route' => '/reports/freight/delivery-note-zone-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'MapPin', 'parent' => $freight, 'sort_order' => 10]);
@@ -278,11 +278,11 @@ class MenuSeeder extends Seeder
 
         // ── Year-End Process ─────────────────────────────────────
         $yearEnd = $this->create([
-            'menu_name'               => 'Year-End Process',
+            'menu_name' => 'Year-End Process',
             'app_module_feature_code' => 'YEAR_END_PROCESS_MENU_VIEW',
-            'icon'                    => 'Archive',
-            'sort_order'              => 60,
-            'is_group'                => true,
+            'icon' => 'Archive',
+            'sort_order' => 60,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Close Fiscal Year', 'route' => '/masters/organization/fiscal_year', 'app_module_feature_code' => 'CLOSE_FISCAL_YEAR_MENU_VIEW', 'icon' => 'Archive', 'parent' => $yearEnd, 'sort_order' => 10]);
@@ -291,21 +291,21 @@ class MenuSeeder extends Seeder
 
         // ── Other (hidden by default, visible via permissions) ────
         $other = $this->create([
-            'menu_name'               => 'Other',
+            'menu_name' => 'Other',
             'app_module_feature_code' => 'SETTINGS_MENU_VIEW',
-            'icon'                    => 'Settings',
-            'sort_order'              => 999,
-            'is_group'                => true,
-            'is_visible'              => false,
+            'icon' => 'Settings',
+            'sort_order' => 999,
+            'is_group' => true,
+            'is_visible' => false,
         ]);
 
         $settings = $this->create([
-            'menu_name'               => 'Settings',
+            'menu_name' => 'Settings',
             'app_module_feature_code' => 'SETTINGS_MENU_VIEW',
-            'icon'                    => 'Settings',
-            'parent'                  => $other,
-            'sort_order'              => 10,
-            'is_group'                => true,
+            'icon' => 'Settings',
+            'parent' => $other,
+            'sort_order' => 10,
+            'is_group' => true,
         ]);
 
         $this->create(['menu_name' => 'Profile', 'route' => '/settings', 'icon' => 'UserCheck', 'app_module_feature_code' => 'SETTINGS_MENU_VIEW', 'parent' => $settings, 'sort_order' => 10]);
@@ -316,7 +316,7 @@ class MenuSeeder extends Seeder
 
         $this->create(['menu_name' => 'Help Center', 'route' => '/help-center', 'icon' => 'Help', 'app_module_feature_code' => 'HELP_CENTER_MENU_VIEW', 'parent' => $other, 'sort_order' => 10]);
 
-        $this->command->info('MenuSeeder: ' . Menu::count() . ' menu entries seeded.');
+        $this->command->info('MenuSeeder: '.Menu::count().' menu entries seeded.');
     }
 
     /** Create a menu entry returning the model. */
@@ -329,21 +329,21 @@ class MenuSeeder extends Seeder
         unset($data['parent']);
 
         $featureId = $featureCode ? ($this->featureIds[$featureCode] ?? null) : null;
-        if ($featureCode && !$featureId) {
+        if ($featureCode && ! $featureId) {
             $this->command->warn("Feature code '{$featureCode}' not found — menu '{$data['menu_name']}' will have no permission linkage.");
         }
 
         $payload = array_merge([
             'app_module_feature_id' => $featureId,
-            'menu_name'             => 'Unnamed',
-            'route'                 => null,
-            'icon'                  => null,
-            'parent_id'             => $parent?->id ?? null,
-            'sort_order'            => 0,
-            'status'                => 'active',
-            'is_visible'            => true,
-            'is_group'              => false,
-            'description'           => null,
+            'menu_name' => 'Unnamed',
+            'route' => null,
+            'icon' => null,
+            'parent_id' => $parent?->id ?? null,
+            'sort_order' => 0,
+            'status' => 'active',
+            'is_visible' => true,
+            'is_group' => false,
+            'description' => null,
         ], $data);
 
         return Menu::create($payload);

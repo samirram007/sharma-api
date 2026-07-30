@@ -36,8 +36,8 @@ class StorageUnitRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('storage_unit');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:storage_units,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:storage_units,code,' . $id,];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:storage_units,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:storage_units,code,'.$id];
 
         }
 

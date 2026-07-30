@@ -2,92 +2,70 @@
 
 namespace Modules\AccountLedger\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
 use Modules\AccountLedger\Models\AccountLedger;
-use Modules\User\Models\User;
 use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
-use Modules\UserFiscalYear\Services\UserFiscalYearService;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 
-class AccountLedgerService implements AccountLedgerServiceInterface
+class AccountLedgerService extends BaseService implements AccountLedgerServiceInterface
 {
+    protected string $modelClass = AccountLedger::class;
 
-    protected $resource = [
+    protected array $defaultResource = [
         'account_group.account_nature',
     ];
-    protected $ledgerable_resource = [
+
+    protected array $ledgerableResource = [
         'account_group.account_nature',
         'ledgerable.address.state',
-        'ledgerable.address.country'
+        'ledgerable.address.country',
     ];
 
-    protected $userFiscalYearService;
-    public function __construct(UserFiscalYearServiceInterface $userFiscalYearService)
-    {
-        $this->userFiscalYearService = $userFiscalYearService;
-    }
+    public function __construct(
+        protected UserFiscalYearServiceInterface $userFiscalYearService
+    ) {}
 
-    // /**
-    //  * Define the resources and their relations to be resolved
-    //  *
-    //  * @var array<string|array<string,callable>>
-    //  */
-    // protected $resource = [
-    //     'account_group.account_nature', // Simple nested relation
-    //     'ledgerable.address' => fn($resolved) => $resolved instanceof \Illuminate\Database\Eloquent\Model
-    //         ? $resolved->load(['state', 'country'])
-    //         : $resolved, // Transform resolved resource
-    // ];
     public function getAll(): Collection
     {
-        return AccountLedger::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): AccountLedger
     {
-        return AccountLedger::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): AccountLedger
     {
-        return AccountLedger::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): AccountLedger
     {
-        // dd($data);
-        $record = AccountLedger::findOrFail($id);
-
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = AccountLedger::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 
     public function getLedgerBalance(int $id): ?array
     {
-
         $ledger = AccountLedger::with('account_nature')->find($id);
-        // dd($ledger->toArray());
 
-        if (!$ledger) {
+        if (! $ledger) {
             return null;
         }
 
         $balance = $this->calculateLedgerBalance($ledger);
-        $nature = strtolower($ledger->account_nature->accounting_effect); // "debit" or "credit"
+        $nature = strtolower($ledger->account_nature->accounting_effect);
 
-        // Default (normal behavior)
         $drCr = $nature === 'debit' ? 'DR' : 'CR';
 
-        // If balance is negative → reverse the sign & flip DR/CR
         if ($balance < 0) {
-            $balance = $balance ? abs($balance) : 0;
+            $balance = abs($balance);
             $drCr = $drCr === 'DR' ? 'CR' : 'DR';
         }
 
@@ -100,9 +78,17 @@ class AccountLedgerService implements AccountLedgerServiceInterface
 
     private function calculateLedgerBalance(AccountLedger $ledger): float
     {
-        // dd($ledger->toArray());
+        $user = auth()->user();
 
-        $userFiscalYear = $this->userFiscalYearService->getByUserId(auth()->user()->id);
+        if (! $user) {
+            return 0.0;
+        }
+
+        $userFiscalYear = $this->userFiscalYearService->getByUserId($user->id);
+
+        if (! $userFiscalYear) {
+            return 0.0;
+        }
 
         $totals = $ledger->voucher_entries()
             ->whereHas('voucher', function ($q) use ($userFiscalYear) {
@@ -110,44 +96,37 @@ class AccountLedgerService implements AccountLedgerServiceInterface
             })
             ->selectRaw('SUM(debit) as debitTotal, SUM(credit) as creditTotal')
             ->first();
-        //dd($userFiscalYear, $ledger->id);
-        //     $totals = DB::table('voucher_entries')
-        //         ->join('vouchers', 'vouchers.id', '=', 'voucher_entries.voucher_id')
-        //         ->where('voucher_entries.account_ledger_id', $ledger->id)
-        //         ->where('vouchers.fiscal_year_id', $userFiscalYear->fiscal_year_id)
-        //         ->selectRaw('
-        //     SUM(voucher_entries.debit) as debitTotal,
-        //     SUM(voucher_entries.credit) as creditTotal
-        // ')->first();
 
-        //dd($totals);
         return ($totals->debitTotal ?? 0) - ($totals->creditTotal ?? 0);
     }
 
     public function getPurchaseLedgers(): Collection
     {
-        return AccountLedger::with($this->resource)
+        return AccountLedger::with($this->defaultResource)
             ->where('account_group_id', 40004)->orderBy('name')->get();
     }
+
     public function getSaleLedgers(): Collection
     {
-        return AccountLedger::with($this->resource)
+        return AccountLedger::with($this->defaultResource)
             ->where('account_group_id', 30004)->orderBy('name')->get();
     }
 
     public function getSupplierLedgers(): Collection
     {
-        return AccountLedger::with($this->ledgerable_resource)
+        return AccountLedger::with($this->ledgerableResource)
             ->where('account_group_id', 20003)->orderBy('name')->get();
     }
+
     public function getDistributorLedgers(): Collection
     {
-        return AccountLedger::with($this->ledgerable_resource)
+        return AccountLedger::with($this->ledgerableResource)
             ->where('account_group_id', 10008)->orderBy('name')->get();
     }
+
     public function getStockInHandLedgers(): Collection
     {
-        return AccountLedger::with($this->resource)
+        return AccountLedger::with($this->defaultResource)
             ->where('account_group_id', 10009)->orderBy('name')->get();
     }
 }

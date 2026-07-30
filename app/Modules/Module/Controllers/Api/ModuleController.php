@@ -3,13 +3,12 @@
 namespace Modules\Module\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Module\Contracts\ModuleServiceInterface;
-use Modules\Module\Resources\ModuleResource;
-use Modules\Module\Resources\ModuleCollection;
-use Modules\Module\Requests\ModuleRequest;
-use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\Module\Contracts\ModuleServiceInterface;
+use Modules\Module\Requests\ModuleRequest;
+use Modules\Module\Resources\ModuleCollection;
+use Modules\Module\Resources\ModuleResource;
 
 class ModuleController extends Controller
 {
@@ -20,12 +19,14 @@ class ModuleController extends Controller
     public function index(): JsonResponse
     {
         $data = $this->service->getAll();
+
         return (new ModuleCollection($data))->response();
     }
 
     public function show(int $id): JsonResponse
     {
         $data = $this->service->getById($id);
+
         return $this->resourceResponse(
             new ModuleResource($data),
             'Module retrieved successfully'
@@ -35,6 +36,7 @@ class ModuleController extends Controller
     public function store(ModuleRequest $request): JsonResponse
     {
         $data = $this->service->store($request->validated());
+
         return $this->resourceResponse(
             new ModuleResource($data),
             'Module created successfully',
@@ -45,6 +47,7 @@ class ModuleController extends Controller
     public function update(ModuleRequest $request, int $id): JsonResponse
     {
         $data = $this->service->update($request->validated(), $id);
+
         return $this->resourceResponse(
             new ModuleResource($data),
             'Module updated successfully'
@@ -53,11 +56,6 @@ class ModuleController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $result = $this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result ? 'Module deleted successfully' : 'Module not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'Module');
     }
 }

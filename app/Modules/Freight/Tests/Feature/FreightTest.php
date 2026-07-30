@@ -2,9 +2,9 @@
 
 namespace Modules\Freight\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Freight\Models\Freight;
+use Tests\TestCase;
 
 class FreightTest extends TestCase
 {
@@ -14,77 +14,77 @@ class FreightTest extends TestCase
     {
         $response = $this->getJson('/api/freights');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_Freight(): void
+    public function test_can_create_freight(): void
     {
         $data = ['name' => 'Test Freight'];
 
         $response = $this->postJson('/api/freights', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('freights', $data);
     }
 
-    public function test_can_show_Freight(): void
+    public function test_can_show_freight(): void
     {
         $Freight = Freight::factory()->create();
 
-        $response = $this->getJson('/api/freights/' . $Freight->id);
+        $response = $this->getJson('/api/freights/'.$Freight->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_Freight(): void
+    public function test_can_update_freight(): void
     {
         $Freight = Freight::factory()->create();
         $data = ['name' => 'Updated Freight'];
 
-        $response = $this->putJson('/api/freights/' . $Freight->id, $data);
+        $response = $this->putJson('/api/freights/'.$Freight->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('freights', $data);
     }
 
-    public function test_can_delete_Freight(): void
+    public function test_can_delete_freight(): void
     {
         $Freight = Freight::factory()->create();
 
-        $response = $this->deleteJson('/api/freights/' . $Freight->id);
+        $response = $this->deleteJson('/api/freights/'.$Freight->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('freights', ['id' => $Freight->id]);
     }
@@ -93,6 +93,6 @@ class FreightTest extends TestCase
     {
         $response = $this->postJson('/api/freights', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

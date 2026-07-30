@@ -2,8 +2,8 @@
 
 namespace Modules\AccountLedger\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 use Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
 use Modules\AccountLedger\Services\AccountLedgerService;
 
@@ -24,11 +24,11 @@ class AccountLedgerServiceProvider extends ServiceProvider
     {
         Route::middleware('api')
             ->prefix('api')
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__.'/../Routes/api.php');
     }
 
     private function loadMigrations(): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
     }
 }

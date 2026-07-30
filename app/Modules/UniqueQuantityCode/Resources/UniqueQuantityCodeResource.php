@@ -2,15 +2,19 @@
 
 namespace Modules\UniqueQuantityCode\Resources;
 
-use App\Enums\QuantityType;
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class UniqueQuantityCodeResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -19,6 +23,7 @@ class UniqueQuantityCodeResource extends SuccessResource
             'icon' => $this->icon,
             'quantityType' => $this->quantity_type?->value,
 
-        ];
+        ]);
+
     }
 }

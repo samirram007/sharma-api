@@ -19,20 +19,21 @@ class AppModuleFeatureRequest extends FormRequest
             'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:app_module_features,code'],
             'description' => ['sometimes', 'required', 'string', 'max:255'],
             'status' => ['sometimes', 'required', 'string', 'max:255'],
-            'app_module_id' => ['required', 'numeric', 'exists:app_modules,id']
+            'icon' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'app_module_id' => ['required', 'numeric', 'exists:app_modules,id'],
         ];
         $rules['name'] = [
             'required',
             'string',
             'max:255',
-            Rule::unique('app_module_features')->where(fn($query) => $query->where('app_module_id', $this->app_module_id))
+            Rule::unique('app_module_features')->where(fn ($query) => $query->where('app_module_id', $this->app_module_id)),
         ];
 
         $rules['code'] = [
             'required',
             'string',
             'max:255',
-            Rule::unique('app_module_features')->where(fn($query) => $query->where('app_module_id', $this->app_module_id))
+            Rule::unique('app_module_features')->where(fn ($query) => $query->where('app_module_id', $this->app_module_id)),
         ];
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
@@ -44,7 +45,7 @@ class AppModuleFeatureRequest extends FormRequest
                 'max:255',
                 Rule::unique('app_module_features')
                     ->ignore($id)
-                    ->where(fn($query) => $query->where('app_module_id', $this->app_module_id)),
+                    ->where(fn ($query) => $query->where('app_module_id', $this->app_module_id)),
             ];
 
             $rules['code'] = [
@@ -54,7 +55,7 @@ class AppModuleFeatureRequest extends FormRequest
                 'max:255',
                 Rule::unique('app_module_features')
                     ->ignore($id)
-                    ->where(fn($query) => $query->where('app_module_id', $this->app_module_id)),
+                    ->where(fn ($query) => $query->where('app_module_id', $this->app_module_id)),
             ];
 
         }

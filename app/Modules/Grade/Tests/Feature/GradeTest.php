@@ -2,9 +2,9 @@
 
 namespace Modules\Grade\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Grade\Models\Grade;
+use Tests\TestCase;
 
 class GradeTest extends TestCase
 {
@@ -14,77 +14,77 @@ class GradeTest extends TestCase
     {
         $response = $this->getJson('/api/grades');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_Grade(): void
+    public function test_can_create_grade(): void
     {
         $data = ['name' => 'Test Grade'];
 
         $response = $this->postJson('/api/grades', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('grades', $data);
     }
 
-    public function test_can_show_Grade(): void
+    public function test_can_show_grade(): void
     {
         $Grade = Grade::factory()->create();
 
-        $response = $this->getJson('/api/grades/' . $Grade->id);
+        $response = $this->getJson('/api/grades/'.$Grade->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_Grade(): void
+    public function test_can_update_grade(): void
     {
         $Grade = Grade::factory()->create();
         $data = ['name' => 'Updated Grade'];
 
-        $response = $this->putJson('/api/grades/' . $Grade->id, $data);
+        $response = $this->putJson('/api/grades/'.$Grade->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('grades', $data);
     }
 
-    public function test_can_delete_Grade(): void
+    public function test_can_delete_grade(): void
     {
         $Grade = Grade::factory()->create();
 
-        $response = $this->deleteJson('/api/grades/' . $Grade->id);
+        $response = $this->deleteJson('/api/grades/'.$Grade->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('grades', ['id' => $Grade->id]);
     }
@@ -93,6 +93,6 @@ class GradeTest extends TestCase
     {
         $response = $this->postJson('/api/grades', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

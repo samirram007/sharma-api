@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('employee_groups', function (Blueprint $table) {
@@ -13,7 +14,6 @@ return new class extends Migration {
             $table->string('code')->unique()->nullable();
             $table->string('description')->nullable();
             $table->string('status')->default('active');
-
 
             $table->timestamps();
         });

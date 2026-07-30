@@ -2,39 +2,37 @@
 
 namespace Modules\LeaveType\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\LeaveType\Contracts\LeaveTypeServiceInterface;
 use Modules\LeaveType\Models\LeaveType;
-use Illuminate\Database\Eloquent\Collection;
 
-class LeaveTypeService implements LeaveTypeServiceInterface
+class LeaveTypeService extends BaseService implements LeaveTypeServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = LeaveType::class;
 
     public function getAll(): Collection
     {
-        return LeaveType::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?LeaveType
     {
-        return LeaveType::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): LeaveType
     {
-        return LeaveType::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): LeaveType
     {
-        $record = LeaveType::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = LeaveType::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

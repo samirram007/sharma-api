@@ -3,14 +3,14 @@
 namespace Modules\StockItemBrand\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\StockItemBrand\Contracts\StockItemBrandServiceInterface;
-use Modules\StockItemBrand\Resources\StockItemBrandResource;
-use Modules\StockItemBrand\Resources\StockItemBrandCollection;
-use Modules\StockItemBrand\Requests\StockItemBrandRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\StockItemBrand\Contracts\StockItemBrandServiceInterface;
+use Modules\StockItemBrand\Requests\StockItemBrandRequest;
+use Modules\StockItemBrand\Resources\StockItemBrandCollection;
+use Modules\StockItemBrand\Resources\StockItemBrandResource;
 
 class StockItemBrandController extends Controller
 {
@@ -21,35 +21,33 @@ class StockItemBrandController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new StockItemBrandCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new StockItemBrandResource($data);
+
+        return new StockItemBrandResource($data);
     }
 
     public function store(StockItemBrandRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new StockItemBrandResource($data, $messages='StockItemBrand created successfully');
+
+        return new StockItemBrandResource($data, $messages = 'StockItemBrand created successfully');
     }
 
     public function update(StockItemBrandRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new StockItemBrandResource($data, $messages='StockItemBrand updated successfully');
+
+        return new StockItemBrandResource($data, $messages = 'StockItemBrand updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'StockItemBrand deleted successfully':'StockItemBrand not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'StockItemBrand');
     }
 }

@@ -2,18 +2,15 @@
 
 namespace Modules\Company\Models;
 
-use Modules\CompanyType\Models\CompanyType;
-use Modules\Country\Models\Country;
-use Modules\Currency\Models\Currency;
-use Modules\FiscalYear\Models\FiscalYear;
-use Modules\Address\Models\Address;
-use Modules\State\Models\State;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-
+use Modules\Address\Models\Address;
+use Modules\CompanyType\Models\CompanyType;
+use Modules\Currency\Models\Currency;
+use Modules\FiscalYear\Models\FiscalYear;
 
 class Company extends Model
 {
@@ -56,6 +53,7 @@ class Company extends Model
     {
         return $this->belongsTo(Currency::class);
     }
+
     public function fiscal_years(): HasMany
     {
         return $this->hasMany(FiscalYear::class);

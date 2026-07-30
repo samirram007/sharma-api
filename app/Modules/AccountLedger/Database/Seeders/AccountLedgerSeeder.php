@@ -2,9 +2,7 @@
 
 namespace Modules\AccountLedger\Database\Seeders;
 
-use Modules\AccountGroup\Models\AccountGroup;
 use Illuminate\Database\Seeder;
-use Modules\AccountLedger\Models\AccountLedger;
 use Illuminate\Support\Facades\DB;
 
 class AccountLedgerSeeder extends Seeder

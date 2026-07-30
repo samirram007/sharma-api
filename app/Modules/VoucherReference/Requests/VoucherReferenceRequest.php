@@ -16,7 +16,7 @@ class VoucherReferenceRequest extends FormRequest
         $rules = [
             'voucher_id' => ['required', 'numeric', 'exists:vouchers,id'],
             'ref_voucher_id' => ['required', 'numeric', 'exists:vouchers,id'],
-            'type' => ['sometimes', 'nullable', 'string', 'max:255']
+            'type' => ['sometimes', 'nullable', 'string', 'max:255'],
 
         ];
 

@@ -2,9 +2,9 @@
 
 namespace Modules\DocumentUser\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\DocumentUser\Models\DocumentUser;
+use Tests\TestCase;
 
 class DocumentUserTest extends TestCase
 {
@@ -14,77 +14,77 @@ class DocumentUserTest extends TestCase
     {
         $response = $this->getJson('/api/document_users');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_DocumentUser(): void
+    public function test_can_create_document_user(): void
     {
         $data = ['name' => 'Test DocumentUser'];
 
         $response = $this->postJson('/api/document_users', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('document_users', $data);
     }
 
-    public function test_can_show_DocumentUser(): void
+    public function test_can_show_document_user(): void
     {
         $DocumentUser = DocumentUser::factory()->create();
 
-        $response = $this->getJson('/api/document_users/' . $DocumentUser->id);
+        $response = $this->getJson('/api/document_users/'.$DocumentUser->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_DocumentUser(): void
+    public function test_can_update_document_user(): void
     {
         $DocumentUser = DocumentUser::factory()->create();
         $data = ['name' => 'Updated DocumentUser'];
 
-        $response = $this->putJson('/api/document_users/' . $DocumentUser->id, $data);
+        $response = $this->putJson('/api/document_users/'.$DocumentUser->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('document_users', $data);
     }
 
-    public function test_can_delete_DocumentUser(): void
+    public function test_can_delete_document_user(): void
     {
         $DocumentUser = DocumentUser::factory()->create();
 
-        $response = $this->deleteJson('/api/document_users/' . $DocumentUser->id);
+        $response = $this->deleteJson('/api/document_users/'.$DocumentUser->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('document_users', ['id' => $DocumentUser->id]);
     }
@@ -93,6 +93,6 @@ class DocumentUserTest extends TestCase
     {
         $response = $this->postJson('/api/document_users', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

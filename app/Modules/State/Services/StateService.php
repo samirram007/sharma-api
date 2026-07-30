@@ -2,39 +2,41 @@
 
 namespace Modules\State\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\State\Contracts\StateServiceInterface;
 use Modules\State\Models\State;
-use Illuminate\Database\Eloquent\Collection;
 
-class StateService implements StateServiceInterface
+class StateService extends BaseService implements StateServiceInterface
 {
-    protected $resource = ['country'];
+    protected string $modelClass = State::class;
+
+    protected array $defaultResource = [
+        'country',
+    ];
 
     public function getAll(): Collection
     {
-        return State::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?State
     {
-        return State::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): State
     {
-        return State::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): State
     {
-        $record = State::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = State::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

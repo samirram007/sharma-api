@@ -30,7 +30,6 @@ class FreightRequest extends FormRequest
             'freight_charges' => ['sometimes', 'nullable', 'numeric'],
             'total_fare' => ['sometimes', 'nullable', 'numeric'],
 
-
         ];
 
         // For update requests, make validation more flexible

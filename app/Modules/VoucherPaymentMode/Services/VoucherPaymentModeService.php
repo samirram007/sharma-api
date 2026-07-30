@@ -2,39 +2,37 @@
 
 namespace Modules\VoucherPaymentMode\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\VoucherPaymentMode\Contracts\VoucherPaymentModeServiceInterface;
 use Modules\VoucherPaymentMode\Models\VoucherPaymentMode;
-use Illuminate\Database\Eloquent\Collection;
 
-class VoucherPaymentModeService implements VoucherPaymentModeServiceInterface
+class VoucherPaymentModeService extends BaseService implements VoucherPaymentModeServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = VoucherPaymentMode::class;
 
     public function getAll(): Collection
     {
-        return VoucherPaymentMode::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?VoucherPaymentMode
     {
-        return VoucherPaymentMode::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): VoucherPaymentMode
     {
-        return VoucherPaymentMode::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): VoucherPaymentMode
     {
-        $record = VoucherPaymentMode::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = VoucherPaymentMode::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

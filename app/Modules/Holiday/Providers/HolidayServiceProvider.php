@@ -2,8 +2,8 @@
 
 namespace Modules\Holiday\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 use Modules\Holiday\Contracts\HolidayServiceInterface;
 use Modules\Holiday\Services\HolidayService;
 
@@ -24,11 +24,11 @@ class HolidayServiceProvider extends ServiceProvider
     {
         Route::middleware('api')
             ->prefix('api')
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__.'/../Routes/api.php');
     }
 
     private function loadMigrations(): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
     }
 }

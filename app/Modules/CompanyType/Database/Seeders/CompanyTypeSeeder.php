@@ -13,7 +13,7 @@ class CompanyTypeSeeder extends Seeder
             'name' => 'Transport',
             'code' => 'TRAN',
             'description' => 'Transport industry',
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         // Uncomment to use factory if available

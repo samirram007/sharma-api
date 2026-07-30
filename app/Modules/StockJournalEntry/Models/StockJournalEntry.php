@@ -3,12 +3,6 @@
 namespace Modules\StockJournalEntry\Models;
 
 use App\Enums\MovementType;
-use Modules\StockItem\Models\StockItem;
-use Modules\StockJournal\Models\StockJournal;
-use Modules\StockJournalEntryPurge\Models\StockJournalEntryPurge;
-use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
-use Modules\StockUnit\Models\StockUnit;
-use Modules\Voucher\Models\Voucher;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,11 +10,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\StockItem\Models\StockItem;
+use Modules\StockJournal\Models\StockJournal;
+use Modules\StockJournalEntryPurge\Models\StockJournalEntryPurge;
+use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
+use Modules\StockUnit\Models\StockUnit;
+use Modules\Voucher\Models\Voucher;
 
 class StockJournalEntry extends Model
 {
-    use HasFactory;
     use Blameable;
+    use HasFactory;
 
     protected $table = 'stock_journal_entries';
 
@@ -43,10 +43,10 @@ class StockJournalEntry extends Model
         // 'is_cancelled',
 
     ];
+
     protected $appends = [
         'is_purged',
     ];
-
 
     protected $casts = [
         'created_at' => 'datetime',
@@ -62,8 +62,8 @@ class StockJournalEntry extends Model
             $builder->whereDoesntHave('stock_journal_entry_purge');
         });
         //  static::addGlobalScope('hide_purged', function (Builder $builder) {
-//             $builder->where('is_purged', 0);
-//         });
+        //             $builder->where('is_purged', 0);
+        //         });
         static::addGlobalScope('default_order', function (Builder $builder) {
             $builder->orderBy('entry_order', 'asc');
         });
@@ -83,22 +83,27 @@ class StockJournalEntry extends Model
     {
         return $this->belongsTo(StockJournal::class, 'stock_journal_id');
     }
+
     public function stock_journal_godown_entries(): HasMany
     {
         return $this->hasMany(StockJournalGodownEntry::class, 'stock_journal_entry_id');
     }
+
     public function stock_item(): BelongsTo
     {
         return $this->belongsTo(StockItem::class, 'stock_item_id');
     }
+
     public function stock_unit(): BelongsTo
     {
         return $this->belongsTo(StockUnit::class, 'stock_unit_id');
     }
+
     public function alternate_unit(): BelongsTo
     {
         return $this->belongsTo(StockUnit::class, 'alternate_unit_id');
     }
+
     public function rate_unit(): BelongsTo
     {
         return $this->belongsTo(StockUnit::class, 'rate_unit_id');
@@ -108,6 +113,7 @@ class StockJournalEntry extends Model
     {
         return $this->voucher();
     }
+
     public function getIsCancelledAttribute(): bool
     {
         return true;
@@ -124,5 +130,4 @@ class StockJournalEntry extends Model
             'voucher_id'
         );
     }
-
 }

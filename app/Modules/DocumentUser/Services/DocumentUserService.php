@@ -2,39 +2,37 @@
 
 namespace Modules\DocumentUser\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\DocumentUser\Contracts\DocumentUserServiceInterface;
 use Modules\DocumentUser\Models\DocumentUser;
-use Illuminate\Database\Eloquent\Collection;
 
-class DocumentUserService implements DocumentUserServiceInterface
+class DocumentUserService extends BaseService implements DocumentUserServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = DocumentUser::class;
 
     public function getAll(): Collection
     {
-        return DocumentUser::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?DocumentUser
     {
-        return DocumentUser::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): DocumentUser
     {
-        return DocumentUser::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): DocumentUser
     {
-        $record = DocumentUser::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = DocumentUser::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

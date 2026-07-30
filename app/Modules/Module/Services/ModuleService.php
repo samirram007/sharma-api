@@ -2,37 +2,37 @@
 
 namespace Modules\Module\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Module\Contracts\ModuleServiceInterface;
 use Modules\Module\Models\Module;
-use Illuminate\Database\Eloquent\Collection;
 
-class ModuleService implements ModuleServiceInterface
+class ModuleService extends BaseService implements ModuleServiceInterface
 {
+    protected string $modelClass = Module::class;
+
     public function getAll(): Collection
     {
-        return Module::all();
+        return $this->getAllRecords();
     }
 
-    public function getById(int $id): Module
+    public function getById(int $id): ?Module
     {
-        return Module::findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Module
     {
-        return Module::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Module
     {
-        $record = Module::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Module::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

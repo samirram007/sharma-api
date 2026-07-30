@@ -2,10 +2,10 @@
 
 namespace Modules\Address\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Country\Models\Country;
 use Modules\State\Models\State;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Address extends Model
 {
@@ -28,7 +28,7 @@ class Address extends Model
         'addressable_id',
         'addressable_type',
         'post_office',
-        'district'
+        'district',
     ];
 
     protected $casts = [
@@ -37,6 +37,7 @@ class Address extends Model
         'is_primary' => 'boolean',
         // 'address_type' => AddressType::class,
     ];
+
     protected $attributes = [
         'is_primary' => false,
     ];
@@ -55,6 +56,4 @@ class Address extends Model
     {
         return $this->belongsTo(Country::class);
     }
-
-
 }

@@ -2,39 +2,37 @@
 
 namespace Modules\StockItemPrice\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StockItemPrice\Contracts\StockItemPriceServiceInterface;
 use Modules\StockItemPrice\Models\StockItemPrice;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockItemPriceService implements StockItemPriceServiceInterface
+class StockItemPriceService extends BaseService implements StockItemPriceServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = StockItemPrice::class;
 
     public function getAll(): Collection
     {
-        return StockItemPrice::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockItemPrice
     {
-        return StockItemPrice::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockItemPrice
     {
-        return StockItemPrice::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockItemPrice
     {
-        $record = StockItemPrice::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockItemPrice::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

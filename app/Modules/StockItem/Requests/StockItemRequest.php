@@ -2,6 +2,10 @@
 
 namespace Modules\StockItem\Requests;
 
+use App\Enums\CostingMethod;
+use App\Enums\GstType;
+use App\Enums\MarketValuationMethod;
+use App\Enums\TypeOfSupply;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StockItemRequest extends FormRequest
@@ -29,7 +33,7 @@ class StockItemRequest extends FormRequest
             'base_unit_value' => ['sometimes', 'nullable', 'numeric'],
             'alternate_unit_value' => ['sometimes', 'nullable', 'numeric'],
             'unique_quantity_code_id' => ['sometimes', 'nullable', 'integer', 'exists:unique_quantity_codes,id'],
-            'type_of_supply' => ['sometimes', 'required', 'in:' . implode(',', array_column(\App\Enums\TypeOfSupply::cases(), 'value'))],
+            'type_of_supply' => ['sometimes', 'required', 'in:'.implode(',', array_column(TypeOfSupply::cases(), 'value'))],
             'is_negative_sales_allow' => ['sometimes', 'required', 'boolean'],
             'is_maintain_batch' => ['sometimes', 'required', 'boolean'],
             'is_maintain_serial' => ['sometimes', 'required', 'boolean'],
@@ -39,8 +43,8 @@ class StockItemRequest extends FormRequest
             'is_finish_goods' => ['sometimes', 'required', 'boolean'],
             'is_raw_material' => ['sometimes', 'required', 'boolean'],
             'is_unfinished_goods' => ['sometimes', 'required', 'boolean'],
-            'costing_method' => ['sometimes', 'required', 'in:' . implode(',', array_column(\App\Enums\CostingMethod::cases(), 'value'))],
-            'market_valuation_method' => ['sometimes', 'required', 'in:' . implode(',', array_column(\App\Enums\MarketValuationMethod::cases(), 'value'))],
+            'costing_method' => ['sometimes', 'required', 'in:'.implode(',', array_column(CostingMethod::cases(), 'value'))],
+            'market_valuation_method' => ['sometimes', 'required', 'in:'.implode(',', array_column(MarketValuationMethod::cases(), 'value'))],
             'reorder_level' => ['sometimes', 'required', 'numeric'],
             'minimum_stock' => ['sometimes', 'required', 'numeric'],
             'maximum_stock' => ['sometimes', 'required', 'numeric'],
@@ -52,7 +56,7 @@ class StockItemRequest extends FormRequest
             'rate_of_duty' => ['sometimes', 'required', 'numeric'],
             'hsn_sac_code' => ['sometimes', 'nullable', 'string', 'max:255'],
             'is_gst_inclusive' => ['sometimes', 'required', 'boolean'],
-            'gst_type' => ['sometimes', 'required', 'in:' . implode(',', array_column(\App\Enums\GstType::cases(), 'value'))],
+            'gst_type' => ['sometimes', 'required', 'in:'.implode(',', array_column(GstType::cases(), 'value'))],
             'brand_id' => ['sometimes', 'required', 'integer', 'exists:brands,id'],
             'mrp' => ['sometimes', 'required', 'numeric'],
             'standard_cost' => ['sometimes', 'required', 'numeric'],
@@ -64,56 +68,15 @@ class StockItemRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('stock_item');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_items,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_items,code,' . $id,];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_items,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_items,code,'.$id];
 
         }
-        //dd($rules);
+
+        // dd($rules);
         return $rules;
     }
-    // 'name',
-    //     'code',
-    //     'print_name',
-    //     'sku',
-    //     'article_no',
-    //     'part_no',
-    //     'description',
-    //     'stock_category_id',
-    //     'stock_group_id',
-    //     'stock_unit_id',
-    //     'alternative_stock_unit_id',
-    //     'alternate_unit_ratio',
-    //     'invoice_stock_unit_id',
-    //     'invoice_conversion_factor',
-    //     'no_of_decimal_places',
-    //     'uqc_id',
-    //     'type_of_supply',
-    //     'is_negative_sales_allow',
-    //     'is_maintain_batch',
-    //     'is_maintain_serial',
-    //     'is_expiry_item',
-    //     'is_finish_goods',
-    //     'is_raw_material',
-    //     'is_unfinished_goods',
-    //     'costing_method',
-    //     'pricing_method',
-    //     'reorder_level',
-    //     'minimum_stock',
-    //     'maximum_stock',
-    //     'has_bom',
-    //     'is_sales_as_new_manufacture',
-    //     'is_purchase_as_consumed',
-    //     'is_rejection_as_scrap',
-    //     'is_gst_applicable',
-    //     'rate_of_duty',
-    //     'hsn_sac_code',
-    //     'is_gst_inclusive',
-    //     'gst_type',
-    //     'brand_id',
-    //     'mrp',
-    //     'standard_cost',
-    //     'icon',
-    //     'status',
+
     public function messages(): array
     {
         return [

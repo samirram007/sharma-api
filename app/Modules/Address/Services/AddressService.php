@@ -2,39 +2,37 @@
 
 namespace Modules\Address\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Address\Contracts\AddressServiceInterface;
 use Modules\Address\Models\Address;
-use Illuminate\Database\Eloquent\Collection;
 
-class AddressService implements AddressServiceInterface
+class AddressService extends BaseService implements AddressServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = Address::class;
 
     public function getAll(): Collection
     {
-        return Address::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Address
     {
-        return Address::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Address
     {
-        return Address::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Address
     {
-        $record = Address::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Address::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

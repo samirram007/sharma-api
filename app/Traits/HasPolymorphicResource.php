@@ -11,7 +11,7 @@ trait HasPolymorphicResource
     /**
      * Resolve a model or collection into its corresponding Resource
      *
-     * @param Model|Collection|null $model
+     * @param  Model|Collection|null  $model
      * @return JsonResource|Collection|null
      */
     protected function resolveResource($model)
@@ -21,10 +21,10 @@ trait HasPolymorphicResource
         }
 
         if ($model instanceof Collection || $model instanceof \Illuminate\Database\Eloquent\Collection) {
-            return $model->map(fn($item) => $this->resolveResource($item));
+            return $model->map(fn ($item) => $this->resolveResource($item));
         }
 
-        if (!$model instanceof Model) {
+        if (! $model instanceof Model) {
             return $model;
         }
 
@@ -40,7 +40,7 @@ trait HasPolymorphicResource
     /**
      * Generate the fully qualified resource class name from a model class
      *
-     * @param string $modelClass Fully qualified model class name
+     * @param  string  $modelClass  Fully qualified model class name
      * @return string Fully qualified resource class name
      */
     protected function getResourceClass(string $modelClass): string
@@ -49,15 +49,13 @@ trait HasPolymorphicResource
             ['\\Models\\', 'App\\Modules\\'],
             ['\\Resources\\', 'App\\Modules\\'],
             $modelClass
-        ) . 'Resource';
+        ).'Resource';
     }
 
     /**
      * Recursively resolve all loaded relations in a model
      *
-     * @param Model $model
-     * @param array<string|array<string,callable>> $relationsToWrap Relations to process
-     * @return JsonResource|Model
+     * @param  array<string|array<string,callable>>  $relationsToWrap  Relations to process
      */
     protected function resolveRelations(Model $model, array $relationsToWrap = []): JsonResource|Model
     {
@@ -82,9 +80,7 @@ trait HasPolymorphicResource
     /**
      * Recursively wrap nested relations
      *
-     * @param Model $model
-     * @param array<string> $nested Array of relation segments
-     * @return void
+     * @param  array<string>  $nested  Array of relation segments
      */
     protected function wrapNestedRelations(Model $model, array $nested): void
     {
@@ -94,14 +90,14 @@ trait HasPolymorphicResource
 
         $relation = array_shift($nested);
 
-        if (!$model->relationLoaded($relation)) {
+        if (! $model->relationLoaded($relation)) {
             return;
         }
 
         $related = $model->{$relation};
         $resolved = $this->resolveResource($related);
 
-        if (!empty($nested) && $resolved instanceof Model) {
+        if (! empty($nested) && $resolved instanceof Model) {
             $this->wrapNestedRelations($resolved, $nested);
         }
 

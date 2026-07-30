@@ -2,9 +2,9 @@
 
 namespace Modules\AppModuleFeature\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\AppModuleFeature\Contracts\AppModuleFeatureServiceInterface;
 use Modules\AppModuleFeature\Models\AppModuleFeature;
-use Illuminate\Database\Eloquent\Collection;
 
 class AppModuleFeatureService implements AppModuleFeatureServiceInterface
 {
@@ -29,12 +29,14 @@ class AppModuleFeatureService implements AppModuleFeatureServiceInterface
     {
         $record = AppModuleFeature::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = AppModuleFeature::findOrFail($id);
+
         return $record->delete();
     }
 
@@ -46,9 +48,10 @@ class AppModuleFeatureService implements AppModuleFeatureServiceInterface
                 'module',
                 'role_permissions' => function ($query) use ($role_id) {
                     $query->where('role_id', $role_id);
-                }
+                },
             ])
             ->get();
+
         // dd($data->toArray());
         return $data;
         // return AppModuleFeature::where('app_module_id', $module_id)->get();
@@ -60,10 +63,10 @@ class AppModuleFeatureService implements AppModuleFeatureServiceInterface
             'module',
             'role_permissions' => function ($query) use ($role_id) {
                 $query->where('role_id', $role_id);
-            }
+            },
         ])
-        ->orderBy('app_module_id')
-        ->orderBy('id')
-        ->get();
+            ->orderBy('app_module_id')
+            ->orderBy('id')
+            ->get();
     }
 }

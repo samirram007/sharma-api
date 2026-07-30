@@ -2,13 +2,13 @@
 
 namespace Modules\Receipt\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Receipt\Contracts\ReceiptServiceInterface;
 use Modules\Receipt\Models\Receipt;
-use Illuminate\Database\Eloquent\Collection;
 
 class ReceiptService implements ReceiptServiceInterface
 {
-    protected $resource=[];
+    protected $resource = [];
 
     public function getAll(): Collection
     {
@@ -29,12 +29,14 @@ class ReceiptService implements ReceiptServiceInterface
     {
         $record = Receipt::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = Receipt::findOrFail($id);
+
         return $record->delete();
     }
 }

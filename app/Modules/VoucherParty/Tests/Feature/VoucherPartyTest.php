@@ -2,9 +2,9 @@
 
 namespace Modules\VoucherParty\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\VoucherParty\Models\VoucherParty;
+use Tests\TestCase;
 
 class VoucherPartyTest extends TestCase
 {
@@ -14,77 +14,77 @@ class VoucherPartyTest extends TestCase
     {
         $response = $this->getJson('/api/voucher_parties');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_VoucherParty(): void
+    public function test_can_create_voucher_party(): void
     {
         $data = ['name' => 'Test VoucherParty'];
 
         $response = $this->postJson('/api/voucher_parties', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('voucher_parties', $data);
     }
 
-    public function test_can_show_VoucherParty(): void
+    public function test_can_show_voucher_party(): void
     {
         $VoucherParty = VoucherParty::factory()->create();
 
-        $response = $this->getJson('/api/voucher_parties/' . $VoucherParty->id);
+        $response = $this->getJson('/api/voucher_parties/'.$VoucherParty->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_VoucherParty(): void
+    public function test_can_update_voucher_party(): void
     {
         $VoucherParty = VoucherParty::factory()->create();
         $data = ['name' => 'Updated VoucherParty'];
 
-        $response = $this->putJson('/api/voucher_parties/' . $VoucherParty->id, $data);
+        $response = $this->putJson('/api/voucher_parties/'.$VoucherParty->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('voucher_parties', $data);
     }
 
-    public function test_can_delete_VoucherParty(): void
+    public function test_can_delete_voucher_party(): void
     {
         $VoucherParty = VoucherParty::factory()->create();
 
-        $response = $this->deleteJson('/api/voucher_parties/' . $VoucherParty->id);
+        $response = $this->deleteJson('/api/voucher_parties/'.$VoucherParty->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('voucher_parties', ['id' => $VoucherParty->id]);
     }
@@ -93,6 +93,6 @@ class VoucherPartyTest extends TestCase
     {
         $response = $this->postJson('/api/voucher_parties', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

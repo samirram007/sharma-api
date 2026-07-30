@@ -2,9 +2,9 @@
 
 namespace Modules\Vehicle\Models;
 
-use Modules\Transporter\Models\Transporter;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Modules\Transporter\Models\Transporter;
 
 class Vehicle extends Model
 {

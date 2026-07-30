@@ -3,14 +3,14 @@
 namespace Modules\AccountingPeriod\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\AccountingPeriod\Contracts\AccountingPeriodServiceInterface;
-use Modules\AccountingPeriod\Resources\AccountingPeriodResource;
-use Modules\AccountingPeriod\Resources\AccountingPeriodCollection;
-use Modules\AccountingPeriod\Requests\AccountingPeriodRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\AccountingPeriod\Contracts\AccountingPeriodServiceInterface;
+use Modules\AccountingPeriod\Requests\AccountingPeriodRequest;
+use Modules\AccountingPeriod\Resources\AccountingPeriodCollection;
+use Modules\AccountingPeriod\Resources\AccountingPeriodResource;
 
 class AccountingPeriodController extends Controller
 {
@@ -21,35 +21,33 @@ class AccountingPeriodController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new AccountingPeriodCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new AccountingPeriodResource($data);
+
+        return new AccountingPeriodResource($data);
     }
 
     public function store(AccountingPeriodRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new AccountingPeriodResource($data, $messages='AccountingPeriod created successfully');
+
+        return new AccountingPeriodResource($data, $messages = 'AccountingPeriod created successfully');
     }
 
     public function update(AccountingPeriodRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new AccountingPeriodResource($data, $messages='AccountingPeriod updated successfully');
+
+        return new AccountingPeriodResource($data, $messages = 'AccountingPeriod updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'AccountingPeriod deleted successfully':'AccountingPeriod not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'AccountingPeriod');
     }
 }

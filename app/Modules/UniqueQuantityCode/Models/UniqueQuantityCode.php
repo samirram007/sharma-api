@@ -3,8 +3,8 @@
 namespace Modules\UniqueQuantityCode\Models;
 
 use App\Enums\QuantityType;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class UniqueQuantityCode extends Model
 {
@@ -18,12 +18,12 @@ class UniqueQuantityCode extends Model
         'description',
         'status',
         'icon',
-        'quantity_type'
+        'quantity_type',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'quantity_type' => QuantityType::class
+        'quantity_type' => QuantityType::class,
     ];
 }

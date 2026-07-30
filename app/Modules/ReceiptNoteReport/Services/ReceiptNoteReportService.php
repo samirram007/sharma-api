@@ -2,11 +2,11 @@
 
 namespace Modules\ReceiptNoteReport\Services;
 
-use Modules\Voucher\Contracts\VoucherServiceInterface;
-use Modules\Voucher\Models\Voucher;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Models\Voucher;
 
 class ReceiptNoteReportService
 {
@@ -26,14 +26,12 @@ class ReceiptNoteReportService
         'fiscal_year',
     ];
 
-    public function __construct(protected VoucherServiceInterface $voucherService)
-    {
-    }
+    public function __construct(protected VoucherServiceInterface $voucherService) {}
 
     public function getAll(array $params = []): LengthAwarePaginator
     {
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
-        if (!$userFiscalYear) {
+        if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
 
@@ -43,20 +41,20 @@ class ReceiptNoteReportService
             ->whereBetween('voucher_date', [$userFiscalYear->start_date, $userFiscalYear->end_date]);
 
         // Search filter
-        if (!empty($params['search'])) {
+        if (! empty($params['search'])) {
             $search = $params['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('voucher_no', 'like', "%{$search}%")
-                  ->orWhere('remarks', 'like', "%{$search}%")
-                  ->orWhereHas('voucher_entries.account_ledger', function ($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('remarks', 'like', "%{$search}%")
+                    ->orWhereHas('voucher_entries.account_ledger', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
         // Sorting
-        if (!empty($params['sort_by'])) {
-            $sortOrder = !empty($params['sort_order']) && strtolower($params['sort_order']) === 'desc' ? 'desc' : 'asc';
+        if (! empty($params['sort_by'])) {
+            $sortOrder = ! empty($params['sort_order']) && strtolower($params['sort_order']) === 'desc' ? 'desc' : 'asc';
             match ($params['sort_by']) {
                 'voucher_date' => $query->reorder()->orderBy('voucher_date', $sortOrder),
                 'voucher_no' => $query->reorder()->orderBy('voucher_no', $sortOrder),
@@ -70,7 +68,7 @@ class ReceiptNoteReportService
 
         $perPage = $params['per_page'] ?? 10;
         $vouchers = $query->paginate($perPage);
-        $vouchers->through(fn(Voucher $voucher) => $this->voucherService->attachLedgerInfo($voucher));
+        $vouchers->through(fn (Voucher $voucher) => $this->voucherService->attachLedgerInfo($voucher));
 
         return $vouchers;
     }
@@ -78,7 +76,7 @@ class ReceiptNoteReportService
     public function getGroupedByLedger(array $params = []): Collection
     {
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
-        if (!$userFiscalYear) {
+        if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
 
@@ -99,10 +97,10 @@ class ReceiptNoteReportService
             ->orderBy('total_amount', 'desc');
 
         // Date range filter
-        if (!empty($params['from_date'])) {
+        if (! empty($params['from_date'])) {
             $query->whereDate('vouchers.voucher_date', '>=', $params['from_date']);
         }
-        if (!empty($params['to_date'])) {
+        if (! empty($params['to_date'])) {
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
@@ -112,7 +110,7 @@ class ReceiptNoteReportService
     public function getGroupedByDate(array $params = []): Collection
     {
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
-        if (!$userFiscalYear) {
+        if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
 
@@ -128,10 +126,10 @@ class ReceiptNoteReportService
             ->groupBy('vouchers.voucher_date')
             ->orderBy('vouchers.voucher_date', 'desc');
 
-        if (!empty($params['from_date'])) {
+        if (! empty($params['from_date'])) {
             $query->whereDate('vouchers.voucher_date', '>=', $params['from_date']);
         }
-        if (!empty($params['to_date'])) {
+        if (! empty($params['to_date'])) {
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
@@ -141,7 +139,7 @@ class ReceiptNoteReportService
     public function getGroupedByStockItem(array $params = []): Collection
     {
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
-        if (!$userFiscalYear) {
+        if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
 
@@ -162,10 +160,10 @@ class ReceiptNoteReportService
             ->groupBy('stock_items.id', 'stock_items.name')
             ->orderBy('total_amount', 'desc');
 
-        if (!empty($params['from_date'])) {
+        if (! empty($params['from_date'])) {
             $query->whereDate('vouchers.voucher_date', '>=', $params['from_date']);
         }
-        if (!empty($params['to_date'])) {
+        if (! empty($params['to_date'])) {
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
@@ -175,7 +173,7 @@ class ReceiptNoteReportService
     public function getGroupedByGodown(array $params = []): Collection
     {
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
-        if (!$userFiscalYear) {
+        if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
 
@@ -197,10 +195,10 @@ class ReceiptNoteReportService
             ->groupBy('godowns.id', 'godowns.name')
             ->orderBy('godowns.name');
 
-        if (!empty($params['from_date'])) {
+        if (! empty($params['from_date'])) {
             $query->whereDate('vouchers.voucher_date', '>=', $params['from_date']);
         }
-        if (!empty($params['to_date'])) {
+        if (! empty($params['to_date'])) {
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 

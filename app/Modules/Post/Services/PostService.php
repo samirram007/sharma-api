@@ -2,37 +2,37 @@
 
 namespace Modules\Post\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Post\Contracts\PostServiceInterface;
 use Modules\Post\Models\Post;
-use Illuminate\Database\Eloquent\Collection;
 
-class PostService implements PostServiceInterface
+class PostService extends BaseService implements PostServiceInterface
 {
+    protected string $modelClass = Post::class;
+
     public function getAll(): Collection
     {
-        return Post::all();
+        return $this->getAllRecords();
     }
 
-    public function getById(int $id): Post
+    public function getById(int $id): ?Post
     {
-        return Post::findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Post
     {
-        return Post::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Post
     {
-        $record = Post::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Post::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

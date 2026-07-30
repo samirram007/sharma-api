@@ -1,7 +1,7 @@
 <?php
 
-use Modules\User\Models\User;
 use Illuminate\Support\Facades\Broadcast;
+use Modules\User\Models\User;
 
 /*
 |--------------------------------------------------------------------------

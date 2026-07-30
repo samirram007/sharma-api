@@ -2,15 +2,16 @@
 
 namespace Modules\User\Services;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 use Modules\User\Contracts\UserServiceInterface;
 use Modules\User\Models\User;
 use Modules\User\Models\UserNotificationPreference;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Str;
 
 class UserService implements UserServiceInterface
 {
     protected $resources = ['roles'];
+
     public function getAll(): Collection
     {
         // return User::all()->load($this->resources);
@@ -26,6 +27,7 @@ class UserService implements UserServiceInterface
     {
         return User::create($data);
     }
+
     public function findOrCreateSocialUser($socialUser, string $provider): User
     {
         // 1. Try to find by provider + provider_id (most reliable)
@@ -40,6 +42,7 @@ class UserService implements UserServiceInterface
                 'avatar' => $socialUser->getAvatar(),
                 'email' => $socialUser->getEmail() ?? $user->email,
             ]);
+
             return $user;
         }
 
@@ -53,6 +56,7 @@ class UserService implements UserServiceInterface
                     'provider_id' => $socialUser->getId(),
                     'avatar' => $socialUser->getAvatar(),
                 ]);
+
                 return $user;
             }
         }
@@ -69,22 +73,26 @@ class UserService implements UserServiceInterface
             'status' => 'active',
         ]);
     }
+
     public function syncAvatar(User $user, ?string $avatarUrl): void
     {
         if ($avatarUrl && $user->avatar !== $avatarUrl) {
             $user->update(['avatar' => $avatarUrl]);
         }
     }
+
     public function update(array $data, int $id): User
     {
         $record = User::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = User::findOrFail($id);
+
         return $record->delete();
     }
 
@@ -100,7 +108,7 @@ class UserService implements UserServiceInterface
 
         $newPrefs = collect();
         foreach ($allTypes as $type) {
-            if (!in_array($type, $existingTypes)) {
+            if (! in_array($type, $existingTypes)) {
                 $newPrefs[] = UserNotificationPreference::create([
                     'user_id' => $userId,
                     'type' => $type,

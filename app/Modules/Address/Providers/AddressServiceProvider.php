@@ -2,8 +2,8 @@
 
 namespace Modules\Address\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 use Modules\Address\Contracts\AddressServiceInterface;
 use Modules\Address\Services\AddressService;
 
@@ -24,11 +24,11 @@ class AddressServiceProvider extends ServiceProvider
     {
         Route::middleware('api')
             ->prefix('api')
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__.'/../Routes/api.php');
     }
 
     private function loadMigrations(): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
     }
 }

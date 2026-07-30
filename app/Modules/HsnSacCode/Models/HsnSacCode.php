@@ -2,8 +2,8 @@
 
 namespace Modules\HsnSacCode\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class HsnSacCode extends Model
 {

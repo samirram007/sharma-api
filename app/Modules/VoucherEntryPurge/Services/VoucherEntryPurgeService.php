@@ -2,39 +2,37 @@
 
 namespace Modules\VoucherEntryPurge\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\VoucherEntryPurge\Contracts\VoucherEntryPurgeServiceInterface;
 use Modules\VoucherEntryPurge\Models\VoucherEntryPurge;
-use Illuminate\Database\Eloquent\Collection;
 
-class VoucherEntryPurgeService implements VoucherEntryPurgeServiceInterface
+class VoucherEntryPurgeService extends BaseService implements VoucherEntryPurgeServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = VoucherEntryPurge::class;
 
     public function getAll(): Collection
     {
-        return VoucherEntryPurge::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?VoucherEntryPurge
     {
-        return VoucherEntryPurge::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): VoucherEntryPurge
     {
-        return VoucherEntryPurge::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): VoucherEntryPurge
     {
-        $record = VoucherEntryPurge::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = VoucherEntryPurge::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

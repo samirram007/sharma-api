@@ -3,11 +3,11 @@
 namespace Modules\VoucherDispatchDetail\Models;
 
 use App\Enums\QuantityType;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\StockUnit\Models\StockUnit;
 use Modules\Voucher\Models\Voucher;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VoucherDispatchDetail extends Model
 {
@@ -50,6 +50,7 @@ class VoucherDispatchDetail extends Model
         'freight_charges',
         'total_fare',
     ];
+
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -69,12 +70,11 @@ class VoucherDispatchDetail extends Model
         'freight_basis' => QuantityType::class,
 
     ];
+
     public function voucher(): BelongsTo
     {
         return $this->belongsTo(Voucher::class, 'voucher_id');
     }
-
-
 
     public function distanceUnit(): BelongsTo
     {
@@ -90,6 +90,7 @@ class VoucherDispatchDetail extends Model
     {
         return $this->belongsTo(StockUnit::class, 'quantity_unit_id');
     }
+
     public function weightUnit(): BelongsTo
     {
         return $this->belongsTo(StockUnit::class, 'weight_unit_id');

@@ -14,17 +14,17 @@ class VendorRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255','unique:vendors,name'],
-            'code' => ['sometimes','required', 'string', 'max:255','unique:vendors,code'],
-            'description' => ['sometimes','required', 'string', 'max:255'],
-            'status' => ['sometimes','required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:vendors,name'],
+            'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:vendors,code'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', 'string', 'max:255'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $id=$this->route('vendor');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:vendors,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:vendors,code,' . $id,];
+            $id = $this->route('vendor');
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:vendors,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:vendors,code,'.$id];
 
         }
 

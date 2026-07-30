@@ -2,15 +2,20 @@
 
 namespace Modules\FiscalYear\Resources;
 
-use Modules\Company\Resources\CompanyResource;
-use Illuminate\Http\Request;
-
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
+use Modules\Company\Resources\CompanyResource;
+
 class FiscalYearResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'startDate' => $this->start_date?->format('Y-m-d'),
@@ -20,6 +25,8 @@ class FiscalYearResource extends SuccessResource
             'status' => $this->status,
             'closedAt' => $this->closed_at?->toISOString(),
             'closedBy' => $this->closed_by,
-        ];
+
+        ]);
+
     }
 }

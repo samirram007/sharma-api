@@ -3,14 +3,14 @@
 namespace Modules\Shift\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Shift\Contracts\ShiftServiceInterface;
-use Modules\Shift\Resources\ShiftResource;
-use Modules\Shift\Resources\ShiftCollection;
-use Modules\Shift\Requests\ShiftRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\Shift\Contracts\ShiftServiceInterface;
+use Modules\Shift\Requests\ShiftRequest;
+use Modules\Shift\Resources\ShiftCollection;
+use Modules\Shift\Resources\ShiftResource;
 
 class ShiftController extends Controller
 {
@@ -21,35 +21,33 @@ class ShiftController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new ShiftCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new ShiftResource($data);
+
+        return new ShiftResource($data);
     }
 
     public function store(ShiftRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new ShiftResource($data, $messages='Shift created successfully');
+
+        return new ShiftResource($data, $messages = 'Shift created successfully');
     }
 
     public function update(ShiftRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new ShiftResource($data, $messages='Shift updated successfully');
+
+        return new ShiftResource($data, $messages = 'Shift updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'Shift deleted successfully':'Shift not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'Shift');
     }
 }

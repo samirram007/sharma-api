@@ -2,15 +2,14 @@
 
 use App\Enums\CostingMethod;
 use App\Enums\MarketValuationMethod;
-use App\Enums\PricingMethod;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
-
 
         Schema::create('stock_items', function (Blueprint $table) {
             $table->id();
@@ -70,7 +69,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('stock_category_id')->nullable();
             $table->unsignedBigInteger('stock_group_id')->nullable();
 
-
             // E-commerce readiness
             $table->decimal('mrp', 15, 2)->nullable();
             $table->decimal('standard_cost', 15, 2)->nullable();
@@ -93,7 +91,6 @@ return new class extends Migration {
         //     $table->foreign('brand_id')->references('id')->on('brands')->cascadeOnUpdate()->restrictOnDelete();
         //     $table->foreign('category_id')->references('id')->on('stock_categories')->cascadeOnUpdate()->restrictOnDelete();
         // });
-
 
     }
 

@@ -3,8 +3,8 @@
 namespace Modules\StockCategory\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\StockCategory\Models\StockCategory;
 use Illuminate\Support\Facades\DB;
+use Modules\StockCategory\Models\StockCategory;
 
 class StockCategorySeeder extends Seeder
 {

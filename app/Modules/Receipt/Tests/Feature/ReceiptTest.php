@@ -2,9 +2,9 @@
 
 namespace Modules\Receipt\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Receipt\Models\Receipt;
+use Tests\TestCase;
 
 class ReceiptTest extends TestCase
 {
@@ -14,77 +14,77 @@ class ReceiptTest extends TestCase
     {
         $response = $this->getJson('/api/receipts');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_Receipt(): void
+    public function test_can_create_receipt(): void
     {
         $data = ['name' => 'Test Receipt'];
 
         $response = $this->postJson('/api/receipts', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('receipts', $data);
     }
 
-    public function test_can_show_Receipt(): void
+    public function test_can_show_receipt(): void
     {
         $Receipt = Receipt::factory()->create();
 
-        $response = $this->getJson('/api/receipts/' . $Receipt->id);
+        $response = $this->getJson('/api/receipts/'.$Receipt->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_Receipt(): void
+    public function test_can_update_receipt(): void
     {
         $Receipt = Receipt::factory()->create();
         $data = ['name' => 'Updated Receipt'];
 
-        $response = $this->putJson('/api/receipts/' . $Receipt->id, $data);
+        $response = $this->putJson('/api/receipts/'.$Receipt->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('receipts', $data);
     }
 
-    public function test_can_delete_Receipt(): void
+    public function test_can_delete_receipt(): void
     {
         $Receipt = Receipt::factory()->create();
 
-        $response = $this->deleteJson('/api/receipts/' . $Receipt->id);
+        $response = $this->deleteJson('/api/receipts/'.$Receipt->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('receipts', ['id' => $Receipt->id]);
     }
@@ -93,6 +93,6 @@ class ReceiptTest extends TestCase
     {
         $response = $this->postJson('/api/receipts', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

@@ -2,39 +2,46 @@
 
 namespace Modules\VoucherType\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
+use Modules\VoucherType\Contracts\VoucherTypeRepositoryInterface;
 use Modules\VoucherType\Contracts\VoucherTypeServiceInterface;
 use Modules\VoucherType\Models\VoucherType;
-use Illuminate\Database\Eloquent\Collection;
 
-class VoucherTypeService implements VoucherTypeServiceInterface
+class VoucherTypeService extends BaseService implements VoucherTypeServiceInterface
 {
-    protected $resource = ['voucher_category'];
+    protected string $modelClass = VoucherType::class;
+
+    protected array $defaultResource = [
+        'voucher_category',
+    ];
+
+    public function __construct(
+        protected VoucherTypeRepositoryInterface $voucherTypeRepository
+    ) {}
 
     public function getAll(): Collection
     {
-        return VoucherType::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
-    public function getById(int $id): VoucherType
+    public function getById(int $id): ?VoucherType
     {
-        return VoucherType::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): VoucherType
     {
-        return VoucherType::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): VoucherType
     {
-        $record = VoucherType::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = VoucherType::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

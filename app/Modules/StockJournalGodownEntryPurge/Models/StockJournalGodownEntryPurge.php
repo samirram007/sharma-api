@@ -2,11 +2,11 @@
 
 namespace Modules\StockJournalGodownEntryPurge\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
 use Modules\User\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StockJournalGodownEntryPurge extends Model
 {
@@ -21,7 +21,9 @@ class StockJournalGodownEntryPurge extends Model
         'reason',
 
     ];
+
     public $timestamps = false;
+
     protected $casts = [
         'purged_at' => 'datetime',
     ];
@@ -35,5 +37,4 @@ class StockJournalGodownEntryPurge extends Model
     {
         return $this->belongsTo(User::class, 'purged_by');
     }
-
 }

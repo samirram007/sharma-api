@@ -3,19 +3,18 @@
 namespace Modules\AppNotification\Services;
 
 use App\Events\AppNotificationCreated;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\AppNotification\Contracts\AppNotificationServiceInterface;
 use Modules\AppNotification\Models\AppNotification;
 use Modules\User\Contracts\UserServiceInterface;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
 
 class AppNotificationService implements AppNotificationServiceInterface
 {
     public function __construct(
         protected UserServiceInterface $userService
-    ) {
-    }
+    ) {}
+
     public function getAll(array $params = []): LengthAwarePaginator
     {
         $perPage = $params['per_page'] ?? 15;
@@ -28,7 +27,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         // Filter by notification type
-        if (!empty($params['type'])) {
+        if (! empty($params['type'])) {
             $types = explode(',', $params['type']);
             $query->whereIn('type', $types);
         }
@@ -66,7 +65,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         // Filter by notification type
-        if (!empty($params['type'])) {
+        if (! empty($params['type'])) {
             $types = explode(',', $params['type']);
             $query->whereIn('type', $types);
         }
@@ -74,8 +73,6 @@ class AppNotificationService implements AppNotificationServiceInterface
         return $query->orderBy('created_at', 'desc')
             ->paginate($perPage);
     }
-
-
 
     public function getUnreadForUser(int $userId): Collection
     {
@@ -108,7 +105,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         // Check if user has warning notifications enabled
         $warningsEnabled = $userId ? $this->userService->shouldNotify($userId, 'warning') : true;
 
-        if (!$warningsEnabled) {
+        if (! $warningsEnabled) {
             return [];
         }
 
@@ -135,7 +132,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         $weight = $dispatchDetail['weight'] ?? 0;
-        if (!isset($dispatchDetail['weight']) || (float)$weight <= 0) {
+        if (! isset($dispatchDetail['weight']) || (float) $weight <= 0) {
             $notifications[] = [
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
@@ -146,7 +143,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         $rate = $dispatchDetail['rate'] ?? 0;
-        if (!isset($dispatchDetail['rate']) || (float)$rate <= 0) {
+        if (! isset($dispatchDetail['rate']) || (float) $rate <= 0) {
             $notifications[] = [
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
@@ -177,7 +174,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         $totalFare = $dispatchDetail['totalFare'] ?? 0;
-        if (!isset($dispatchDetail['totalFare']) || (float)$totalFare <= 0) {
+        if (! isset($dispatchDetail['totalFare']) || (float) $totalFare <= 0) {
             $notifications[] = [
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
@@ -205,7 +202,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         // Check if user has warning notifications enabled
         $warningsEnabled = $userId ? $this->userService->shouldNotify($userId, 'warning') : true;
 
-        if (!$warningsEnabled) {
+        if (! $warningsEnabled) {
             return collect();
         }
 
@@ -237,7 +234,7 @@ class AppNotificationService implements AppNotificationServiceInterface
             ]);
         }
 
-        if (!isset($dispatchDetail['weight']) || (float)$dispatchDetail['weight'] <= 0) {
+        if (! isset($dispatchDetail['weight']) || (float) $dispatchDetail['weight'] <= 0) {
             $notifications[] = AppNotification::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
@@ -249,7 +246,7 @@ class AppNotificationService implements AppNotificationServiceInterface
             ]);
         }
 
-        if (!isset($dispatchDetail['rate']) || (float)$dispatchDetail['rate'] <= 0) {
+        if (! isset($dispatchDetail['rate']) || (float) $dispatchDetail['rate'] <= 0) {
             $notifications[] = AppNotification::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
@@ -285,7 +282,7 @@ class AppNotificationService implements AppNotificationServiceInterface
             ]);
         }
 
-        if (!isset($dispatchDetail['totalFare']) || (float)$dispatchDetail['totalFare'] <= 0) {
+        if (! isset($dispatchDetail['totalFare']) || (float) $dispatchDetail['totalFare'] <= 0) {
             $notifications[] = AppNotification::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
@@ -315,6 +312,7 @@ class AppNotificationService implements AppNotificationServiceInterface
     public function markAsRead(int $id): bool
     {
         $notification = AppNotification::findOrFail($id);
+
         return $notification->update(['is_read' => true]);
     }
 
@@ -328,6 +326,7 @@ class AppNotificationService implements AppNotificationServiceInterface
     public function delete(int $id): bool
     {
         $notification = AppNotification::findOrFail($id);
+
         return $notification->delete();
     }
 }

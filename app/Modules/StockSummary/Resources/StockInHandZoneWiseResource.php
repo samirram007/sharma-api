@@ -2,16 +2,19 @@
 
 namespace Modules\StockSummary\Resources;
 
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class StockInHandZoneWiseResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
 
+        return array_merge($this->toCamelCaseArray($request), [
 
-        return [
             'zoneId' => data_get($this->resource, 'zone_id'),
             'zoneName' => data_get($this->resource, 'zone_name'),
             'zoneCode' => data_get($this->resource, 'zone_code'),
@@ -25,11 +28,11 @@ class StockInHandZoneWiseResource extends SuccessResource
             'closingAmount' => $this['closing_amount'] ?? 0,
             'godownDetails' => StockInHandGodownWiseResource::collection(data_get($this->resource, 'godowns', [])),
 
+        ]);
 
-        ];
     }
 }
-//In frontEnd (TypeScript)
+// In frontEnd (TypeScript)
 // export const stockInHand = z.object({
 //   itemId: z.number().int().positive(),
 //   itemName: z.string().min(1),

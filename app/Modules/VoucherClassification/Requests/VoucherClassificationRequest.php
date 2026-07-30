@@ -14,10 +14,10 @@ class VoucherClassificationRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255','unique:VoucherClassification,name'],
-            'code' => ['sometimes','required', 'string', 'max:255','unique:VoucherClassification,code'],
-            'description' => ['sometimes','required', 'string', 'max:255'],
-            'status' => ['sometimes','required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:VoucherClassification,name'],
+            'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:VoucherClassification,code'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', 'string', 'max:255'],
             'inclusion_rules' => ['sometimes', 'nullable', 'array'],
             'exclusion_rules' => ['sometimes', 'nullable', 'array'],
             'default_value' => ['sometimes', 'nullable', 'numeric', 'min:0'],
@@ -26,8 +26,8 @@ class VoucherClassificationRequest extends FormRequest
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:voucher_classifications,name,' . $this->route('voucher_classification')];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:voucher_classifications,code,' . $this->route('voucher_classification')];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:voucher_classifications,name,'.$this->route('voucher_classification')];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:voucher_classifications,code,'.$this->route('voucher_classification')];
 
         }
 

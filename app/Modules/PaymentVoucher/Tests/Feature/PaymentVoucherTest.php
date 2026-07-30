@@ -2,9 +2,9 @@
 
 namespace Modules\PaymentVoucher\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\PaymentVoucher\Models\PaymentVoucher;
+use Tests\TestCase;
 
 class PaymentVoucherTest extends TestCase
 {
@@ -14,77 +14,77 @@ class PaymentVoucherTest extends TestCase
     {
         $response = $this->getJson('/api/payment_vouchers');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_PaymentVoucher(): void
+    public function test_can_create_payment_voucher(): void
     {
         $data = ['name' => 'Test PaymentVoucher'];
 
         $response = $this->postJson('/api/payment_vouchers', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('payment_vouchers', $data);
     }
 
-    public function test_can_show_PaymentVoucher(): void
+    public function test_can_show_payment_voucher(): void
     {
         $PaymentVoucher = PaymentVoucher::factory()->create();
 
-        $response = $this->getJson('/api/payment_vouchers/' . $PaymentVoucher->id);
+        $response = $this->getJson('/api/payment_vouchers/'.$PaymentVoucher->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_PaymentVoucher(): void
+    public function test_can_update_payment_voucher(): void
     {
         $PaymentVoucher = PaymentVoucher::factory()->create();
         $data = ['name' => 'Updated PaymentVoucher'];
 
-        $response = $this->putJson('/api/payment_vouchers/' . $PaymentVoucher->id, $data);
+        $response = $this->putJson('/api/payment_vouchers/'.$PaymentVoucher->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('payment_vouchers', $data);
     }
 
-    public function test_can_delete_PaymentVoucher(): void
+    public function test_can_delete_payment_voucher(): void
     {
         $PaymentVoucher = PaymentVoucher::factory()->create();
 
-        $response = $this->deleteJson('/api/payment_vouchers/' . $PaymentVoucher->id);
+        $response = $this->deleteJson('/api/payment_vouchers/'.$PaymentVoucher->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('payment_vouchers', ['id' => $PaymentVoucher->id]);
     }
@@ -93,6 +93,6 @@ class PaymentVoucherTest extends TestCase
     {
         $response = $this->postJson('/api/payment_vouchers', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

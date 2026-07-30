@@ -2,48 +2,41 @@
 
 namespace Modules\VoucherEntry\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
 use Modules\VoucherEntry\Models\VoucherEntry;
-use Illuminate\Database\Eloquent\Collection;
 
-class VoucherEntryService implements VoucherEntryServiceInterface
+class VoucherEntryService extends BaseService implements VoucherEntryServiceInterface
 {
-    protected $resource = ['account_ledger'];
+    protected string $modelClass = VoucherEntry::class;
+
+    protected array $defaultResource = [
+        'account_ledger',
+    ];
 
     public function getAll(): Collection
     {
-        return VoucherEntry::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?VoucherEntry
     {
-        return VoucherEntry::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): VoucherEntry
     {
-
-        try {
-            //code...
-            $voucherEntry = VoucherEntry::create($data);
-        } catch (\Throwable $th) {
-
-            throw $th;
-        }
-
-        return $voucherEntry;
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): VoucherEntry
     {
-        $record = VoucherEntry::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = VoucherEntry::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

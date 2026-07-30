@@ -27,7 +27,7 @@ class StockJournalGodownEntryRequest extends FormRequest
             'discount' => ['nullable', 'numeric', 'min:0'],
             'amount' => ['required', 'numeric', 'min:0'],
             'movement_type' => ['required', 'in:in,out'],
-            'remarks' => ['sometimes', 'nullable', 'string']
+            'remarks' => ['sometimes', 'nullable', 'string'],
         ];
 
         // For update requests, make validation more flexible

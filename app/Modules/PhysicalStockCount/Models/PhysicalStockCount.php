@@ -2,16 +2,15 @@
 
 namespace Modules\PhysicalStockCount\Models;
 
-use Modules\FiscalYear\Models\FiscalYear;
-use Modules\Godown\Models\Godown;
-use Modules\PhysicalStockCount\Models\PhysicalStockCountItem;
-use Modules\User\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
+use Modules\FiscalYear\Models\FiscalYear;
+use Modules\Godown\Models\Godown;
+use Modules\User\Models\User;
 
 class PhysicalStockCount extends Model
 {

@@ -4,7 +4,6 @@ namespace Modules\Uqc\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\Uqc\Models\Uqc;
-use Illuminate\Support\Facades\DB;
 
 class UqcSeeder extends Seeder
 {

@@ -2,9 +2,9 @@
 
 namespace Modules\LeaveType\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\LeaveType\Models\LeaveType;
+use Tests\TestCase;
 
 class LeaveTypeTest extends TestCase
 {
@@ -14,77 +14,77 @@ class LeaveTypeTest extends TestCase
     {
         $response = $this->getJson('/api/leave_types');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_LeaveType(): void
+    public function test_can_create_leave_type(): void
     {
         $data = ['name' => 'Test LeaveType'];
 
         $response = $this->postJson('/api/leave_types', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('leave_types', $data);
     }
 
-    public function test_can_show_LeaveType(): void
+    public function test_can_show_leave_type(): void
     {
         $LeaveType = LeaveType::factory()->create();
 
-        $response = $this->getJson('/api/leave_types/' . $LeaveType->id);
+        $response = $this->getJson('/api/leave_types/'.$LeaveType->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_LeaveType(): void
+    public function test_can_update_leave_type(): void
     {
         $LeaveType = LeaveType::factory()->create();
         $data = ['name' => 'Updated LeaveType'];
 
-        $response = $this->putJson('/api/leave_types/' . $LeaveType->id, $data);
+        $response = $this->putJson('/api/leave_types/'.$LeaveType->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('leave_types', $data);
     }
 
-    public function test_can_delete_LeaveType(): void
+    public function test_can_delete_leave_type(): void
     {
         $LeaveType = LeaveType::factory()->create();
 
-        $response = $this->deleteJson('/api/leave_types/' . $LeaveType->id);
+        $response = $this->deleteJson('/api/leave_types/'.$LeaveType->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('leave_types', ['id' => $LeaveType->id]);
     }
@@ -93,6 +93,6 @@ class LeaveTypeTest extends TestCase
     {
         $response = $this->postJson('/api/leave_types', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

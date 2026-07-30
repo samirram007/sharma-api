@@ -2,22 +2,19 @@
 
 namespace Modules\Role\Resources;
 
-use Modules\RolePermission\Models\RolePermission;
-use Modules\RolePermission\Resources\RolePermissionResource;
-use Illuminate\Http\Request;
-
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
+use Modules\RolePermission\Resources\RolePermissionResource;
+
 class RoleResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        $data = [
-            'id' => $this->id,
-            'name' => $this->name,
-            'code' => $this->code,
-            'status' => $this->status,
+        return array_merge($this->toCamelCaseArray($request), [
             'permissions' => RolePermissionResource::collection($this->whenLoaded('permissions')),
-        ];
-        return $data;
+        ]);
     }
 }

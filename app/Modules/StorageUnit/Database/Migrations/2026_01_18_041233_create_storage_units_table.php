@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         // php artisan migrate --path="Modules\/StorageUnit/Database/Migrations/2026_01_18_041233_create_storage_units_table.php"
@@ -20,8 +21,6 @@ return new class extends Migration {
             $table->string('description')->nullable();
             $table->string('status')->default('active');
             $table->string('icon')->nullable();
-
-
 
             /* ===============================
              * Classification
@@ -72,7 +71,6 @@ return new class extends Migration {
             $table->index('parent_id');
         });
     }
-
 
     public function down(): void
     {

@@ -2,39 +2,37 @@
 
 namespace Modules\Vehicle\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Vehicle\Contracts\VehicleServiceInterface;
 use Modules\Vehicle\Models\Vehicle;
-use Illuminate\Database\Eloquent\Collection;
 
-class VehicleService implements VehicleServiceInterface
+class VehicleService extends BaseService implements VehicleServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = Vehicle::class;
 
     public function getAll(): Collection
     {
-        return Vehicle::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Vehicle
     {
-        return Vehicle::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Vehicle
     {
-        return Vehicle::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Vehicle
     {
-        $record = Vehicle::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Vehicle::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

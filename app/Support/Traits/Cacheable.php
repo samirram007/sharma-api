@@ -3,11 +3,13 @@
 namespace App\Support\Traits;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Modules\App\Tenant\Services\TenantManager;
 
 trait Cacheable
 {
     protected bool $useCache = true;
+
     protected ?TenantManager $tenantManager = null;
 
     /**
@@ -16,6 +18,7 @@ trait Cacheable
     public function cache(bool $enabled = true): static
     {
         $this->useCache = $enabled;
+
         return $this;
     }
 
@@ -32,9 +35,10 @@ trait Cacheable
      */
     protected function getTenantManager(): TenantManager
     {
-        if (!$this->tenantManager) {
+        if (! $this->tenantManager) {
             $this->tenantManager = app(TenantManager::class);
         }
+
         return $this->tenantManager;
     }
 
@@ -44,7 +48,8 @@ trait Cacheable
     protected function getCachePrefix(): string
     {
         $tenantId = $this->getTenantManager()->getCurrentTenant()?->id ?? 'central';
-        return 'tenant_' . $tenantId . '_' . strtolower(class_basename($this));
+
+        return 'tenant_'.$tenantId.'_'.strtolower(class_basename($this));
     }
 
     /**
@@ -52,7 +57,7 @@ trait Cacheable
      */
     protected function getCacheVersion(): int
     {
-        return Cache::get($this->getCachePrefix() . '_version', 1);
+        return Cache::get($this->getCachePrefix().'_version', 1);
     }
 
     /**
@@ -60,10 +65,10 @@ trait Cacheable
      */
     protected function getCacheKey(string $method, array $params = []): string
     {
-        return $this->getCachePrefix() .
-            '_v' . $this->getCacheVersion() .
-            '_' . $method .
-            '_' . md5(json_encode($params));
+        return $this->getCachePrefix().
+            '_v'.$this->getCacheVersion().
+            '_'.$method.
+            '_'.md5(json_encode($params));
     }
 
     /**
@@ -71,16 +76,18 @@ trait Cacheable
      */
     protected function remember(string $key, \Closure $callback)
     {
-        if (!$this->useCache) {
+        if (! $this->useCache) {
             $this->useCache = true; // Reset for next call
+
             return $callback();
         }
 
         $value = Cache::remember($key, env('CACHE_TTL', 3600), $callback);
 
         if ($this->hasIncompleteClass($value)) {
-            \Illuminate\Support\Facades\Log::warning("Cache corruption detected (__PHP_Incomplete_Class) for key: {$key}. Clearing corrupted entry.");
+            Log::warning("Cache corruption detected (__PHP_Incomplete_Class) for key: {$key}. Clearing corrupted entry.");
             Cache::forget($key);
+
             return $callback();
         }
 
@@ -112,6 +119,6 @@ trait Cacheable
      */
     public function clearCache(): void
     {
-        Cache::increment($this->getCachePrefix() . '_version');
+        Cache::increment($this->getCachePrefix().'_version');
     }
 }

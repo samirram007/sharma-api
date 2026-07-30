@@ -3,20 +3,23 @@
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+
 trait HasPolymorphicResourceB
 {
     protected array $resource = [];
 
     protected function resolveResource($data)
     {
-        if (is_null($data))
+        if (is_null($data)) {
             return null;
-
-        if ($data instanceof \Illuminate\Support\Collection) {
-            return $data->map(fn($item) => $this->resolveResource($item));
         }
 
-        if ($data instanceof \Illuminate\Database\Eloquent\Model) {
+        if ($data instanceof Collection) {
+            return $data->map(fn ($item) => $this->resolveResource($item));
+        }
+
+        if ($data instanceof Model) {
             $this->loadResourceRelations($data);
 
             $modelClass = get_class($data);
@@ -24,7 +27,7 @@ trait HasPolymorphicResourceB
                 '\\Models\\',
                 '\\Resources\\',
                 $modelClass
-            ) . 'Resource';
+            ).'Resource';
 
             return class_exists($resourceClass)
                 ? new $resourceClass($data)
@@ -126,8 +129,6 @@ trait HasPolymorphicResourceB
 //         // For anything else (e.g., primitives)
 //         return $data;
 //     }
-
-
 
 //     // protected function resolveResource($model)
 //     // {

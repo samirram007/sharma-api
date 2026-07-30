@@ -2,12 +2,11 @@
 
 namespace Modules\Supplier\Services;
 
-use App\Enums\AddressType;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Supplier\Contracts\SupplierServiceInterface;
 use Modules\Supplier\Models\Supplier;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Arr;
 
 class SupplierService implements SupplierServiceInterface
 {
@@ -33,7 +32,7 @@ class SupplierService implements SupplierServiceInterface
             $data['address']['address_type'] = 'office';
             $data['address']['addressable_type'] = 'supplier';
             $data['address']['addressable_id'] = $supplier->id;
-            //dump($data['address']);
+            // dump($data['address']);
             $supplier->address()->create($data['address']);
             // dd($data['address']);
         }
@@ -44,7 +43,7 @@ class SupplierService implements SupplierServiceInterface
             $data['account_ledger']['account_group_id'] = $data['account_group_id'];
             $data['account_ledger']['ledgerable_type'] = 'supplier';
             $data['account_ledger']['ledgerable_id'] = $supplier->id;
-            //dump($data['address']);
+            // dump($data['address']);
             $supplier->account_ledger()->create($data['account_ledger']);
             // dd($data['address']);
         }
@@ -65,7 +64,7 @@ class SupplierService implements SupplierServiceInterface
             $data['address']['address_type'] = 'office';
             $data['address']['addressable_type'] = 'supplier';
             $data['address']['addressable_id'] = $supplier->id;
-            if (!empty($data['address']['id'])) {
+            if (! empty($data['address']['id'])) {
                 $address = $supplier->address()->find($data['address']['id']);
                 $address?->update($data['address']);
             } else {
@@ -99,6 +98,7 @@ class SupplierService implements SupplierServiceInterface
     public function delete(int $id): bool
     {
         $record = Supplier::findOrFail($id);
+
         return $record->delete();
     }
 }

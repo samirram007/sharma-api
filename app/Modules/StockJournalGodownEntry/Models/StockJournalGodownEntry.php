@@ -3,15 +3,15 @@
 namespace Modules\StockJournalGodownEntry\Models;
 
 use App\Enums\MovementType;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Godown\Models\Godown;
 use Modules\StockItem\Models\StockItem;
 use Modules\StockJournalEntry\Models\StockJournalEntry;
 use Modules\StockJournalGodownEntryPurge\Models\StockJournalGodownEntryPurge;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StockJournalGodownEntry extends Model
 {
@@ -75,6 +75,7 @@ class StockJournalGodownEntry extends Model
             $builder->orderBy('entry_order', 'asc');
         });
     }
+
     // public function isPurged(): bool
     // {
     //     return StockJournalGodownEntryPurge::where('stock_journal_godown_entry_id', $this->id)->exists();
@@ -86,7 +87,6 @@ class StockJournalGodownEntry extends Model
         //     ? $this->stock_journal_godown_entry_purge !== null     // no extra query
         //     : $this->stock_journal_godown_entry_purge()->exists(); // fallback query
     }
-
 
     public function stock_journal_godown_entry_purge(): ?HasOne
     {
@@ -102,10 +102,12 @@ class StockJournalGodownEntry extends Model
     {
         return $this->belongsTo(Godown::class, 'godown_id');
     }
+
     public function getStockItemAttribute()
     {
         return $this->stock_journal_entry?->stock_item;
     }
+
     public function stock_item(): mixed
     {
         return $this->hasOneThrough(
@@ -128,10 +130,12 @@ class StockJournalGodownEntry extends Model
     {
         return $this->stock_journal_entry->alternate_unit();
     }
+
     public function rate_unit(): mixed
     {
         return $this->stock_journal_entry->rate_unit();
     }
+
     public function rate_unit_ratio(): mixed
     {
         return $this->stock_journal_entry->rate_unit_ratio();
@@ -141,9 +145,9 @@ class StockJournalGodownEntry extends Model
     {
         return $this->stock_journal_entry->stock_journal();
     }
+
     public function voucher(): mixed
     {
         return $this->stock_journal_entry->voucher();
     }
-
 }

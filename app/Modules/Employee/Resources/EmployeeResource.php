@@ -2,6 +2,9 @@
 
 namespace Modules\Employee\Resources;
 
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
 use Modules\AccountLedger\Resources\AccountLedgerResource;
 use Modules\Address\Resources\AddressResource;
 use Modules\Department\Resources\DepartmentResource;
@@ -10,14 +13,16 @@ use Modules\EmployeeGroup\Resources\EmployeeGroupResource;
 use Modules\Grade\Resources\GradeResource;
 use Modules\Shift\Resources\ShiftResource;
 use Modules\User\Resources\UserResource;
-use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class EmployeeResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -39,10 +44,11 @@ class EmployeeResource extends SuccessResource
             'employeeGroup' => EmployeeGroupResource::make($this->whenLoaded('employee_group')),
             'shift' => ShiftResource::make($this->whenLoaded('shift')),
             'grade' => GradeResource::make($this->whenLoaded('grade')),
-            'address' => $this->whenLoaded('address', fn() => $this->address ? AddressResource::make($this->address) : null),
+            'address' => $this->whenLoaded('address', fn () => $this->address ? AddressResource::make($this->address) : null),
             'user' => UserResource::make($this->whenLoaded('user')),
             'accountLedger' => AccountLedgerResource::make($this->whenLoaded('account_ledger')),
 
-        ];
+        ]);
+
     }
 }

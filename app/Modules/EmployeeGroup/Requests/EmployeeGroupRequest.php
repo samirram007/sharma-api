@@ -23,8 +23,8 @@ class EmployeeGroupRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('employee_group');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:employee_groups,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:employee_groups,code,' . $id,];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:employee_groups,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:employee_groups,code,'.$id];
 
         }
 

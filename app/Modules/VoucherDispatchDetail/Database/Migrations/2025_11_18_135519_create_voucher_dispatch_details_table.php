@@ -5,7 +5,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('voucher_dispatch_details', function (Blueprint $table) {
@@ -40,10 +41,9 @@ return new class extends Migration {
             $table->string('billing_preference')->nullable();          // Billing Preference
 
             $table->enum('freight_basis', QuantityType::getValues())
-                ->default(QuantityType::Weight->value);// Freight Basis
+                ->default(QuantityType::Weight->value); // Freight Basis
             $table->decimal('rate', 15, 2)->nullable();            // Rate
             $table->unsignedBigInteger('rate_unit_id')->nullable();            // Freight Unit
-
 
             $table->decimal('loading_charges', 15, 2)->nullable();            // Loading Charges
             $table->decimal('unloading_charges', 15, 2)->nullable();            // Unloading Charges

@@ -4,25 +4,22 @@ namespace Modules\ReceiptNoteReport\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessCollection;
-
+use Illuminate\Http\Request;
 use Modules\ReceiptNoteReport\Services\ReceiptNoteReportService;
 use Modules\Voucher\Resources\VoucherCollection;
 
-use Illuminate\Http\Request;
-
 class ReceiptNoteReportController extends Controller
 {
-    public function __construct(protected ReceiptNoteReportService $service)
-    {
-    }
+    public function __construct(protected ReceiptNoteReportService $service) {}
 
     public function index(Request $request): SuccessCollection
     {
         $params = $request->only([
             'search', 'sort_by', 'sort_order',
-            'page', 'per_page'
+            'page', 'per_page',
         ]);
         $data = $this->service->getAll($params);
+
         return new VoucherCollection($data);
     }
 
@@ -30,6 +27,7 @@ class ReceiptNoteReportController extends Controller
     {
         $params = $request->only(['from_date', 'to_date']);
         $data = $this->service->getGroupedByLedger($params);
+
         return new SuccessCollection($data);
     }
 
@@ -37,6 +35,7 @@ class ReceiptNoteReportController extends Controller
     {
         $params = $request->only(['from_date', 'to_date']);
         $data = $this->service->getGroupedByDate($params);
+
         return new SuccessCollection($data);
     }
 
@@ -44,6 +43,7 @@ class ReceiptNoteReportController extends Controller
     {
         $params = $request->only(['from_date', 'to_date']);
         $data = $this->service->getGroupedByStockItem($params);
+
         return new SuccessCollection($data);
     }
 
@@ -51,6 +51,7 @@ class ReceiptNoteReportController extends Controller
     {
         $params = $request->only(['from_date', 'to_date']);
         $data = $this->service->getGroupedByGodown($params);
+
         return new SuccessCollection($data);
     }
 }

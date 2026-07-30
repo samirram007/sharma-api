@@ -2,39 +2,37 @@
 
 namespace Modules\StockItemGodown\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StockItemGodown\Contracts\StockItemGodownServiceInterface;
 use Modules\StockItemGodown\Models\StockItemGodown;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockItemGodownService implements StockItemGodownServiceInterface
+class StockItemGodownService extends BaseService implements StockItemGodownServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = StockItemGodown::class;
 
     public function getAll(): Collection
     {
-        return StockItemGodown::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockItemGodown
     {
-        return StockItemGodown::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockItemGodown
     {
-        return StockItemGodown::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockItemGodown
     {
-        $record = StockItemGodown::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockItemGodown::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

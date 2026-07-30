@@ -76,7 +76,7 @@ class AddressRequest extends FormRequest
             'longitude.between' => 'Longitude must be between -180 and 180.',
 
             'address_type.required' => 'Address type is required.',
-            'address_type.in' => 'Address type must be one of: ' . implode(', ', array_column(AddressType::cases(), 'value')),
+            'address_type.in' => 'Address type must be one of: '.implode(', ', array_column(AddressType::cases(), 'value')),
 
             'is_primary.boolean' => 'Is primary must be true or false.',
         ];

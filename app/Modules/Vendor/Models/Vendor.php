@@ -2,10 +2,10 @@
 
 namespace Modules\Vendor\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Address\Models\Address;
 use Modules\User\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Vendor extends Model
 {

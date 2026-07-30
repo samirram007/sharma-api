@@ -2,9 +2,9 @@
 
 namespace Modules\SalaryComponent\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\SalaryComponent\Models\SalaryComponent;
+use Tests\TestCase;
 
 class SalaryComponentTest extends TestCase
 {
@@ -14,77 +14,77 @@ class SalaryComponentTest extends TestCase
     {
         $response = $this->getJson('/api/salary_components');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_SalaryComponent(): void
+    public function test_can_create_salary_component(): void
     {
         $data = ['name' => 'Test SalaryComponent'];
 
         $response = $this->postJson('/api/salary_components', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('salary_components', $data);
     }
 
-    public function test_can_show_SalaryComponent(): void
+    public function test_can_show_salary_component(): void
     {
         $SalaryComponent = SalaryComponent::factory()->create();
 
-        $response = $this->getJson('/api/salary_components/' . $SalaryComponent->id);
+        $response = $this->getJson('/api/salary_components/'.$SalaryComponent->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_SalaryComponent(): void
+    public function test_can_update_salary_component(): void
     {
         $SalaryComponent = SalaryComponent::factory()->create();
         $data = ['name' => 'Updated SalaryComponent'];
 
-        $response = $this->putJson('/api/salary_components/' . $SalaryComponent->id, $data);
+        $response = $this->putJson('/api/salary_components/'.$SalaryComponent->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('salary_components', $data);
     }
 
-    public function test_can_delete_SalaryComponent(): void
+    public function test_can_delete_salary_component(): void
     {
         $SalaryComponent = SalaryComponent::factory()->create();
 
-        $response = $this->deleteJson('/api/salary_components/' . $SalaryComponent->id);
+        $response = $this->deleteJson('/api/salary_components/'.$SalaryComponent->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('salary_components', ['id' => $SalaryComponent->id]);
     }
@@ -93,6 +93,6 @@ class SalaryComponentTest extends TestCase
     {
         $response = $this->postJson('/api/salary_components', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

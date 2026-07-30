@@ -2,10 +2,9 @@
 
 namespace Modules\Voucher\Database\Seeders;
 
+use Illuminate\Database\Seeder;
 use Modules\Voucher\Models\Voucher;
 use Modules\VoucherEntry\Models\VoucherEntry;
-use Illuminate\Database\Seeder;
-
 
 class VoucherDemoSeeder extends Seeder
 {

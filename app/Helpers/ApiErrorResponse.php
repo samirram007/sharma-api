@@ -9,11 +9,10 @@ class ApiErrorResponse
     /**
      * Build a standardized error response.
      *
-     * @param string $message   Human-readable error message
-     * @param int $code         HTTP status code
-     * @param array|null $errors Optional array of detailed field errors
-     * @param string|null $errorCode Optional internal error code for frontend
-     * @return JsonResponse
+     * @param  string  $message  Human-readable error message
+     * @param  int  $code  HTTP status code
+     * @param  array|null  $errors  Optional array of detailed field errors
+     * @param  string|null  $errorCode  Optional internal error code for frontend
      */
     public static function respond(
         string $message,
@@ -31,7 +30,7 @@ class ApiErrorResponse
         $response = [
             'success' => false,
             'message' => $message,
-            'code'    => $code,
+            'code' => $code,
         ];
 
         if ($errors) {

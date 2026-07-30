@@ -2,10 +2,9 @@
 
 namespace Modules\DayBook\Resources;
 
-use Modules\Voucher\Resources\VoucherResource;
 use Illuminate\Http\Request;
+use Modules\Voucher\Resources\VoucherResource;
 
-use App\Http\Resources\SuccessResource;
 class DayBookResource extends VoucherResource
 {
     public function toArray(Request $request): array

@@ -2,9 +2,9 @@
 
 namespace Modules\CompanyType\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\CompanyType\Models\CompanyType;
+use Tests\TestCase;
 
 class CompanyTypeTest extends TestCase
 {
@@ -14,77 +14,77 @@ class CompanyTypeTest extends TestCase
     {
         $response = $this->getJson('/api/company_types');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_CompanyType(): void
+    public function test_can_create_company_type(): void
     {
         $data = ['name' => 'Test CompanyType'];
 
         $response = $this->postJson('/api/company_types', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('company_types', $data);
     }
 
-    public function test_can_show_CompanyType(): void
+    public function test_can_show_company_type(): void
     {
         $CompanyType = CompanyType::factory()->create();
 
-        $response = $this->getJson('/api/company_types/' . $CompanyType->id);
+        $response = $this->getJson('/api/company_types/'.$CompanyType->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_CompanyType(): void
+    public function test_can_update_company_type(): void
     {
         $CompanyType = CompanyType::factory()->create();
         $data = ['name' => 'Updated CompanyType'];
 
-        $response = $this->putJson('/api/company_types/' . $CompanyType->id, $data);
+        $response = $this->putJson('/api/company_types/'.$CompanyType->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('company_types', $data);
     }
 
-    public function test_can_delete_CompanyType(): void
+    public function test_can_delete_company_type(): void
     {
         $CompanyType = CompanyType::factory()->create();
 
-        $response = $this->deleteJson('/api/company_types/' . $CompanyType->id);
+        $response = $this->deleteJson('/api/company_types/'.$CompanyType->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('company_types', ['id' => $CompanyType->id]);
     }
@@ -93,6 +93,6 @@ class CompanyTypeTest extends TestCase
     {
         $response = $this->postJson('/api/company_types', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

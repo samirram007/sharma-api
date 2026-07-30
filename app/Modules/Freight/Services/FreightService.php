@@ -2,9 +2,10 @@
 
 namespace Modules\Freight\Services;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Validator;
 use Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
-use Modules\AccountLedger\Models\AccountLedger;
-use Modules\AccountLedger\Services\AccountLedgerService;
 use Modules\Freight\Contracts\FreightServiceInterface;
 use Modules\Freight\Models\Freight;
 use Modules\Godown\Contracts\GodownServiceInterface;
@@ -16,18 +17,20 @@ use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterfac
 use Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
 use Modules\VoucherDispatchDetail\Services\VoucherDispatchDetailService;
 use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Validator;
 
 class FreightService implements FreightServiceInterface
 {
     protected $resource = [];
-    protected $deliverNoteVoucherTypeID = 2001; //delivery note
-    protected $salesVoucherTypeID = 1006; //sales voucher
+
+    protected $deliverNoteVoucherTypeID = 2001; // delivery note
+
+    protected $salesVoucherTypeID = 1006; // sales voucher
+
     protected $receiptVoucherTypeID = 1003;
-    protected $salesAccountLedgerID = 3000001; //sales account ledger id
-    function __construct(
+
+    protected $salesAccountLedgerID = 3000001; // sales account ledger id
+
+    public function __construct(
         protected AccountLedgerServiceInterface $accountLedgerService,
         protected VoucherServiceInterface $voucherService,
         protected VoucherReferenceServiceInterface $voucherReferenceService,
@@ -48,11 +51,11 @@ class FreightService implements FreightServiceInterface
     public function getAll(): Collection
     {
         $vouchers = $this->voucherService->getByModule('freight');
+
         return Freight::with($this->resource)->get();
     }
 
-
-    public function getDeliveryNote(int $page=1, int $perPage = 10, array $filters = []): LengthAwarePaginator
+    public function getDeliveryNote(int $page = 1, int $perPage = 10, array $filters = []): LengthAwarePaginator
     {
         [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
 
@@ -67,29 +70,29 @@ class FreightService implements FreightServiceInterface
         $this->applyFreightStatusFilter($query, $filters);
 
         // Date range filter
-        if (!empty($filters['date_from'])) {
+        if (! empty($filters['date_from'])) {
             $query->where('vouchers.voucher_date', '>=', $filters['date_from']);
         }
-        if (!empty($filters['date_to'])) {
+        if (! empty($filters['date_to'])) {
             $query->where('vouchers.voucher_date', '<=', $filters['date_to']);
         }
 
         // Search filter - searches across multiple fields
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('vouchers.voucher_no', 'like', "%{$search}%")
-                  ->orWhere('vouchers.remarks', 'like', "%{$search}%")
-                  ->orWhereHas('voucher_dispatch_detail', function ($sq) use ($search) {
-                      $sq->where('carrier_name', 'like', "%{$search}%")
-                         ->orWhere('motor_vehicle_no', 'like', "%{$search}%")
-                         ->orWhere('source', 'like', "%{$search}%")
-                         ->orWhere('destination', 'like', "%{$search}%")
-                         ->orWhere('bill_of_lading_no', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('voucher_party', function ($sq) use ($search) {
-                      $sq->where('name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('vouchers.remarks', 'like', "%{$search}%")
+                    ->orWhereHas('voucher_dispatch_detail', function ($sq) use ($search) {
+                        $sq->where('carrier_name', 'like', "%{$search}%")
+                            ->orWhere('motor_vehicle_no', 'like', "%{$search}%")
+                            ->orWhere('source', 'like', "%{$search}%")
+                            ->orWhere('destination', 'like', "%{$search}%")
+                            ->orWhere('bill_of_lading_no', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('voucher_party', function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -100,11 +103,10 @@ class FreightService implements FreightServiceInterface
             ->paginate($perPage);
 
         // Transform each voucher with ledger info
-        $vouchers->getCollection()->transform(fn($voucher) => $this->voucherService->attachLedgerInfo($voucher));
+        $vouchers->getCollection()->transform(fn ($voucher) => $this->voucherService->attachLedgerInfo($voucher));
 
         return $vouchers;
     }
-
 
     public function getDeliveryNoteOverallTotalFare(array $filters = []): float
     {
@@ -118,27 +120,27 @@ class FreightService implements FreightServiceInterface
         // Apply freight_status filter
         $this->applyFreightStatusFilter($query, $filters);
 
-        if (!empty($filters['date_from'])) {
+        if (! empty($filters['date_from'])) {
             $query->where('vouchers.voucher_date', '>=', $filters['date_from']);
         }
-        if (!empty($filters['date_to'])) {
+        if (! empty($filters['date_to'])) {
             $query->where('vouchers.voucher_date', '<=', $filters['date_to']);
         }
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('vouchers.voucher_no', 'like', "%{$search}%")
-                  ->orWhere('vouchers.remarks', 'like', "%{$search}%")
-                  ->orWhereHas('voucher_dispatch_detail', function ($sq) use ($search) {
-                      $sq->where('carrier_name', 'like', "%{$search}%")
-                         ->orWhere('motor_vehicle_no', 'like', "%{$search}%")
-                         ->orWhere('source', 'like', "%{$search}%")
-                         ->orWhere('destination', 'like', "%{$search}%")
-                         ->orWhere('bill_of_lading_no', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('voucher_party', function ($sq) use ($search) {
-                      $sq->where('name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('vouchers.remarks', 'like', "%{$search}%")
+                    ->orWhereHas('voucher_dispatch_detail', function ($sq) use ($search) {
+                        $sq->where('carrier_name', 'like', "%{$search}%")
+                            ->orWhere('motor_vehicle_no', 'like', "%{$search}%")
+                            ->orWhere('source', 'like', "%{$search}%")
+                            ->orWhere('destination', 'like', "%{$search}%")
+                            ->orWhere('bill_of_lading_no', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('voucher_party', function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -193,7 +195,7 @@ class FreightService implements FreightServiceInterface
         $this->processStockJournalEntries($deliveryNotes, function ($voucher, $godownEntry, $godown, $movementType, $quantity) use (&$godownData) {
             $key = (string) $godown->id;
 
-            if (!isset($godownData[$key])) {
+            if (! isset($godownData[$key])) {
                 $godownData[$key] = $this->initGroupBucket([
                     'godownId' => $godown->id,
                     'godownName' => $godown->name,
@@ -220,12 +222,12 @@ class FreightService implements FreightServiceInterface
         foreach ($freightVouchers as $freightVoucher) {
             // Each freight voucher references exactly one delivery note via voucher_references
             $reference = $freightVoucher->voucher_references->first();
-            if (!$reference) {
+            if (! $reference) {
                 continue;
             }
 
             $deliveryNote = $reference->reference_voucher;
-            if (!$deliveryNote || !$deliveryNote->stock_journal) {
+            if (! $deliveryNote || ! $deliveryNote->stock_journal) {
                 continue;
             }
 
@@ -234,7 +236,7 @@ class FreightService implements FreightServiceInterface
             foreach ($stockJournal->stock_journal_entries as $entry) {
                 foreach ($entry->stock_journal_godown_entries as $godownEntry) {
                     $godown = $godownEntry->godown;
-                    if (!$godown) {
+                    if (! $godown) {
                         continue;
                     }
 
@@ -248,7 +250,7 @@ class FreightService implements FreightServiceInterface
 
                     $key = $zone ? (string) $zone->id : 'unmapped';
 
-                    if (!isset($zoneData[$key])) {
+                    if (! isset($zoneData[$key])) {
                         $zoneData[$key] = $this->initGroupBucket([
                             'zoneId' => $zone?->id,
                             'zoneName' => $zone?->name ?? 'Unmapped',
@@ -299,7 +301,7 @@ class FreightService implements FreightServiceInterface
 
             $key = $zone ? (string) $zone->id : 'unmapped';
 
-            if (!isset($zoneData[$key])) {
+            if (! isset($zoneData[$key])) {
                 $zoneData[$key] = $this->initGroupBucket([
                     'zoneId' => $zone?->id,
                     'zoneName' => $zone?->name ?? 'Unmapped',
@@ -321,8 +323,8 @@ class FreightService implements FreightServiceInterface
      */
     public function deliveryNoteGodownWiseReport(?int $zoneId = null, ?int $godownId = null): Collection
     {
-        if (!$zoneId && !$godownId) {
-            return new Collection();
+        if (! $zoneId && ! $godownId) {
+            return new Collection;
         }
 
         // Determine which godowns to filter by
@@ -334,9 +336,9 @@ class FreightService implements FreightServiceInterface
         } elseif ($zoneId) {
             // All godowns belonging to this zone (zone itself + child godowns)
             $filteredGodownIds = Godown::where(function ($query) use ($zoneId) {
-                    $query->where('id', $zoneId)
-                          ->orWhere('parent_id', $zoneId);
-                })
+                $query->where('id', $zoneId)
+                    ->orWhere('parent_id', $zoneId);
+            })
                 ->pluck('id')
                 ->toArray();
         }
@@ -346,13 +348,13 @@ class FreightService implements FreightServiceInterface
 
         $this->processStockJournalEntries($deliveryNotes, function ($voucher, $godownEntry, $godown, $movementType, $quantity) use (&$godownData, $filteredGodownIds) {
             // Skip godowns not in the filtered list
-            if (!in_array($godown->id, $filteredGodownIds)) {
+            if (! in_array($godown->id, $filteredGodownIds)) {
                 return;
             }
 
             $key = (string) $godown->id;
 
-            if (!isset($godownData[$key])) {
+            if (! isset($godownData[$key])) {
                 $godownData[$key] = $this->initGroupBucket([
                     'godownId' => $godown->id,
                     'godownName' => $godown->name,
@@ -376,12 +378,12 @@ class FreightService implements FreightServiceInterface
         [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
 
         return Voucher::with([
-                'stock_journal.stock_journal_entries.stock_item',
-                'stock_journal.stock_journal_entries.stock_unit',
-                'stock_journal.stock_journal_entries.stock_journal_godown_entries.godown',
-                'voucher_dispatch_detail',
-                'voucher_party',
-            ])
+            'stock_journal.stock_journal_entries.stock_item',
+            'stock_journal.stock_journal_entries.stock_unit',
+            'stock_journal.stock_journal_entries.stock_journal_godown_entries.godown',
+            'voucher_dispatch_detail',
+            'voucher_party',
+        ])
             ->where('vouchers.voucher_type_id', $this->deliverNoteVoucherTypeID)
             ->whereNotNull('vouchers.stock_journal_id')
             ->where('vouchers.fiscal_year_id', $fiscalYearId)
@@ -429,9 +431,10 @@ class FreightService implements FreightServiceInterface
     {
 
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
-        if (!$userFiscalYear) {
+        if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
+
         return [
             (int) $userFiscalYear->fiscal_year_id,
             $userFiscalYear->start_date,
@@ -447,14 +450,14 @@ class FreightService implements FreightServiceInterface
     {
         foreach ($deliveryNotes as $voucher) {
             $stockJournal = $voucher->stock_journal;
-            if (!$stockJournal) {
+            if (! $stockJournal) {
                 continue;
             }
 
             foreach ($stockJournal->stock_journal_entries as $entry) {
                 foreach ($entry->stock_journal_godown_entries as $godownEntry) {
                     $godown = $godownEntry->godown;
-                    if (!$godown) {
+                    if (! $godown) {
                         continue;
                     }
 
@@ -603,8 +606,10 @@ class FreightService implements FreightServiceInterface
             unset($data['_voucher_ids']);
             $result[] = $data;
         }
+
         return $result;
     }
+
     public function transporterWiseReport(): Collection
     {
         [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
@@ -624,8 +629,7 @@ class FreightService implements FreightServiceInterface
 
         $vouchers = $queryBuilder->get();
 
-
-        return $vouchers->map(fn($voucher) => $this->voucherService->attachLedgerInfo($voucher));
+        return $vouchers->map(fn ($voucher) => $this->voucherService->attachLedgerInfo($voucher));
 
     }
 
@@ -638,19 +642,19 @@ class FreightService implements FreightServiceInterface
         foreach ($freightVouchers as $freightVoucher) {
             // Each freight voucher references exactly one delivery note via voucher_references
             $reference = $freightVoucher->voucher_references->first();
-            if (!$reference) {
+            if (! $reference) {
                 continue;
             }
 
             $deliveryNote = $reference->reference_voucher;
-            if (!$deliveryNote || !$deliveryNote->stock_journal) {
+            if (! $deliveryNote || ! $deliveryNote->stock_journal) {
                 continue;
             }
 
             $dispatch = $deliveryNote->voucher_dispatch_detail;
             $transporterName = $dispatch?->carrier_name ?? 'Unknown';
-            $vehicleNumber = $dispatch?->motor_vehicle_no ?? '';
-            $source = $dispatch?->source ?? '';
+            $vehicleNumber = $dispatch?->motor_vehicle_no ?? ';
+            $source = $dispatch?->source ?? ';
             $destination = $dispatch?->destination ?? '';
             $voucherId = $freightVoucher->id;
             $voucherNo = $freightVoucher->voucher_no;
@@ -672,7 +676,7 @@ class FreightService implements FreightServiceInterface
                 // Group by transporter name
                 $transporterKey = $transporterName;
 
-                if (!isset($transporterData[$transporterKey])) {
+                if (! isset($transporterData[$transporterKey])) {
                     $transporterData[$transporterKey] = [
                         'transporterName' => $transporterName,
                         'vehicleNumber' => $vehicleNumber,
@@ -728,19 +732,20 @@ class FreightService implements FreightServiceInterface
 
         return new Collection($result);
     }
+
     public function vehicleWiseReport(): Collection
     {
         // Implement the logic for vehicle wise report
         // Return a collection of results
         return collect(); // Placeholder
     }
+
     public function billingPreferenceReport(): Collection
     {
         // Implement the logic for billing preference report
         // Return a collection of results
         return collect(); // Placeholder
     }
-
 
     public function voucherWiseReport(): Collection
     {
@@ -761,11 +766,8 @@ class FreightService implements FreightServiceInterface
 
         $vouchers = $queryBuilder->get();
 
-
-        return $vouchers->map(fn($voucher) => $this->voucherService->attachLedgerInfo($voucher));
+        return $vouchers->map(fn ($voucher) => $this->voucherService->attachLedgerInfo($voucher));
     }
-
-
 
     public function getById(int $id): ?Freight
     {
@@ -778,10 +780,9 @@ class FreightService implements FreightServiceInterface
         $deliverNoteId = $data['delivery_note_id'] ?? null;
         if ($deliverNoteId) {
             $deliveryNote = $this->voucherService->getById($deliverNoteId);
-            if (!$deliveryNote) {
-                throw new \Exception("Delivery Note not found with ID: " . $deliverNoteId);
+            if (! $deliveryNote) {
+                throw new \Exception('Delivery Note not found with ID: '.$deliverNoteId);
             }
-
 
             // $dispatchDetailData = [
             //     'voucher_id' => $deliverNoteId,
@@ -820,13 +821,11 @@ class FreightService implements FreightServiceInterface
             //     }
             // }
 
-
-
             $deliverNoteAsReferences = $this->voucherReferenceService->getByReferenceVoucherId($deliverNoteId);
-
 
             $existingFreightReference = $deliverNoteAsReferences->first(function ($reference) {
                 $refVoucher = $this->voucherService->getById($reference->voucher_id);
+
                 return $refVoucher && $refVoucher->module === 'freight'
                     && $refVoucher->voucher_type_id === $this->salesVoucherTypeID;
             });
@@ -845,18 +844,16 @@ class FreightService implements FreightServiceInterface
                 });
                 $salesVoucher->delete();
                 // return $salesVoucher->load('company');
-                //throw new \Exception("A Freight record is already associated with this Delivery Note ID: " . $deliverNoteId);
+                // throw new \Exception("A Freight record is already associated with this Delivery Note ID: " . $deliverNoteId);
             }
-
 
             // Create a new Sales Voucher linked to this Delivery Note
             $salesAccountLedger = $this->accountLedgerService->getById($this->salesAccountLedgerID);
-            if (!$salesAccountLedger) {
-                throw new \Exception("Sales Account Ledger not found with ID: " . $this->salesAccountLedgerID);
+            if (! $salesAccountLedger) {
+                throw new \Exception('Sales Account Ledger not found with ID: '.$this->salesAccountLedgerID);
             }
 
-
-            //being the payment received towards freight charges pertaining to Delivery Note ID 24
+            // being the payment received towards freight charges pertaining to Delivery Note ID 24
             $salesVoucherData = [
                 'voucher_type_id' => $this->salesVoucherTypeID,
                 'voucher_date' => date('Y-m-d'),
@@ -865,7 +862,7 @@ class FreightService implements FreightServiceInterface
                 'module' => 'freight',
                 'reference_no' => $deliveryNote->voucher_no,
                 'reference_date' => $deliveryNote->voucher_date,
-                'remarks' => 'being the payment received towards freight charges pertaining to Delivery Note ID : ' . $deliverNoteId . ' dated ' . date_format($deliveryNote->voucher_date, 'd-M-Y'),
+                'remarks' => 'being the payment received towards freight charges pertaining to Delivery Note ID : '.$deliverNoteId.' dated '.date_format($deliveryNote->voucher_date, 'd-M-Y'),
                 'party_ledger' => $deliveryNote->party_ledger,
                 'transaction_ledger' => [
                     'id' => $salesAccountLedger->id,
@@ -890,21 +887,22 @@ class FreightService implements FreightServiceInterface
                 ],
                 'voucher_reference' => [
                     'ref_voucher_id' => $deliverNoteId,
-                    'type' => 'freight'
+                    'type' => 'freight',
                 ],
                 // Add other necessary fields here
             ];
-            $voucherRules = (new VoucherRequest())->rules();
+            $voucherRules = (new VoucherRequest)->rules();
             // dump($rules);
             $validatedVoucherData = Validator::make($salesVoucherData, $voucherRules)->validate();
             // dd($validatedVoucherData);
-            //check if
+            // check if
 
             $salesVoucherStored = $this->voucherService->store($validatedVoucherData);
             $salesVoucher = $this->voucherService->getById($salesVoucherStored->id);
+
             return $salesVoucher->load('company');
         }
-        throw new \Exception("Delivery Note ID is required to create Freight record.");
+        throw new \Exception('Delivery Note ID is required to create Freight record.');
     }
 
     public function payment_voucher(array $data): Collection
@@ -912,8 +910,8 @@ class FreightService implements FreightServiceInterface
         $deliverNoteId = $data['delivery_note_id'] ?? null;
         if ($deliverNoteId) {
             $deliveryNote = $this->voucherService->getById($deliverNoteId);
-            if (!$deliveryNote) {
-                throw new \Exception("Delivery Note not found with ID: " . $deliverNoteId);
+            if (! $deliveryNote) {
+                throw new \Exception('Delivery Note not found with ID: '.$deliverNoteId);
             }
         }
 
@@ -927,12 +925,14 @@ class FreightService implements FreightServiceInterface
     {
         $record = Freight::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = Freight::findOrFail($id);
+
         return $record->delete();
     }
 }

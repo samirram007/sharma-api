@@ -2,39 +2,37 @@
 
 namespace Modules\Uqc\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Uqc\Contracts\UqcServiceInterface;
 use Modules\Uqc\Models\Uqc;
-use Illuminate\Database\Eloquent\Collection;
 
-class UqcService implements UqcServiceInterface
+class UqcService extends BaseService implements UqcServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = Uqc::class;
 
     public function getAll(): Collection
     {
-        return Uqc::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Uqc
     {
-        return Uqc::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Uqc
     {
-        return Uqc::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Uqc
     {
-        $record = Uqc::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Uqc::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

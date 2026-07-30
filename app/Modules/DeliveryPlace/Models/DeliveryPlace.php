@@ -2,10 +2,10 @@
 
 namespace Modules\DeliveryPlace\Models;
 
-use Modules\Address\Models\Address;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Modules\Address\Models\Address;
 
 class DeliveryPlace extends Model
 {
@@ -28,10 +28,10 @@ class DeliveryPlace extends Model
     ];
 
     protected $appends = [
-        'status'
+        'status',
     ];
 
-    //order by name ascending
+    // order by name ascending
     protected static function booted()
     {
         static::addGlobalScope('order', function ($query) {
@@ -43,6 +43,7 @@ class DeliveryPlace extends Model
     {
         return $this->morphOne(Address::class, 'addressable');
     }
+
     public function getStatusAttribute(): string
     {
         return $this->is_active ? 'active' : 'inactive';

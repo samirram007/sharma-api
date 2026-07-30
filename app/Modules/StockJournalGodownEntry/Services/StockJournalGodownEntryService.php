@@ -2,9 +2,9 @@
 
 namespace Modules\StockJournalGodownEntry\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StockJournalGodownEntry\Contracts\StockJournalGodownEntryServiceInterface;
 use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
-use Illuminate\Database\Eloquent\Collection;
 
 class StockJournalGodownEntryService implements StockJournalGodownEntryServiceInterface
 {
@@ -23,13 +23,12 @@ class StockJournalGodownEntryService implements StockJournalGodownEntryServiceIn
     public function store(array $data): StockJournalGodownEntry
     {
         try {
-            //code...
+            // code...
             $stockJournalGodownEntry = StockJournalGodownEntry::create($data);
         } catch (\Throwable $th) {
 
             throw $th;
         }
-
 
         return $stockJournalGodownEntry;
     }
@@ -38,14 +37,17 @@ class StockJournalGodownEntryService implements StockJournalGodownEntryServiceIn
     {
         $record = StockJournalGodownEntry::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = StockJournalGodownEntry::findOrFail($id);
+
         return $record->delete();
     }
+
     public function getByStockJournalEntryId(int $stockJournalEntryId): Collection
     {
         return StockJournalGodownEntry::with($this->resource)

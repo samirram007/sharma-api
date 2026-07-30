@@ -2,39 +2,37 @@
 
 namespace Modules\DeliveryPlace\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\DeliveryPlace\Contracts\DeliveryPlaceServiceInterface;
 use Modules\DeliveryPlace\Models\DeliveryPlace;
-use Illuminate\Database\Eloquent\Collection;
 
-class DeliveryPlaceService implements DeliveryPlaceServiceInterface
+class DeliveryPlaceService extends BaseService implements DeliveryPlaceServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = DeliveryPlace::class;
 
     public function getAll(): Collection
     {
-        return DeliveryPlace::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?DeliveryPlace
     {
-        return DeliveryPlace::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): DeliveryPlace
     {
-        return DeliveryPlace::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): DeliveryPlace
     {
-        $record = DeliveryPlace::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = DeliveryPlace::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

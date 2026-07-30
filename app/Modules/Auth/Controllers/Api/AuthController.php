@@ -3,24 +3,23 @@
 namespace Modules\Auth\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Laravel\Socialite\Facades\Socialite;
 use Modules\Auth\Contracts\AuthServiceInterface;
 use Modules\Auth\Requests\ChangePasswordRequest;
 use Modules\Auth\Requests\LoginRequest;
 use Modules\Auth\Requests\RegisterRequest;
-
 use Modules\User\Contracts\UserServiceInterface;
 use Modules\User\Resources\UserResource;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Laravel\Socialite\Facades\Socialite;
-
 class AuthController extends Controller
 {
-
     protected $domain;
+
     protected $token_expire_duration;
+
     public function __construct(
         protected AuthServiceInterface $authService,
         protected UserServiceInterface $userService
@@ -29,18 +28,26 @@ class AuthController extends Controller
         // $this->token_expire_duration = env('TOKEN_EXPIRE_DURATION', 30000);
         $this->token_expire_duration = config('session.lifetime') * 60;
     }
+
     public function login(LoginRequest $request): JsonResponse
     {
         $token = $this->authService->login($request->validated());
         Log::info('Login token generated', ['token' => $token]);
+
         return $this->respondWithToken($token, 'Login successful!');
 
     }
+
+    public function socialRedirect(string $provider)
+    {
+        return Socialite::driver($provider)->stateless()->redirect();
+    }
+
     public function socialCallback(string $provider)
     {
         $socialUser = Socialite::driver($provider)->stateless()->user();
 
-        $user = $this->userService->findOrCreateFromProvider($socialUser, $provider);
+        $user = $this->userService->findOrCreateSocialUser($socialUser, $provider);
 
         $token = $this->authService->loginWithUser($user); // ← uses same method!
 
@@ -51,6 +58,7 @@ class AuthController extends Controller
     {
 
         $token = $this->authService->register($request->validated());
+
         return $this->respondWithToken($token, 'User created successfully');
     }
 
@@ -60,87 +68,68 @@ class AuthController extends Controller
         $this->authService->logout();
         $cookie = cookie('token', '', -1, '/', $this->domain, true, true);
 
-        return response()->json(['message' => 'Logged out'])->withCookie($cookie);
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Logged out',
+        ])->withCookie($cookie);
     }
+
     public function clean_logout(): JsonResponse
     {
+        try {
+            $this->authService->logout();
+        } catch (\Exception $e) {
+            // Token may already be invalid — still clear the cookie
+        }
 
-        // $this->authService->logout();
         $cookie = cookie('token', '', -1, '/', $this->domain, true, true);
 
-        return response()->json(['message' => 'Logged out'])->withCookie($cookie);
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Logged out',
+        ])->withCookie($cookie);
     }
-
-
 
     public function profile(): JsonResponse
     {
 
         $user = $this->authService->profile();
+
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'code' => 200,
             'message' => 'User profile fetched successfully.',
             'data' => new UserResource($user),
         ]);
     }
-    public function profile2(): JsonResponse
-    {
 
-        // $user = $this->authService->profile();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User profile fetched successfully.',
-            'data' => [],
-        ]);
-    }
     public function changePassword(ChangePasswordRequest $request): JsonResponse
     {
         $this->authService->changePassword($request->validated());
+
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'code' => 200,
             'message' => 'Password changed successfully.',
             'data' => [],
         ]);
     }
 
-
-
-    public function refresh()
+    public function refresh(): JsonResponse
     {
-        $token = $this->authService->refresh();
-        return $this->respondWithToken($token, 'Token refreshed successfully!');
+        try {
+            $token = $this->authService->refresh();
 
-    }
-
-    public function menu(): JsonResponse
-    {
-        $user = Auth::user();
-        if (!$user) {
-            return response()->json(['status' => 'error', 'message' => 'Unauthenticated.'], 401);
+            return $this->respondWithToken($token, 'Token refreshed successfully!');
+        } catch (AuthenticationException $e) {
+            return response()->json([
+                'success' => false,
+                'code' => 401,
+                'message' => $e->getMessage(),
+            ], 401);
         }
-
-        $permissions = [];
-        foreach ($user->roles as $role) {
-            foreach ($role->permissions as $permission) {
-                if ($permission->is_allowed && $permission->feature) {
-                    $permissions[] = $permission->feature->code;
-                }
-            }
-        }
-
-        return response()->json([
-            'status' => 'success',
-            'data' => array_values(array_unique($permissions)),
-        ]);
-    }
-
-    public function menuTree(): JsonResponse
-    {
-        $tree = $this->authService->menuTree();
-        return response()->json([
-            'status' => 'success',
-            'data'   => $tree,
-        ]);
     }
 
     protected function respondWithToken(string $token, string $message = 'Authenticated successfully!')
@@ -160,9 +149,12 @@ class AuthController extends Controller
         Log::info(' cookie', ['cookie' => $cookie]);
 
         return response()->json([
-           'token' => $token,
-            'status' => 'success',
+            'token' => $token,
+            'success' => true,
+            'code' => 200,
             'message' => $message,
+            'token_type' => 'bearer',
+            'expires_in' => $this->token_expire_duration,
         ])->withCookie($cookie);
     }
 }

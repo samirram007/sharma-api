@@ -14,17 +14,17 @@ class StockJournalStorageUnitEntryPurgeRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255','unique:stock_journal_storage_unit_entry_purges,name'],
-            'code' => ['sometimes','required', 'string', 'max:255','unique:stock_journal_storage_unit_entry_purges,code'],
-            'description' => ['sometimes','required', 'string', 'max:255'],
-            'status' => ['sometimes','required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:stock_journal_storage_unit_entry_purges,name'],
+            'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:stock_journal_storage_unit_entry_purges,code'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', 'string', 'max:255'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $id=$this->route('stock_journal_storage_unit_entry_purge');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_journal_storage_unit_entry_purges,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_journal_storage_unit_entry_purges,code,' . $id,];
+            $id = $this->route('stock_journal_storage_unit_entry_purge');
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_journal_storage_unit_entry_purges,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_journal_storage_unit_entry_purges,code,'.$id];
 
         }
 

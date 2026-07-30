@@ -2,37 +2,37 @@
 
 namespace Modules\Setting\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Setting\Contracts\SettingServiceInterface;
 use Modules\Setting\Models\Setting;
-use Illuminate\Database\Eloquent\Collection;
 
-class SettingService implements SettingServiceInterface
+class SettingService extends BaseService implements SettingServiceInterface
 {
+    protected string $modelClass = Setting::class;
+
     public function getAll(): Collection
     {
-        return Setting::all();
+        return $this->getAllRecords();
     }
 
-    public function getById(int $id): Setting
+    public function getById(int $id): ?Setting
     {
-        return Setting::findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Setting
     {
-        return Setting::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Setting
     {
-        $record = Setting::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Setting::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

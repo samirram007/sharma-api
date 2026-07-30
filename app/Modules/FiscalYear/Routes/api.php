@@ -7,4 +7,3 @@ Route::apiResource('fiscal_years', FiscalYearController::class)->middleware(['jw
 
 Route::get('fiscal_years/current', [FiscalYearController::class, 'getCurrentFiscalYear'])->middleware(['jwt.cookies']);
 Route::get('fiscal_years/active', [FiscalYearController::class, 'getActiveFiscalYear'])->middleware(['jwt.cookies']);
-

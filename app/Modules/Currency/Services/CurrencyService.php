@@ -2,37 +2,37 @@
 
 namespace Modules\Currency\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Currency\Contracts\CurrencyServiceInterface;
 use Modules\Currency\Models\Currency;
-use Illuminate\Database\Eloquent\Collection;
 
-class CurrencyService implements CurrencyServiceInterface
+class CurrencyService extends BaseService implements CurrencyServiceInterface
 {
+    protected string $modelClass = Currency::class;
+
     public function getAll(): Collection
     {
-        return Currency::all();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): Currency
     {
-        return Currency::findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Currency
     {
-        return Currency::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Currency
     {
-        $record = Currency::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Currency::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

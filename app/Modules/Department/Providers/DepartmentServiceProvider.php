@@ -2,9 +2,11 @@
 
 namespace Modules\Department\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
+use Modules\Department\Contracts\DepartmentRepositoryInterface;
 use Modules\Department\Contracts\DepartmentServiceInterface;
+use Modules\Department\Repositories\DepartmentRepository;
 use Modules\Department\Services\DepartmentService;
 
 class DepartmentServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class DepartmentServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(DepartmentServiceInterface::class, DepartmentService::class);
+        $this->app->singleton(DepartmentRepositoryInterface::class, DepartmentRepository::class);
     }
 
     public function boot(): void
@@ -24,11 +27,11 @@ class DepartmentServiceProvider extends ServiceProvider
     {
         Route::middleware('api')
             ->prefix('api')
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__.'/../Routes/api.php');
     }
 
     private function loadMigrations(): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Modules\Godown\Requests;
 
-use Modules\Address\Requests\AddressRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Address\Requests\AddressRequest;
 
 class GodownRequest extends FormRequest
 {
@@ -21,8 +21,8 @@ class GodownRequest extends FormRequest
             'status' => ['sometimes', 'required', 'string', 'max:255'],
             'parent_id' => ['sometimes', 'nullable', 'numeric', 'exists:godowns,id'],
         ];
-        $addressRules = collect((new AddressRequest())->rules())
-            ->mapWithKeys(fn($rule, $key) => ["address.$key" => $rule])
+        $addressRules = collect((new AddressRequest)->rules())
+            ->mapWithKeys(fn ($rule, $key) => ["address.$key" => $rule])
             ->toArray();
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {

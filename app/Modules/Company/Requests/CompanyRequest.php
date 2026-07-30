@@ -2,10 +2,8 @@
 
 namespace Modules\Company\Requests;
 
-
-use Modules\Address\Requests\AddressRequest;
 use Illuminate\Foundation\Http\FormRequest;
-
+use Modules\Address\Requests\AddressRequest;
 
 class CompanyRequest extends FormRequest
 {
@@ -46,9 +44,10 @@ class CompanyRequest extends FormRequest
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('company');
 
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:companies,name,' . $id];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:companies,name,'.$id];
 
         }
+
         return $rules; // array_merge($rules, $addressRules);
         // return array_merge($rules, $addressRules);
     }

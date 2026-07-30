@@ -1,18 +1,15 @@
 <?php
 
-
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class NormalizeRequestKeys
 {
     /**
      * Normalize camelCase keys to snake_case recursively.
-     *
-     * @param array $data
-     * @return array
      */
     protected function normalize(array $data): array
     {
@@ -34,9 +31,6 @@ class NormalizeRequestKeys
 
     /**
      * Remove camelCase keys if the snake_case version exists.
-     *
-     * @param array $data
-     * @return array
      */
     protected function removeCamelCaseKeys(array $data): array
     {
@@ -64,8 +58,7 @@ class NormalizeRequestKeys
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
+     * @param  Request  $request
      * @return mixed
      */
     public function handle($request, Closure $next)

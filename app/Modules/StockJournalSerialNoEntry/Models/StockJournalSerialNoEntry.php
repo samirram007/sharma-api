@@ -2,8 +2,8 @@
 
 namespace Modules\StockJournalSerialNoEntry\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class StockJournalSerialNoEntry extends Model
 {

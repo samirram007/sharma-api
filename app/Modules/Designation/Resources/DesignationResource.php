@@ -2,18 +2,17 @@
 
 namespace Modules\Designation\Resources;
 
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class DesignationResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'code' => $this->code,
-            'status' => $this->status,
-        ];
+
+        return $this->toCamelCaseArray($request);
     }
 }

@@ -2,39 +2,37 @@
 
 namespace Modules\CostCategory\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\CostCategory\Contracts\CostCategoryServiceInterface;
 use Modules\CostCategory\Models\CostCategory;
-use Illuminate\Database\Eloquent\Collection;
 
-class CostCategoryService implements CostCategoryServiceInterface
+class CostCategoryService extends BaseService implements CostCategoryServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = CostCategory::class;
 
     public function getAll(): Collection
     {
-        return CostCategory::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?CostCategory
     {
-        return CostCategory::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): CostCategory
     {
-        return CostCategory::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): CostCategory
     {
-        $record = CostCategory::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = CostCategory::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

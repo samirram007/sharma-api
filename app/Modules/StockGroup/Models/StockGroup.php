@@ -3,8 +3,8 @@
 namespace Modules\StockGroup\Models;
 
 use App\Enums\ActiveInactive;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -20,7 +20,7 @@ class StockGroup extends Model
         'description',
         'status',
         'parent_id',
-        'should_quantities_of_items_be_added'
+        'should_quantities_of_items_be_added',
 
     ];
 
@@ -28,15 +28,15 @@ class StockGroup extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'status' => ActiveInactive::class,
-        'should_quantities_of_items_be_added' => 'boolean'
+        'should_quantities_of_items_be_added' => 'boolean',
     ];
 
-    function parent(): BelongsTo
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(StockGroup::class);
     }
 
-    function child(): HasMany
+    public function child(): HasMany
     {
         return $this->hasMany(StockGroup::class, 'parent_stock_category_id', 'id');
     }

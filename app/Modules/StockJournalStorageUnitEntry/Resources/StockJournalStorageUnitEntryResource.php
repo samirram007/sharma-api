@@ -2,15 +2,20 @@
 
 namespace Modules\StockJournalStorageUnitEntry\Resources;
 
-use Modules\StorageUnit\Resources\StorageUnitResource;
-use Illuminate\Http\Request;
-
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
+use Modules\StorageUnit\Resources\StorageUnitResource;
+
 class StockJournalStorageUnitEntryResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'stockJournalEntryId' => $this->stock_journal_entry_id,
             'storageUnitId' => $this->storage_unit_id,
@@ -29,6 +34,8 @@ class StockJournalStorageUnitEntryResource extends SuccessResource
             'storageUnit' => StorageUnitResource::make($this->whenLoaded('storage_unit')),
             'createdAt' => $this->created_at?->toISOString(),
             'updatedAt' => $this->updated_at?->toISOString(),
-        ];
+
+        ]);
+
     }
 }

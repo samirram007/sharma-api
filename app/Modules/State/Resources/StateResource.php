@@ -3,17 +3,19 @@
 namespace Modules\State\Resources;
 
 use App\Http\Resources\SuccessResource;
-
-use Modules\Country\Resources\CountryResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Country\Resources\CountryResource;
 
 class StateResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
 
-        return [
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -21,7 +23,7 @@ class StateResource extends SuccessResource
             'countryId' => $this->country_id,
             'country' => CountryResource::make($this->whenLoaded('country')),
 
+        ]);
 
-        ];
     }
 }

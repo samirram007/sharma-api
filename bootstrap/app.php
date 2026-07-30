@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Middleware\JWTFromCookie;
+use App\Http\Middleware\NormalizeQueryParameters;
+use App\Http\Middleware\NormalizeRequestKeys;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -13,14 +17,17 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
+    ->withCommands([
+        __DIR__.'/../app/Console/Commands',
+    ])
     ->withMiddleware(function (Middleware $middleware): void {
-          $middleware->use([
-            App\Http\Middleware\NormalizeRequestKeys::class,
-            App\Http\Middleware\NormalizeQueryParameters::class,
-            Illuminate\Http\Middleware\HandleCors::class
+        $middleware->use([
+            NormalizeRequestKeys::class,
+            NormalizeQueryParameters::class,
+            HandleCors::class,
         ]);
         $middleware->alias([
-            'jwt.cookies' => App\Http\Middleware\JWTFromCookie::class,
+            'jwt.cookies' => JWTFromCookie::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

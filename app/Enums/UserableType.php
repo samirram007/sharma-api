@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Enums;
 
 enum UserableType: string
@@ -14,8 +15,9 @@ enum UserableType: string
     case Agent = 'agent';
 
     case Other = 'other';
+
     public static function getValues(): array
     {
-        return array_map(fn($case) => $case->value, self::cases());
+        return array_map(fn ($case) => $case->value, self::cases());
     }
 }

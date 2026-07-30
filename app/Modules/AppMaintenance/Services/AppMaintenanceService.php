@@ -2,37 +2,37 @@
 
 namespace Modules\AppMaintenance\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\AppMaintenance\Contracts\AppMaintenanceServiceInterface;
 use Modules\AppMaintenance\Models\AppMaintenance;
-use Illuminate\Database\Eloquent\Collection;
 
-class AppMaintenanceService implements AppMaintenanceServiceInterface
+class AppMaintenanceService extends BaseService implements AppMaintenanceServiceInterface
 {
+    protected string $modelClass = AppMaintenance::class;
+
     public function getAll(): Collection
     {
-        return AppMaintenance::all();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?AppMaintenance
     {
-        return AppMaintenance::findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): AppMaintenance
     {
-        return AppMaintenance::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): AppMaintenance
     {
-        $record = AppMaintenance::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = AppMaintenance::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

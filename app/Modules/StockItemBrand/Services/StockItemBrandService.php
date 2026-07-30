@@ -2,39 +2,37 @@
 
 namespace Modules\StockItemBrand\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StockItemBrand\Contracts\StockItemBrandServiceInterface;
 use Modules\StockItemBrand\Models\StockItemBrand;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockItemBrandService implements StockItemBrandServiceInterface
+class StockItemBrandService extends BaseService implements StockItemBrandServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = StockItemBrand::class;
 
     public function getAll(): Collection
     {
-        return StockItemBrand::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockItemBrand
     {
-        return StockItemBrand::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockItemBrand
     {
-        return StockItemBrand::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockItemBrand
     {
-        $record = StockItemBrand::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockItemBrand::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

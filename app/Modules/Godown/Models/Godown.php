@@ -2,15 +2,15 @@
 
 namespace Modules\Godown\Models;
 
-use Modules\Address\Models\Address;
-use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Modules\Address\Models\Address;
+use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
 
 class Godown extends Model
 {
@@ -26,7 +26,7 @@ class Godown extends Model
         'parent_id',
         'our_stock_with_third_party',
         'third_party_stock_with_us',
-        'storage_unit_type'
+        'storage_unit_type',
 
     ];
 
@@ -36,7 +36,8 @@ class Godown extends Model
         'our_stock_with_third_party' => 'boolean',
         'third_party_stock_with_us' => 'boolean',
     ];
- protected static function booted(): void
+
+    protected static function booted(): void
     {
         static::addGlobalScope('orderByName', function (Builder $builder) {
             $builder->orderBy('name');
@@ -55,7 +56,7 @@ class Godown extends Model
 
         if ($lastCode) {
             // Extract numeric part
-            $lastNumber = (int) str_replace($prefix . '-', '', $lastCode);
+            $lastNumber = (int) str_replace($prefix.'-', '', $lastCode);
             $nextNumber = $lastNumber + 1;
         } else {
             $nextNumber = 1;
@@ -66,14 +67,17 @@ class Godown extends Model
 
         return $newCode;
     }
-    function parent(): BelongsTo
+
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(Godown::class);
     }
+
     public function address(): MorphOne
     {
         return $this->morphOne(Address::class, 'addressable');
     }
+
     public function stock_journal_godown_entries(): HasMany
     {
         return $this->hasMany(StockJournalGodownEntry::class, 'godown_id');
@@ -104,6 +108,5 @@ class Godown extends Model
     //                 : -$entry->actual_quantity;
     //         });
     // }
-
 
 }

@@ -2,12 +2,13 @@
 
 namespace Modules\VoucherNo\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Branch\Models\Branch;
+use Modules\Company\Models\Company;
 use Modules\FiscalYear\Models\FiscalYear;
 use Modules\VoucherType\Models\VoucherType;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VoucherNo extends Model
 {
@@ -23,7 +24,6 @@ class VoucherNo extends Model
         'fiscal_year_id',
         'starting_no',
         'current_no',
-
 
     ];
 
@@ -44,15 +44,17 @@ class VoucherNo extends Model
     {
         return $this->belongsTo(VoucherType::class, 'voucher_type_id');
     }
+
     public function company(): BelongsTo
     {
-        return $this->belongsTo(\Modules\Company\Models\Company::class, 'company_id');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class, 'branch_id');
     }
+
     public function fiscal_year(): BelongsTo
     {
         return $this->belongsTo(FiscalYear::class, 'fiscal_year_id');
@@ -60,7 +62,6 @@ class VoucherNo extends Model
 
     public function getVoucherNoAttribute()
     {
-        return $this->prefix . str_pad($this->current_no + 1, 6, '0', STR_PAD_LEFT);
+        return $this->prefix.str_pad($this->current_no + 1, 6, '0', STR_PAD_LEFT);
     }
-
 }

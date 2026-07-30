@@ -2,8 +2,8 @@
 
 namespace Modules\Transporter\Requests;
 
-use Modules\Address\Requests\AddressRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Address\Requests\AddressRequest;
 
 class TransporterRequest extends FormRequest
 {
@@ -31,16 +31,17 @@ class TransporterRequest extends FormRequest
             'account_group_id' => ['sometimes', 'required', 'exists:account_groups,id'],
 
         ];
-        $addressRules = collect((new AddressRequest())->rules())
-            ->mapWithKeys(fn($rule, $key) => ["address.$key" => $rule])
+        $addressRules = collect((new AddressRequest)->rules())
+            ->mapWithKeys(fn ($rule, $key) => ["address.$key" => $rule])
             ->toArray();
 
         // // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('transporter');
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:transporters,code,' . $id,];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:transporters,code,'.$id];
 
         }
+
         return array_merge($rules, $addressRules);
         //  return $rules;
     }

@@ -3,14 +3,14 @@
 namespace Modules\StockItemSerial\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\StockItemSerial\Contracts\StockItemSerialServiceInterface;
-use Modules\StockItemSerial\Resources\StockItemSerialResource;
-use Modules\StockItemSerial\Resources\StockItemSerialCollection;
-use Modules\StockItemSerial\Requests\StockItemSerialRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\StockItemSerial\Contracts\StockItemSerialServiceInterface;
+use Modules\StockItemSerial\Requests\StockItemSerialRequest;
+use Modules\StockItemSerial\Resources\StockItemSerialCollection;
+use Modules\StockItemSerial\Resources\StockItemSerialResource;
 
 class StockItemSerialController extends Controller
 {
@@ -21,35 +21,33 @@ class StockItemSerialController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new StockItemSerialCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new StockItemSerialResource($data);
+
+        return new StockItemSerialResource($data);
     }
 
     public function store(StockItemSerialRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new StockItemSerialResource($data, $messages='StockItemSerial created successfully');
+
+        return new StockItemSerialResource($data, $messages = 'StockItemSerial created successfully');
     }
 
     public function update(StockItemSerialRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new StockItemSerialResource($data, $messages='StockItemSerial updated successfully');
+
+        return new StockItemSerialResource($data, $messages = 'StockItemSerial updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'StockItemSerial deleted successfully':'StockItemSerial not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'StockItemSerial');
     }
 }

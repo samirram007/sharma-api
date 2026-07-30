@@ -2,39 +2,46 @@
 
 namespace Modules\StockCategory\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
+use Modules\StockCategory\Contracts\StockCategoryRepositoryInterface;
 use Modules\StockCategory\Contracts\StockCategoryServiceInterface;
 use Modules\StockCategory\Models\StockCategory;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockCategoryService implements StockCategoryServiceInterface
+class StockCategoryService extends BaseService implements StockCategoryServiceInterface
 {
-    protected $resource = ['parent'];
+    protected string $modelClass = StockCategory::class;
+
+    protected array $defaultResource = [
+        'parent',
+    ];
+
+    public function __construct(
+        protected StockCategoryRepositoryInterface $stockCategoryRepository
+    ) {}
 
     public function getAll(): Collection
     {
-        return StockCategory::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockCategory
     {
-        return StockCategory::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockCategory
     {
-        return StockCategory::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockCategory
     {
-        $record = StockCategory::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockCategory::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

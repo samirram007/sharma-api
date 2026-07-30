@@ -1,8 +1,9 @@
 <?php
+
 namespace Modules\Company\Repositories;
 
-use Modules\Company\Models\Company;
 use Illuminate\Database\Eloquent\Collection;
+use Modules\Company\Models\Company;
 
 class CompanyRepository implements CompanyRepositoryInterface
 {

@@ -2,51 +2,37 @@
 
 namespace Modules\VoucherDispatchDetail\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
 use Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Log;
 
-class VoucherDispatchDetailService implements VoucherDispatchDetailServiceInterface
+class VoucherDispatchDetailService extends BaseService implements VoucherDispatchDetailServiceInterface
 {
-    protected $resource = [];
+    protected string $modelClass = VoucherDispatchDetail::class;
 
     public function getAll(): Collection
     {
-        return VoucherDispatchDetail::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?VoucherDispatchDetail
     {
-        return VoucherDispatchDetail::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): VoucherDispatchDetail
     {
-        if ($data['voucher_id']) {
-            //ensure only one dispatch detail per voucher
-            // Log::info("Checking existing dispatch detail for voucher ID {$data['voucher_id']}");
-            $existing = VoucherDispatchDetail::where('voucher_id', $data['voucher_id'])->first();
-            if ($existing) {
-                $existing->update($data);
-                return $existing->fresh();
-                // throw new \Exception("Dispatch detail for voucher ID {$data['voucher_id']} already exists.");
-            }
-        }
-        // Log::info("Creating dispatch detail for voucher ID {$data['voucher_id']}");
-        return VoucherDispatchDetail::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): VoucherDispatchDetail
     {
-        $record = VoucherDispatchDetail::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = VoucherDispatchDetail::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

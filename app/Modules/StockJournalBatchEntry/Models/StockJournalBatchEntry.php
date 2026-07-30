@@ -3,8 +3,8 @@
 namespace Modules\StockJournalBatchEntry\Models;
 
 use App\Enums\MovementType;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class StockJournalBatchEntry extends Model
 {

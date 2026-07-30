@@ -24,8 +24,8 @@ class UserFiscalYearRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('user_fiscal_year');
-            $rules['user_id'] = ['sometimes', 'required', 'numeric', 'unique:user_fiscal_years,user_id,' . $id,];
-            $rules['fiscal_year_id'] = ['sometimes', 'required', 'numeric', 'unique:user_fiscal_years,fiscal_year_id,' . $id,];
+            $rules['user_id'] = ['sometimes', 'required', 'numeric', 'unique:user_fiscal_years,user_id,'.$id];
+            $rules['fiscal_year_id'] = ['sometimes', 'required', 'numeric', 'unique:user_fiscal_years,fiscal_year_id,'.$id];
 
         }
 

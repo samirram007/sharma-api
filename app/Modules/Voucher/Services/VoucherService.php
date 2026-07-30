@@ -2,9 +2,14 @@
 
 namespace Modules\Voucher\Services;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Modules\FiscalYear\Models\FiscalYear;
 use Modules\StockJournal\Contracts\StockJournalServiceInterface;
+use Modules\StockJournal\Models\StockJournal;
 use Modules\StockJournal\Requests\StockJournalRequest;
-
 use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
 use Modules\Voucher\Contracts\VoucherServiceInterface;
 use Modules\Voucher\Models\Voucher;
@@ -17,11 +22,7 @@ use Modules\VoucherParty\Contracts\VoucherPartyServiceInterface;
 use Modules\VoucherParty\Requests\VoucherPartyRequest;
 use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
 use Modules\VoucherReference\Requests\VoucherReferenceRequest;
-use Modules\FiscalYear\Models\FiscalYear;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
+
 class VoucherService implements VoucherServiceInterface
 {
     protected $resource = [
@@ -38,14 +39,20 @@ class VoucherService implements VoucherServiceInterface
         'company',
         'fiscal_year',
     ];
-    protected $userFiscalYearService;
-    protected $voucherNoService;
-    protected $stockJournalRequest;
-    protected $stockJournalService;
-    protected $voucherEntryService;
-    protected $voucherDispatchDetailService;
-    protected $voucherPartyService;
 
+    protected $userFiscalYearService;
+
+    protected $voucherNoService;
+
+    protected $stockJournalRequest;
+
+    protected $stockJournalService;
+
+    protected $voucherEntryService;
+
+    protected $voucherDispatchDetailService;
+
+    protected $voucherPartyService;
 
     public function __construct(
         UserFiscalYearServiceInterface $userFiscalYearService,
@@ -68,24 +75,29 @@ class VoucherService implements VoucherServiceInterface
         // return Voucher::with($this->resource)->get();
         // dd("here");
         $vouchers = Voucher::with($this->resource)->orderBy('created_at', 'desc')->get();
+
         // dd($vouchers);
-        return $vouchers->map(fn(Voucher $voucher) => $this->attachLedgerInfo($voucher));
+        return $vouchers->map(fn (Voucher $voucher) => $this->attachLedgerInfo($voucher));
     }
+
     public function getByModule(string $module): Collection
     {
         $vouchers = Voucher::with($this->resource)
             ->where('module', $module)
             ->orderByDesc('created_at')
             ->get();
-        return $vouchers->map(fn(Voucher $voucher) => $this->attachLedgerInfo($voucher));
+
+        return $vouchers->map(fn (Voucher $voucher) => $this->attachLedgerInfo($voucher));
     }
+
     public function getByVoucherType(int $voucherTypeId): Collection
     {
         $vouchers = Voucher::with($this->resource)
             ->where('voucher_type_id', $voucherTypeId)
             ->orderByDesc('created_at')
             ->get();
-        return $vouchers->map(fn(Voucher $voucher) => $this->attachLedgerInfo($voucher));
+
+        return $vouchers->map(fn (Voucher $voucher) => $this->attachLedgerInfo($voucher));
     }
 
     public function getById(int $id): ?Voucher
@@ -102,25 +114,25 @@ class VoucherService implements VoucherServiceInterface
     {
         DB::beginTransaction();
         try {
-            //code...
+            // code...
             $userFiscalYear = $this->userFiscalYearService->getByUserId(auth()->user()->id);
             $fiscal_year_id = $data['fiscal_year_id'] ?? $userFiscalYear->fiscal_year->id;
 
             $this->validateFiscalYear($fiscal_year_id);
 
-            if (isset($data['stock_journal']) && !empty($data['stock_journal'])) {
+            if (isset($data['stock_journal']) && ! empty($data['stock_journal'])) {
                 $stock_journal = $data['stock_journal'];
-                $rules = (new StockJournalRequest())->rules();
+                $rules = (new StockJournalRequest)->rules();
                 $validatedStockJournal = Validator::make($stock_journal, $rules)->validate();
-                if (!empty($validatedStockJournal)) {
+                if (! empty($validatedStockJournal)) {
 
                     $stockJournal = $this->stockJournalService->store($validatedStockJournal);
-                    //dd("VoucherLevel", $stockJournal);
+                    // dd("VoucherLevel", $stockJournal);
                     $data['stock_journal_id'] = $stockJournal->id ?? null;
                 }
             }
 
-            if (!isset($data['voucher_no']) || empty($data['voucher_no']) || $data['voucher_no'] === 'new') {
+            if (! isset($data['voucher_no']) || empty($data['voucher_no']) || $data['voucher_no'] === 'new') {
                 // $voucher_type = Voucher::where('voucher_type_id', $data['voucher_type_id'])->first();
                 // $userFiscalYear = $this->userFiscalYearService->getByUserId(auth()->user()->id);
                 $voucher_type_id = $data['voucher_type_id'];
@@ -134,15 +146,13 @@ class VoucherService implements VoucherServiceInterface
                 $data['voucher_no'] = $voucher_no;
             }
 
-            //dd($data);
+            // dd($data);
 
             $SANITIZED_DATA = [];
             $SANITIZED_DATA['fiscal_year_id'] = $fiscal_year_id;
 
-
-
-            //Avhisek Shaw Approach Start
-            $voucherModel = new Voucher();
+            // Avhisek Shaw Approach Start
+            $voucherModel = new Voucher;
 
             foreach ($data as $key => $value) {
                 if (in_array($key, $voucherModel->getFillable(), true)) {
@@ -152,60 +162,60 @@ class VoucherService implements VoucherServiceInterface
             // dd($SANITIZED_DATA);
             $voucher = Voucher::create($SANITIZED_DATA);
 
-            //Avhisek Shaw Approach End
+            // Avhisek Shaw Approach End
             // dd($data['voucher_entries']);
 
-            if (!empty($data['voucher_entries'])) {
+            if (! empty($data['voucher_entries'])) {
                 foreach ($data['voucher_entries'] as $key => $voucher_entry) {
                     $voucher_entry['voucher_id'] = $voucher->id;
-                    $rules = (new VoucherEntryRequest())->rules();
+                    $rules = (new VoucherEntryRequest)->rules();
                     $validatedVoucherEntry = Validator::make($voucher_entry, $rules)->validate();
                     $data['voucher_entries'][$key] = $this->voucherEntryService->store($validatedVoucherEntry);
                 }
             }
-            if (!empty($data['voucher_dispatch_detail'])) {
+            if (! empty($data['voucher_dispatch_detail'])) {
                 $data['voucher_dispatch_detail']['voucher_id'] = $voucher->id;
-                $rules = (new VoucherDispatchDetailRequest())->rules();
+                $rules = (new VoucherDispatchDetailRequest)->rules();
                 $validatedDispatchDetail = Validator::make($data['voucher_dispatch_detail'], $rules)->validate();
                 $this->voucherDispatchDetailService->store($validatedDispatchDetail);
                 // $voucher->voucher_dispatch_detail()->create($data['voucher_dispatch_detail']);
             }
-            if (!empty($data['party'])) {
+            if (! empty($data['party'])) {
                 $data['party']['voucher_id'] = $voucher->id;
-                $rules = (new VoucherPartyRequest())->rules();
+                $rules = (new VoucherPartyRequest)->rules();
                 $validatedParty = Validator::make($data['party'], $rules)->validate();
-                //dump($validatedParty);
+                // dump($validatedParty);
                 $this->voucherPartyService->store($validatedParty);
                 // $voucher->party()->create($validatedParty);
             }
-            if (!empty($data['voucher_reference'])) {
+            if (! empty($data['voucher_reference'])) {
 
                 $data['voucher_reference']['voucher_id'] = $voucher->id;
-                $rules = (new VoucherReferenceRequest())->rules();
+                $rules = (new VoucherReferenceRequest)->rules();
                 $validatedVoucherReference = Validator::make($data['voucher_reference'], $rules)->validate();
                 $data['voucher_reference'] = app(VoucherReferenceServiceInterface::class)
                     ->store($validatedVoucherReference);
 
             }
 
-
-            //dd($voucher);
+            // dd($voucher);
             DB::commit();
+
             return $voucher;
         } catch (\Exception $e) {
-            Log::info("error is roll?");
+            Log::info('error is roll?');
             DB::rollBack();
             throw $e;
         }
     }
 
-
     protected function generateJournalNo(): string
     {
         // Implement your logic to generate a unique journal number
-        $latestJournal = \Modules\StockJournal\Models\StockJournal::orderBy('id', 'desc')->first();
+        $latestJournal = StockJournal::orderBy('id', 'desc')->first();
         $nextNumber = $latestJournal ? intval(substr($latestJournal->journal_no, -5)) + 1 : 1;
-        return 'JRN-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+
+        return 'JRN-'.str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
     }
 
     public function update(array $data, int $id): Voucher
@@ -221,7 +231,7 @@ class VoucherService implements VoucherServiceInterface
             $fiscal_year_id = $data['fiscal_year_id'] ?? $voucher->fiscal_year_id;
             $this->validateFiscalYear($fiscal_year_id);
 
-            if (isset($data['stock_journal']) && !empty($data['stock_journal'])) {
+            if (isset($data['stock_journal']) && ! empty($data['stock_journal'])) {
 
                 if ($voucher->stock_journal_id) {
 
@@ -239,7 +249,7 @@ class VoucherService implements VoucherServiceInterface
                     $stock_journal = $data['stock_journal'];
                     $rules = (new StockJournalRequest)->rules();
                     $validatedStockJournal = Validator::make($stock_journal, $rules)->validate();
-                    if (!empty($validatedStockJournal)) {
+                    if (! empty($validatedStockJournal)) {
 
                         $stockJournal = $this->stockJournalService->store($validatedStockJournal);
                         // dd("VoucherLevel", $stockJournal);
@@ -250,8 +260,7 @@ class VoucherService implements VoucherServiceInterface
                 unset($data['stock_journal']);
             }
 
-
-            if (!isset($data['voucher_no']) || empty($data['voucher_no']) || $data['voucher_no'] === 'new') {
+            if (! isset($data['voucher_no']) || empty($data['voucher_no']) || $data['voucher_no'] === 'new') {
                 // $voucher_type = Voucher::where('voucher_type_id', $data['voucher_type_id'])->first();
 
                 $voucher_type_id = $data['voucher_type_id'];
@@ -281,7 +290,7 @@ class VoucherService implements VoucherServiceInterface
 
             // dd($data['voucher_entries']);
 
-            if (!empty($data['voucher_entries'])) {
+            if (! empty($data['voucher_entries'])) {
                 foreach ($data['voucher_entries'] as $key => $voucher_entry) {
                     $voucher_entry['voucher_id'] = $voucher->id;
                     $rules = (new VoucherEntryRequest)->rules();
@@ -293,7 +302,7 @@ class VoucherService implements VoucherServiceInterface
                             $this->voucherEntryService->delete($voucher_entry['id']);
 
                             continue; // skip to next entry
-                            //Hello Avhisek Shaw What you are doing here by "continue"?
+                            // Hello Avhisek Shaw What you are doing here by "continue"?
                         } else {
                             // unset($validatedVoucherEntry['is_deleted']); //remove is_deleted flag before update
                             $this->voucherEntryService->update($validatedVoucherEntry, $voucher_entry['id']);
@@ -304,7 +313,7 @@ class VoucherService implements VoucherServiceInterface
                     }
                 }
             }
-            if (!empty($data['voucher_dispatch_detail'])) {
+            if (! empty($data['voucher_dispatch_detail'])) {
                 $data['voucher_dispatch_detail']['voucher_id'] = $voucher->id;
                 $rules = (new VoucherDispatchDetailRequest)->rules();
                 $validatedDispatchDetail = Validator::make($data['voucher_dispatch_detail'], $rules)->validate();
@@ -317,7 +326,7 @@ class VoucherService implements VoucherServiceInterface
                 }
                 // $voucher->voucher_dispatch_detail()->create($data['voucher_dispatch_detail']);
             }
-            if (!empty($data['party'])) {
+            if (! empty($data['party'])) {
                 $data['party']['voucher_id'] = $voucher->id;
                 $rules = (new VoucherPartyRequest)->rules();
                 $validatedParty = Validator::make($data['party'], $rules)->validate();
@@ -333,7 +342,7 @@ class VoucherService implements VoucherServiceInterface
 
                 // $voucher->party()->create($validatedParty);
             }
-            if (!empty($data['voucher_reference'])) {
+            if (! empty($data['voucher_reference'])) {
 
                 $data['voucher_reference']['voucher_id'] = $voucher->id;
                 $rules = (new VoucherReferenceRequest)->rules();
@@ -345,9 +354,10 @@ class VoucherService implements VoucherServiceInterface
 
             // dd($voucher);
             DB::commit();
+
             return $voucher->fresh();
         } catch (\Exception $e) {
-            \Log("error");
+            \log('error');
             DB::rollBack();
             throw $e;
         }
@@ -357,21 +367,21 @@ class VoucherService implements VoucherServiceInterface
     public function delete(int $id): bool
     {
         $record = Voucher::findOrFail($id);
+
         return $record->delete();
     }
 
     protected function validateFiscalYear(int $fiscalYearId): void
     {
         $fiscalYear = FiscalYear::find($fiscalYearId);
-        if (!$fiscalYear) {
+        if (! $fiscalYear) {
             throw new \Exception('Fiscal Year not found.');
         }
 
-        if (!$fiscalYear->isActive()) {
+        if (! $fiscalYear->isActive()) {
             throw new \Exception("Fiscal Year '{$fiscalYear->name}' is inactive. Voucher operations are not allowed.");
         }
     }
-
 
     public function attachLedgerInfo(Voucher $voucher): Voucher
     {
@@ -379,15 +389,15 @@ class VoucherService implements VoucherServiceInterface
         // Detect party ledger (Customer / Supplier)
         // dd($voucher->voucher_entries->first());
         $partyEntry = $voucher->voucher_entries
-            ->first(fn($entry) => in_array($entry->account_ledger->ledgerable_type, ['customer', 'supplier', 'distributor', 'transporter']));
-        //dd($partyEntry);
+            ->first(fn ($entry) => in_array($entry->account_ledger->ledgerable_type, ['customer', 'supplier', 'distributor', 'transporter']));
+        // dd($partyEntry);
         // Detect transaction ledger using account_group_id
         $purchaseGroupId = 40001; // Purchase group ID
         $salesGroupId = 50001;    // Sales group ID
         $stockGroupId = 10009;    // Stock group ID
 
         $transactionEntry = $voucher->voucher_entries
-            ->first(fn($entry) => in_array($entry->account_ledger->account_group_id, [$purchaseGroupId, $salesGroupId, $stockGroupId]));
+            ->first(fn ($entry) => in_array($entry->account_ledger->account_group_id, [$purchaseGroupId, $salesGroupId, $stockGroupId]));
 
         // Calculate current balance for party ledger
         $partyCurrentBalance = $partyEntry?->account_ledger
@@ -401,7 +411,6 @@ class VoucherService implements VoucherServiceInterface
             : 0;
         // dd($transactionEntry->account_ledger->voucher_entries()->sum('credit'));
         // Attach full ledger objects with current balance
-
 
         $voucher->setRelation(
             'party_ledger',
@@ -425,9 +434,8 @@ class VoucherService implements VoucherServiceInterface
         // $voucher->transaction_ledger['current_balance'] = $transactionCurrentBalance;
         // dd($voucher);
         // Attach voucher amount (total debit or credit)
-        $voucher->amount = $voucher->voucher_entries->sum(fn($entry) => $entry->debit ?: $entry->credit ?: 0);
+        $voucher->amount = $voucher->voucher_entries->sum(fn ($entry) => $entry->debit ?: $entry->credit ?: 0);
 
         return $voucher;
     }
-
 }

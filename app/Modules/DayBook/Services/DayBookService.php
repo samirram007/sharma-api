@@ -2,17 +2,13 @@
 
 namespace Modules\DayBook\Services;
 
-use Modules\AccountLedger\Models\AccountLedger;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\DayBook\Contracts\DayBookServiceInterface;
 use Modules\DayBook\Models\DayBook;
 use Modules\Voucher\Contracts\VoucherServiceInterface;
 use Modules\Voucher\Models\Voucher;
-use Modules\VoucherEntry\Models\VoucherEntry;
 use Modules\VoucherType\Models\VoucherType;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class DayBookService implements DayBookServiceInterface
 {
@@ -32,14 +28,12 @@ class DayBookService implements DayBookServiceInterface
         'fiscal_year',
     ];
 
-    public function __construct(protected VoucherServiceInterface $voucherService)
-    {
-    }
+    public function __construct(protected VoucherServiceInterface $voucherService) {}
 
     public function getAll(array $params = []): LengthAwarePaginator
     {
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
-        if (!$userFiscalYear) {
+        if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
         $startDate = $userFiscalYear->start_date;
@@ -50,19 +44,19 @@ class DayBookService implements DayBookServiceInterface
             ->whereBetween('voucher_date', [$startDate, $endDate]);
 
         // Search filter
-        if (!empty($params['search'])) {
+        if (! empty($params['search'])) {
             $search = $params['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('voucher_no', 'like', "%{$search}%")
-                  ->orWhere('remarks', 'like', "%{$search}%")
-                  ->orWhereHas('voucher_entries.account_ledger', function ($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('remarks', 'like', "%{$search}%")
+                    ->orWhereHas('voucher_entries.account_ledger', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
         // Voucher type filter (accepts comma-separated IDs or array)
-        if (!empty($params['voucher_type_id'])) {
+        if (! empty($params['voucher_type_id'])) {
             $voucherTypeIds = is_array($params['voucher_type_id'])
                 ? $params['voucher_type_id']
                 : explode(',', $params['voucher_type_id']);
@@ -70,7 +64,7 @@ class DayBookService implements DayBookServiceInterface
         }
 
         // Billing preference filter
-        if (!empty($params['billing_preference'])) {
+        if (! empty($params['billing_preference'])) {
             $preferences = is_array($params['billing_preference'])
                 ? $params['billing_preference']
                 : explode(',', $params['billing_preference']);
@@ -80,7 +74,7 @@ class DayBookService implements DayBookServiceInterface
         }
 
         // Status filter
-        if (!empty($params['status'])) {
+        if (! empty($params['status'])) {
             $statuses = is_array($params['status'])
                 ? $params['status']
                 : explode(',', $params['status']);
@@ -110,21 +104,21 @@ class DayBookService implements DayBookServiceInterface
                 if (in_array('freight_done', $statuses)) {
                     $q->orWhere(function ($sq) {
                         $sq->where('voucher_type_id', 2001)
-                           ->whereHas('referenced_by', fn($r) => $r->where('type', 'freight'));
+                            ->whereHas('referenced_by', fn ($r) => $r->where('type', 'freight'));
                     });
                 }
                 if (in_array('no_freight', $statuses)) {
                     $q->orWhere(function ($sq) {
                         $sq->where('voucher_type_id', 2001)
-                           ->whereDoesntHave('referenced_by', fn($r) => $r->where('type', 'freight'));
+                            ->whereDoesntHave('referenced_by', fn ($r) => $r->where('type', 'freight'));
                     });
                 }
             });
         }
 
         // Sorting
-        if (!empty($params['sort_by'])) {
-            $sortOrder = !empty($params['sort_order']) && strtolower($params['sort_order']) === 'desc' ? 'desc' : 'asc';
+        if (! empty($params['sort_by'])) {
+            $sortOrder = ! empty($params['sort_order']) && strtolower($params['sort_order']) === 'desc' ? 'desc' : 'asc';
 
             match ($params['sort_by']) {
                 'billing_preference' => $query->leftJoin('voucher_dispatch_details AS vdd_sort', 'vouchers.id', '=', 'vdd_sort.voucher_id')
@@ -140,7 +134,7 @@ class DayBookService implements DayBookServiceInterface
         $vouchers = $query->paginate($perPage);
 
         // Transform each voucher with ledger info using through() to keep paginator
-        $vouchers->through(fn(Voucher $voucher) => $this->voucherService->attachLedgerInfo($voucher));
+        $vouchers->through(fn (Voucher $voucher) => $this->voucherService->attachLedgerInfo($voucher));
 
         return $vouchers;
     }
@@ -148,7 +142,7 @@ class DayBookService implements DayBookServiceInterface
     public function dayBooksSelf(array $params = []): LengthAwarePaginator
     {
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
-        if (!$userFiscalYear) {
+        if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
         $startDate = $userFiscalYear->start_date;
@@ -160,19 +154,19 @@ class DayBookService implements DayBookServiceInterface
             ->where('created_by', auth()->id());
 
         // Search filter
-        if (!empty($params['search'])) {
+        if (! empty($params['search'])) {
             $search = $params['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('voucher_no', 'like', "%{$search}%")
-                  ->orWhere('remarks', 'like', "%{$search}%")
-                  ->orWhereHas('voucher_entries.account_ledger', function ($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('remarks', 'like', "%{$search}%")
+                    ->orWhereHas('voucher_entries.account_ledger', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
         // Voucher type filter
-        if (!empty($params['voucher_type_id'])) {
+        if (! empty($params['voucher_type_id'])) {
             $voucherTypeIds = is_array($params['voucher_type_id'])
                 ? $params['voucher_type_id']
                 : explode(',', $params['voucher_type_id']);
@@ -180,7 +174,7 @@ class DayBookService implements DayBookServiceInterface
         }
 
         // Billing preference filter
-        if (!empty($params['billing_preference'])) {
+        if (! empty($params['billing_preference'])) {
             $preferences = is_array($params['billing_preference'])
                 ? $params['billing_preference']
                 : explode(',', $params['billing_preference']);
@@ -190,7 +184,7 @@ class DayBookService implements DayBookServiceInterface
         }
 
         // Status filter
-        if (!empty($params['status'])) {
+        if (! empty($params['status'])) {
             $statuses = is_array($params['status'])
                 ? $params['status']
                 : explode(',', $params['status']);
@@ -218,21 +212,21 @@ class DayBookService implements DayBookServiceInterface
                 if (in_array('freight_done', $statuses)) {
                     $q->orWhere(function ($sq) {
                         $sq->where('voucher_type_id', 2001)
-                           ->whereHas('referenced_by', fn($r) => $r->where('type', 'freight'));
+                            ->whereHas('referenced_by', fn ($r) => $r->where('type', 'freight'));
                     });
                 }
                 if (in_array('no_freight', $statuses)) {
                     $q->orWhere(function ($sq) {
                         $sq->where('voucher_type_id', 2001)
-                           ->whereDoesntHave('referenced_by', fn($r) => $r->where('type', 'freight'));
+                            ->whereDoesntHave('referenced_by', fn ($r) => $r->where('type', 'freight'));
                     });
                 }
             });
         }
 
         // Sorting
-        if (!empty($params['sort_by'])) {
-            $sortOrder = !empty($params['sort_order']) && strtolower($params['sort_order']) === 'desc' ? 'desc' : 'asc';
+        if (! empty($params['sort_by'])) {
+            $sortOrder = ! empty($params['sort_order']) && strtolower($params['sort_order']) === 'desc' ? 'desc' : 'asc';
 
             match ($params['sort_by']) {
                 'billing_preference' => $query->leftJoin('voucher_dispatch_details AS vdd_sort', 'vouchers.id', '=', 'vdd_sort.voucher_id')
@@ -247,7 +241,7 @@ class DayBookService implements DayBookServiceInterface
 
         $vouchers = $query->paginate($perPage);
 
-        $vouchers->through(fn(Voucher $voucher) => $this->voucherService->attachLedgerInfo($voucher));
+        $vouchers->through(fn (Voucher $voucher) => $this->voucherService->attachLedgerInfo($voucher));
 
         return $vouchers;
     }
@@ -255,7 +249,7 @@ class DayBookService implements DayBookServiceInterface
     public function getUsedVoucherTypes(): Collection
     {
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
-        if (!$userFiscalYear) {
+        if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
 
@@ -284,12 +278,14 @@ class DayBookService implements DayBookServiceInterface
     {
         $record = DayBook::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = DayBook::findOrFail($id);
+
         return $record->delete();
     }
 }

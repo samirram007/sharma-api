@@ -2,39 +2,37 @@
 
 namespace Modules\StockJournalStorageUnitEntry\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StockJournalStorageUnitEntry\Contracts\StockJournalStorageUnitEntryServiceInterface;
 use Modules\StockJournalStorageUnitEntry\Models\StockJournalStorageUnitEntry;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockJournalStorageUnitEntryService implements StockJournalStorageUnitEntryServiceInterface
+class StockJournalStorageUnitEntryService extends BaseService implements StockJournalStorageUnitEntryServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = StockJournalStorageUnitEntry::class;
 
     public function getAll(): Collection
     {
-        return StockJournalStorageUnitEntry::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockJournalStorageUnitEntry
     {
-        return StockJournalStorageUnitEntry::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockJournalStorageUnitEntry
     {
-        return StockJournalStorageUnitEntry::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockJournalStorageUnitEntry
     {
-        $record = StockJournalStorageUnitEntry::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockJournalStorageUnitEntry::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

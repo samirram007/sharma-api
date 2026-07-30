@@ -14,16 +14,16 @@ class VoucherCategoryRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255','unique:VoucherCategory,name'],
-            'code' => ['sometimes','required', 'string', 'max:255','unique:VoucherCategory,code'],
-            'description' => ['sometimes','required', 'string', 'max:255'],
-            'status' => ['sometimes','required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:VoucherCategory,name'],
+            'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:VoucherCategory,code'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', 'string', 'max:255'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:VoucherCategory,name,' . $this->route('VoucherCategory'),];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:VoucherCategory,code,' . $this->route('VoucherCategory'),];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:VoucherCategory,name,'.$this->route('VoucherCategory')];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:VoucherCategory,code,'.$this->route('VoucherCategory')];
 
         }
 

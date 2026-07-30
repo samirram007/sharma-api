@@ -24,7 +24,7 @@ class AccountGroupRequest extends FormRequest
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:account_groups,name,' . $this->route('account_group')];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:account_groups,name,'.$this->route('account_group')];
         }
 
         return $rules;

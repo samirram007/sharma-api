@@ -8,10 +8,12 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class SuccessCollection extends ResourceCollection
 {
     protected string $message;
+
     protected int $successCode;
+
     public function __construct(
         $resource,
-        string $message = null,
+        ?string $message = null,
         int $successCode = 200
     ) {
         parent::__construct($resource);
@@ -27,9 +29,9 @@ class SuccessCollection extends ResourceCollection
     public function with(Request $request): array
     {
         return [
-            'status' => true,
+            'success' => true,
             'code' => $this->successCode,
-            'message' => $this->message . ' (' . $this->collection->count() . ' record(s))',
+            'message' => $this->message.' ('.$this->collection->count().' record(s))',
         ];
     }
 }

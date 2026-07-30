@@ -5,7 +5,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('addresses', function (Blueprint $table) {
@@ -35,8 +36,6 @@ return new class extends Migration {
             // Polymorphic relation using short type
             $table->unsignedBigInteger('addressable_id');
             $table->string('addressable_type'); // 'customer', 'employee', 'vendor', 'agent'
-
-
 
             // Polymorphic relation
             // $table->morphs('addressable'); // creates addressable_id + addressable_type

@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Modules\StockGroup\Controllers\Api\StockGroupController;
 
-
 // Route::get('stock_groups', function ($request) {
 //     dd($request->all());
 // });

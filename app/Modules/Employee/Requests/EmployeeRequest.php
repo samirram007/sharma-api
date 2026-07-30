@@ -2,8 +2,8 @@
 
 namespace Modules\Employee\Requests;
 
-use Modules\Address\Requests\AddressRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Address\Requests\AddressRequest;
 
 class EmployeeRequest extends FormRequest
 {
@@ -33,18 +33,16 @@ class EmployeeRequest extends FormRequest
             'image' => ['sometimes', 'nullable', 'string', 'max:255'],
             'has_user_account' => ['sometimes', 'nullable', 'boolean'],
         ];
-        //return $rules;
-        $addressRules = collect((new AddressRequest())->rules())
-            ->mapWithKeys(fn($rule, $key) => ["address.$key" => $rule])
+        // return $rules;
+        $addressRules = collect((new AddressRequest)->rules())
+            ->mapWithKeys(fn ($rule, $key) => ["address.$key" => $rule])
             ->toArray();
-
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('employee');
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:employees,code,' . $id,];
-            $rules['email'] = ['sometimes', 'required', 'string', 'max:255', 'unique:employees,email,' . $id,];
-
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:employees,code,'.$id];
+            $rules['email'] = ['sometimes', 'required', 'string', 'max:255', 'unique:employees,email,'.$id];
 
         }
         // dd($rules, $addressRules);

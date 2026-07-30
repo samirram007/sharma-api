@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Modules\Payment\Controllers\Api\PaymentController;
 

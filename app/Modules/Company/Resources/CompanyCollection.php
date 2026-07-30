@@ -17,4 +17,3 @@ class CompanyCollection extends SuccessCollection
         return parent::toArray($request);
     }
 }
-

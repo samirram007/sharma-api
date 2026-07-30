@@ -2,6 +2,10 @@
 
 namespace Modules\Employee\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Address\Models\Address;
 use Modules\Department\Models\Department;
@@ -10,10 +14,6 @@ use Modules\EmployeeGroup\Models\EmployeeGroup;
 use Modules\Grade\Models\Grade;
 use Modules\Shift\Models\Shift;
 use Modules\User\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Employee extends Model
 {
@@ -59,7 +59,7 @@ class Employee extends Model
 
         if ($lastCode) {
             // Extract numeric part
-            $lastNumber = (int) str_replace($prefix . '-', '', $lastCode);
+            $lastNumber = (int) str_replace($prefix.'-', '', $lastCode);
             $nextNumber = $lastNumber + 1;
         } else {
             $nextNumber = 1;
@@ -75,6 +75,7 @@ class Employee extends Model
     {
         return $this->morphOne(User::class, 'userable');
     }
+
     public function account_ledger(): MorphOne
     {
         return $this->morphOne(AccountLedger::class, 'ledgerable');
@@ -84,25 +85,29 @@ class Employee extends Model
     {
         return $this->morphOne(Address::class, 'addressable');
     }
+
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');
     }
+
     public function designation(): BelongsTo
     {
         return $this->belongsTo(Designation::class, 'designation_id', 'id');
     }
+
     public function shift(): BelongsTo
     {
         return $this->belongsTo(Shift::class, 'shift_id', 'id');
     }
+
     public function grade(): BelongsTo
     {
         return $this->belongsTo(Grade::class, 'grade_id', 'id');
     }
+
     public function employee_group(): BelongsTo
     {
         return $this->belongsTo(EmployeeGroup::class, 'employee_group_id', 'id');
     }
-
 }

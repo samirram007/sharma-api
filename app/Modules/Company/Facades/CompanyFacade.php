@@ -1,8 +1,9 @@
 <?php
+
 namespace Modules\Company\Facades;
 
-use Modules\Company\Contracts\CompanyServiceInterface;
 use Illuminate\Support\Facades\Facade;
+use Modules\Company\Contracts\CompanyServiceInterface;
 
 class CompanyFacade extends Facade
 {

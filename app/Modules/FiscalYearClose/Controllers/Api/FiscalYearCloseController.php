@@ -4,18 +4,14 @@ namespace Modules\FiscalYearClose\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessResource;
-use Modules\FiscalYearClose\Contracts\FiscalYearCloseServiceInterface;
 use App\Traits\ApiResponseTrait;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Modules\FiscalYearClose\Contracts\FiscalYearCloseServiceInterface;
 
 class FiscalYearCloseController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected FiscalYearCloseServiceInterface $fiscalYearCloseService)
-    {
-    }
+    public function __construct(protected FiscalYearCloseServiceInterface $fiscalYearCloseService) {}
 
     /**
      * Preview closing summary before confirming close
@@ -23,6 +19,7 @@ class FiscalYearCloseController extends Controller
     public function preview(int $fiscalYear): SuccessResource
     {
         $data = $this->fiscalYearCloseService->preview($fiscalYear);
+
         return new SuccessResource($data, 'Closing preview retrieved successfully');
     }
 
@@ -32,6 +29,7 @@ class FiscalYearCloseController extends Controller
     public function close(int $fiscalYear): SuccessResource
     {
         $result = $this->fiscalYearCloseService->close($fiscalYear);
+
         return new SuccessResource($result, $result['message']);
     }
 
@@ -41,6 +39,7 @@ class FiscalYearCloseController extends Controller
     public function reopen(int $fiscalYear): SuccessResource
     {
         $result = $this->fiscalYearCloseService->reopen($fiscalYear);
+
         return new SuccessResource($result, $result['message']);
     }
 }

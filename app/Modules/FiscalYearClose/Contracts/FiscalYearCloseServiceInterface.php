@@ -2,8 +2,6 @@
 
 namespace Modules\FiscalYearClose\Contracts;
 
-use Modules\FiscalYear\Models\FiscalYear;
-
 interface FiscalYearCloseServiceInterface
 {
     /**

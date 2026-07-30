@@ -2,9 +2,9 @@
 
 namespace Modules\UserFiscalYear\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
 use Modules\UserFiscalYear\Models\UserFiscalYear;
-use Illuminate\Database\Eloquent\Collection;
 
 class UserFiscalYearService implements UserFiscalYearServiceInterface
 {
@@ -30,6 +30,7 @@ class UserFiscalYearService implements UserFiscalYearServiceInterface
     {
         $record = UserFiscalYear::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
@@ -38,17 +39,19 @@ class UserFiscalYearService implements UserFiscalYearServiceInterface
         $userId = auth()->id();
         $record = UserFiscalYear::where('user_id', $userId)->first();
 
-        if (!$record) {
+        if (! $record) {
             throw new \Exception('Reporting period cannot be set. UserFiscalYear not found for the user.');
         }
 
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = UserFiscalYear::findOrFail($id);
+
         return $record->delete();
     }
 

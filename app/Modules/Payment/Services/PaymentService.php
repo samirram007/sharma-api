@@ -2,10 +2,10 @@
 
 namespace Modules\Payment\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Payment\Contracts\PaymentServiceInterface;
 use Modules\Payment\Models\Payment;
 use Modules\VoucherReference\Models\VoucherReference;
-use Illuminate\Database\Eloquent\Collection;
 
 class PaymentService implements PaymentServiceInterface
 {
@@ -30,12 +30,14 @@ class PaymentService implements PaymentServiceInterface
     {
         $record = Payment::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = Payment::findOrFail($id);
+
         return $record->delete();
     }
 

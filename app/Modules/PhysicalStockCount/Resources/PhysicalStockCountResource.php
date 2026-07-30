@@ -3,43 +3,46 @@
 namespace Modules\PhysicalStockCount\Resources;
 
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
 use Modules\PhysicalStockCount\Models\PhysicalStockCount;
 
 class PhysicalStockCountResource extends SuccessResource
 {
-    public function toArray($request): array
+    use CamelCaseResource;
+
+    public function toArray(Request $request): array
     {
         $data = parent::toArray($request);
 
         if ($this->resource instanceof PhysicalStockCount) {
             $data['data'] = [
                 'id' => $this->id,
-                'fiscal_year_id' => $this->fiscal_year_id,
-                'fiscal_year' => $this->whenLoaded('fiscal_year', fn() => [
+                'fiscalYearId' => $this->fiscal_year_id,
+                'fiscalYear' => $this->whenLoaded('fiscal_year', fn () => [
                     'id' => $this->fiscal_year->id,
                     'name' => $this->fiscal_year->name,
                 ]),
-                'godown_id' => $this->godown_id,
-                'godown' => $this->whenLoaded('godown', fn() => [
+                'godownId' => $this->godown_id,
+                'godown' => $this->whenLoaded('godown', fn () => [
                     'id' => $this->godown->id,
                     'name' => $this->godown->name,
                     'code' => $this->godown->code,
                 ]),
-                'count_date' => $this->count_date,
+                'countDate' => $this->count_date,
                 'status' => $this->status,
-                'counted_by' => $this->counted_by,
-                'counted_by_user' => $this->whenLoaded('counted_by_user', fn() => [
+                'countedBy' => $this->counted_by,
+                'countedByUser' => $this->whenLoaded('counted_by_user', fn () => [
                     'id' => $this->counted_by_user->id,
                     'name' => $this->counted_by_user->name,
                 ]),
                 'items' => PhysicalStockCountItemResource::collection($this->whenLoaded('items')),
-                'total_items' => $this->whenCounted('items'),
-                'total_difference' => $this->when($this->relationLoaded('items'), fn() =>
-                    $this->items->sum('difference')
+                'totalItems' => $this->whenCounted('items'),
+                'totalDifference' => $this->when($this->relationLoaded('items'), fn () => $this->items->sum('difference')
                 ),
                 'remarks' => $this->remarks,
-                'created_at' => $this->created_at,
-                'updated_at' => $this->updated_at,
+                'createdAt' => $this->created_at,
+                'updatedAt' => $this->updated_at,
             ];
         }
 

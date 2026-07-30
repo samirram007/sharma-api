@@ -2,9 +2,9 @@
 
 namespace Modules\CostCenter\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\CostCenter\Models\CostCenter;
+use Tests\TestCase;
 
 class CostCenterTest extends TestCase
 {
@@ -14,77 +14,77 @@ class CostCenterTest extends TestCase
     {
         $response = $this->getJson('/api/cost_centers');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_CostCenter(): void
+    public function test_can_create_cost_center(): void
     {
         $data = ['name' => 'Test CostCenter'];
 
         $response = $this->postJson('/api/cost_centers', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('cost_centers', $data);
     }
 
-    public function test_can_show_CostCenter(): void
+    public function test_can_show_cost_center(): void
     {
         $CostCenter = CostCenter::factory()->create();
 
-        $response = $this->getJson('/api/cost_centers/' . $CostCenter->id);
+        $response = $this->getJson('/api/cost_centers/'.$CostCenter->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_CostCenter(): void
+    public function test_can_update_cost_center(): void
     {
         $CostCenter = CostCenter::factory()->create();
         $data = ['name' => 'Updated CostCenter'];
 
-        $response = $this->putJson('/api/cost_centers/' . $CostCenter->id, $data);
+        $response = $this->putJson('/api/cost_centers/'.$CostCenter->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('cost_centers', $data);
     }
 
-    public function test_can_delete_CostCenter(): void
+    public function test_can_delete_cost_center(): void
     {
         $CostCenter = CostCenter::factory()->create();
 
-        $response = $this->deleteJson('/api/cost_centers/' . $CostCenter->id);
+        $response = $this->deleteJson('/api/cost_centers/'.$CostCenter->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('cost_centers', ['id' => $CostCenter->id]);
     }
@@ -93,6 +93,6 @@ class CostCenterTest extends TestCase
     {
         $response = $this->postJson('/api/cost_centers', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

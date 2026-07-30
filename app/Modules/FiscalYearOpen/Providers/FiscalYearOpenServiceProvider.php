@@ -2,8 +2,8 @@
 
 namespace Modules\FiscalYearOpen\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 use Modules\FiscalYearOpen\Contracts\FiscalYearOpenServiceInterface;
 use Modules\FiscalYearOpen\Services\FiscalYearOpenService;
 
@@ -23,6 +23,6 @@ class FiscalYearOpenServiceProvider extends ServiceProvider
     {
         Route::middleware('api')
             ->prefix('api')
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__.'/../Routes/api.php');
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Modules\AppNotification\Models;
 
-use Modules\User\Models\User;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\User\Models\User;
 
 class AppNotification extends Model
 {

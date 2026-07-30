@@ -3,13 +3,12 @@
 namespace Modules\Language\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Language\Contracts\LanguageServiceInterface;
-use Modules\Language\Resources\LanguageResource;
-use Modules\Language\Resources\LanguageCollection;
-use Modules\Language\Requests\LanguageRequest;
-use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\Language\Contracts\LanguageServiceInterface;
+use Modules\Language\Requests\LanguageRequest;
+use Modules\Language\Resources\LanguageCollection;
+use Modules\Language\Resources\LanguageResource;
 
 class LanguageController extends Controller
 {
@@ -20,12 +19,14 @@ class LanguageController extends Controller
     public function index(): JsonResponse
     {
         $data = $this->service->getAll();
+
         return (new LanguageCollection($data))->response();
     }
 
     public function show(int $id): JsonResponse
     {
         $data = $this->service->getById($id);
+
         return $this->resourceResponse(
             new LanguageResource($data),
             'Language retrieved successfully'
@@ -35,6 +36,7 @@ class LanguageController extends Controller
     public function store(LanguageRequest $request): JsonResponse
     {
         $data = $this->service->store($request->validated());
+
         return $this->resourceResponse(
             new LanguageResource($data),
             'Language created successfully',
@@ -45,6 +47,7 @@ class LanguageController extends Controller
     public function update(LanguageRequest $request, int $id): JsonResponse
     {
         $data = $this->service->update($request->validated(), $id);
+
         return $this->resourceResponse(
             new LanguageResource($data),
             'Language updated successfully'
@@ -53,11 +56,6 @@ class LanguageController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $result = $this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result ? 'Language deleted successfully' : 'Language not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'Language');
     }
 }

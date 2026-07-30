@@ -2,8 +2,8 @@
 
 namespace Modules\Freight\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Freight extends Model
 {

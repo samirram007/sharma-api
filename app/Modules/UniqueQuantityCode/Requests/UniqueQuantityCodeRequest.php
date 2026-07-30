@@ -14,16 +14,16 @@ class UniqueQuantityCodeRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255','unique:UniqueQuantityCode,name'],
-            'code' => ['sometimes','required', 'string', 'max:255','unique:UniqueQuantityCode,code'],
-            'description' => ['sometimes','required', 'string', 'max:255'],
-            'status' => ['sometimes','required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:UniqueQuantityCode,name'],
+            'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:UniqueQuantityCode,code'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', 'string', 'max:255'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:UniqueQuantityCode,name,' . $this->route('UniqueQuantityCode'),];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:UniqueQuantityCode,code,' . $this->route('UniqueQuantityCode'),];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:UniqueQuantityCode,name,'.$this->route('UniqueQuantityCode')];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:UniqueQuantityCode,code,'.$this->route('UniqueQuantityCode')];
 
         }
 

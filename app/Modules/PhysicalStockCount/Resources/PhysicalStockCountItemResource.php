@@ -13,11 +13,11 @@ class PhysicalStockCountItemResource extends JsonResource
             'id' => $this->id,
             'physical_stock_count_id' => $this->physical_stock_count_id,
             'stock_item_id' => $this->stock_item_id,
-            'stock_item' => $this->whenLoaded('stock_item', fn() => [
+            'stock_item' => $this->whenLoaded('stock_item', fn () => [
                 'id' => $this->stock_item->id,
                 'name' => $this->stock_item->name,
                 'code' => $this->stock_item->code,
-                'stock_unit' => $this->when($this->stock_item->relationLoaded('stock_unit'), fn() => [
+                'stock_unit' => $this->when($this->stock_item->relationLoaded('stock_unit'), fn () => [
                     'id' => $this->stock_item->stock_unit->id,
                     'name' => $this->stock_item->stock_unit->name,
                 ]),

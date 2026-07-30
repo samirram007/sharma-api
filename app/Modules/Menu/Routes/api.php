@@ -11,6 +11,9 @@ use Modules\Menu\Controllers\Api\MenuController;
 
 Route::middleware(['jwt.cookies'])->group(function () {
 
+    // ── Search (must be before apiResource to avoid {menu} catch-all) ─
+    Route::get('/menus/search', [MenuController::class, 'search']);
+
     // ── Menu CRUD ────────────────────────────────────────────────
     Route::apiResource('menus', MenuController::class);
 
@@ -20,6 +23,17 @@ Route::middleware(['jwt.cookies'])->group(function () {
     // ── Drag-and-drop reorder ───────────────────────────────────
     Route::post('/menus/reorder', [MenuController::class, 'reorder']);
 
+    // ── Batch operations ────────────────────────────────────────
+    Route::post('/menus/batch-update', [MenuController::class, 'batchUpdate']);
+    Route::post('/menus/batch-delete', [MenuController::class, 'batchDelete']);
+
+    // ── Duplicate ───────────────────────────────────────────────
+    Route::post('/menus/{id}/duplicate', [MenuController::class, 'duplicate']);
+
+    // ── Import / Export ──────────────────────────────────────────
+    Route::get('/menus/export', [MenuController::class, 'export']);
+    Route::post('/menus/import', [MenuController::class, 'import']);
+
     // ── User-facing endpoints (moved from Auth module) ──────────
     Route::get('/user/menu', [MenuController::class, 'userMenu']);
     Route::get('/auth/menus', [MenuController::class, 'userMenuTree']);
@@ -27,4 +41,3 @@ Route::middleware(['jwt.cookies'])->group(function () {
     // ── Role permissions (moved from AppModuleFeature module) ───
     Route::get('/role/{role_id}/menu-permissions', [MenuController::class, 'roleMenuPermissions']);
 });
-

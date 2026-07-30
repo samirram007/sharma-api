@@ -2,11 +2,11 @@
 
 namespace Modules\Employee\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Employee\Contracts\EmployeeServiceInterface;
 use Modules\Employee\Models\Employee;
 use Modules\User\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 
 class EmployeeService implements EmployeeServiceInterface
 {
@@ -28,7 +28,7 @@ class EmployeeService implements EmployeeServiceInterface
         if (empty($data['code'])) {
 
             $data['code'] = Employee::getUniqueCode();
-            //dd($data);
+            // dd($data);
         }
 
         $employee = Employee::create($data);
@@ -51,8 +51,8 @@ class EmployeeService implements EmployeeServiceInterface
             $employee->account_ledger()->create($data['account_ledger']);
 
         }
-        if (!empty($data['has_user_account']) && !empty($data['email'])) {
-            if (!User::where('username', $data['email'])->exists()) {
+        if (! empty($data['has_user_account']) && ! empty($data['email'])) {
+            if (! User::where('username', $data['email'])->exists()) {
                 $data['user']['name'] = $employee->name;
                 $data['user']['email'] = $employee->email;
                 $data['user']['username'] = $employee->email;
@@ -65,7 +65,6 @@ class EmployeeService implements EmployeeServiceInterface
 
             }
         }
-
 
         return $employee->load($this->resource);
     }
@@ -80,7 +79,7 @@ class EmployeeService implements EmployeeServiceInterface
         $baseName = trim($name);
         $uniqueName = $baseName;
         $counter = 1;
-        //dd(AccountLedger::ledgerNameExists($uniqueName));
+        // dd(AccountLedger::ledgerNameExists($uniqueName));
         // Check for uniqueness
         while (AccountLedger::ledgerNameExists($uniqueName)) {
             // dd($uniqueName);
@@ -91,7 +90,6 @@ class EmployeeService implements EmployeeServiceInterface
         return $uniqueName;
 
     }
-
 
     public function update(array $data, int $id): Employee
     {
@@ -108,7 +106,7 @@ class EmployeeService implements EmployeeServiceInterface
             $data['address']['address_type'] = 'office';
             $data['address']['addressable_type'] = 'employee';
             $data['address']['addressable_id'] = $employee->id;
-            if (!empty($data['address']['id'])) {
+            if (! empty($data['address']['id'])) {
                 $address = $employee->address()->find($data['address']['id']);
                 // dd($address);
                 $address?->update($data['address']);
@@ -137,8 +135,8 @@ class EmployeeService implements EmployeeServiceInterface
 
         }
 
-        if (!empty($data['has_user_account']) && !empty($data['email'])) {
-            if (!User::where('username', $data['email'])->exists()) {
+        if (! empty($data['has_user_account']) && ! empty($data['email'])) {
+            if (! User::where('username', $data['email'])->exists()) {
                 $data['user']['name'] = $employee->name;
                 $data['user']['email'] = $employee->email;
                 $data['user']['username'] = $employee->email;
@@ -158,6 +156,7 @@ class EmployeeService implements EmployeeServiceInterface
     public function delete(int $id): bool
     {
         $record = Employee::findOrFail($id);
+
         return $record->delete();
     }
 }

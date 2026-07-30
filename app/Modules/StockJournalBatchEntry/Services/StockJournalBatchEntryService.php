@@ -2,39 +2,37 @@
 
 namespace Modules\StockJournalBatchEntry\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StockJournalBatchEntry\Contracts\StockJournalBatchEntryServiceInterface;
 use Modules\StockJournalBatchEntry\Models\StockJournalBatchEntry;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockJournalBatchEntryService implements StockJournalBatchEntryServiceInterface
+class StockJournalBatchEntryService extends BaseService implements StockJournalBatchEntryServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = StockJournalBatchEntry::class;
 
     public function getAll(): Collection
     {
-        return StockJournalBatchEntry::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockJournalBatchEntry
     {
-        return StockJournalBatchEntry::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockJournalBatchEntry
     {
-        return StockJournalBatchEntry::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockJournalBatchEntry
     {
-        $record = StockJournalBatchEntry::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockJournalBatchEntry::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

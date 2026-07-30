@@ -2,39 +2,37 @@
 
 namespace Modules\Shift\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Shift\Contracts\ShiftServiceInterface;
 use Modules\Shift\Models\Shift;
-use Illuminate\Database\Eloquent\Collection;
 
-class ShiftService implements ShiftServiceInterface
+class ShiftService extends BaseService implements ShiftServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = Shift::class;
 
     public function getAll(): Collection
     {
-        return Shift::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Shift
     {
-        return Shift::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Shift
     {
-        return Shift::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Shift
     {
-        $record = Shift::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Shift::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

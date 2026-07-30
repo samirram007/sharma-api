@@ -8,8 +8,12 @@ use Modules\StockItemPrice\Models\StockItemPrice;
 interface StockItemPriceServiceInterface
 {
     public function getAll(): Collection;
+
     public function getById(int $id): ?StockItemPrice;
+
     public function store(array $data): StockItemPrice;
+
     public function update(array $data, int $id): StockItemPrice;
+
     public function delete(int $id): bool;
 }

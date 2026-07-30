@@ -2,22 +2,21 @@
 
 namespace Modules\StockJournalStorageUnitEntry\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\StockItem\Models\StockItem;
 use Modules\StockJournalEntry\Models\StockJournalEntry;
 use Modules\StockJournalStorageUnitEntryPurge\Models\StockJournalStorageUnitEntryPurge;
 use Modules\StorageUnit\Models\StorageUnit;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StockJournalStorageUnitEntry extends Model
 {
     use HasFactory;
 
     protected $table = 'stock_journal_storage_unit_entries';
-
 
     protected $fillable = [
         'stock_journal_entry_id',
@@ -81,7 +80,6 @@ class StockJournalStorageUnitEntry extends Model
         return $this->stock_journal_storage_unit_entry_purge()->exists();
     }
 
-
     public function stock_journal_storage_unit_entry_purge(): ?HasOne
     {
         return $this->hasOne(StockJournalStorageUnitEntryPurge::class, 'stock_journal_storage_unit_entry_id', 'id');
@@ -96,10 +94,12 @@ class StockJournalStorageUnitEntry extends Model
     {
         return $this->belongsTo(StorageUnit::class, 'storage_unit_id');
     }
+
     public function getStockItemAttribute()
     {
         return $this->stock_journal_entry?->stock_item;
     }
+
     public function stock_item(): mixed
     {
         return $this->hasOneThrough(
@@ -122,10 +122,12 @@ class StockJournalStorageUnitEntry extends Model
     {
         return $this->stock_journal_entry->alternate_unit();
     }
+
     public function rate_unit(): mixed
     {
         return $this->stock_journal_entry->rate_unit();
     }
+
     public function rate_unit_ratio(): mixed
     {
         return $this->stock_journal_entry->rate_unit_ratio();
@@ -135,6 +137,7 @@ class StockJournalStorageUnitEntry extends Model
     {
         return $this->stock_journal_entry->stock_journal();
     }
+
     public function voucher(): mixed
     {
         return $this->stock_journal_entry->voucher();

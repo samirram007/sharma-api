@@ -22,7 +22,7 @@ class DeliveryRouteRequest extends FormRequest
             'rate' => ['sometimes', 'nullable', 'numeric'],
             'rate_unit_id' => ['sometimes', 'nullable', 'numeric', 'exists:stock_units,id'],
             'estimated_time_in_minutes' => ['sometimes', 'nullable', 'integer'],
-            //check unique constraint for transporter_id, source_place_id, destination_place_id, vehicle_no
+            // check unique constraint for transporter_id, source_place_id, destination_place_id, vehicle_no
             'vehicle_no' => [
                 'required',
                 'string',

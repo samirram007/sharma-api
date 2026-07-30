@@ -3,14 +3,14 @@
 namespace Modules\VoucherPaymentMode\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\VoucherPaymentMode\Contracts\VoucherPaymentModeServiceInterface;
-use Modules\VoucherPaymentMode\Resources\VoucherPaymentModeResource;
-use Modules\VoucherPaymentMode\Resources\VoucherPaymentModeCollection;
-use Modules\VoucherPaymentMode\Requests\VoucherPaymentModeRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\VoucherPaymentMode\Contracts\VoucherPaymentModeServiceInterface;
+use Modules\VoucherPaymentMode\Requests\VoucherPaymentModeRequest;
+use Modules\VoucherPaymentMode\Resources\VoucherPaymentModeCollection;
+use Modules\VoucherPaymentMode\Resources\VoucherPaymentModeResource;
 
 class VoucherPaymentModeController extends Controller
 {
@@ -21,35 +21,33 @@ class VoucherPaymentModeController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new VoucherPaymentModeCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new VoucherPaymentModeResource($data);
+
+        return new VoucherPaymentModeResource($data);
     }
 
     public function store(VoucherPaymentModeRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new VoucherPaymentModeResource($data, $messages='VoucherPaymentMode created successfully');
+
+        return new VoucherPaymentModeResource($data, $messages = 'VoucherPaymentMode created successfully');
     }
 
     public function update(VoucherPaymentModeRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new VoucherPaymentModeResource($data, $messages='VoucherPaymentMode updated successfully');
+
+        return new VoucherPaymentModeResource($data, $messages = 'VoucherPaymentMode updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'VoucherPaymentMode deleted successfully':'VoucherPaymentMode not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'VoucherPaymentMode');
     }
 }

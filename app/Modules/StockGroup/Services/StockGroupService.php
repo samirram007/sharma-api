@@ -2,39 +2,46 @@
 
 namespace Modules\StockGroup\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
+use Modules\StockGroup\Contracts\StockGroupRepositoryInterface;
 use Modules\StockGroup\Contracts\StockGroupServiceInterface;
 use Modules\StockGroup\Models\StockGroup;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockGroupService implements StockGroupServiceInterface
+class StockGroupService extends BaseService implements StockGroupServiceInterface
 {
-    protected $resource = ['parent'];
+    protected string $modelClass = StockGroup::class;
+
+    protected array $defaultResource = [
+        'parent',
+    ];
+
+    public function __construct(
+        protected StockGroupRepositoryInterface $stockGroupRepository
+    ) {}
 
     public function getAll(): Collection
     {
-        return StockGroup::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockGroup
     {
-        return StockGroup::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockGroup
     {
-        return StockGroup::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockGroup
     {
-        $record = StockGroup::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockGroup::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

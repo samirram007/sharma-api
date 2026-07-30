@@ -2,10 +2,10 @@
 
 namespace Modules\VoucherEntryPurge\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Modules\User\Models\User;
 use Modules\VoucherEntry\Models\VoucherEntry;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class VoucherEntryPurge extends Model
 {
@@ -20,12 +20,12 @@ class VoucherEntryPurge extends Model
         'reason',
 
     ];
+
     public $timestamps = false;
 
     protected $casts = [
         'purged_at' => 'datetime',
     ];
-
 
     public function voucher_entry()
     {
@@ -36,5 +36,4 @@ class VoucherEntryPurge extends Model
     {
         return $this->belongsTo(User::class, 'purged_by');
     }
-
 }

@@ -2,39 +2,37 @@
 
 namespace Modules\TestItem\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\TestItem\Contracts\TestItemServiceInterface;
 use Modules\TestItem\Models\TestItem;
-use Illuminate\Database\Eloquent\Collection;
 
-class TestItemService implements TestItemServiceInterface
+class TestItemService extends BaseService implements TestItemServiceInterface
 {
-    protected $resource = [];
+    protected string $modelClass = TestItem::class;
 
     public function getAll(): Collection
     {
-        return TestItem::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?TestItem
     {
-        return TestItem::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): TestItem
     {
-        return TestItem::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): TestItem
     {
-        $record = TestItem::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = TestItem::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

@@ -2,12 +2,10 @@
 
 namespace Modules\PhysicalStockCount\Models;
 
-use Modules\PhysicalStockCount\Models\PhysicalStockCount;
-use Modules\StockItem\Models\StockItem;
-use Modules\StockUnit\Models\StockUnit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\StockItem\Models\StockItem;
 
 class PhysicalStockCountItem extends Model
 {

@@ -24,8 +24,8 @@ class DeliveryPlaceRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('delivery_place');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:delivery_places,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:delivery_places,code,' . $id,];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:delivery_places,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:delivery_places,code,'.$id];
             $rules['place_type'] = ['sometimes', 'nullable', 'string', 'max:255'];
             $rules['is_active'] = ['sometimes', 'nullable', 'boolean'];
             $rules['remarks'] = ['sometimes', 'nullable', 'string', 'max:255'];

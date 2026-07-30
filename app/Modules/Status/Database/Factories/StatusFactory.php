@@ -2,8 +2,8 @@
 
 namespace Modules\Status\Database\Factories;
 
-use Modules\Status\Models\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Status\Models\Status;
 
 /**
  * @extends Factory<Status>

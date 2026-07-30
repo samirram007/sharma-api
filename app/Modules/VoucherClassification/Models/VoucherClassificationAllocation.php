@@ -4,6 +4,7 @@ namespace Modules\VoucherClassification\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\AccountLedger\Models\AccountLedger;
 
 class VoucherClassificationAllocation extends Model
 {
@@ -36,6 +37,6 @@ class VoucherClassificationAllocation extends Model
 
     public function ledger(): BelongsTo
     {
-        return $this->belongsTo(\Modules\AccountLedger\Models\AccountLedger::class, 'ledger_id');
+        return $this->belongsTo(AccountLedger::class, 'ledger_id');
     }
 }

@@ -2,49 +2,37 @@
 
 namespace Modules\UserRole\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\UserRole\Contracts\UserRoleServiceInterface;
 use Modules\UserRole\Models\UserRole;
-use Illuminate\Database\Eloquent\Collection;
-use Log;
 
-class UserRoleService implements UserRoleServiceInterface
+class UserRoleService extends BaseService implements UserRoleServiceInterface
 {
-    protected $resource = [];
+    protected string $modelClass = UserRole::class;
 
     public function getAll(): Collection
     {
-        return UserRole::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?UserRole
     {
-        return UserRole::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
-    public function store(array $data): UserRole|bool|null
+    public function store(array $data): UserRole
     {
-        $exists = UserRole::where('user_id', $data['user_id'])
-            ->where('role_id', $data['role_id'])->first();
-        if ($exists) {
-            $exists->delete();
-            Log::info('UserRole unassigned:', ['data' => $exists->fresh()]);
-
-            return $exists->fresh();
-
-        }
-        return UserRole::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): UserRole
     {
-        $record = UserRole::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = UserRole::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

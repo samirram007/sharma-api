@@ -2,8 +2,8 @@
 
 namespace Modules\Distributor\Requests;
 
-use Modules\Address\Requests\AddressRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Address\Requests\AddressRequest;
 
 class DistributorRequest extends FormRequest
 {
@@ -28,18 +28,19 @@ class DistributorRequest extends FormRequest
             'gst_registration_type_id' => ['sometimes', 'nullable', 'exists:gst_registration_types,id'],
             // 'address' => ['sometimes', 'required', new AddressRequest()]
         ];
-        $addressRules = collect((new AddressRequest())->rules())
-            ->mapWithKeys(fn($rule, $key) => ["address.$key" => $rule])
+        $addressRules = collect((new AddressRequest)->rules())
+            ->mapWithKeys(fn ($rule, $key) => ["address.$key" => $rule])
             ->toArray();
-        //dd(array_merge($rules, $addressRules));
+        // dd(array_merge($rules, $addressRules));
         // // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('distributor');
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:distributors,code,' . $id,];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:distributors,code,'.$id];
 
         }
+
         // dd($rules['address']);
-        //return $rules;
+        // return $rules;
         return array_merge($rules, $addressRules);
 
     }

@@ -2,19 +2,19 @@
 
 namespace Modules\AccountNature\Models;
 
-use Modules\AccountLedger\Models\AccountLedger;
-use Illuminate\Database\Eloquent\Model;
-
-use Modules\AccountGroup\Models\AccountGroup;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Modules\AccountGroup\Models\AccountGroup;
+use Modules\AccountLedger\Models\AccountLedger;
 
 class AccountNature extends Model
 {
     use HasFactory;
 
     protected $table = 'account_natures';
+
     protected $fillable = [
         'name',
         'code',
@@ -24,6 +24,7 @@ class AccountNature extends Model
         'accounting_effect',
 
     ];
+
     protected $casts = [
         'accounting_effect' => 'string',
     ];
@@ -32,7 +33,6 @@ class AccountNature extends Model
     {
         return $this->hasMany(AccountGroup::class);
     }
-
 
     public function account_ledgers(): HasManyThrough
     {

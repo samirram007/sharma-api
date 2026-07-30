@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Enums;
 
 enum SupplyType: string
@@ -9,7 +10,6 @@ enum SupplyType: string
 
     public static function getValues(): array
     {
-        return array_map(fn($case) => $case->value, self::cases());
+        return array_map(fn ($case) => $case->value, self::cases());
     }
-
 }

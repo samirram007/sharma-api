@@ -4,7 +4,6 @@ namespace Modules\VoucherEntry\Database\Seeders;
 
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Modules\VoucherEntry\Models\VoucherEntry;
 use Illuminate\Support\Facades\DB;
 
 class VoucherEntrySeeder extends Seeder
@@ -181,8 +180,4 @@ class VoucherEntrySeeder extends Seeder
 
         DB::table('voucher_entries')->insert($entries);
     }
-
-
-
-
 }

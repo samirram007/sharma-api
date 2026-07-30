@@ -3,14 +3,14 @@
 namespace Modules\Vehicle\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Vehicle\Contracts\VehicleServiceInterface;
-use Modules\Vehicle\Resources\VehicleResource;
-use Modules\Vehicle\Resources\VehicleCollection;
-use Modules\Vehicle\Requests\VehicleRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\Vehicle\Contracts\VehicleServiceInterface;
+use Modules\Vehicle\Requests\VehicleRequest;
+use Modules\Vehicle\Resources\VehicleCollection;
+use Modules\Vehicle\Resources\VehicleResource;
 
 class VehicleController extends Controller
 {
@@ -21,35 +21,33 @@ class VehicleController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new VehicleCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new VehicleResource($data);
+
+        return new VehicleResource($data);
     }
 
     public function store(VehicleRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new VehicleResource($data, $messages='Vehicle created successfully');
+
+        return new VehicleResource($data, $messages = 'Vehicle created successfully');
     }
 
     public function update(VehicleRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new VehicleResource($data, $messages='Vehicle updated successfully');
+
+        return new VehicleResource($data, $messages = 'Vehicle updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'Vehicle deleted successfully':'Vehicle not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'Vehicle');
     }
 }

@@ -3,23 +3,23 @@
 namespace Modules\Company\Resources;
 
 use App\Http\Resources\SuccessResource;
-use Modules\CompanyType\Resources\CompanyTypeResource;
-
-use Modules\Currency\Resources\CurrencyResource;
-use Modules\FiscalYear\Resources\FiscalYearCollection;
-
-use Modules\Address\Resources\AddressResource;
-
-use Modules\FiscalYear\Resources\FiscalYearResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
-
+use Modules\Address\Resources\AddressResource;
+use Modules\CompanyType\Resources\CompanyTypeResource;
+use Modules\Currency\Resources\CurrencyResource;
+use Modules\FiscalYear\Resources\FiscalYearResource;
 
 class CompanyResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
         // dd($this->resource->toArray());
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'mailingName' => $this->mailing_name,
@@ -42,7 +42,9 @@ class CompanyResource extends SuccessResource
             'companyTypeId' => $this->company_type_id,
             'companyType' => CompanyTypeResource::make($this->whenLoaded('company_type')),
             'fiscalYears' => FiscalYearResource::collection($this->whenLoaded('fiscal_years')),
-             'address' => AddressResource::make($this->whenLoaded('address')),
-        ];
+            'address' => AddressResource::make($this->whenLoaded('address')),
+
+        ]);
+
     }
 }

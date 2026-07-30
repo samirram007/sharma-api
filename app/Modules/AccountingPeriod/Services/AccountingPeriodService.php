@@ -2,39 +2,37 @@
 
 namespace Modules\AccountingPeriod\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\AccountingPeriod\Contracts\AccountingPeriodServiceInterface;
 use Modules\AccountingPeriod\Models\AccountingPeriod;
-use Illuminate\Database\Eloquent\Collection;
 
-class AccountingPeriodService implements AccountingPeriodServiceInterface
+class AccountingPeriodService extends BaseService implements AccountingPeriodServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = AccountingPeriod::class;
 
     public function getAll(): Collection
     {
-        return AccountingPeriod::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?AccountingPeriod
     {
-        return AccountingPeriod::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): AccountingPeriod
     {
-        return AccountingPeriod::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): AccountingPeriod
     {
-        $record = AccountingPeriod::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = AccountingPeriod::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

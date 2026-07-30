@@ -8,7 +8,7 @@ class VoucherCollection extends SuccessCollection
 {
     public $collects = VoucherResource::class;
 
-    public function __construct($resource, string $message = null)
+    public function __construct($resource, ?string $message = null)
     {
         parent::__construct(
             $resource,

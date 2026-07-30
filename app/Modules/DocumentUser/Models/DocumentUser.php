@@ -2,8 +2,8 @@
 
 namespace Modules\DocumentUser\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class DocumentUser extends Model
 {

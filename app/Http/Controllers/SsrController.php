@@ -9,7 +9,7 @@ class SsrController extends Controller
 {
     public function __invoke()
     {
-        $url = '/' . request()->path();
+        $url = '/'.request()->path();
 
         // Run compiled SSR bundle with Node
         $output = Process::run("node bootstrap/ssr/entry-server.js \"$url\"");

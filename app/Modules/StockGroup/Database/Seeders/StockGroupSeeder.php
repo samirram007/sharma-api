@@ -3,7 +3,6 @@
 namespace Modules\StockGroup\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\StockGroup\Models\StockGroup;
 use Illuminate\Support\Facades\DB;
 
 class StockGroupSeeder extends Seeder

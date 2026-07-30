@@ -1,7 +1,7 @@
 <?php
 
-use Modules\StockItem\Controllers\Api\ItemPriceController;
 use Illuminate\Support\Facades\Route;
+use Modules\StockItem\Controllers\Api\ItemPriceController;
 use Modules\StockItem\Controllers\Api\StockItemController;
 
 Route::apiResource('stock_items', StockItemController::class)->middleware(['jwt.cookies']);

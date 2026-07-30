@@ -2,39 +2,37 @@
 
 namespace Modules\Designation\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Designation\Contracts\DesignationServiceInterface;
 use Modules\Designation\Models\Designation;
-use Illuminate\Database\Eloquent\Collection;
 
-class DesignationService implements DesignationServiceInterface
+class DesignationService extends BaseService implements DesignationServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = Designation::class;
 
     public function getAll(): Collection
     {
-        return Designation::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Designation
     {
-        return Designation::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Designation
     {
-        return Designation::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Designation
     {
-        $record = Designation::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Designation::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

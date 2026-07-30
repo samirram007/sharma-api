@@ -2,33 +2,36 @@
 
 namespace Modules\User\Models;
 
-use Modules\Role\Models\Role;
-use Modules\UserFiscalYear\Models\UserFiscalYear;
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Notifications\Notifiable;
-use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Modules\Role\Models\Role;
+use Modules\UserFiscalYear\Models\UserFiscalYear;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
     protected $fillable = [
         'name',
         'email',
         'username',
         'user_type',
         'password',
-        'status'
+        'status',
     ];
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
     protected function casts(): array
     {
         return [
@@ -41,10 +44,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(UserFiscalYear::class, 'user_id', 'id');
     }
+
     public function current_fiscal_year(): ?UserFiscalYear
     {
         return $this->user_fiscal_year()->first();
     }
+
     public function fiscal_years(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -54,15 +59,16 @@ class User extends Authenticatable implements JWTSubject
             'fiscal_year_id'
         );
     }
+
     public function user_roles(): HasMany
     {
         return $this->hasMany('Modules\UserRole\Models\UserRole', 'user_id', 'id');
     }
+
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
     }
-
 
     // Helper: Check if user has a specific role
     public function hasRole(string $roleName): bool
@@ -88,6 +94,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->getKey();
     }
+
     public function getJWTCustomClaims(): array
     {
         return [];

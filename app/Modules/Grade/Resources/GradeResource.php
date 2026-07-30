@@ -2,19 +2,17 @@
 
 namespace Modules\Grade\Resources;
 
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class GradeResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'code' => $this->code,
-            'description' => $this->description,
-            'status' => $this->status,
-        ];
+
+        return $this->toCamelCaseArray($request);
     }
 }

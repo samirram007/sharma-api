@@ -2,40 +2,41 @@
 
 namespace Modules\DeliveryVehicle\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\DeliveryVehicle\Contracts\DeliveryVehicleServiceInterface;
 use Modules\DeliveryVehicle\Models\DeliveryVehicle;
-use Illuminate\Database\Eloquent\Collection;
 
-class DeliveryVehicleService implements DeliveryVehicleServiceInterface
+class DeliveryVehicleService extends BaseService implements DeliveryVehicleServiceInterface
 {
-    protected $resource = ['transporter'];
+    protected string $modelClass = DeliveryVehicle::class;
+
+    protected array $defaultResource = [
+        'transporter',
+    ];
 
     public function getAll(): Collection
     {
-        // dd('calledtttt');
-        return DeliveryVehicle::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?DeliveryVehicle
     {
-        return DeliveryVehicle::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): DeliveryVehicle
     {
-        return DeliveryVehicle::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): DeliveryVehicle
     {
-        $record = DeliveryVehicle::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = DeliveryVehicle::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

@@ -2,50 +2,44 @@
 
 namespace Modules\StockItem\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StockItem\Contracts\StockItemServiceInterface;
 use Modules\StockItem\Models\StockItem;
-use Modules\StockJournalEntry\Models\StockJournalEntry;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockItemService implements StockItemServiceInterface
+class StockItemService extends BaseService implements StockItemServiceInterface
 {
-    protected $resource = ['stock_unit', 'alternate_stock_unit'];
+    protected string $modelClass = StockItem::class;
+
+    protected array $defaultResource = ['stock_unit', 'alternate_stock_unit'];
 
     public function getAll(): Collection
     {
-        $data = StockItem::with($this->resource)->get();
-        //dd($data);
-
-        return $data;
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockItem
     {
-
-        return StockItem::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockItem
     {
-        //dd($data);
-        return StockItem::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockItem
     {
-        $record = StockItem::findOrFail($id);
-        $record->update($data);
-        $record->refresh();
-        return $record;
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockItem::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
+
     public function getPurchasableStockItems(): Collection
     {
-        return StockItem::with($this->resource)->get();
+        return $this->queryWithResource()->get();
     }
 }

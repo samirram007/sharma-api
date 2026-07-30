@@ -2,15 +2,20 @@
 
 namespace Modules\StorageUnit\Resources;
 
-use Modules\StockUnit\Resources\StockUnitResource;
-use Illuminate\Http\Request;
-
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
+use Modules\StockUnit\Resources\StockUnitResource;
+
 class StorageUnitResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -30,6 +35,8 @@ class StorageUnitResource extends SuccessResource
             'thirdPartyStockWithUs' => $this->third_party_stock_with_us,
             'parent' => StorageUnitResource::make($this->whenLoaded('parent')),
             'capacityUnit' => StockUnitResource::make($this->whenLoaded('capacity_unit')),
-        ];
+
+        ]);
+
     }
 }

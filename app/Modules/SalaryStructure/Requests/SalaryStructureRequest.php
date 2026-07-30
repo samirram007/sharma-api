@@ -14,17 +14,17 @@ class SalaryStructureRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255','unique:salary_structures,name'],
-            'code' => ['sometimes','required', 'string', 'max:255','unique:salary_structures,code'],
-            'description' => ['sometimes','required', 'string', 'max:255'],
-            'status' => ['sometimes','required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:salary_structures,name'],
+            'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:salary_structures,code'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', 'string', 'max:255'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $id=$this->route('salary_structure');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:salary_structures,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:salary_structures,code,' . $id,];
+            $id = $this->route('salary_structure');
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:salary_structures,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:salary_structures,code,'.$id];
 
         }
 

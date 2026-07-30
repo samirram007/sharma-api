@@ -2,11 +2,11 @@
 
 namespace Modules\Transporter\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Address\Models\Address;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Transporter extends Model
 {

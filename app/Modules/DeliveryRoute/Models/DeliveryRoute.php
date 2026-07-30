@@ -2,13 +2,13 @@
 
 namespace Modules\DeliveryRoute\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\DeliveryPlace\Models\DeliveryPlace;
 use Modules\Godown\Models\Godown;
 use Modules\StockUnit\Models\StockUnit;
 use Modules\Transporter\Models\Transporter;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DeliveryRoute extends Model
 {
@@ -24,7 +24,7 @@ class DeliveryRoute extends Model
         'distance_km',
         'rate',
         'rate_unit_id',
-        'estimated_time_in_minutes'
+        'estimated_time_in_minutes',
     ];
 
     protected $casts = [
@@ -39,6 +39,7 @@ class DeliveryRoute extends Model
     {
         return $this->belongsTo(Transporter::class, 'transporter_id');
     }
+
     public function source_place(): BelongsTo
     {
         return $this->belongsTo(Godown::class, 'source_place_id');
@@ -48,6 +49,7 @@ class DeliveryRoute extends Model
     {
         return $this->belongsTo(DeliveryPlace::class, 'destination_place_id');
     }
+
     public function rate_unit(): BelongsTo
     {
         return $this->belongsTo(StockUnit::class, 'rate_unit_id');

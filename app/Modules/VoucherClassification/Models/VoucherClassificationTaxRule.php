@@ -4,6 +4,7 @@ namespace Modules\VoucherClassification\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\AccountLedger\Models\AccountLedger;
 
 class VoucherClassificationTaxRule extends Model
 {
@@ -31,6 +32,6 @@ class VoucherClassificationTaxRule extends Model
 
     public function taxLedger(): BelongsTo
     {
-        return $this->belongsTo(\Modules\AccountLedger\Models\AccountLedger::class, 'tax_ledger_id');
+        return $this->belongsTo(AccountLedger::class, 'tax_ledger_id');
     }
 }

@@ -2,39 +2,43 @@
 
 namespace Modules\StorageUnit\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StorageUnit\Contracts\StorageUnitServiceInterface;
 use Modules\StorageUnit\Models\StorageUnit;
-use Illuminate\Database\Eloquent\Collection;
 
-class StorageUnitService implements StorageUnitServiceInterface
+class StorageUnitService extends BaseService implements StorageUnitServiceInterface
 {
-    protected $resource = ['parent', 'capacity_unit', 'address'];
+    protected string $modelClass = StorageUnit::class;
+
+    protected array $defaultResource = [
+        'parent',
+        'capacity_unit',
+        'address',
+    ];
 
     public function getAll(): Collection
     {
-        return StorageUnit::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StorageUnit
     {
-        return StorageUnit::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StorageUnit
     {
-        return StorageUnit::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StorageUnit
     {
-        $record = StorageUnit::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StorageUnit::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

@@ -2,39 +2,37 @@
 
 namespace Modules\OrderStockJournal\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\OrderStockJournal\Contracts\OrderStockJournalServiceInterface;
 use Modules\OrderStockJournal\Models\OrderStockJournal;
-use Illuminate\Database\Eloquent\Collection;
 
-class OrderStockJournalService implements OrderStockJournalServiceInterface
+class OrderStockJournalService extends BaseService implements OrderStockJournalServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = OrderStockJournal::class;
 
     public function getAll(): Collection
     {
-        return OrderStockJournal::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?OrderStockJournal
     {
-        return OrderStockJournal::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): OrderStockJournal
     {
-        return OrderStockJournal::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): OrderStockJournal
     {
-        $record = OrderStockJournal::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = OrderStockJournal::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

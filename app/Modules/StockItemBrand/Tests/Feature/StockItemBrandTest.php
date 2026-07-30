@@ -2,9 +2,9 @@
 
 namespace Modules\StockItemBrand\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\StockItemBrand\Models\StockItemBrand;
+use Tests\TestCase;
 
 class StockItemBrandTest extends TestCase
 {
@@ -14,77 +14,77 @@ class StockItemBrandTest extends TestCase
     {
         $response = $this->getJson('/api/stock_item_brands');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_StockItemBrand(): void
+    public function test_can_create_stock_item_brand(): void
     {
         $data = ['name' => 'Test StockItemBrand'];
 
         $response = $this->postJson('/api/stock_item_brands', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('stock_item_brands', $data);
     }
 
-    public function test_can_show_StockItemBrand(): void
+    public function test_can_show_stock_item_brand(): void
     {
         $StockItemBrand = StockItemBrand::factory()->create();
 
-        $response = $this->getJson('/api/stock_item_brands/' . $StockItemBrand->id);
+        $response = $this->getJson('/api/stock_item_brands/'.$StockItemBrand->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_StockItemBrand(): void
+    public function test_can_update_stock_item_brand(): void
     {
         $StockItemBrand = StockItemBrand::factory()->create();
         $data = ['name' => 'Updated StockItemBrand'];
 
-        $response = $this->putJson('/api/stock_item_brands/' . $StockItemBrand->id, $data);
+        $response = $this->putJson('/api/stock_item_brands/'.$StockItemBrand->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('stock_item_brands', $data);
     }
 
-    public function test_can_delete_StockItemBrand(): void
+    public function test_can_delete_stock_item_brand(): void
     {
         $StockItemBrand = StockItemBrand::factory()->create();
 
-        $response = $this->deleteJson('/api/stock_item_brands/' . $StockItemBrand->id);
+        $response = $this->deleteJson('/api/stock_item_brands/'.$StockItemBrand->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('stock_item_brands', ['id' => $StockItemBrand->id]);
     }
@@ -93,6 +93,6 @@ class StockItemBrandTest extends TestCase
     {
         $response = $this->postJson('/api/stock_item_brands', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Modules\Module\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Module\Models\Module;
+use Tests\TestCase;
 
 class ModuleTest extends TestCase
 {
@@ -14,77 +14,77 @@ class ModuleTest extends TestCase
     {
         $response = $this->getJson('/api/modules');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_Module(): void
+    public function test_can_create_module(): void
     {
         $data = ['name' => 'Test Module'];
 
         $response = $this->postJson('/api/modules', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('modules', $data);
     }
 
-    public function test_can_show_Module(): void
+    public function test_can_show_module(): void
     {
         $Module = Module::factory()->create();
 
-        $response = $this->getJson('/api/modules/' . $Module->id);
+        $response = $this->getJson('/api/modules/'.$Module->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_Module(): void
+    public function test_can_update_module(): void
     {
         $Module = Module::factory()->create();
         $data = ['name' => 'Updated Module'];
 
-        $response = $this->putJson('/api/modules/' . $Module->id, $data);
+        $response = $this->putJson('/api/modules/'.$Module->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('modules', $data);
     }
 
-    public function test_can_delete_Module(): void
+    public function test_can_delete_module(): void
     {
         $Module = Module::factory()->create();
 
-        $response = $this->deleteJson('/api/modules/' . $Module->id);
+        $response = $this->deleteJson('/api/modules/'.$Module->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('modules', ['id' => $Module->id]);
     }
@@ -93,6 +93,6 @@ class ModuleTest extends TestCase
     {
         $response = $this->postJson('/api/modules', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

@@ -1,15 +1,16 @@
 <?php
+
 namespace Modules\ReceiptVoucher\Services;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Log\Logger;
+use Illuminate\Support\Facades\Validator;
 use Modules\ReceiptVoucher\Contracts\ReceiptVoucherServiceInterface;
 use Modules\ReceiptVoucher\Models\ReceiptVoucher;
 use Modules\Voucher\Contracts\VoucherServiceInterface;
 use Modules\Voucher\Models\Voucher;
 use Modules\Voucher\Requests\VoucherRequest;
 use Modules\VoucherReference\Models\VoucherReference;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Log\Logger;
-use Illuminate\Support\Facades\Validator;
 
 class ReceiptVoucherService implements ReceiptVoucherServiceInterface
 {
@@ -27,17 +28,19 @@ class ReceiptVoucherService implements ReceiptVoucherServiceInterface
         'company',
         'fiscal_year',
     ];
+
     public function __construct(protected VoucherServiceInterface $voucherService)
     {
         // $this->resource = ['partyLedger', 'transactionLedger'];
     }
+
     public function getAll(): Collection
     {
         // $user = auth()->user();
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
         $startDate = $userFiscalYear->start_date;
         $endDate = $userFiscalYear->end_date;
-        if (!$userFiscalYear) {
+        if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
         $vouchers = Voucher::with($this->resource)
@@ -46,13 +49,10 @@ class ReceiptVoucherService implements ReceiptVoucherServiceInterface
             ->whereBetween('voucher_date', [$startDate, $endDate])
             ->get();
 
-        //dd($vouchers->toArray());
+        // dd($vouchers->toArray());
         // Optionally map each voucher to include party/transaction detection
-        return $vouchers->map(fn(Voucher $voucher) => $this->voucherService->attachLedgerInfo($voucher));
+        return $vouchers->map(fn (Voucher $voucher) => $this->voucherService->attachLedgerInfo($voucher));
     }
-
-
-
 
     public function getById(int $id): ?ReceiptVoucher
     {
@@ -68,14 +68,17 @@ class ReceiptVoucherService implements ReceiptVoucherServiceInterface
     {
         $record = ReceiptVoucher::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = ReceiptVoucher::findOrFail($id);
+
         return $record->delete();
     }
+
     public function getFreightReceiptByFreightId(int $freight_id): Collection
     {
         $paymentVouchersIds = VoucherReference::where('ref_voucher_id', $freight_id)
@@ -91,25 +94,23 @@ class ReceiptVoucherService implements ReceiptVoucherServiceInterface
 
         //  return ReceiptVoucher::with($this->resource)->where('freight_id', $freight_id)->get();
     }
+
     public function storeFreightReceiptVoucher(array $data): Voucher
     {
         try {
             // return $this->voucherService->storeFreightReceiptVoucher($data);
-
 
             $refVoucherId = $data['freight_id'] ?? null;
             $paymentVoucher = VoucherReference::where('ref_voucher_id', $refVoucherId)
                 ->where('type', 'freight_payment')
                 ->first();
 
-
-
             $refVoucherData = [
                 'ref_voucher_id' => $refVoucherId,
                 'type' => 'freight_payment',
             ];
             //   dd($refVoucherData);
-            //voucher create
+            // voucher create
             $voucherEntries = [
                 [
                     'entry_order' => 1,
@@ -135,26 +136,23 @@ class ReceiptVoucherService implements ReceiptVoucherServiceInterface
                 'voucher_entries' => $voucherEntries,
                 'voucher_reference' => $refVoucherData,
             ];
-            //dd($voucherData);
-            //dd($entryData);
-            $rules = (new VoucherRequest())->rules();
+            // dd($voucherData);
+            // dd($entryData);
+            $rules = (new VoucherRequest)->rules();
             $validatedEntry = Validator::make($entryData, $rules)->validate();
             //  dd($validatedEntry);
             $receiptVoucher = $this->voucherService->store($validatedEntry);
+
             // \Log::info('Freight receipt voucher created successfully', ['voucher_id' => $receiptVoucher->id]);
             //  throw new \Exception('No associated freight payment voucher found for the given freight_id.');
-            //Logger::info('Freight receipt voucher created successfully', ['voucher_id' => $receiptVoucher->id]);
+            // Logger::info('Freight receipt voucher created successfully', ['voucher_id' => $receiptVoucher->id]);
             return $receiptVoucher;
 
         } catch (\Exception $e) {
             // Log the exception or handle it as needed
             //  \Log::error('Failed to create freight receipt voucher: ' . $e->getMessage());
-            throw new \Exception('Failed to create freight receipt voucher: ' . $e->getMessage());
+            throw new \Exception('Failed to create freight receipt voucher: '.$e->getMessage());
         }
 
-
     }
-
-
-
 }

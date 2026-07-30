@@ -3,14 +3,14 @@
 namespace Modules\VoucherDispatchDetail\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
-use Modules\VoucherDispatchDetail\Resources\VoucherDispatchDetailResource;
-use Modules\VoucherDispatchDetail\Resources\VoucherDispatchDetailCollection;
-use Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
+use Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
+use Modules\VoucherDispatchDetail\Resources\VoucherDispatchDetailCollection;
+use Modules\VoucherDispatchDetail\Resources\VoucherDispatchDetailResource;
 
 class VoucherDispatchDetailController extends Controller
 {
@@ -21,35 +21,33 @@ class VoucherDispatchDetailController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new VoucherDispatchDetailCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new VoucherDispatchDetailResource($data);
+
+        return new VoucherDispatchDetailResource($data);
     }
 
     public function store(VoucherDispatchDetailRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new VoucherDispatchDetailResource($data, $messages='VoucherDispatchDetail created successfully');
+
+        return new VoucherDispatchDetailResource($data, $messages = 'VoucherDispatchDetail created successfully');
     }
 
     public function update(VoucherDispatchDetailRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new VoucherDispatchDetailResource($data, $messages='VoucherDispatchDetail updated successfully');
+
+        return new VoucherDispatchDetailResource($data, $messages = 'VoucherDispatchDetail updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'VoucherDispatchDetail deleted successfully':'VoucherDispatchDetail not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'VoucherDispatchDetail');
     }
 }

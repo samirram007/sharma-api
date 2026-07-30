@@ -2,13 +2,13 @@
 
 namespace Modules\Vendor\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Vendor\Contracts\VendorServiceInterface;
 use Modules\Vendor\Models\Vendor;
-use Illuminate\Database\Eloquent\Collection;
 
 class VendorService implements VendorServiceInterface
 {
-    protected $resource=[];
+    protected $resource = [];
 
     public function getAll(): Collection
     {
@@ -29,12 +29,14 @@ class VendorService implements VendorServiceInterface
     {
         $record = Vendor::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = Vendor::findOrFail($id);
+
         return $record->delete();
     }
 }

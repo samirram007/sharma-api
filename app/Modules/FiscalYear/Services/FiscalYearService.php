@@ -2,46 +2,46 @@
 
 namespace Modules\FiscalYear\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
+use Modules\FiscalYear\Contracts\FiscalYearRepositoryInterface;
 use Modules\FiscalYear\Contracts\FiscalYearServiceInterface;
 use Modules\FiscalYear\Models\FiscalYear;
-use Illuminate\Database\Eloquent\Collection;
 
-class FiscalYearService implements FiscalYearServiceInterface
+class FiscalYearService extends BaseService implements FiscalYearServiceInterface
 {
-    protected $resource = ['company'];
+    protected string $modelClass = FiscalYear::class;
+
+    protected array $defaultResource = [
+        'company',
+    ];
+
+    public function __construct(
+        protected FiscalYearRepositoryInterface $fiscalYearRepository
+    ) {}
 
     public function getAll(): Collection
     {
-        // dd(FiscalYear::with($this->resource)->get());
-        return FiscalYear::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?FiscalYear
     {
-        return FiscalYear::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): FiscalYear
     {
-        //dd($data);
-        // $data['start_date'] = date('Y-m-d', strtotime($data['start_date']));
-        // $data['end_date'] = date('Y-m-d', strtotime($data['end_date']));
-        return FiscalYear::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): FiscalYear
     {
-        // dd($data);
-        $record = FiscalYear::findOrFail($id);
-        $record->update($data);
-        $record->fresh();
-        return $record->load($this->resource);
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = FiscalYear::findOrFail($id);
-
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace Modules\ReceiptVoucher\Models;
 
-use Modules\Voucher\Models\Voucher;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ReceiptVoucher extends Model
 {
     use HasFactory;
+
     protected static function booted()
     {
         static::addGlobalScope('receipt_voucher', function ($q) {

@@ -3,13 +3,12 @@
 namespace Modules\CompanyType\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\CompanyType\Contracts\CompanyTypeServiceInterface;
-use Modules\CompanyType\Resources\CompanyTypeResource;
-use Modules\CompanyType\Resources\CompanyTypeCollection;
-use Modules\CompanyType\Requests\CompanyTypeRequest;
-use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\CompanyType\Contracts\CompanyTypeServiceInterface;
+use Modules\CompanyType\Requests\CompanyTypeRequest;
+use Modules\CompanyType\Resources\CompanyTypeCollection;
+use Modules\CompanyType\Resources\CompanyTypeResource;
 
 class CompanyTypeController extends Controller
 {
@@ -20,12 +19,14 @@ class CompanyTypeController extends Controller
     public function index(): JsonResponse
     {
         $data = $this->service->getAll();
+
         return (new CompanyTypeCollection($data))->response();
     }
 
     public function show(int $id): JsonResponse
     {
         $data = $this->service->getById($id);
+
         return $this->resourceResponse(
             new CompanyTypeResource($data),
             'CompanyType retrieved successfully'
@@ -35,6 +36,7 @@ class CompanyTypeController extends Controller
     public function store(CompanyTypeRequest $request): JsonResponse
     {
         $data = $this->service->store($request->validated());
+
         return $this->resourceResponse(
             new CompanyTypeResource($data),
             'CompanyType created successfully',
@@ -45,6 +47,7 @@ class CompanyTypeController extends Controller
     public function update(CompanyTypeRequest $request, int $id): JsonResponse
     {
         $data = $this->service->update($request->validated(), $id);
+
         return $this->resourceResponse(
             new CompanyTypeResource($data),
             'CompanyType updated successfully'
@@ -53,12 +56,6 @@ class CompanyTypeController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-         $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'CompanyType deleted successfully':'CompanyType not found',
-        ]);
-
+        return $this->deletedResponse($this->service->delete($id), 'CompanyType');
     }
 }

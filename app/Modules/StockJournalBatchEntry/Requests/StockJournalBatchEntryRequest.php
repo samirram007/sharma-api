@@ -26,7 +26,6 @@ class StockJournalBatchEntryRequest extends FormRequest
             'amount' => ['nullable', 'numeric', 'min:0'],
         ];
 
-
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('stock_journal_batch_entry');

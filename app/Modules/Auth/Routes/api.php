@@ -4,19 +4,22 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 use Modules\Auth\Controllers\Api\AuthController;
 
+// Unprotected auth routes (registration, login, social, and cookie-clearing logout)
 Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/register', [AuthController::class, 'register']);
-    //  Route::post('/swaggerLogin', [AuthController::class, 'swaggerLogin']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/user-profile', function (): JsonResponse {
         return response()->json([
-            'status' => 'success',
+            'success' => true,
             'message' => 'User profile fetched successfully.',
             'data' => [],
         ]);
     });
-    Route::post('/clean_logout', [AuthController::class, 'clean_logout']);
+
+    // Clear cookie even if token is already expired/absent
     Route::get('/clean_logout', [AuthController::class, 'clean_logout']);
+    Route::post('/clean_logout', [AuthController::class, 'clean_logout']);
+
     // Social
     Route::get('/{provider}', [AuthController::class, 'socialRedirect'])
         ->where('provider', 'google|github');
@@ -24,7 +27,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
         ->where('provider', 'google|github');
 });
 
-
+// Protected auth routes (require valid JWT)
 Route::middleware(['jwt.cookies'])->group(function () {
     Route::group(['prefix' => 'auth'], function ($router) {
         Route::post('/logout', [AuthController::class, 'logout']);

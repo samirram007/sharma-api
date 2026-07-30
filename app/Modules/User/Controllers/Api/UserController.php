@@ -3,34 +3,32 @@
 namespace Modules\User\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\User\Contracts\UserServiceInterface;
-use Modules\User\Resources\UserResource;
-use Modules\User\Resources\UserCollection;
-use Modules\User\Requests\UserRequest;
-use Modules\User\Requests\UserNotificationPreferenceRequest;
-use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\User\Contracts\UserServiceInterface;
+use Modules\User\Requests\UserNotificationPreferenceRequest;
+use Modules\User\Requests\UserRequest;
+use Modules\User\Resources\UserCollection;
+use Modules\User\Resources\UserResource;
 
 class UserController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected UserServiceInterface $service)
-    {
-    }
+    public function __construct(protected UserServiceInterface $service) {}
 
     public function index(): JsonResponse
     {
         $data = $this->service->getAll();
+
         return (new UserCollection($data))->response();
     }
 
     public function show(int $id): JsonResponse
     {
         $data = $this->service->getById($id);
+
         return $this->resourceResponse(
             new UserResource($data),
             'User retrieved successfully'
@@ -40,6 +38,7 @@ class UserController extends Controller
     public function store(UserRequest $request): JsonResponse
     {
         $data = $this->service->store($request->validated());
+
         return $this->resourceResponse(
             new UserResource($data),
             'User created successfully',
@@ -50,6 +49,7 @@ class UserController extends Controller
     public function update(UserRequest $request, int $id): JsonResponse
     {
         $data = $this->service->update($request->validated(), $id);
+
         return $this->resourceResponse(
             new UserResource($data),
             'User updated successfully'
@@ -58,12 +58,7 @@ class UserController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $result = $this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result ? 'User deleted successfully' : 'User not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'User');
     }
 
     // ── Notification Preferences ────────────────────────────────
@@ -77,7 +72,6 @@ class UserController extends Controller
         $prefs = $this->service->getNotificationPreferences($userId);
 
         return response()->json([
-            'status' => true,
             'success' => true,
             'data' => $prefs->map(fn ($p) => [
                 'id' => $p->id,

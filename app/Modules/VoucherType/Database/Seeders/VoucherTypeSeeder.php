@@ -1,7 +1,7 @@
 <?php
 
 namespace Modules\VoucherType\Database\Seeders;
-use DB;
+
 use Illuminate\Database\Seeder;
 use Modules\VoucherType\Models\VoucherType;
 
@@ -692,7 +692,6 @@ class VoucherTypeSeeder extends Seeder
                 $type
             );
         }
-
 
     }
 }

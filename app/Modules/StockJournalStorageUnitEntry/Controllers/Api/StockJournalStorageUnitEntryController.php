@@ -3,14 +3,14 @@
 namespace Modules\StockJournalStorageUnitEntry\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\StockJournalStorageUnitEntry\Contracts\StockJournalStorageUnitEntryServiceInterface;
-use Modules\StockJournalStorageUnitEntry\Resources\StockJournalStorageUnitEntryResource;
-use Modules\StockJournalStorageUnitEntry\Resources\StockJournalStorageUnitEntryCollection;
-use Modules\StockJournalStorageUnitEntry\Requests\StockJournalStorageUnitEntryRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\StockJournalStorageUnitEntry\Contracts\StockJournalStorageUnitEntryServiceInterface;
+use Modules\StockJournalStorageUnitEntry\Requests\StockJournalStorageUnitEntryRequest;
+use Modules\StockJournalStorageUnitEntry\Resources\StockJournalStorageUnitEntryCollection;
+use Modules\StockJournalStorageUnitEntry\Resources\StockJournalStorageUnitEntryResource;
 
 class StockJournalStorageUnitEntryController extends Controller
 {
@@ -21,35 +21,33 @@ class StockJournalStorageUnitEntryController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new StockJournalStorageUnitEntryCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new StockJournalStorageUnitEntryResource($data);
+
+        return new StockJournalStorageUnitEntryResource($data);
     }
 
     public function store(StockJournalStorageUnitEntryRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new StockJournalStorageUnitEntryResource($data, $messages='StockJournalStorageUnitEntry created successfully');
+
+        return new StockJournalStorageUnitEntryResource($data, $messages = 'StockJournalStorageUnitEntry created successfully');
     }
 
     public function update(StockJournalStorageUnitEntryRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new StockJournalStorageUnitEntryResource($data, $messages='StockJournalStorageUnitEntry updated successfully');
+
+        return new StockJournalStorageUnitEntryResource($data, $messages = 'StockJournalStorageUnitEntry updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'StockJournalStorageUnitEntry deleted successfully':'StockJournalStorageUnitEntry not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'StockJournalStorageUnitEntry');
     }
 }

@@ -2,6 +2,13 @@
 
 namespace Modules\Voucher\Models;
 
+use App\Traits\Blameable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\AccountsJournal\Models\AccountsJournal;
 use Modules\Company\Models\Company;
 use Modules\FiscalYear\Models\FiscalYear;
@@ -11,18 +18,12 @@ use Modules\VoucherEntry\Models\VoucherEntry;
 use Modules\VoucherParty\Models\VoucherParty;
 use Modules\VoucherReference\Models\VoucherReference;
 use Modules\VoucherType\Models\VoucherType;
-use App\Traits\Blameable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Voucher extends Model
 {
-    use HasFactory;
     use Blameable;
+    use HasFactory;
+
     protected $table = 'vouchers';
 
     protected $fillable = [
@@ -54,7 +55,6 @@ class Voucher extends Model
         'effects_stock' => 'boolean',
     ];
 
-
     protected static function boot()
     {
         parent::boot();
@@ -70,44 +70,49 @@ class Voucher extends Model
     {
         return $this->belongsTo(StockJournal::class);
     }
+
     public function voucher_type(): BelongsTo
     {
         return $this->belongsTo(VoucherType::class);
     }
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
+
     public function fiscal_year(): BelongsTo
     {
         return $this->belongsTo(FiscalYear::class);
     }
+
     public function accounts_journals(): HasMany
     {
         return $this->hasMany(AccountsJournal::class);
     }
+
     public function voucher_entries(): HasMany
     {
         return $this->hasMany(VoucherEntry::class);
     }
+
     public function voucher_party(): HasOne
     {
         return $this->hasOne(VoucherParty::class, 'voucher_id');
     }
+
     public function voucher_dispatch_detail(): HasOne
     {
         return $this->hasOne(VoucherDispatchDetail::class, 'voucher_id');
     }
 
-
-
     protected $appends = ['party_ledger', 'transaction_ledger', 'amount', 'payment_status'];
-
 
     public function voucher_references(): HasMany
     {
         return $this->hasMany(VoucherReference::class, 'voucher_id', 'id');
     }
+
     public function referenced_by(): HasMany
     {
         return $this->hasMany(VoucherReference::class, 'ref_voucher_id', 'id');
@@ -115,25 +120,28 @@ class Voucher extends Model
 
     public function getPartyLedgerAttribute()
     {
-        if (!isset($this->relations['party_ledger'])) {
+        if (! isset($this->relations['party_ledger'])) {
             return null;
         }
+
         return $this->relations['party_ledger'];
     }
 
     public function getTransactionLedgerAttribute()
     {
-        if (!isset($this->relations['transaction_ledger'])) {
+        if (! isset($this->relations['transaction_ledger'])) {
             return null;
         }
+
         return $this->relations['transaction_ledger'];
     }
 
     public function getAmountAttribute()
     {
-        if (!isset($this->relations['amount'])) {
-            return $this->voucher_entries->sum(fn($entry) => $entry->debit ?: $entry->credit ?: 0);
+        if (! isset($this->relations['amount'])) {
+            return $this->voucher_entries->sum(fn ($entry) => $entry->debit ?: $entry->credit ?: 0);
         }
+
         return $this->relations['amount'];
     }
 
@@ -144,7 +152,7 @@ class Voucher extends Model
         // \Log::info($paymentVouchersIds);
         $paymentVouchers = Voucher::whereIn('id', $paymentVouchersIds)->get();
 
-        $totalPaidAmount = $paymentVouchers->sum(fn($voucher) => $voucher->amount);
+        $totalPaidAmount = $paymentVouchers->sum(fn ($voucher) => $voucher->amount);
         // \Log::info([$this->id, $totalPaidAmount]);
         // return $totalPaidAmount;
         if ($totalPaidAmount >= $this->amount) {
@@ -155,5 +163,4 @@ class Voucher extends Model
             return 'unpaid';
         }
     }
-
 }

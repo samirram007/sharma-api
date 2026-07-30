@@ -2,20 +2,21 @@
 
 namespace Modules\AccountLedger\Models;
 
-use Modules\VoucherEntry\Models\VoucherEntry;
-use Illuminate\Database\Eloquent\Model;
-use Modules\AccountGroup\Models\AccountGroup;
-use Modules\AccountNature\Models\AccountNature;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Modules\AccountGroup\Models\AccountGroup;
+use Modules\AccountNature\Models\AccountNature;
+use Modules\VoucherEntry\Models\VoucherEntry;
 
 class AccountLedger extends Model
 {
     use HasFactory;
 
     protected $table = 'account_ledgers';
+
     protected $fillable = [
         'name',
         'code',
@@ -24,19 +25,22 @@ class AccountLedger extends Model
         'status',
         'icon',
         'ledgerable_id',
-        'ledgerable_type'
+        'ledgerable_type',
     ];
+
     public static function ledgerNameExists(string $name): bool
     {
         $query = static::query()->where('name', $name);
-        //dd($query->exists());
+        // dd($query->exists());
 
         return $query->exists();
     }
+
     public function account_group()
     {
         return $this->belongsTo(AccountGroup::class);
     }
+
     public function voucher_entries(): HasMany
     {
         return $this->hasMany(VoucherEntry::class, 'account_ledger_id', 'id');
@@ -46,6 +50,7 @@ class AccountLedger extends Model
     {
         return $this->morphTo();
     }
+
     public function account_nature(): HasOneThrough
     {
         return $this->hasOneThrough(
@@ -57,7 +62,4 @@ class AccountLedger extends Model
             'account_nature_id'       // Foreign key on AccountGroup
         );
     }
-
-
-
 }

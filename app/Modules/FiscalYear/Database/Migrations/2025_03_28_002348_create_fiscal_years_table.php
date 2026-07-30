@@ -5,7 +5,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -21,7 +22,7 @@ return new class extends Migration {
 
             $table->enum(
                 'status',
-                array_map(fn($case) => $case->value, ActiveInactive::cases())
+                array_map(fn ($case) => $case->value, ActiveInactive::cases())
             )
                 ->default(ActiveInactive::Active->value);
             $table->timestamps();
@@ -35,5 +36,4 @@ return new class extends Migration {
     {
         Schema::dropIfExists('fiscal_years');
     }
-
 };

@@ -4,24 +4,25 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         // Update the main header table for ERP requirements
         Schema::table('voucher_classifications', function (Blueprint $table) {
-            if (!Schema::hasColumn('voucher_classifications', 'company_id')) {
+            if (! Schema::hasColumn('voucher_classifications', 'company_id')) {
                 $table->unsignedBigInteger('company_id')->after('id')->nullable();
             }
-            if (!Schema::hasColumn('voucher_classifications', 'branch_id')) {
+            if (! Schema::hasColumn('voucher_classifications', 'branch_id')) {
                 $table->unsignedBigInteger('branch_id')->after('company_id')->nullable();
             }
-            if (!Schema::hasColumn('voucher_classifications', 'is_default')) {
+            if (! Schema::hasColumn('voucher_classifications', 'is_default')) {
                 $table->boolean('is_default')->default(false)->after('status');
             }
-            if (!Schema::hasColumn('voucher_classifications', 'is_system_defined')) {
+            if (! Schema::hasColumn('voucher_classifications', 'is_system_defined')) {
                 $table->boolean('is_system_defined')->default(false)->after('is_default');
             }
-            if (!Schema::hasColumn('voucher_classifications', 'requires_approval')) {
+            if (! Schema::hasColumn('voucher_classifications', 'requires_approval')) {
                 $table->boolean('requires_approval')->default(false)->after('is_system_defined');
             }
 
@@ -51,7 +52,7 @@ return new class extends Migration {
             $table->boolean('is_hidden')->default(false);
             $table->boolean('is_readonly')->default(false);
             $table->boolean('is_mandatory')->default(true);
-            $table->string('rounding_method')->nullable();// -- normal, upward, downward
+            $table->string('rounding_method')->nullable(); // -- normal, upward, downward
             $table->decimal('rounding_limit', 18, 4)->nullable();
             $table->timestamps();
 
@@ -90,7 +91,7 @@ return new class extends Migration {
         Schema::create('voucher_classification_ui_configs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('voucher_classification_id');
-            $table->string('field_name');// -- cost_center, narration, etc.
+            $table->string('field_name'); // -- cost_center, narration, etc.
             $table->boolean('is_visible')->default(true);
             $table->boolean('is_mandatory')->default(false);
             $table->boolean('is_readonly')->default(false);

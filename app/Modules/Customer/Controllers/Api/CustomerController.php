@@ -3,14 +3,14 @@
 namespace Modules\Customer\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Customer\Contracts\CustomerServiceInterface;
-use Modules\Customer\Resources\CustomerResource;
-use Modules\Customer\Resources\CustomerCollection;
-use Modules\Customer\Requests\CustomerRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\Customer\Contracts\CustomerServiceInterface;
+use Modules\Customer\Requests\CustomerRequest;
+use Modules\Customer\Resources\CustomerCollection;
+use Modules\Customer\Resources\CustomerResource;
 
 class CustomerController extends Controller
 {
@@ -21,35 +21,33 @@ class CustomerController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new CustomerCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new CustomerResource($data);
+
+        return new CustomerResource($data);
     }
 
     public function store(CustomerRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new CustomerResource($data, $messages='Customer created successfully');
+
+        return new CustomerResource($data, $messages = 'Customer created successfully');
     }
 
     public function update(CustomerRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new CustomerResource($data, $messages='Customer updated successfully');
+
+        return new CustomerResource($data, $messages = 'Customer updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'Customer deleted successfully':'Customer not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'Customer');
     }
 }

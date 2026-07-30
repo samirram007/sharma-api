@@ -2,8 +2,8 @@
 
 namespace Modules\ReceiptVoucher\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 use Modules\ReceiptVoucher\Contracts\ReceiptVoucherServiceInterface;
 use Modules\ReceiptVoucher\Services\ReceiptVoucherService;
 
@@ -24,11 +24,11 @@ class ReceiptVoucherServiceProvider extends ServiceProvider
     {
         Route::middleware('api')
             ->prefix('api')
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__.'/../Routes/api.php');
     }
 
     private function loadMigrations(): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
     }
 }

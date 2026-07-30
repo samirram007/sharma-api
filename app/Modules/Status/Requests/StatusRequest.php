@@ -23,8 +23,8 @@ class StatusRequest extends FormRequest
 
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('status');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:statuses,name,' . $id];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:statuses,code,' . $id];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:statuses,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:statuses,code,'.$id];
         }
 
         return $rules;

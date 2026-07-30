@@ -1,11 +1,11 @@
 <?php
 
-use Modules\Transporter\Models\Transporter;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('delivery_vehicles', function (Blueprint $table) {
@@ -28,5 +28,4 @@ return new class extends Migration {
     {
         Schema::dropIfExists('delivery_vehicles');
     }
-
 };

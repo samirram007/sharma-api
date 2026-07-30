@@ -2,9 +2,9 @@
 
 namespace Modules\AppModule\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\AppModule\Models\AppModule;
+use Tests\TestCase;
 
 class AppModuleTest extends TestCase
 {
@@ -14,77 +14,77 @@ class AppModuleTest extends TestCase
     {
         $response = $this->getJson('/api/app_modules');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_AppModule(): void
+    public function test_can_create_app_module(): void
     {
         $data = ['name' => 'Test AppModule'];
 
         $response = $this->postJson('/api/app_modules', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('app_modules', $data);
     }
 
-    public function test_can_show_AppModule(): void
+    public function test_can_show_app_module(): void
     {
         $AppModule = AppModule::factory()->create();
 
-        $response = $this->getJson('/api/app_modules/' . $AppModule->id);
+        $response = $this->getJson('/api/app_modules/'.$AppModule->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_AppModule(): void
+    public function test_can_update_app_module(): void
     {
         $AppModule = AppModule::factory()->create();
         $data = ['name' => 'Updated AppModule'];
 
-        $response = $this->putJson('/api/app_modules/' . $AppModule->id, $data);
+        $response = $this->putJson('/api/app_modules/'.$AppModule->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('app_modules', $data);
     }
 
-    public function test_can_delete_AppModule(): void
+    public function test_can_delete_app_module(): void
     {
         $AppModule = AppModule::factory()->create();
 
-        $response = $this->deleteJson('/api/app_modules/' . $AppModule->id);
+        $response = $this->deleteJson('/api/app_modules/'.$AppModule->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('app_modules', ['id' => $AppModule->id]);
     }
@@ -93,6 +93,6 @@ class AppModuleTest extends TestCase
     {
         $response = $this->postJson('/api/app_modules', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

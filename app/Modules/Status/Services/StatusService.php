@@ -2,39 +2,37 @@
 
 namespace Modules\Status\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Status\Contracts\StatusServiceInterface;
 use Modules\Status\Models\Status;
-use Illuminate\Database\Eloquent\Collection;
 
-class StatusService implements StatusServiceInterface
+class StatusService extends BaseService implements StatusServiceInterface
 {
-    protected $resource = [];
+    protected string $modelClass = Status::class;
 
     public function getAll(): Collection
     {
-        return Status::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Status
     {
-        return Status::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Status
     {
-        return Status::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Status
     {
-        $record = Status::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Status::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

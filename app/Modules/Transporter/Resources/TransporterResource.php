@@ -2,16 +2,21 @@
 
 namespace Modules\Transporter\Resources;
 
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
 use Modules\AccountLedger\Resources\AccountLedgerResource;
 use Modules\Address\Resources\AddressResource;
-use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class TransporterResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -25,7 +30,9 @@ class TransporterResource extends SuccessResource
             'email' => $this->email,
             'status' => $this->status,
             'accountLedger' => AccountLedgerResource::make($this->whenLoaded('account_ledger')),
-            'address' => $this->whenLoaded('address', fn() => $this->address ? AddressResource::make($this->address) : null),
-        ];
+            'address' => $this->whenLoaded('address', fn () => $this->address ? AddressResource::make($this->address) : null),
+
+        ]);
+
     }
 }

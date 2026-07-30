@@ -24,8 +24,8 @@ class UserRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('user');
-            $rules['username'] = ['sometimes', 'required', 'string', 'max:255', 'unique:users,username,' . $id];
-            $rules['email'] = ['sometimes', 'required', 'string', 'max:255', 'unique:users,email,' . $id];
+            $rules['username'] = ['sometimes', 'required', 'string', 'max:255', 'unique:users,username,'.$id];
+            $rules['email'] = ['sometimes', 'required', 'string', 'max:255', 'unique:users,email,'.$id];
 
         }
 

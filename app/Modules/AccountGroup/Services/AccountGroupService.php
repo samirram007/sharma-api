@@ -2,54 +2,48 @@
 
 namespace Modules\AccountGroup\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
+use Modules\AccountGroup\Contracts\AccountGroupRepositoryInterface;
 use Modules\AccountGroup\Contracts\AccountGroupServiceInterface;
 use Modules\AccountGroup\Models\AccountGroup;
-use Illuminate\Database\Eloquent\Collection;
 
-class AccountGroupService implements AccountGroupServiceInterface
+class AccountGroupService extends BaseService implements AccountGroupServiceInterface
 {
-    protected $resource = ['account_nature'];
-    public function getAll(): Collection
-    {
-        $data = AccountGroup::with($this->resource)->get();
-        //dd($data);
-        return $data;
-    }
+    protected string $modelClass = AccountGroup::class;
 
+    protected array $defaultResource = ['account_nature'];
 
+    public function __construct(
+        protected AccountGroupRepositoryInterface $accountGroupRepository
+    ) {}
+
+    /**
+     * Override to provide covariant return type matching the interface.
+     */
     public function getById(int $id): ?AccountGroup
     {
-        //dd(AccountGroup::findOrFail($id));
-        return AccountGroup::findOrFail($id);
+        return parent::getById($id);
     }
 
+    /**
+     * Override to provide covariant return type matching the interface.
+     */
     public function store(array $data): AccountGroup
     {
-        return AccountGroup::create($data);
+        return parent::store($data);
     }
 
+    /**
+     * Override to provide covariant return type matching the interface.
+     */
     public function update(array $data, int $id): AccountGroup
     {
-
-        $record = AccountGroup::findOrFail($id);
-        $record->update($data);
-
-        return $record->fresh();
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = AccountGroup::findOrFail($id);
-        return $record->delete();
+        return parent::update($data, $id);
     }
 
     public function getCurrentLiabilityGroups(): Collection
     {
-        $data = AccountGroup::with($this->resource)
-            ->where('id', 20002)
-            ->orWhere('parent_id', 20002)
-            ->orderBy('name')->get();
-        //dd($data);
-        return $data;
+        return $this->accountGroupRepository->getCurrentLiabilityGroups();
     }
 }

@@ -3,14 +3,14 @@
 namespace Modules\SalaryStructure\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\SalaryStructure\Contracts\SalaryStructureServiceInterface;
-use Modules\SalaryStructure\Resources\SalaryStructureResource;
-use Modules\SalaryStructure\Resources\SalaryStructureCollection;
-use Modules\SalaryStructure\Requests\SalaryStructureRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Modules\SalaryStructure\Contracts\SalaryStructureServiceInterface;
+use Modules\SalaryStructure\Requests\SalaryStructureRequest;
+use Modules\SalaryStructure\Resources\SalaryStructureCollection;
+use Modules\SalaryStructure\Resources\SalaryStructureResource;
 
 class SalaryStructureController extends Controller
 {
@@ -21,35 +21,33 @@ class SalaryStructureController extends Controller
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new SalaryStructureCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
-        return  new SalaryStructureResource($data);
+
+        return new SalaryStructureResource($data);
     }
 
     public function store(SalaryStructureRequest $request): SuccessResource
     {
         $data = $this->service->store($request->validated());
-       return  new SalaryStructureResource($data, $messages='SalaryStructure created successfully');
+
+        return new SalaryStructureResource($data, $messages = 'SalaryStructure created successfully');
     }
 
     public function update(SalaryStructureRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
-        return  new SalaryStructureResource($data, $messages='SalaryStructure updated successfully');
+
+        return new SalaryStructureResource($data, $messages = 'SalaryStructure updated successfully');
     }
 
-        public function destroy(int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-
-        $result=$this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result?'SalaryStructure deleted successfully':'SalaryStructure not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'SalaryStructure');
     }
 }

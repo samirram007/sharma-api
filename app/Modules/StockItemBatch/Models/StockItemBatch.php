@@ -2,8 +2,8 @@
 
 namespace Modules\StockItemBatch\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class StockItemBatch extends Model
 {

@@ -15,7 +15,7 @@ class VehicleRequest extends FormRequest
     {
         $rules = [
             'transporter_id' => ['required', 'exists:transporters,id'],
-            'vehicle_type' => ['sometimes', 'nullable', 'string', 'max:255',],
+            'vehicle_type' => ['sometimes', 'nullable', 'string', 'max:255'],
             'vehicle_no' => ['required', 'string', 'max:255', 'unique:vehicles,vehicle_no'],
             'description' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'string', 'max:50'],
@@ -24,7 +24,7 @@ class VehicleRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('vehicle');
-            $rules['vehicle_no'] = ['required', 'string', 'max:255', 'unique:vehicles,vehicle_no,' . $id];
+            $rules['vehicle_no'] = ['required', 'string', 'max:255', 'unique:vehicles,vehicle_no,'.$id];
         }
 
         return $rules;

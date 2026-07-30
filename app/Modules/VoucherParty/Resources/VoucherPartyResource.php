@@ -2,17 +2,22 @@
 
 namespace Modules\VoucherParty\Resources;
 
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
 use Modules\Country\Resources\CountryResource;
 use Modules\State\Resources\StateResource;
 use Modules\Voucher\Resources\VoucherResource;
-use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class VoucherPartyResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'mailingName' => $this->mailing_name,
@@ -27,8 +32,9 @@ class VoucherPartyResource extends SuccessResource
             'gstin' => $this->gstin,
             'placeOfSupplyStateId' => $this->place_of_supply_state_id,
             'voucherId' => $this->voucher_id,
-            'voucher' => VoucherResource::make($this->whenLoaded('voucher'))
-        ];
+            'voucher' => VoucherResource::make($this->whenLoaded('voucher')),
+
+        ]);
 
     }
 }

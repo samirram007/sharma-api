@@ -3,17 +3,21 @@
 namespace Modules\Address\Resources;
 
 use App\Enums\AddressType;
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class AddressResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
 
-        //dd($this->resource->toArray());
+        // dd($this->resource->toArray());
 
-        return [
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'line1' => $this->line1,
             'line2' => $this->line2,
@@ -22,14 +26,14 @@ class AddressResource extends SuccessResource
             'district' => $this->district,
             'city' => $this->city,
             'stateId' => $this->state_id,
-            'state' => $this->whenLoaded('state', fn() => [
+            'state' => $this->whenLoaded('state', fn () => [
                 'id' => $this->state->id,
                 'name' => $this->state->name,
                 'code' => $this->state->code,
                 'gst_code' => $this->state->gst_code,
             ]),
             'countryId' => $this->country_id,
-            'country' => $this->whenLoaded('country', fn() => [
+            'country' => $this->whenLoaded('country', fn () => [
                 'id' => $this->country->id,
                 'name' => $this->country->name,
                 'iso_code' => $this->country->iso_code,
@@ -43,6 +47,8 @@ class AddressResource extends SuccessResource
                 'id' => $this->addressable_id,
                 'type' => class_basename($this->addressable_type),
             ],
-        ];
+
+        ]);
+
     }
 }

@@ -1,9 +1,9 @@
 <?php
+
 namespace Modules\VoucherCategory\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\VoucherCategory\Models\VoucherCategory;
-
 
 class VoucherCategorySeeder extends Seeder
 {
@@ -111,14 +111,12 @@ class VoucherCategorySeeder extends Seeder
             ],
         ];
 
-
         foreach ($voucherCategories as $category) {
             VoucherCategory::updateOrCreate(
                 ['id' => $category['id']],
                 $category
             );
         }
-
 
     }
 }

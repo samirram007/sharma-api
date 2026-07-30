@@ -2,16 +2,20 @@
 
 namespace Modules\Godown\Resources;
 
-use Modules\Address\Resources\AddressResource;
-use Illuminate\Http\Request;
-
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
+use Modules\Address\Resources\AddressResource;
+
 class GodownResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
 
-        return [
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -24,11 +28,11 @@ class GodownResource extends SuccessResource
             'thirdPartyStockWithUs' => $this->third_party_stock_with_us,
             'parentId' => $this->parent_id,
             'parent' => GodownResource::make($this->whenLoaded('parent')),
-            'address' => $this->whenLoaded('address', fn() => $this->address ? AddressResource::make($this->address) : null),
+            'address' => $this->whenLoaded('address', fn () => $this->address ? AddressResource::make($this->address) : null),
 
             // 'stockInHand' => $this->stock_in_hand,
 
+        ]);
 
-        ];
     }
 }

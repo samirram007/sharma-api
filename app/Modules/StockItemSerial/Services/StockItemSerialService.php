@@ -2,39 +2,37 @@
 
 namespace Modules\StockItemSerial\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\StockItemSerial\Contracts\StockItemSerialServiceInterface;
 use Modules\StockItemSerial\Models\StockItemSerial;
-use Illuminate\Database\Eloquent\Collection;
 
-class StockItemSerialService implements StockItemSerialServiceInterface
+class StockItemSerialService extends BaseService implements StockItemSerialServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = StockItemSerial::class;
 
     public function getAll(): Collection
     {
-        return StockItemSerial::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?StockItemSerial
     {
-        return StockItemSerial::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): StockItemSerial
     {
-        return StockItemSerial::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): StockItemSerial
     {
-        $record = StockItemSerial::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = StockItemSerial::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

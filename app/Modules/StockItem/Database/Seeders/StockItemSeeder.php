@@ -2,16 +2,13 @@
 
 namespace Modules\StockItem\Database\Seeders;
 
-
-
+use Illuminate\Database\Seeder;
 use Modules\StockCategory\Models\StockCategory;
 use Modules\StockGroup\Models\StockGroup;
+use Modules\StockItem\Models\StockItem;
 use Modules\StockItemBrand\Models\StockItemBrand;
 use Modules\StockUnit\Models\StockUnit;
 use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
-
-use Illuminate\Database\Seeder;
-use Modules\StockItem\Models\StockItem;
 
 class StockItemSeeder extends Seeder
 {
@@ -34,7 +31,7 @@ class StockItemSeeder extends Seeder
                 'conversion_factor' => 50.0,
                 'created_at' => now(),
                 'updated_at' => now(),
-                'no_of_decimal_places' => 2
+                'no_of_decimal_places' => 2,
             ]);
         $uqc = UniqueQuantityCode::where('code', 'KGS')->first() ??
             UniqueQuantityCode::create(['code' => 'KGS', 'description' => 'Kilogram']);

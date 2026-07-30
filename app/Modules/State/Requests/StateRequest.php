@@ -19,13 +19,12 @@ class StateRequest extends FormRequest
             'country_id' => ['required', 'string', 'max:255'],
             'gst_code' => ['sometimes', 'required', 'string', 'max:255'],
 
-
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('state');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:states,name,' . $id];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:states,name,'.$id];
 
         }
 

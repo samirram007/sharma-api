@@ -2,39 +2,42 @@
 
 namespace Modules\RolePermission\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\RolePermission\Contracts\RolePermissionServiceInterface;
 use Modules\RolePermission\Models\RolePermission;
-use Illuminate\Database\Eloquent\Collection;
 
-class RolePermissionService implements RolePermissionServiceInterface
+class RolePermissionService extends BaseService implements RolePermissionServiceInterface
 {
-    protected $resource = ['role', 'feature.module'];
+    protected string $modelClass = RolePermission::class;
+
+    protected array $defaultResource = [
+        'role',
+        'feature.module',
+    ];
 
     public function getAll(): Collection
     {
-        return RolePermission::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?RolePermission
     {
-        return RolePermission::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): RolePermission
     {
-        return RolePermission::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): RolePermission
     {
-        $record = RolePermission::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = RolePermission::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

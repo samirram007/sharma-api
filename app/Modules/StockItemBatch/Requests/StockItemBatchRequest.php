@@ -14,17 +14,17 @@ class StockItemBatchRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255','unique:stock_item_batches,name'],
-            'code' => ['sometimes','required', 'string', 'max:255','unique:stock_item_batches,code'],
-            'description' => ['sometimes','required', 'string', 'max:255'],
-            'status' => ['sometimes','required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:stock_item_batches,name'],
+            'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:stock_item_batches,code'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', 'string', 'max:255'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $id=$this->route('stock_item_batch');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_item_batches,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_item_batches,code,' . $id,];
+            $id = $this->route('stock_item_batch');
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_item_batches,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_item_batches,code,'.$id];
 
         }
 

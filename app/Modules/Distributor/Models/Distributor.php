@@ -2,13 +2,13 @@
 
 namespace Modules\Distributor\Models;
 
-use Modules\Address\Models\Address;
-use Modules\GstRegistrationType\Models\GstRegistrationType;
-use Illuminate\Database\Eloquent\Model;
-use Modules\AccountLedger\Models\AccountLedger;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Modules\AccountLedger\Models\AccountLedger;
+use Modules\Address\Models\Address;
+use Modules\GstRegistrationType\Models\GstRegistrationType;
 
 class Distributor extends Model
 {
@@ -44,6 +44,7 @@ class Distributor extends Model
     {
         return $this->morphOne(Address::class, 'addressable');
     }
+
     public function gst_registration_type(): BelongsTo
     {
         return $this->belongsTo(GstRegistrationType::class, 'gst_registration_type_id');

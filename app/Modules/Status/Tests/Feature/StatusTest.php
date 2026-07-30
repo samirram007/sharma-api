@@ -2,9 +2,9 @@
 
 namespace Modules\Status\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Status\Models\Status;
+use Tests\TestCase;
 
 class StatusTest extends TestCase
 {
@@ -14,12 +14,12 @@ class StatusTest extends TestCase
     {
         $response = $this->getJson('/api/statuses');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message',
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
     public function test_can_create_status(): void
@@ -28,12 +28,12 @@ class StatusTest extends TestCase
 
         $response = $this->postJson('/api/statuses', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message',
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('statuses', $data);
     }
@@ -42,20 +42,20 @@ class StatusTest extends TestCase
     {
         $status = Status::factory()->create();
 
-        $response = $this->getJson('/api/statuses/' . $status->id);
+        $response = $this->getJson('/api/statuses/'.$status->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'code',
-                         'created_at',
-                         'updated_at',
-                     ],
-                     'status',
-                     'code',
-                     'message',
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'code',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
     public function test_can_update_status(): void
@@ -63,14 +63,14 @@ class StatusTest extends TestCase
         $status = Status::factory()->create();
         $data = ['name' => 'Updated Status'];
 
-        $response = $this->putJson('/api/statuses/' . $status->id, $data);
+        $response = $this->putJson('/api/statuses/'.$status->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message',
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('statuses', $data);
     }
@@ -79,13 +79,13 @@ class StatusTest extends TestCase
     {
         $status = Status::factory()->create();
 
-        $response = $this->deleteJson('/api/statuses/' . $status->id);
+        $response = $this->deleteJson('/api/statuses/'.$status->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message',
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('statuses', ['id' => $status->id]);
     }
@@ -94,6 +94,6 @@ class StatusTest extends TestCase
     {
         $response = $this->postJson('/api/statuses', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

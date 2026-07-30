@@ -2,11 +2,9 @@
 
 namespace Modules\Godown\Services;
 
+use Illuminate\Support\Collection;
 use Modules\Godown\Contracts\GodownServiceInterface;
 use Modules\Godown\Models\Godown;
-use Modules\StockItem\Models\StockItem;
-use Illuminate\Support\Collection;
-
 
 class GodownService implements GodownServiceInterface
 {
@@ -15,7 +13,8 @@ class GodownService implements GodownServiceInterface
     public function getAll(): Collection
     {
         $data = Godown::with($this->resource)->get();
-        //dd($data->toArray());
+
+        // dd($data->toArray());
         return $data;
         // return Godown::get()->load($this->resource);
     }
@@ -31,7 +30,7 @@ class GodownService implements GodownServiceInterface
         if (empty($data['code'])) {
 
             $data['code'] = Godown::getUniqueCode();
-            //dd($data);
+            // dd($data);
         }
 
         $godown = Godown::create($data);
@@ -46,7 +45,6 @@ class GodownService implements GodownServiceInterface
 
             $godown->address()->create($data['address']);
         }
-
 
         return $godown->load($this->resource);
     }
@@ -67,7 +65,7 @@ class GodownService implements GodownServiceInterface
             $data['address']['address_type'] = 'office';
             $data['address']['addressable_type'] = 'godown';
             $data['address']['addressable_id'] = $godown->id;
-            if (!empty($data['address']['id'])) {
+            if (! empty($data['address']['id'])) {
                 $address = $godown->address()->find($data['address']['id']);
                 // dd($address);
                 $address?->update($data['address']);
@@ -76,15 +74,16 @@ class GodownService implements GodownServiceInterface
             }
         }
 
-
         return $godown->fresh()->load($this->resource);
     }
 
     public function delete(int $id): bool
     {
         $record = Godown::findOrFail($id);
+
         return $record->delete();
     }
+
     public function getGodownItemStocks(int $item_id): Collection
     {
         return Godown::with([
@@ -94,9 +93,9 @@ class GodownService implements GodownServiceInterface
                 })
                     ->select('id', 'godown_id', 'stock_journal_entry_id', 'actual_quantity'); // Important!
             },
-            'stock_journal_godown_entries.stock_journal_entry:id,movement_type' // Join movement type
+            'stock_journal_godown_entries.stock_journal_entry:id,movement_type', // Join movement type
         ])
-        ->where('storage_unit_type', 'GODOWN')
+            ->where('storage_unit_type', 'GODOWN')
             ->get()
             ->map(function ($godown) use ($item_id) {
 
@@ -118,7 +117,6 @@ class GodownService implements GodownServiceInterface
             });
     }
 
-
     public function getGodownItemBatches(int $item_id, int $godown_id): Collection
     {
         $godown = Godown::with([
@@ -129,13 +127,13 @@ class GodownService implements GodownServiceInterface
                     $q->where('stock_item_id', $item_id);
                 })
                     ->with([
-                        'stock_journal_entry:id,stock_item_id,movement_type'
+                        'stock_journal_entry:id,stock_item_id,movement_type',
                     ]);
 
-            }
+            },
         ])->find($godown_id);
 
-        if (!$godown) {
+        if (! $godown) {
             return collect([]);
         }
 
@@ -159,20 +157,19 @@ class GodownService implements GodownServiceInterface
                 'batchNo' => $batchNo,
                 'mfgDate' => $first->mfg_date,
                 'expiryDate' => $first->expiry_date,
-                'stockInHand' => $stock
+                'stockInHand' => $stock,
             ];
 
         })->values();
     }
 
-        public function getZones(): Collection
-        {
-            return Godown::where('storage_unit_type', 'ZONE')->get();
-        }
+    public function getZones(): Collection
+    {
+        return Godown::where('storage_unit_type', 'ZONE')->get();
+    }
 
-        public function getZoneById(int $id): ?Godown
-        {
-            return Godown::where('storage_unit_type', 'ZONE')->findOrFail($id);
-            }
-
+    public function getZoneById(int $id): ?Godown
+    {
+        return Godown::where('storage_unit_type', 'ZONE')->findOrFail($id);
+    }
 }

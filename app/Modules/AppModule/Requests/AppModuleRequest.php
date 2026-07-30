@@ -14,17 +14,18 @@ class AppModuleRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255','unique:app_modules,name'],
-            'code' => ['sometimes','required', 'string', 'max:255','unique:app_modules,code'],
-            'description' => ['sometimes','required', 'string', 'max:255'],
-            'status' => ['sometimes','required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:app_modules,name'],
+            'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:app_modules,code'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', 'string', 'max:255'],
+            'icon' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $id=$this->route('app_module');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:app_modules,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:app_modules,code,' . $id,];
+            $id = $this->route('app_module');
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:app_modules,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:app_modules,code,'.$id];
 
         }
 

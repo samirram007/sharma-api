@@ -3,21 +3,16 @@
 namespace Modules\Country\Resources;
 
 use App\Http\Resources\SuccessResource;
-use Modules\State\Resources\StateCollection;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 class CountryResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'phoneCode' => $this->phone_code,
-            'isoCode' => $this->iso_code,
-            // 'states' => new StateCollection($this->whenLoaded('states')),
 
-        ];
+        return $this->toCamelCaseArray($request);
     }
 }

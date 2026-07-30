@@ -1,7 +1,8 @@
 <?php
+
 namespace App\Enums;
 
-//['fifo','lifo','moving_average','standard','batch','serial']
+// ['fifo','lifo','moving_average','standard','batch','serial']
 enum CostingMethod: string
 {
     case AtZeroCost = 'at_zero_cost';
@@ -17,6 +18,6 @@ enum CostingMethod: string
 
     public static function getValues(): array
     {
-        return array_map(fn($case) => $case->value, self::cases());
+        return array_map(fn ($case) => $case->value, self::cases());
     }
 }

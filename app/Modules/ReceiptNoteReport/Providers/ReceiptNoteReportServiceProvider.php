@@ -2,9 +2,10 @@
 
 namespace Modules\ReceiptNoteReport\Providers;
 
-use Modules\ReceiptNoteReport\Services\ReceiptNoteReportService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\ReceiptNoteReport\Services\ReceiptNoteReportService;
+use Modules\Voucher\Contracts\VoucherServiceInterface;
 
 class ReceiptNoteReportServiceProvider extends ServiceProvider
 {
@@ -12,7 +13,7 @@ class ReceiptNoteReportServiceProvider extends ServiceProvider
     {
         $this->app->bind(ReceiptNoteReportService::class, function ($app) {
             return new ReceiptNoteReportService(
-                $app->make(\Modules\Voucher\Contracts\VoucherServiceInterface::class)
+                $app->make(VoucherServiceInterface::class)
             );
         });
     }
@@ -26,6 +27,6 @@ class ReceiptNoteReportServiceProvider extends ServiceProvider
     {
         Route::middleware('api')
             ->prefix('api')
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__.'/../Routes/api.php');
     }
 }

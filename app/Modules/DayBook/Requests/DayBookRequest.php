@@ -14,17 +14,17 @@ class DayBookRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255','unique:day_books,name'],
-            'code' => ['sometimes','required', 'string', 'max:255','unique:day_books,code'],
-            'description' => ['sometimes','required', 'string', 'max:255'],
-            'status' => ['sometimes','required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:day_books,name'],
+            'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:day_books,code'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', 'string', 'max:255'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $id=$this->route('day_book');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:day_books,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:day_books,code,' . $id,];
+            $id = $this->route('day_book');
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:day_books,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:day_books,code,'.$id];
 
         }
 

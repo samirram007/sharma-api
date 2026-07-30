@@ -2,35 +2,33 @@
 
 use App\Http\Controllers\Api\EnumController;
 use App\Http\Controllers\Api\FileController;
-
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
-Route::post('clear', function () {
-    Artisan::call('cache:clear');
-    Artisan::call('config:clear');
-    Artisan::call('config:cache');
-    Artisan::call('route:clear');
-    Artisan::call('route:cache');
-    Artisan::call('view:clear');
-
-});
-Route::get('clear', function () {
-    Artisan::call('cache:clear');
-    Artisan::call('config:clear');
-    Artisan::call('config:cache');
-    Artisan::call('route:clear');
-    Artisan::call('route:cache');
-    Artisan::call('view:clear');
-
-});
-
-Route::post('reload', function () {
-    Artisan::call('migrate:refresh --seed');
-});
-
 Route::middleware(['jwt.cookies'])->group(function () {
+    Route::post('clear', function () {
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('config:cache');
+        Artisan::call('route:clear');
+        Artisan::call('route:cache');
+        Artisan::call('view:clear');
+    });
+    Route::get('clear', function () {
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('config:cache');
+        Artisan::call('route:clear');
+        Artisan::call('route:cache');
+        Artisan::call('view:clear');
+    });
 
+    Route::post('reload', function () {
+        if (! app()->environment('local')) {
+            abort(403, 'Reload is only allowed in local environment.');
+        }
+        Artisan::call('migrate:refresh --seed');
+    });
 
     Route::get('enums/{enum}', [EnumController::class, 'index']);
     Route::get('report_template_files', [FileController::class, 'report_template_files']);

@@ -2,39 +2,37 @@
 
 namespace Modules\Salary\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Salary\Contracts\SalaryServiceInterface;
 use Modules\Salary\Models\Salary;
-use Illuminate\Database\Eloquent\Collection;
 
-class SalaryService implements SalaryServiceInterface
+class SalaryService extends BaseService implements SalaryServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = Salary::class;
 
     public function getAll(): Collection
     {
-        return Salary::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Salary
     {
-        return Salary::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Salary
     {
-        return Salary::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Salary
     {
-        $record = Salary::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Salary::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

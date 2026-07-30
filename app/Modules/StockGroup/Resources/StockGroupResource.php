@@ -2,14 +2,19 @@
 
 namespace Modules\StockGroup\Resources;
 
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class StockGroupResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -19,7 +24,7 @@ class StockGroupResource extends SuccessResource
             'parentId' => $this->parent_id,
             'parent' => new StockGroupResource($this->whenLoaded('parent')),
 
+        ]);
 
-        ];
     }
 }

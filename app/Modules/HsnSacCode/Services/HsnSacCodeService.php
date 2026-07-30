@@ -2,39 +2,37 @@
 
 namespace Modules\HsnSacCode\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\HsnSacCode\Contracts\HsnSacCodeServiceInterface;
 use Modules\HsnSacCode\Models\HsnSacCode;
-use Illuminate\Database\Eloquent\Collection;
 
-class HsnSacCodeService implements HsnSacCodeServiceInterface
+class HsnSacCodeService extends BaseService implements HsnSacCodeServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = HsnSacCode::class;
 
     public function getAll(): Collection
     {
-        return HsnSacCode::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?HsnSacCode
     {
-        return HsnSacCode::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): HsnSacCode
     {
-        return HsnSacCode::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): HsnSacCode
     {
-        $record = HsnSacCode::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = HsnSacCode::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

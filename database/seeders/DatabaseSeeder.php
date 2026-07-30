@@ -4,67 +4,60 @@ namespace Database\Seeders;
 
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Modules\AppModule\Database\Seeders\AppModuleSeeder;
-use Modules\Menu\Database\Seeders\MenuSeeder;
-use Modules\Currency\Database\Seeders\CurrencySeeder;
-use Modules\Department\Database\Seeders\DepartmentSeeder;
-use Modules\Department\Models\Department;
-use Modules\Designation\Database\Seeders\DesignationSeeder;
-use Modules\Distributor\Database\Seeders\DistributorSeeder;
-use Modules\EmployeeGroup\Database\Seeders\EmployeeGroupSeeder;
-use Modules\Grade\Database\Seeders\GradeSeeder;
-use Modules\Status\Database\Seeders\StatusSeeder;
-use Modules\GstRegistrationType\Database\Seeders\GstRegistrationTypeSeeder;
-use Modules\GstRegistrationType\Models\GstRegistrationType;
-use Modules\Role\Database\Seeders\RoleSeeder;
-use Modules\Shift\Database\Seeders\ShiftSeeder;
-use Modules\Supplier\Database\Seeders\SupplierSeeder;
-use Modules\UserFiscalYear\Database\Seeders\UserFiscalYearSeeder;
-
 use Illuminate\Database\Seeder;
-
-use Database\Seeders\SampleDataSeeder;
-
-use Modules\State\Database\Seeders\StateSeeder;
-use Modules\StockCategory\Models\StockCategory;
-use Modules\Godown\Database\Seeders\GodownSeeder;
-use Modules\Company\Database\Seeders\CompanySeeder;
-use Modules\Country\Database\Seeders\CountrySeeder;
-use Modules\Purchase\Database\Seeders\PurchaseSeeder;
-use Modules\StockItem\Database\Seeders\StockItemSeeder;
-use Modules\StockUnit\Database\Seeders\StockUnitSeeder;
-use Modules\FiscalYear\Database\Seeders\FiscalYearSeeder;
-use Modules\StockGroup\Database\Seeders\StockGroupSeeder;
-use Modules\UniqueQuantityCode\Models\UniqueQuantityCode;
-use Modules\CompanyType\Database\Seeders\CompanyTypeSeeder;
-use Modules\VoucherType\Database\Seeders\VoucherTypeSeeder;
-
 use Modules\AccountGroup\Database\Seeders\AccountGroupSeeder;
 use Modules\AccountLedger\Database\Seeders\AccountLedgerSeeder;
 use Modules\AccountNature\Database\Seeders\AccountNatureSeeder;
+use Modules\AppModule\Database\Seeders\AppModuleSeeder;
+use Modules\AppModuleFeature\Database\Seeders\AppModuleFeatureSeeder;
+use Modules\AppModuleFeature\Database\Seeders\MenuFeatureSeeder;
+use Modules\Company\Database\Seeders\CompanySeeder;
+use Modules\CompanyType\Database\Seeders\CompanyTypeSeeder;
+use Modules\Country\Database\Seeders\CountrySeeder;
+use Modules\Currency\Database\Seeders\CurrencySeeder;
+use Modules\Department\Database\Seeders\DepartmentSeeder;
+use Modules\Designation\Database\Seeders\DesignationSeeder;
+use Modules\Distributor\Database\Seeders\DistributorSeeder;
+use Modules\EmployeeGroup\Database\Seeders\EmployeeGroupSeeder;
+use Modules\FiscalYear\Database\Seeders\FiscalYearSeeder;
+use Modules\Godown\Database\Seeders\GodownSeeder;
+use Modules\Grade\Database\Seeders\GradeSeeder;
+use Modules\GstRegistrationType\Database\Seeders\GstRegistrationTypeSeeder;
+use Modules\Menu\Database\Seeders\MenuSeeder;
+use Modules\Purchase\Database\Seeders\PurchaseSeeder;
+use Modules\Role\Database\Seeders\RoleSeeder;
+use Modules\RolePermission\Database\Seeders\RolePermissionSeeder;
+use Modules\Shift\Database\Seeders\ShiftSeeder;
+use Modules\State\Database\Seeders\StateSeeder;
+use Modules\Status\Database\Seeders\StatusSeeder;
 use Modules\StockCategory\Database\Seeders\StockCategorySeeder;
-use Modules\VoucherClassification\Models\VoucherClassification;
-use Modules\VoucherCategory\Database\Seeders\VoucherCategorySeeder;
+use Modules\StockGroup\Database\Seeders\StockGroupSeeder;
+use Modules\StockItem\Database\Seeders\StockItemSeeder;
+use Modules\StockUnit\Database\Seeders\StockUnitSeeder;
+use Modules\Supplier\Database\Seeders\SupplierSeeder;
 use Modules\UniqueQuantityCode\Database\Seeders\UniqueQuantityCodeSeeder;
+use Modules\UserFiscalYear\Database\Seeders\UserFiscalYearSeeder;
+use Modules\VoucherCategory\Database\Seeders\VoucherCategorySeeder;
 use Modules\VoucherClassification\Database\Seeders\VoucherClassificationSeeder;
-
+use Modules\VoucherType\Database\Seeders\VoucherTypeSeeder;
 
 class DatabaseSeeder extends Seeder
 {
-
     protected static ?string $password;
+
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
 
-
         $this->call([
-
-            // AppModuleSeeder::class,
+            AppModuleSeeder::class,
+            AppModuleFeatureSeeder::class,
+            MenuFeatureSeeder::class,
+            RoleSeeder::class,
             MenuSeeder::class,
-            // RoleSeeder::class,
+            RolePermissionSeeder::class,
 
             // GstRegistrationTypeSeeder::class,
 
@@ -106,7 +99,6 @@ class DatabaseSeeder extends Seeder
             // UserFiscalYearSeeder::class,
             // VoucherDemoSeeder::class,
             // ReceiptNoteSeeder::class,
-
 
         ]);
         // User::factory(10)->create();

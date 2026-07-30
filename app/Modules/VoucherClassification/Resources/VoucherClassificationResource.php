@@ -2,15 +2,20 @@
 
 namespace Modules\VoucherClassification\Resources;
 
-use Modules\VoucherType\Resources\VoucherTypeResource;
-use Illuminate\Http\Request;
-
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
+use Modules\VoucherType\Resources\VoucherTypeResource;
+
 class VoucherClassificationResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -23,6 +28,8 @@ class VoucherClassificationResource extends SuccessResource
             'percentage' => $this->percentage,
             'voucherTypeId' => $this->voucher_type_id,
             'voucherType' => new VoucherTypeResource($this->whenLoaded('voucher_type')),
-        ];
+
+        ]);
+
     }
 }

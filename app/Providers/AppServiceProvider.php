@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use Modules\Agent\Models\Agent;
 use Modules\Company\Models\Company;
@@ -15,8 +15,6 @@ use Modules\StorageUnit\Models\StorageUnit;
 use Modules\Supplier\Models\Supplier;
 use Modules\Transporter\Models\Transporter;
 use Modules\Vendor\Models\Vendor;
-
-use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AppServiceProvider extends ServiceProvider
 {

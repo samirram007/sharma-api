@@ -3,33 +3,32 @@
 namespace Modules\UserRole\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\UserRole\Contracts\UserRoleServiceInterface;
-use Modules\UserRole\Resources\UserRoleResource;
-use Modules\UserRole\Resources\UserRoleCollection;
-use Modules\UserRole\Requests\UserRoleRequest;
-use App\Http\Resources\SuccessResource;
 use App\Http\Resources\SuccessCollection;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Log;
+use Modules\UserRole\Contracts\UserRoleServiceInterface;
+use Modules\UserRole\Requests\UserRoleRequest;
+use Modules\UserRole\Resources\UserRoleCollection;
+use Modules\UserRole\Resources\UserRoleResource;
 
 class UserRoleController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected UserRoleServiceInterface $service)
-    {
-    }
+    public function __construct(protected UserRoleServiceInterface $service) {}
 
     public function index(): SuccessCollection
     {
         $data = $this->service->getAll();
+
         return new UserRoleCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
         $data = $this->service->getById($id);
+
         return new UserRoleResource($data);
     }
 
@@ -41,9 +40,9 @@ class UserRoleController extends Controller
             return new UserRoleResource($data ?? [], $messages = 'Role assigned successfully');
         }
 
-        return new JsonResponse([
-            'status' => $data,
-            'code' => 204,
+        return response()->json([
+            'success' => true,
+            'code' => 200,
             'message' => 'Role unassigned successfully',
         ]);
 
@@ -52,17 +51,12 @@ class UserRoleController extends Controller
     public function update(UserRoleRequest $request, int $id): SuccessResource
     {
         $data = $this->service->update($request->validated(), $id);
+
         return new UserRoleResource($data, $messages = 'UserRole updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-
-        $result = $this->service->delete($id);
-        return new JsonResponse([
-            'status' => $result,
-            'code' => 204,
-            'message' => $result ? 'UserRole deleted successfully' : 'UserRole not found',
-        ]);
+        return $this->deletedResponse($this->service->delete($id), 'UserRole');
     }
 }

@@ -2,39 +2,37 @@
 
 namespace Modules\GstRegistrationType\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\GstRegistrationType\Contracts\GstRegistrationTypeServiceInterface;
 use Modules\GstRegistrationType\Models\GstRegistrationType;
-use Illuminate\Database\Eloquent\Collection;
 
-class GstRegistrationTypeService implements GstRegistrationTypeServiceInterface
+class GstRegistrationTypeService extends BaseService implements GstRegistrationTypeServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = GstRegistrationType::class;
 
     public function getAll(): Collection
     {
-        return GstRegistrationType::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?GstRegistrationType
     {
-        return GstRegistrationType::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): GstRegistrationType
     {
-        return GstRegistrationType::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): GstRegistrationType
     {
-        $record = GstRegistrationType::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = GstRegistrationType::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

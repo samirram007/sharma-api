@@ -21,15 +21,14 @@ class FiscalYearRequest extends FormRequest
             'end_date' => ['sometimes', 'required', 'date', 'after:start_date'],
             'company_id' => ['sometimes', 'required', 'numeric', 'exists:companies,id'],
             'status' => ['required', Rule::enum(ActiveInactive::class)],
-            'assessment_year' => ['sometimes', 'string']
+            'assessment_year' => ['sometimes', 'string'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('fiscal_year');
 
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:fiscal_years,name,' . $id,];
-
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:fiscal_years,name,'.$id];
 
         }
 

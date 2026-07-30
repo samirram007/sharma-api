@@ -2,10 +2,10 @@
 
 namespace Modules\VoucherNo\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\VoucherNo\Contracts\VoucherNoServiceInterface;
 use Modules\VoucherNo\Models\VoucherNo;
 use Modules\VoucherType\Models\VoucherType;
-use Illuminate\Database\Eloquent\Collection;
 
 class VoucherNoService implements VoucherNoServiceInterface
 {
@@ -30,14 +30,17 @@ class VoucherNoService implements VoucherNoServiceInterface
     {
         $record = VoucherNo::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = VoucherNo::findOrFail($id);
+
         return $record->delete();
     }
+
     public function getVoucherNo(int $voucher_type_id, int $company_id, int $fiscal_year_id, ?int $branch_id = null): ?string
     {
         $voucherNoRecord = VoucherNo::where('voucher_type_id', $voucher_type_id)
@@ -51,7 +54,7 @@ class VoucherNoService implements VoucherNoServiceInterface
         } else {
             $prefix = VoucherType::find($voucher_type_id)->code;
             $voucherNoRecord = new VoucherNo([
-                'prefix' => substr($prefix, 0, 4) . '-',
+                'prefix' => substr($prefix, 0, 4).'-',
                 'voucher_type_id' => $voucher_type_id,
                 'company_id' => $company_id,
                 'branch_id' => $branch_id ?? null,
@@ -62,7 +65,6 @@ class VoucherNoService implements VoucherNoServiceInterface
             $voucherNoRecord->save();
         }
 
-
-        return $voucherNoRecord ? $voucherNoRecord->prefix . $voucherNoRecord->current_no : null;
+        return $voucherNoRecord ? $voucherNoRecord->prefix.$voucherNoRecord->current_no : null;
     }
 }

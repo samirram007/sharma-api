@@ -2,14 +2,19 @@
 
 namespace Modules\StockUnit\Resources;
 
+use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
 
-use App\Http\Resources\SuccessResource;
 class StockUnitResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -24,7 +29,9 @@ class StockUnitResource extends SuccessResource
             'secondaryStockUnitId' => $this->secondary_stock_unit_id,
             'secondaryStockUnit' => new StockUnitResource($this->whenLoaded('secondary_stock_unit')),
             'conversionFactor' => $this->conversion_factor,
-            'noOfDecimalPlaces' => $this->no_of_decimal_places
-        ];
+            'noOfDecimalPlaces' => $this->no_of_decimal_places,
+
+        ]);
+
     }
 }

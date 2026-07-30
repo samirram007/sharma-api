@@ -3,6 +3,8 @@
 namespace Modules\Voucher\Resources;
 
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
 use Modules\Company\Resources\CompanyResource;
 use Modules\FiscalYear\Resources\FiscalYearResource;
 use Modules\StockJournal\Resources\StockJournalResource;
@@ -11,14 +13,16 @@ use Modules\VoucherEntry\Resources\VoucherEntryResource;
 use Modules\VoucherParty\Resources\VoucherPartyResource;
 use Modules\VoucherReference\Resources\VoucherReferenceResource;
 use Modules\VoucherType\Resources\VoucherTypeResource;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 class VoucherPrintResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'voucherNo' => $this->voucher_no,
             'voucherDate' => $this->voucher_date,
@@ -45,6 +49,8 @@ class VoucherPrintResource extends SuccessResource
             'voucherDispatchDetail' => VoucherDispatchDetailResource::make($this->whenLoaded('voucher_dispatch_detail')),
             'voucherReferences' => VoucherReferenceResource::collection($this->whenLoaded('voucher_references')),
             'referenceBy' => VoucherReferenceResource::make($this->whenLoaded('referenced_by')),
-        ];
+
+        ]);
+
     }
 }

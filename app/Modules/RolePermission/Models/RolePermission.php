@@ -2,11 +2,11 @@
 
 namespace Modules\RolePermission\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\AppModuleFeature\Models\AppModuleFeature;
 use Modules\Role\Models\Role;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RolePermission extends Model
 {
@@ -15,9 +15,11 @@ class RolePermission extends Model
     protected $table = 'role_permissions';
 
     protected $fillable = ['role_id', 'app_module_feature_id', 'is_allowed'];
+
     public $timestamps = false;
+
     protected $casts = [
-        'is_allowed' => 'boolean'
+        'is_allowed' => 'boolean',
     ];
 
     public function role(): BelongsTo

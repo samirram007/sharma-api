@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Support;
 
 class ModuleConnectionResolver
@@ -7,11 +8,14 @@ class ModuleConnectionResolver
     {
         $default = config('module-database.default');
 
-        if (!$class) return $default;
+        if (! $class) {
+            return $default;
+        }
 
         // Extract module from namespace: Modules\{Module}\...
         if (preg_match('/Modules\\\\([^\\\\]+)/', $class, $m)) {
             $module = $m[1];
+
             return config("module-database.map.$module", $default);
         }
 

@@ -2,9 +2,9 @@
 
 namespace Modules\VoucherReference\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
 use Modules\VoucherReference\Models\VoucherReference;
-use Illuminate\Database\Eloquent\Collection;
 
 class VoucherReferenceService implements VoucherReferenceServiceInterface
 {
@@ -14,12 +14,14 @@ class VoucherReferenceService implements VoucherReferenceServiceInterface
     {
         return VoucherReference::with($this->resource)->get();
     }
+
     public function getByVoucherId(int $voucherId): Collection
     {
         return VoucherReference::with($this->resource)
             ->where('voucher_id', $voucherId)
             ->get();
     }
+
     public function getByReferenceVoucherId(int $voucherId): Collection
     {
         return VoucherReference::with($this->resource)
@@ -43,7 +45,6 @@ class VoucherReferenceService implements VoucherReferenceServiceInterface
             ->get();
     }
 
-
     public function getById(int $id): ?VoucherReference
     {
         return VoucherReference::with($this->resource)->findOrFail($id);
@@ -58,12 +59,14 @@ class VoucherReferenceService implements VoucherReferenceServiceInterface
     {
         $record = VoucherReference::findOrFail($id);
         $record->update($data);
+
         return $record->fresh();
     }
 
     public function delete(int $id): bool
     {
         $record = VoucherReference::findOrFail($id);
+
         return $record->delete();
     }
 }

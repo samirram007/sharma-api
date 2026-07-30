@@ -2,9 +2,9 @@
 
 namespace Modules\StockJournalGodownEntry\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
+use Tests\TestCase;
 
 class StockJournalGodownEntryTest extends TestCase
 {
@@ -14,77 +14,77 @@ class StockJournalGodownEntryTest extends TestCase
     {
         $response = $this->getJson('/api/stock_journal_godown_entries');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_StockJournalGodownEntry(): void
+    public function test_can_create_stock_journal_godown_entry(): void
     {
         $data = ['name' => 'Test StockJournalGodownEntry'];
 
         $response = $this->postJson('/api/stock_journal_godown_entries', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('stock_journal_godown_entries', $data);
     }
 
-    public function test_can_show_StockJournalGodownEntry(): void
+    public function test_can_show_stock_journal_godown_entry(): void
     {
         $StockJournalGodownEntry = StockJournalGodownEntry::factory()->create();
 
-        $response = $this->getJson('/api/stock_journal_godown_entries/' . $StockJournalGodownEntry->id);
+        $response = $this->getJson('/api/stock_journal_godown_entries/'.$StockJournalGodownEntry->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_StockJournalGodownEntry(): void
+    public function test_can_update_stock_journal_godown_entry(): void
     {
         $StockJournalGodownEntry = StockJournalGodownEntry::factory()->create();
         $data = ['name' => 'Updated StockJournalGodownEntry'];
 
-        $response = $this->putJson('/api/stock_journal_godown_entries/' . $StockJournalGodownEntry->id, $data);
+        $response = $this->putJson('/api/stock_journal_godown_entries/'.$StockJournalGodownEntry->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('stock_journal_godown_entries', $data);
     }
 
-    public function test_can_delete_StockJournalGodownEntry(): void
+    public function test_can_delete_stock_journal_godown_entry(): void
     {
         $StockJournalGodownEntry = StockJournalGodownEntry::factory()->create();
 
-        $response = $this->deleteJson('/api/stock_journal_godown_entries/' . $StockJournalGodownEntry->id);
+        $response = $this->deleteJson('/api/stock_journal_godown_entries/'.$StockJournalGodownEntry->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('stock_journal_godown_entries', ['id' => $StockJournalGodownEntry->id]);
     }
@@ -93,6 +93,6 @@ class StockJournalGodownEntryTest extends TestCase
     {
         $response = $this->postJson('/api/stock_journal_godown_entries', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

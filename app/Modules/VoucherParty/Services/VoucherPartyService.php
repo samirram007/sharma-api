@@ -2,40 +2,37 @@
 
 namespace Modules\VoucherParty\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\VoucherParty\Contracts\VoucherPartyServiceInterface;
 use Modules\VoucherParty\Models\VoucherParty;
-use Illuminate\Database\Eloquent\Collection;
 
-class VoucherPartyService implements VoucherPartyServiceInterface
+class VoucherPartyService extends BaseService implements VoucherPartyServiceInterface
 {
-    protected $resource = [];
+    protected string $modelClass = VoucherParty::class;
 
     public function getAll(): Collection
     {
-        return VoucherParty::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?VoucherParty
     {
-        return VoucherParty::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): VoucherParty
     {
-
-        return VoucherParty::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): VoucherParty
     {
-        $record = VoucherParty::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = VoucherParty::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

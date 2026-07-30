@@ -2,13 +2,12 @@
 
 namespace Modules\StorageUnit\Models;
 
-use Modules\Address\Models\Address;
-use Modules\StockUnit\Models\StockUnit;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Modules\Address\Models\Address;
+use Modules\StockUnit\Models\StockUnit;
 
 class StorageUnit extends Model
 {
@@ -60,10 +59,12 @@ class StorageUnit extends Model
     {
         return $this->belongsTo(StorageUnit::class, 'parent_id', 'id');
     }
+
     public function capacity_unit(): BelongsTo
     {
         return $this->belongsTo(StockUnit::class, 'capacity_unit_id', 'id');
     }
+
     public static function getUniqueCode(): string
     {
         $prefix = 'LOC';
@@ -76,7 +77,7 @@ class StorageUnit extends Model
 
         if ($lastCode) {
             // Extract numeric part
-            $lastNumber = (int) str_replace($prefix . '-', '', $lastCode);
+            $lastNumber = (int) str_replace($prefix.'-', '', $lastCode);
             $nextNumber = $lastNumber + 1;
         } else {
             $nextNumber = 1;

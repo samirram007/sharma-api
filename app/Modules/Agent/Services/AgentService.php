@@ -2,39 +2,37 @@
 
 namespace Modules\Agent\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Agent\Contracts\AgentServiceInterface;
 use Modules\Agent\Models\Agent;
-use Illuminate\Database\Eloquent\Collection;
 
-class AgentService implements AgentServiceInterface
+class AgentService extends BaseService implements AgentServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = Agent::class;
 
     public function getAll(): Collection
     {
-        return Agent::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?Agent
     {
-        return Agent::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): Agent
     {
-        return Agent::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): Agent
     {
-        $record = Agent::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = Agent::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

@@ -2,39 +2,44 @@
 
 namespace Modules\DeliveryRoute\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\DeliveryRoute\Contracts\DeliveryRouteServiceInterface;
 use Modules\DeliveryRoute\Models\DeliveryRoute;
-use Illuminate\Database\Eloquent\Collection;
 
-class DeliveryRouteService implements DeliveryRouteServiceInterface
+class DeliveryRouteService extends BaseService implements DeliveryRouteServiceInterface
 {
-    protected $resource = ['source_place', 'destination_place', 'transporter', 'rate_unit'];
+    protected string $modelClass = DeliveryRoute::class;
+
+    protected array $defaultResource = [
+        'source_place',
+        'destination_place',
+        'transporter',
+        'rate_unit',
+    ];
 
     public function getAll(): Collection
     {
-        return DeliveryRoute::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?DeliveryRoute
     {
-        return DeliveryRoute::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): DeliveryRoute
     {
-        return DeliveryRoute::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): DeliveryRoute
     {
-        $record = DeliveryRoute::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = DeliveryRoute::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

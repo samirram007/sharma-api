@@ -2,21 +2,19 @@
 
 namespace Modules\StockJournal\Services;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Validator;
 use Modules\StockJournal\Contracts\StockJournalServiceInterface;
 use Modules\StockJournal\Models\StockJournal;
 use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
 use Modules\StockJournalEntry\Requests\StockJournalEntryRequest;
-use Modules\StockJournalEntry\Services\StockJournalEntryService;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Validator;
 
 class StockJournalService implements StockJournalServiceInterface
 {
-
     protected $resource = [];
-    protected $stockJournalEntryService;
 
+    protected $stockJournalEntryService;
 
     public function __construct(
         StockJournalEntryServiceInterface $stockJournalEntryService,
@@ -49,34 +47,37 @@ class StockJournalService implements StockJournalServiceInterface
             $data['type'] = 'in';
         }
 
-
         $stockJournal = StockJournal::create($data);
 
-        if (!empty($data['stock_journal_entries'])) {
+        if (! empty($data['stock_journal_entries'])) {
             foreach ($data['stock_journal_entries'] as $key => $entryData) {
                 $entryData['stock_journal_id'] = $stockJournal->id;
-                $rules = (new StockJournalEntryRequest())->rules();
+                $rules = (new StockJournalEntryRequest)->rules();
                 $validatedStockJournalEntry = Validator::make($entryData, $rules)->validate();
 
                 $data['stock_journal_entries'][$key] = $this->stockJournalEntryService->store($validatedStockJournalEntry);
             }
 
         }
+
         return $stockJournal;
     }
+
     protected function generateJournalNo(): string
     {
         // Implement your logic to generate a unique journal number
-        $latestJournal = \Modules\StockJournal\Models\StockJournal::orderBy('id', 'desc')->first();
+        $latestJournal = StockJournal::orderBy('id', 'desc')->first();
         $nextNumber = $latestJournal ? intval(substr($latestJournal->journal_no, -5)) + 1 : 1;
-        return 'JRN-' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+
+        return 'JRN-'.str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
     }
+
     public function update(array $data, int $id): StockJournal
     {
         $record = StockJournal::findOrFail($id);
         $record->update($data);
 
-        if (!empty($data['stock_journal_entries'])) {
+        if (! empty($data['stock_journal_entries'])) {
 
             $this->checkDelete(
                 $data['stock_journal_entries'],
@@ -94,7 +95,7 @@ class StockJournalService implements StockJournalServiceInterface
 
                 $validatedEntry = Validator::make($entryData, $rules)->validate();
 
-                if (!empty($entryData['id'])) {
+                if (! empty($entryData['id'])) {
 
                     $this->stockJournalEntryService->update($validatedEntry, $entryData['id']);
 
@@ -105,6 +106,7 @@ class StockJournalService implements StockJournalServiceInterface
             }
 
         }
+
         return $record->fresh();
 
     }
@@ -113,7 +115,7 @@ class StockJournalService implements StockJournalServiceInterface
     {
         $existingEntries = $this->stockJournalEntryService->getByStockJournalId($record->id);
 
-        //delete entries not present in the update data
+        // delete entries not present in the update data
         foreach ($existingEntries as $existingEntry) {
 
             $found = false;
@@ -128,16 +130,16 @@ class StockJournalService implements StockJournalServiceInterface
                 }
             }
 
-            if (!$found) {
+            if (! $found) {
                 $this->stockJournalEntryService->delete($existingEntry->id);
             }
         }
     }
 
-
     public function delete(int $id): bool
     {
         $record = StockJournal::findOrFail($id);
+
         return $record->delete();
     }
 }

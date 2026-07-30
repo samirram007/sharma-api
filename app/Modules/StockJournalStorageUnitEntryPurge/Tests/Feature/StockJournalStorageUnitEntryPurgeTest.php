@@ -2,9 +2,9 @@
 
 namespace Modules\StockJournalStorageUnitEntryPurge\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\StockJournalStorageUnitEntryPurge\Models\StockJournalStorageUnitEntryPurge;
+use Tests\TestCase;
 
 class StockJournalStorageUnitEntryPurgeTest extends TestCase
 {
@@ -14,77 +14,77 @@ class StockJournalStorageUnitEntryPurgeTest extends TestCase
     {
         $response = $this->getJson('/api/stock_journal_storage_unit_entry_purges');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_StockJournalStorageUnitEntryPurge(): void
+    public function test_can_create_stock_journal_storage_unit_entry_purge(): void
     {
         $data = ['name' => 'Test StockJournalStorageUnitEntryPurge'];
 
         $response = $this->postJson('/api/stock_journal_storage_unit_entry_purges', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('stock_journal_storage_unit_entry_purges', $data);
     }
 
-    public function test_can_show_StockJournalStorageUnitEntryPurge(): void
+    public function test_can_show_stock_journal_storage_unit_entry_purge(): void
     {
         $StockJournalStorageUnitEntryPurge = StockJournalStorageUnitEntryPurge::factory()->create();
 
-        $response = $this->getJson('/api/stock_journal_storage_unit_entry_purges/' . $StockJournalStorageUnitEntryPurge->id);
+        $response = $this->getJson('/api/stock_journal_storage_unit_entry_purges/'.$StockJournalStorageUnitEntryPurge->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_StockJournalStorageUnitEntryPurge(): void
+    public function test_can_update_stock_journal_storage_unit_entry_purge(): void
     {
         $StockJournalStorageUnitEntryPurge = StockJournalStorageUnitEntryPurge::factory()->create();
         $data = ['name' => 'Updated StockJournalStorageUnitEntryPurge'];
 
-        $response = $this->putJson('/api/stock_journal_storage_unit_entry_purges/' . $StockJournalStorageUnitEntryPurge->id, $data);
+        $response = $this->putJson('/api/stock_journal_storage_unit_entry_purges/'.$StockJournalStorageUnitEntryPurge->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('stock_journal_storage_unit_entry_purges', $data);
     }
 
-    public function test_can_delete_StockJournalStorageUnitEntryPurge(): void
+    public function test_can_delete_stock_journal_storage_unit_entry_purge(): void
     {
         $StockJournalStorageUnitEntryPurge = StockJournalStorageUnitEntryPurge::factory()->create();
 
-        $response = $this->deleteJson('/api/stock_journal_storage_unit_entry_purges/' . $StockJournalStorageUnitEntryPurge->id);
+        $response = $this->deleteJson('/api/stock_journal_storage_unit_entry_purges/'.$StockJournalStorageUnitEntryPurge->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('stock_journal_storage_unit_entry_purges', ['id' => $StockJournalStorageUnitEntryPurge->id]);
     }
@@ -93,6 +93,6 @@ class StockJournalStorageUnitEntryPurgeTest extends TestCase
     {
         $response = $this->postJson('/api/stock_journal_storage_unit_entry_purges', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

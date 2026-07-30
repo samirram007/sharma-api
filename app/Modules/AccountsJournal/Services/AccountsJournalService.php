@@ -2,39 +2,37 @@
 
 namespace Modules\AccountsJournal\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\AccountsJournal\Contracts\AccountsJournalServiceInterface;
 use Modules\AccountsJournal\Models\AccountsJournal;
-use Illuminate\Database\Eloquent\Collection;
 
-class AccountsJournalService implements AccountsJournalServiceInterface
+class AccountsJournalService extends BaseService implements AccountsJournalServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = AccountsJournal::class;
 
     public function getAll(): Collection
     {
-        return AccountsJournal::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?AccountsJournal
     {
-        return AccountsJournal::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): AccountsJournal
     {
-        return AccountsJournal::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): AccountsJournal
     {
-        $record = AccountsJournal::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = AccountsJournal::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

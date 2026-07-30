@@ -3,15 +3,20 @@
 namespace Modules\VoucherType\Resources;
 
 use App\Http\Resources\SuccessResource;
-use Modules\VoucherCategory\Resources\VoucherCategoryResource;
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\VoucherCategory\Resources\VoucherCategoryResource;
+use Modules\VoucherClassification\Resources\VoucherClassificationResource;
 
 class VoucherTypeResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
@@ -22,8 +27,9 @@ class VoucherTypeResource extends SuccessResource
             'voucherCategoryId' => $this->voucher_category_id,
             'voucherCategory' => new VoucherCategoryResource($this->whenLoaded('voucher_category')),
             'voucherClassificationId' => $this->voucher_classification_id,
-            'voucherClassifications' => \Modules\VoucherClassification\Resources\VoucherClassificationResource::collection($this->whenLoaded('voucher_classifications')),
+            'voucherClassifications' => VoucherClassificationResource::collection($this->whenLoaded('voucher_classifications')),
 
-        ];
+        ]);
+
     }
 }

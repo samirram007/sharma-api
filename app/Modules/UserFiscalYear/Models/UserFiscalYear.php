@@ -2,11 +2,11 @@
 
 namespace Modules\UserFiscalYear\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\FiscalYear\Models\FiscalYear;
 use Modules\User\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserFiscalYear extends Model
 {
@@ -15,6 +15,7 @@ class UserFiscalYear extends Model
     protected $table = 'user_fiscal_years';
 
     public $timestamps = false;
+
     protected $fillable = [
         'user_id',
         'fiscal_year_id',
@@ -28,6 +29,7 @@ class UserFiscalYear extends Model
         'end_date' => 'date',
         'current_date' => 'date',
     ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

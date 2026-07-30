@@ -23,8 +23,8 @@ class StockCategoryRequest extends FormRequest
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $id = $this->route('stock_category');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_categories,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_categories,code,' . $id,];
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_categories,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:stock_categories,code,'.$id];
 
         }
 

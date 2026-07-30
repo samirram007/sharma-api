@@ -2,39 +2,37 @@
 
 namespace Modules\CostCenter\Services;
 
+use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\CostCenter\Contracts\CostCenterServiceInterface;
 use Modules\CostCenter\Models\CostCenter;
-use Illuminate\Database\Eloquent\Collection;
 
-class CostCenterService implements CostCenterServiceInterface
+class CostCenterService extends BaseService implements CostCenterServiceInterface
 {
-    protected $resource=[];
+    protected string $modelClass = CostCenter::class;
 
     public function getAll(): Collection
     {
-        return CostCenter::with($this->resource)->get();
+        return $this->getAllRecords();
     }
 
     public function getById(int $id): ?CostCenter
     {
-        return CostCenter::with($this->resource)->findOrFail($id);
+        return $this->findOrFail($id);
     }
 
     public function store(array $data): CostCenter
     {
-        return CostCenter::create($data);
+        return $this->createRecord($data);
     }
 
     public function update(array $data, int $id): CostCenter
     {
-        $record = CostCenter::findOrFail($id);
-        $record->update($data);
-        return $record->fresh();
+        return $this->updateRecord($id, $data);
     }
 
     public function delete(int $id): bool
     {
-        $record = CostCenter::findOrFail($id);
-        return $record->delete();
+        return $this->deleteRecord($id);
     }
 }

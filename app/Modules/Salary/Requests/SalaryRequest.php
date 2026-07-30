@@ -14,17 +14,17 @@ class SalaryRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255','unique:salaries,name'],
-            'code' => ['sometimes','required', 'string', 'max:255','unique:salaries,code'],
-            'description' => ['sometimes','required', 'string', 'max:255'],
-            'status' => ['sometimes','required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:salaries,name'],
+            'code' => ['sometimes', 'required', 'string', 'max:255', 'unique:salaries,code'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', 'string', 'max:255'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $id=$this->route('salary');
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:salaries,name,' . $id,];
-            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:salaries,code,' . $id,];
+            $id = $this->route('salary');
+            $rules['name'] = ['sometimes', 'required', 'string', 'max:255', 'unique:salaries,name,'.$id];
+            $rules['code'] = ['sometimes', 'required', 'string', 'max:255', 'unique:salaries,code,'.$id];
 
         }
 

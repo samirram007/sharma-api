@@ -1,9 +1,9 @@
 <?php
+
 namespace App\Enums;
 
 enum AddressableType: string
 {
-
     case Company = 'company';
     case User = 'User';
     case Vendor = 'vendor';
@@ -13,8 +13,6 @@ enum AddressableType: string
 
     public static function getValues(): array
     {
-        return array_map(fn($case) => $case->value, self::cases());
+        return array_map(fn ($case) => $case->value, self::cases());
     }
-
-
 }

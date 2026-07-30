@@ -2,11 +2,10 @@
 
 namespace Modules\VoucherReference\Models;
 
-use Modules\Voucher\Models\Voucher;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Voucher\Models\Voucher;
 
 class VoucherReference extends Model
 {
@@ -30,6 +29,7 @@ class VoucherReference extends Model
     {
         return $this->belongsTo(Voucher::class, 'voucher_id', 'id');
     }
+
     public function reference_voucher(): BelongsTo
     {
         return $this->belongsTo(Voucher::class, 'ref_voucher_id', 'id');

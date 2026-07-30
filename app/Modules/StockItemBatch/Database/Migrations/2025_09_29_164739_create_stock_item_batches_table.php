@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('stock_item_batches', function (Blueprint $table) {
@@ -16,7 +17,6 @@ return new class extends Migration {
             $table->date('manufacture_date');
             $table->date('expiry_date')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
-
 
             $table->foreign('stock_item_id')->references('id')->on('stock_items')->onDelete('cascade');
             $table->foreign('stock_unit_id')->references('id')->on('stock_units')->onDelete('restrict');

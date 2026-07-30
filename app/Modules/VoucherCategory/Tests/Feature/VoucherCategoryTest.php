@@ -2,9 +2,9 @@
 
 namespace Modules\VoucherCategory\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\VoucherCategory\Models\VoucherCategory;
+use Tests\TestCase;
 
 class VoucherCategoryTest extends TestCase
 {
@@ -14,77 +14,77 @@ class VoucherCategoryTest extends TestCase
     {
         $response = $this->getJson('/api/voucher_categories');
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_create_VoucherCategory(): void
+    public function test_can_create_voucher_category(): void
     {
         $data = ['name' => 'Test VoucherCategory'];
 
         $response = $this->postJson('/api/voucher_categories', $data);
         $response->assertStatus(201)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('voucher_categories', $data);
     }
 
-    public function test_can_show_VoucherCategory(): void
+    public function test_can_show_voucher_category(): void
     {
         $VoucherCategory = VoucherCategory::factory()->create();
 
-        $response = $this->getJson('/api/voucher_categories/' . $VoucherCategory->id);
+        $response = $this->getJson('/api/voucher_categories/'.$VoucherCategory->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         'id',
-                         'name',
-                         'created_at',
-                         'updated_at'
-                     ],
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                ],
+                'status',
+                'code',
+                'message',
+            ]);
     }
 
-    public function test_can_update_VoucherCategory(): void
+    public function test_can_update_voucher_category(): void
     {
         $VoucherCategory = VoucherCategory::factory()->create();
         $data = ['name' => 'Updated VoucherCategory'];
 
-        $response = $this->putJson('/api/voucher_categories/' . $VoucherCategory->id, $data);
+        $response = $this->putJson('/api/voucher_categories/'.$VoucherCategory->id, $data);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data',
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'data',
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseHas('voucher_categories', $data);
     }
 
-    public function test_can_delete_VoucherCategory(): void
+    public function test_can_delete_voucher_category(): void
     {
         $VoucherCategory = VoucherCategory::factory()->create();
 
-        $response = $this->deleteJson('/api/voucher_categories/' . $VoucherCategory->id);
+        $response = $this->deleteJson('/api/voucher_categories/'.$VoucherCategory->id);
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'status',
-                     'code',
-                     'message'
-                 ]);
+            ->assertJsonStructure([
+                'status',
+                'code',
+                'message',
+            ]);
 
         $this->assertDatabaseMissing('voucher_categories', ['id' => $VoucherCategory->id]);
     }
@@ -93,6 +93,6 @@ class VoucherCategoryTest extends TestCase
     {
         $response = $this->postJson('/api/voucher_categories', []);
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Modules\Status\Resources;
 
-use Illuminate\Http\Request;
 use App\Http\Resources\SuccessCollection;
+use Illuminate\Http\Request;
 
 class StatusCollection extends SuccessCollection
 {

@@ -2,16 +2,20 @@
 
 namespace Modules\VoucherDispatchDetail\Resources;
 
-use Illuminate\Http\Request;
-
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
+use Illuminate\Http\Request;
 use Modules\StockUnit\Resources\StockUnitResource;
 
 class VoucherDispatchDetailResource extends SuccessResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+
+        return array_merge($this->toCamelCaseArray($request), [
+
             'id' => $this->id,
             'voucherId' => $this->voucher_id,
             'orderNumber' => $this->order_number,
@@ -46,9 +50,11 @@ class VoucherDispatchDetailResource extends SuccessResource
             'otherCharges' => $this->other_charges,
             'freightCharges' => $this->freight_charges,
             'totalFare' => $this->total_fare,
-            'weightUnit'=> new StockUnitResource($this->whenLoaded('weightUnit')),
-            'quantityUnit'=> new StockUnitResource($this->whenLoaded('quantityUnit')),
-            'volumeUnit'=> new StockUnitResource($this->whenLoaded('volumeUnit')),
-        ];
+            'weightUnit' => new StockUnitResource($this->whenLoaded('weightUnit')),
+            'quantityUnit' => new StockUnitResource($this->whenLoaded('quantityUnit')),
+            'volumeUnit' => new StockUnitResource($this->whenLoaded('volumeUnit')),
+
+        ]);
+
     }
 }
