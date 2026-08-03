@@ -4,7 +4,9 @@ namespace Modules\RolePermission\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\RolePermission\Contracts\RolePermissionRepositoryInterface;
 use Modules\RolePermission\Contracts\RolePermissionServiceInterface;
+use Modules\RolePermission\Repositories\RolePermissionRepository;
 use Modules\RolePermission\Services\RolePermissionService;
 
 class RolePermissionServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class RolePermissionServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(RolePermissionServiceInterface::class, RolePermissionService::class);
+        $this->app->singleton(RolePermissionRepositoryInterface::class, RolePermissionRepository::class);
     }
 
     public function boot(): void

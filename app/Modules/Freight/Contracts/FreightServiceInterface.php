@@ -2,14 +2,15 @@
 
 namespace Modules\Freight\Contracts;
 
+use App\Support\Contracts\BaseServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\Freight\Models\Freight;
 use Modules\Voucher\Models\Voucher;
 
-interface FreightServiceInterface
+interface FreightServiceInterface extends BaseServiceInterface
 {
-    public function getAll(): Collection;
+    public function getAll(): Collection|LengthAwarePaginator;
 
     public function getDeliveryNote(int $page = 1, int $perPage = 10, array $filters = []): LengthAwarePaginator;
 

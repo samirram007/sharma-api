@@ -8,6 +8,7 @@ use Modules\Auth\Controllers\Api\AuthController;
 Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('/user-profile', function (): JsonResponse {
         return response()->json([
             'success' => true,

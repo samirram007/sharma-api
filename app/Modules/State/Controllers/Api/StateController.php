@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\State\Contracts\StateServiceInterface;
+use Modules\State\Facades\StateFacade;
 use Modules\State\Requests\StateRequest;
 use Modules\State\Resources\StateCollection;
 use Modules\State\Resources\StateResource;
@@ -15,19 +15,16 @@ class StateController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected StateServiceInterface $service) {}
-
     public function index(): JsonResponse
     {
-        $data = $this->service->getAll();
+        $data = StateFacade::getAll();
 
-        // dd($data->toArray());
         return (new StateCollection($data))->response();
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = StateFacade::getById($id);
 
         return new StateResource($data, $messages = 'State retrieved successfully');
 
@@ -35,7 +32,7 @@ class StateController extends Controller
 
     public function store(StateRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = StateFacade::store($request->validated());
 
         return new StateResource($data, $messages = 'State created successfully');
 
@@ -43,7 +40,7 @@ class StateController extends Controller
 
     public function update(StateRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = StateFacade::update($request->validated(), $id);
 
         return new StateResource($data, $messages = 'State updated successfully');
 
@@ -51,6 +48,6 @@ class StateController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'State');
+        return $this->deletedResponse(StateFacade::delete($id), 'State');
     }
 }

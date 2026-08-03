@@ -4,7 +4,9 @@ namespace Modules\Holiday\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Holiday\Contracts\HolidayRepositoryInterface;
 use Modules\Holiday\Contracts\HolidayServiceInterface;
+use Modules\Holiday\Repositories\HolidayRepository;
 use Modules\Holiday\Services\HolidayService;
 
 class HolidayServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class HolidayServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(HolidayServiceInterface::class, HolidayService::class);
+        $this->app->singleton(HolidayRepositoryInterface::class, HolidayRepository::class);
     }
 
     public function boot(): void

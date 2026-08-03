@@ -2,18 +2,6 @@
 
 namespace Modules\DocumentUser\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\DocumentUser\Models\DocumentUser;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface DocumentUserServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?DocumentUser;
-
-    public function store(array $data): DocumentUser;
-
-    public function update(array $data, int $id): DocumentUser;
-
-    public function delete(int $id): bool;
-}
+interface DocumentUserServiceInterface extends BaseServiceInterface {}

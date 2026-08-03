@@ -2,43 +2,16 @@
 
 namespace Modules\AppModuleFeature\Services;
 
+use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\AppModuleFeature\Contracts\AppModuleFeatureServiceInterface;
 use Modules\AppModuleFeature\Models\AppModuleFeature;
 
-class AppModuleFeatureService implements AppModuleFeatureServiceInterface
+class AppModuleFeatureService extends BaseService implements AppModuleFeatureServiceInterface
 {
-    protected $resource = ['module'];
+    protected string $modelClass = AppModuleFeature::class;
 
-    public function getAll(): Collection
-    {
-        return AppModuleFeature::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?AppModuleFeature
-    {
-        return AppModuleFeature::with($this->resource)->findOrFail($id);
-    }
-
-    public function store(array $data): AppModuleFeature
-    {
-        return AppModuleFeature::create($data);
-    }
-
-    public function update(array $data, int $id): AppModuleFeature
-    {
-        $record = AppModuleFeature::findOrFail($id);
-        $record->update($data);
-
-        return $record->fresh();
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = AppModuleFeature::findOrFail($id);
-
-        return $record->delete();
-    }
+    protected array $defaultResource = ['module'];
 
     public function getByRoleAndModule(int $role_id, int $module_id): Collection
     {

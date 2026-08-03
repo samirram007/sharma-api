@@ -2,21 +2,11 @@
 
 namespace Modules\AccountLedger\Contracts;
 
+use App\Support\Contracts\BaseServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
-use Modules\AccountLedger\Models\AccountLedger;
 
-interface AccountLedgerServiceInterface
+interface AccountLedgerServiceInterface extends BaseServiceInterface
 {
-    public function getAll(): Collection;
-
-    public function getById(int $id): AccountLedger;
-
-    public function store(array $data): AccountLedger;
-
-    public function update(array $data, int $id): AccountLedger;
-
-    public function delete(int $id): bool;
-
     public function getLedgerBalance(int $id): ?array;
 
     public function getPurchaseLedgers(): Collection;

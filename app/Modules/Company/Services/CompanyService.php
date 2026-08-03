@@ -2,32 +2,35 @@
 
 namespace Modules\Company\Services;
 
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\Services\BaseService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Modules\Address\Requests\AddressRequest;
 use Modules\Company\Contracts\CompanyServiceInterface;
+use Modules\Company\Facades\CompanyRepositoryFacade;
 use Modules\Company\Models\Company;
 
-class CompanyService implements CompanyServiceInterface
+class CompanyService extends BaseService implements CompanyServiceInterface
 {
-    protected $resource = ['company_type', 'address', 'fiscal_years', 'currency'];
+    protected string $modelClass = Company::class;
 
-    public function getAll(?string $status = null): Collection
+    protected array $defaultResource = ['company_type', 'address', 'fiscal_years', 'currency'];
+
+    protected string $repositoryFacadeClass = CompanyRepositoryFacade::class;
+
+    public function getAll(): LengthAwarePaginator
     {
-        $query = Company::with($this->resource);
+        $perPage = request()->integer('per_page', 15);
+        $status = request()->input('status');
+
+        $query = CompanyRepositoryFacade::query()->with($this->defaultResource);
 
         if ($status) {
             $query->where('status', $status);
         }
 
-        return $query->get();
-    }
-
-    public function getById(int $id): ?Company
-    {
-
-        return Company::with($this->resource)->findOrFail($id);
+        return $query->paginate($perPage);
     }
 
     public function store(array $data): Company
@@ -40,7 +43,7 @@ class CompanyService implements CompanyServiceInterface
         if (empty($data['mailing_name']) && ! empty($data['name'])) {
             $data['mailing_name'] = $data['name'];
         }
-        $company = Company::create($data);
+        $company = CompanyRepositoryFacade::create($data);
 
         if (! empty($data['address'])) {
             $data['address']['address_type'] = 'company';
@@ -55,12 +58,12 @@ class CompanyService implements CompanyServiceInterface
 
         DB::commit();
 
-        return $company->load($this->resource);
+        return $company->load($this->defaultResource);
     }
 
     public function update(array $data, int $id): Company
     {
-        $record = Company::findOrFail($id);
+        $record = CompanyRepositoryFacade::find($id);
         $record->update($data);
         if (! empty($data['address'])) {
             $data['address']['is_primary'] = $data['address']['is_primary'] ?? false;
@@ -80,12 +83,5 @@ class CompanyService implements CompanyServiceInterface
         }
 
         return $record->fresh();
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = Company::findOrFail($id);
-
-        return $record->delete();
     }
 }

@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\Godown\Contracts\GodownServiceInterface;
+use Modules\Godown\Facades\GodownFacade;
 use Modules\Godown\Requests\GodownRequest;
 use Modules\Godown\Resources\GodownCollection;
 use Modules\Godown\Resources\GodownResource;
@@ -16,65 +16,63 @@ class GodownController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected GodownServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = GodownFacade::getAll();
 
         return new GodownCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = GodownFacade::getById($id);
 
         return new GodownResource($data);
     }
 
     public function store(GodownRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = GodownFacade::store($request->validated());
 
         return new GodownResource($data, $messages = 'Godown created successfully');
     }
 
     public function update(GodownRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = GodownFacade::update($request->validated(), $id);
 
         return new GodownResource($data, $messages = 'Godown updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'Godown');
+        return $this->deletedResponse(GodownFacade::delete($id), 'Godown');
     }
 
     public function godown_item_stocks(int $item_id): SuccessCollection
     {
-        $data = $this->service->getGodownItemStocks($item_id);
+        $data = GodownFacade::getGodownItemStocks($item_id);
 
         return new SuccessCollection($data);
     }
 
     public function godown_item_batches(int $item_id, int $godown_id): SuccessCollection
     {
-        $data = $this->service->getGodownItemBatches($item_id, $godown_id);
+        $data = GodownFacade::getGodownItemBatches($item_id, $godown_id);
 
         return new SuccessCollection($data);
     }
 
     public function zones(): SuccessCollection
     {
-        $data = $this->service->getZones();
+        $data = GodownFacade::getZones();
 
         return new GodownCollection($data);
     }
 
     public function zonesById(int $id): SuccessResource
     {
-        $data = $this->service->getZonesById($id);
+        $data = GodownFacade::getZonesById($id);
 
         return new SuccessResource($data);
     }

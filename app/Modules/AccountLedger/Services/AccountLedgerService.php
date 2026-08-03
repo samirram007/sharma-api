@@ -5,6 +5,7 @@ namespace Modules\AccountLedger\Services;
 use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
+use Modules\AccountLedger\Facades\AccountLedgerRepositoryFacade;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
 
@@ -16,6 +17,8 @@ class AccountLedgerService extends BaseService implements AccountLedgerServiceIn
         'account_group.account_nature',
     ];
 
+    protected string $repositoryFacadeClass = AccountLedgerRepositoryFacade::class;
+
     protected array $ledgerableResource = [
         'account_group.account_nature',
         'ledgerable.address.state',
@@ -25,31 +28,6 @@ class AccountLedgerService extends BaseService implements AccountLedgerServiceIn
     public function __construct(
         protected UserFiscalYearServiceInterface $userFiscalYearService
     ) {}
-
-    public function getAll(): Collection
-    {
-        return $this->getAllRecords();
-    }
-
-    public function getById(int $id): AccountLedger
-    {
-        return $this->findOrFail($id);
-    }
-
-    public function store(array $data): AccountLedger
-    {
-        return $this->createRecord($data);
-    }
-
-    public function update(array $data, int $id): AccountLedger
-    {
-        return $this->updateRecord($id, $data);
-    }
-
-    public function delete(int $id): bool
-    {
-        return $this->deleteRecord($id);
-    }
 
     public function getLedgerBalance(int $id): ?array
     {
@@ -102,31 +80,41 @@ class AccountLedgerService extends BaseService implements AccountLedgerServiceIn
 
     public function getPurchaseLedgers(): Collection
     {
-        return AccountLedger::with($this->defaultResource)
-            ->where('account_group_id', 40004)->orderBy('name')->get();
+        return AccountLedgerRepositoryFacade::with($this->defaultResource)
+            ->filter(['account_group_id' => 40004])
+            ->sortBy('name')
+            ->getAllFiltered();
     }
 
     public function getSaleLedgers(): Collection
     {
-        return AccountLedger::with($this->defaultResource)
-            ->where('account_group_id', 30004)->orderBy('name')->get();
+        return AccountLedgerRepositoryFacade::with($this->defaultResource)
+            ->filter(['account_group_id' => 30004])
+            ->sortBy('name')
+            ->getAllFiltered();
     }
 
     public function getSupplierLedgers(): Collection
     {
-        return AccountLedger::with($this->ledgerableResource)
-            ->where('account_group_id', 20003)->orderBy('name')->get();
+        return AccountLedgerRepositoryFacade::with($this->ledgerableResource)
+            ->filter(['account_group_id' => 20003])
+            ->sortBy('name')
+            ->getAllFiltered();
     }
 
     public function getDistributorLedgers(): Collection
     {
-        return AccountLedger::with($this->ledgerableResource)
-            ->where('account_group_id', 10008)->orderBy('name')->get();
+        return AccountLedgerRepositoryFacade::with($this->ledgerableResource)
+            ->filter(['account_group_id' => 10008])
+            ->sortBy('name')
+            ->getAllFiltered();
     }
 
     public function getStockInHandLedgers(): Collection
     {
-        return AccountLedger::with($this->defaultResource)
-            ->where('account_group_id', 10009)->orderBy('name')->get();
+        return AccountLedgerRepositoryFacade::with($this->defaultResource)
+            ->filter(['account_group_id' => 10009])
+            ->sortBy('name')
+            ->getAllFiltered();
     }
 }

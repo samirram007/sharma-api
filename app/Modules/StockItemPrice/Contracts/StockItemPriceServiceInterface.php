@@ -2,18 +2,6 @@
 
 namespace Modules\StockItemPrice\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\StockItemPrice\Models\StockItemPrice;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface StockItemPriceServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?StockItemPrice;
-
-    public function store(array $data): StockItemPrice;
-
-    public function update(array $data, int $id): StockItemPrice;
-
-    public function delete(int $id): bool;
-}
+interface StockItemPriceServiceInterface extends BaseServiceInterface {}

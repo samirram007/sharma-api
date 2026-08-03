@@ -4,13 +4,10 @@ namespace App\Support\Traits;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Modules\App\Tenant\Services\TenantManager;
 
 trait Cacheable
 {
     protected bool $useCache = true;
-
-    protected ?TenantManager $tenantManager = null;
 
     /**
      * Enable or disable cache for the current request/chain.
@@ -31,25 +28,11 @@ trait Cacheable
     }
 
     /**
-     * Get the tenant manager instance.
-     */
-    protected function getTenantManager(): TenantManager
-    {
-        if (! $this->tenantManager) {
-            $this->tenantManager = app(TenantManager::class);
-        }
-
-        return $this->tenantManager;
-    }
-
-    /**
-     * Get the cache key prefix based on tenant and repository name.
+     * Get the cache key prefix based on the repository class name.
      */
     protected function getCachePrefix(): string
     {
-        $tenantId = $this->getTenantManager()->getCurrentTenant()?->id ?? 'central';
-
-        return 'tenant_'.$tenantId.'_'.strtolower(class_basename($this));
+        return strtolower(class_basename($this));
     }
 
     /**

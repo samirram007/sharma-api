@@ -4,7 +4,9 @@ namespace Modules\StockJournalStorageUnitEntry\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\StockJournalStorageUnitEntry\Contracts\StockJournalStorageUnitEntryRepositoryInterface;
 use Modules\StockJournalStorageUnitEntry\Contracts\StockJournalStorageUnitEntryServiceInterface;
+use Modules\StockJournalStorageUnitEntry\Repositories\StockJournalStorageUnitEntryRepository;
 use Modules\StockJournalStorageUnitEntry\Services\StockJournalStorageUnitEntryService;
 
 class StockJournalStorageUnitEntryServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class StockJournalStorageUnitEntryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(StockJournalStorageUnitEntryServiceInterface::class, StockJournalStorageUnitEntryService::class);
+        $this->app->singleton(StockJournalStorageUnitEntryRepositoryInterface::class, StockJournalStorageUnitEntryRepository::class);
     }
 
     public function boot(): void

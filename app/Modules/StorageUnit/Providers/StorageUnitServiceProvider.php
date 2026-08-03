@@ -4,7 +4,9 @@ namespace Modules\StorageUnit\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\StorageUnit\Contracts\StorageUnitRepositoryInterface;
 use Modules\StorageUnit\Contracts\StorageUnitServiceInterface;
+use Modules\StorageUnit\Repositories\StorageUnitRepository;
 use Modules\StorageUnit\Services\StorageUnitService;
 
 class StorageUnitServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class StorageUnitServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(StorageUnitServiceInterface::class, StorageUnitService::class);
+        $this->app->singleton(StorageUnitRepositoryInterface::class, StorageUnitRepository::class);
     }
 
     public function boot(): void

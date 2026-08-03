@@ -265,6 +265,15 @@ class AccountLedgerSeeder extends Seeder
                 'is_system' => false,
                 'is_hidden' => false,
             ],
+            [
+                'id' => 4000007,
+                'name' => 'Manufacturing',
+                'code' => 'MANUF',
+                'account_group_id' => 40002, // Direct Expenses
+                'description' => 'Manufacturing / stock conversion account for Manufacturing Journal vouchers',
+                'is_system' => true,
+                'is_hidden' => false,
+            ],
 
             // ==============================
             // 🔹 EQUITY (5000001–)

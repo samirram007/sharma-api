@@ -4,7 +4,9 @@ namespace Modules\CostCategory\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\CostCategory\Contracts\CostCategoryRepositoryInterface;
 use Modules\CostCategory\Contracts\CostCategoryServiceInterface;
+use Modules\CostCategory\Repositories\CostCategoryRepository;
 use Modules\CostCategory\Services\CostCategoryService;
 
 class CostCategoryServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class CostCategoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(CostCategoryServiceInterface::class, CostCategoryService::class);
+        $this->app->singleton(CostCategoryRepositoryInterface::class, CostCategoryRepository::class);
     }
 
     public function boot(): void

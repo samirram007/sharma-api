@@ -2,18 +2,6 @@
 
 namespace Modules\EmployeeGroup\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\EmployeeGroup\Models\EmployeeGroup;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface EmployeeGroupServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?EmployeeGroup;
-
-    public function store(array $data): EmployeeGroup;
-
-    public function update(array $data, int $id): EmployeeGroup;
-
-    public function delete(int $id): bool;
-}
+interface EmployeeGroupServiceInterface extends BaseServiceInterface {}

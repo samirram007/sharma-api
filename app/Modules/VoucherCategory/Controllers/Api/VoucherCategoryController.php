@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\VoucherCategory\Contracts\VoucherCategoryServiceInterface;
+use Modules\VoucherCategory\Facades\VoucherCategoryFacade;
 use Modules\VoucherCategory\Requests\VoucherCategoryRequest;
 use Modules\VoucherCategory\Resources\VoucherCategoryCollection;
 use Modules\VoucherCategory\Resources\VoucherCategoryResource;
@@ -16,38 +16,36 @@ class VoucherCategoryController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected VoucherCategoryServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = VoucherCategoryFacade::getAll();
 
         return new VoucherCategoryCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = VoucherCategoryFacade::getById($id);
 
         return new VoucherCategoryResource($data);
     }
 
     public function store(VoucherCategoryRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = VoucherCategoryFacade::store($request->validated());
 
         return new VoucherCategoryResource($data, $messages = 'VoucherCategory created successfully');
     }
 
     public function update(VoucherCategoryRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = VoucherCategoryFacade::update($request->validated(), $id);
 
         return new VoucherCategoryResource($data, $messages = 'VoucherCategory updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'VoucherCategory');
+        return $this->deletedResponse(VoucherCategoryFacade::delete($id), 'VoucherCategory');
     }
 }

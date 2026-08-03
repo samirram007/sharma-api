@@ -2,21 +2,11 @@
 
 namespace Modules\PhysicalStockCount\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\Contracts\BaseServiceInterface;
 use Modules\PhysicalStockCount\Models\PhysicalStockCount;
 
-interface PhysicalStockCountServiceInterface
+interface PhysicalStockCountServiceInterface extends BaseServiceInterface
 {
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?PhysicalStockCount;
-
-    public function store(array $data): PhysicalStockCount;
-
-    public function update(array $data, int $id): PhysicalStockCount;
-
-    public function delete(int $id): bool;
-
     /**
      * Auto-populate system quantities for a count sheet based on stock movements in the FY
      */

@@ -4,13 +4,16 @@ namespace Modules\Voucher\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Voucher\Contracts\VoucherRepositoryInterface;
 use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Repositories\VoucherRepository;
 use Modules\Voucher\Services\VoucherService;
 
 class VoucherServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->app->singleton(VoucherRepositoryInterface::class, VoucherRepository::class);
         $this->app->bind(VoucherServiceInterface::class, VoucherService::class);
     }
 

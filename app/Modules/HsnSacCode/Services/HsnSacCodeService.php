@@ -3,36 +3,15 @@
 namespace Modules\HsnSacCode\Services;
 
 use App\Support\Services\BaseService;
-use Illuminate\Database\Eloquent\Collection;
 use Modules\HsnSacCode\Contracts\HsnSacCodeServiceInterface;
+use Modules\HsnSacCode\Facades\HsnSacCodeRepositoryFacade;
 use Modules\HsnSacCode\Models\HsnSacCode;
 
 class HsnSacCodeService extends BaseService implements HsnSacCodeServiceInterface
 {
     protected string $modelClass = HsnSacCode::class;
 
-    public function getAll(): Collection
-    {
-        return $this->getAllRecords();
-    }
+    protected string $repositoryFacadeClass = HsnSacCodeRepositoryFacade::class;
 
-    public function getById(int $id): ?HsnSacCode
-    {
-        return $this->findOrFail($id);
-    }
-
-    public function store(array $data): HsnSacCode
-    {
-        return $this->createRecord($data);
-    }
-
-    public function update(array $data, int $id): HsnSacCode
-    {
-        return $this->updateRecord($id, $data);
-    }
-
-    public function delete(int $id): bool
-    {
-        return $this->deleteRecord($id);
-    }
+    public function __construct() {}
 }

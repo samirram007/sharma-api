@@ -6,8 +6,19 @@ use App\Enums\ActiveInactive;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Modules\Company\Models\Company;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $start_date
+ * @property string $end_date
+ * @property string $status
+ * @property int $company_id
+ * @property Carbon|null $closed_at
+ * @property int|null $closed_by
+ */
 class FiscalYear extends Model
 {
     use HasFactory;

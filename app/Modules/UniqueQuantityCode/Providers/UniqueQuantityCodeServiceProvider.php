@@ -4,7 +4,9 @@ namespace Modules\UniqueQuantityCode\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\UniqueQuantityCode\Contracts\UniqueQuantityCodeRepositoryInterface;
 use Modules\UniqueQuantityCode\Contracts\UniqueQuantityCodeServiceInterface;
+use Modules\UniqueQuantityCode\Repositories\UniqueQuantityCodeRepository;
 use Modules\UniqueQuantityCode\Services\UniqueQuantityCodeService;
 
 class UniqueQuantityCodeServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class UniqueQuantityCodeServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UniqueQuantityCodeServiceInterface::class, UniqueQuantityCodeService::class);
+        $this->app->singleton(UniqueQuantityCodeRepositoryInterface::class, UniqueQuantityCodeRepository::class);
     }
 
     public function boot(): void

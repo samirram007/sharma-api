@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\Currency\Contracts\CurrencyServiceInterface;
+use Modules\Currency\Facades\CurrencyFacade;
 use Modules\Currency\Requests\CurrencyRequest;
 use Modules\Currency\Resources\CurrencyCollection;
 use Modules\Currency\Resources\CurrencyResource;
@@ -15,18 +15,16 @@ class CurrencyController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected CurrencyServiceInterface $service) {}
-
     public function index(): JsonResponse
     {
-        $data = $this->service->getAll();
+        $data = CurrencyFacade::getAll();
 
         return (new CurrencyCollection($data))->response();
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = CurrencyFacade::getById($id);
 
         return new CurrencyResource($data, $messages = 'Currency retrieved successfully');
 
@@ -34,7 +32,7 @@ class CurrencyController extends Controller
 
     public function store(CurrencyRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = CurrencyFacade::store($request->validated());
 
         return new CurrencyResource($data, $messages = 'Currency created successfully');
 
@@ -42,7 +40,7 @@ class CurrencyController extends Controller
 
     public function update(CurrencyRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = CurrencyFacade::update($request->validated(), $id);
 
         return new CurrencyResource($data, $messages = 'Currency updated successfully');
 
@@ -50,6 +48,6 @@ class CurrencyController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'Currency');
+        return $this->deletedResponse(CurrencyFacade::delete($id), 'Currency');
     }
 }

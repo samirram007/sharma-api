@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\FiscalYear\Models\FiscalYear;
 use Modules\User\Models\User;
 
+/**
+ * @property int $user_id
+ * @property int $fiscal_year_id
+ * @property-read FiscalYear $fiscal_year
+ */
 class UserFiscalYear extends Model
 {
     use HasFactory;

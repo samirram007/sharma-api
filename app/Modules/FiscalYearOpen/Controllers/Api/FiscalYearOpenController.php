@@ -6,20 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
-use Modules\FiscalYearOpen\Contracts\FiscalYearOpenServiceInterface;
+use Modules\FiscalYearOpen\Facades\FiscalYearOpenFacade;
 
 class FiscalYearOpenController extends Controller
 {
     use ApiResponseTrait;
-
-    public function __construct(protected FiscalYearOpenServiceInterface $fiscalYearOpenService) {}
 
     /**
      * Preview opening details before executing
      */
     public function preview(int $newFiscalYear, int $previousFiscalYear): SuccessResource
     {
-        $data = $this->fiscalYearOpenService->preview($newFiscalYear, $previousFiscalYear);
+        $data = FiscalYearOpenFacade::preview($newFiscalYear, $previousFiscalYear);
 
         return new SuccessResource($data, 'Opening preview retrieved successfully');
     }
@@ -34,7 +32,7 @@ class FiscalYearOpenController extends Controller
             'previous_fiscal_year_id' => 'required|exists:fiscal_years,id',
         ]);
 
-        $result = $this->fiscalYearOpenService->open(
+        $result = FiscalYearOpenFacade::open(
             $request->input('new_fiscal_year_id'),
             $request->input('previous_fiscal_year_id')
         );

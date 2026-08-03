@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\RolePermission\Contracts\RolePermissionServiceInterface;
+use Modules\RolePermission\Facades\RolePermissionFacade;
 use Modules\RolePermission\Requests\RolePermissionRequest;
 use Modules\RolePermission\Resources\RolePermissionCollection;
 use Modules\RolePermission\Resources\RolePermissionResource;
@@ -16,38 +16,36 @@ class RolePermissionController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected RolePermissionServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = RolePermissionFacade::getAll();
 
         return new RolePermissionCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = RolePermissionFacade::getById($id);
 
         return new RolePermissionResource($data);
     }
 
     public function store(RolePermissionRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = RolePermissionFacade::store($request->validated());
 
         return new RolePermissionResource($data, $messages = 'RolePermission created successfully');
     }
 
     public function update(RolePermissionRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = RolePermissionFacade::update($request->validated(), $id);
 
         return new RolePermissionResource($data, $messages = 'RolePermission updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'RolePermission');
+        return $this->deletedResponse(RolePermissionFacade::delete($id), 'RolePermission');
     }
 }

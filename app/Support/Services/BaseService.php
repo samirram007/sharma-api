@@ -2,7 +2,9 @@
 
 namespace App\Support\Services;
 
+use App\Support\Contracts\BaseRepositoryInterface;
 use App\Support\Contracts\BaseServiceInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +23,32 @@ abstract class BaseService implements BaseServiceInterface
      * Default relations to eager-load on queries.
      */
     protected array $defaultResource = [];
+
+    /**
+     * The RepositoryFacade class to use for data access.
+     * Child services should set this to their module's RepositoryFacade:
+     *   protected string $repositoryFacadeClass = CurrencyRepositoryFacade::class;
+     *
+     * When set, all CRUD operations resolve the repository through this facade.
+     */
+    protected string $repositoryFacadeClass = '';
+
+    /**
+     * Get the repository instance resolved from the RepositoryFacade.
+     */
+    protected function getRepository(): ?BaseRepositoryInterface
+    {
+        if ($this->repositoryFacadeClass) {
+            $facade = $this->repositoryFacadeClass;
+
+            // getFacadeRoot() is public and resolves the underlying service/repository
+            // bound in the container. Do NOT call getFacadeAccessor() directly — it is
+            // protected, so an external call triggers Facade::__callStatic and fails.
+            return $facade::getFacadeRoot();
+        }
+
+        return $this->repository ?? null;
+    }
 
     /**
      * Get a new query builder instance for the model.
@@ -46,14 +74,24 @@ abstract class BaseService implements BaseServiceInterface
 
     // ──────────────────────────────────────────────
     //  Public API (implements BaseServiceInterface)
-    //  Delegates to protected helpers so child
-    //  classes that override the public methods
-    //  and call the protected helpers don't cause
-    //  infinite recursion.
     // ──────────────────────────────────────────────
 
-    public function getAll(): Collection
+    /**
+     * Get all records — automatically applies pagination and search
+     * from request query parameters (?per_page, ?search).
+     *
+     * When request has ?per_page= or ?search=, returns paginated results.
+     * Otherwise returns all records as a simple collection.
+     */
+    public function getAll(): Collection|LengthAwarePaginator
     {
+        $perPage = request()->integer('per_page', 0);
+        $search = request()->input('search', '');
+
+        if ($perPage > 0 || $search !== '') {
+            return $this->getAutoPaginated($perPage > 0 ? $perPage : 15, $search);
+        }
+
         return $this->getAllRecords();
     }
 
@@ -77,11 +115,117 @@ abstract class BaseService implements BaseServiceInterface
         return $this->deleteRecord($id);
     }
 
+    /**
+     * Automatically apply search and pagination from request params.
+     */
+    protected function getAutoPaginated(int $perPage, string $search): LengthAwarePaginator
+    {
+        $repo = $this->getRepository();
+
+        if ($repo) {
+            return $repo
+                ->with($this->defaultResource)
+                ->search($search ?: null, [])
+                ->getPaginated($perPage);
+        }
+
+        return $this->queryWithResource()->paginate($perPage);
+    }
+
+    /**
+     * Get paginated results — delegates to repository if available.
+     */
+    public function getPaginated(int $perPage = 15): LengthAwarePaginator
+    {
+        $repo = $this->getRepository();
+
+        if ($repo) {
+            return $repo
+                ->with($this->defaultResource)
+                ->getPaginated($perPage);
+        }
+
+        return $this->queryWithResource()->paginate($perPage);
+    }
+
+    /**
+     * Get paginated results with server-side search.
+     */
+    public function searchAndPaginate(?string $search, int $perPage = 15, array $searchFields = []): LengthAwarePaginator
+    {
+        $repo = $this->getRepository();
+
+        if ($repo) {
+            return $repo
+                ->with($this->defaultResource)
+                ->search($search, $searchFields)
+                ->getPaginated($perPage);
+        }
+
+        $query = $this->queryWithResource();
+
+        if ($search && ! empty($searchFields)) {
+            $query->where(function (Builder $q) use ($search, $searchFields) {
+                foreach ($searchFields as $i => $field) {
+                    if ($i === 0) {
+                        $q->where($field, 'like', "%{$search}%");
+                    } else {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                }
+            });
+        }
+
+        return $query->paginate($perPage);
+    }
+
+    /**
+     * Get filtered results with server-side search, filter, and sort.
+     */
+    public function getFiltered(
+        ?string $search = null,
+        array $filters = [],
+        string $sortBy = 'id',
+        string $sortDirection = 'asc',
+        array $searchFields = [],
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        $repo = $this->getRepository();
+
+        if ($repo) {
+            return $repo
+                ->with($this->defaultResource)
+                ->search($search, $searchFields)
+                ->filter($filters)
+                ->sortBy($sortBy, $sortDirection)
+                ->getPaginated($perPage);
+        }
+
+        $query = $this->queryWithResource();
+
+        if ($search && ! empty($searchFields)) {
+            $query->where(function (Builder $q) use ($search, $searchFields) {
+                foreach ($searchFields as $i => $field) {
+                    if ($i === 0) {
+                        $q->where($field, 'like', "%{$search}%");
+                    } else {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                }
+            });
+        }
+
+        foreach ($filters as $field => $value) {
+            if ($value !== null && $value !== '') {
+                $query->where($field, $value);
+            }
+        }
+
+        return $query->orderBy($sortBy, $sortDirection)->paginate($perPage);
+    }
+
     // ──────────────────────────────────────────────
-    //  Protected helpers (original implementation)
-    //  Retained so existing child services that call
-    //  these directly (e.g. in overridden public
-    //  methods) continue to work without recursion.
+    //  Protected helpers
     // ──────────────────────────────────────────────
 
     /**
@@ -89,6 +233,12 @@ abstract class BaseService implements BaseServiceInterface
      */
     protected function getAllRecords(): Collection
     {
+        $repo = $this->getRepository();
+
+        if ($repo) {
+            return $repo->with($this->defaultResource)->all();
+        }
+
         return $this->queryWithResource()->get();
     }
 
@@ -97,6 +247,12 @@ abstract class BaseService implements BaseServiceInterface
      */
     protected function findOrFail(int $id): Model
     {
+        $repo = $this->getRepository();
+
+        if ($repo) {
+            return $repo->with($this->defaultResource)->find($id);
+        }
+
         return $this->queryWithResource()->findOrFail($id);
     }
 
@@ -105,6 +261,12 @@ abstract class BaseService implements BaseServiceInterface
      */
     protected function createRecord(array $data): Model
     {
+        $repo = $this->getRepository();
+
+        if ($repo) {
+            return $repo->create($data);
+        }
+
         return $this->modelClass::create($data);
     }
 
@@ -113,6 +275,12 @@ abstract class BaseService implements BaseServiceInterface
      */
     protected function updateRecord(int $id, array $data): Model
     {
+        $repo = $this->getRepository();
+
+        if ($repo) {
+            return $repo->update($data, $id);
+        }
+
         $record = $this->findOrFail($id);
         $record->update($data);
 
@@ -124,6 +292,12 @@ abstract class BaseService implements BaseServiceInterface
      */
     protected function deleteRecord(int $id): bool
     {
+        $repo = $this->getRepository();
+
+        if ($repo) {
+            return $repo->delete($id);
+        }
+
         $record = $this->modelClass::findOrFail($id);
 
         return $record->delete();

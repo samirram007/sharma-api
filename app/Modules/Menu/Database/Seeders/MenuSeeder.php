@@ -285,8 +285,9 @@ class MenuSeeder extends Seeder
             'is_group' => true,
         ]);
 
-        $this->create(['menu_name' => 'Close Fiscal Year', 'route' => '/masters/organization/fiscal_year', 'app_module_feature_code' => 'CLOSE_FISCAL_YEAR_MENU_VIEW', 'icon' => 'Archive', 'parent' => $yearEnd, 'sort_order' => 10]);
-        $this->create(['menu_name' => 'Opening Journal', 'route' => '/masters/organization/fiscal_year', 'app_module_feature_code' => 'OPENING_JOURNAL_MENU_VIEW', 'icon' => 'DoorEnter', 'parent' => $yearEnd, 'sort_order' => 20]);
+        $this->create(['menu_name' => 'Close Fiscal Year', 'route' => '/masters/organization/fiscal_year/close', 'app_module_feature_code' => 'CLOSE_FISCAL_YEAR_MENU_VIEW', 'icon' => 'Archive', 'parent' => $yearEnd, 'sort_order' => 10]);
+        $this->create(['menu_name' => 'Opening Journal', 'route' => '/masters/organization/fiscal_year/new/open', 'app_module_feature_code' => 'OPENING_JOURNAL_MENU_VIEW', 'icon' => 'DoorEnter', 'parent' => $yearEnd, 'sort_order' => 20]);
+        $this->create(['menu_name' => 'Opening Balance Setup', 'route' => '/transactions/opening-balance', 'app_module_feature_code' => 'OPENING_BALANCE_MENU_VIEW', 'icon' => 'Scale', 'parent' => $yearEnd, 'sort_order' => 25]);
         $this->create(['menu_name' => 'Opening Entry Report', 'route' => '/reports/opening_entry', 'app_module_feature_code' => 'OPENING_ENTRY_REPORT_MENU_VIEW', 'icon' => 'Report', 'parent' => $yearEnd, 'sort_order' => 30]);
 
         // ── Other (hidden by default, visible via permissions) ────

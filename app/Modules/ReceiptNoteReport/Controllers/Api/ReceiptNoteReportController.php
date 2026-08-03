@@ -5,20 +5,16 @@ namespace Modules\ReceiptNoteReport\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessCollection;
 use Illuminate\Http\Request;
-use Modules\ReceiptNoteReport\Services\ReceiptNoteReportService;
+use Modules\ReceiptNoteReport\Contracts\ReceiptNoteReportServiceInterface;
 use Modules\Voucher\Resources\VoucherCollection;
 
 class ReceiptNoteReportController extends Controller
 {
-    public function __construct(protected ReceiptNoteReportService $service) {}
+    public function __construct(protected ReceiptNoteReportServiceInterface $service) {}
 
-    public function index(Request $request): SuccessCollection
+    public function index(): SuccessCollection
     {
-        $params = $request->only([
-            'search', 'sort_by', 'sort_order',
-            'page', 'per_page',
-        ]);
-        $data = $this->service->getAll($params);
+        $data = $this->service->getAll();
 
         return new VoucherCollection($data);
     }

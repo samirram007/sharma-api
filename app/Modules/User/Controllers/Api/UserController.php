@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Modules\User\Contracts\UserServiceInterface;
+use Modules\User\Facades\UserFacade;
 use Modules\User\Requests\UserNotificationPreferenceRequest;
 use Modules\User\Requests\UserRequest;
 use Modules\User\Resources\UserCollection;
@@ -16,18 +16,16 @@ class UserController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected UserServiceInterface $service) {}
-
     public function index(): JsonResponse
     {
-        $data = $this->service->getAll();
+        $data = UserFacade::getAll();
 
         return (new UserCollection($data))->response();
     }
 
     public function show(int $id): JsonResponse
     {
-        $data = $this->service->getById($id);
+        $data = UserFacade::getById($id);
 
         return $this->resourceResponse(
             new UserResource($data),
@@ -37,7 +35,7 @@ class UserController extends Controller
 
     public function store(UserRequest $request): JsonResponse
     {
-        $data = $this->service->store($request->validated());
+        $data = UserFacade::store($request->validated());
 
         return $this->resourceResponse(
             new UserResource($data),
@@ -48,7 +46,7 @@ class UserController extends Controller
 
     public function update(UserRequest $request, int $id): JsonResponse
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = UserFacade::update($request->validated(), $id);
 
         return $this->resourceResponse(
             new UserResource($data),
@@ -58,7 +56,7 @@ class UserController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'User');
+        return $this->deletedResponse(UserFacade::delete($id), 'User');
     }
 
     // ── Notification Preferences ────────────────────────────────
@@ -69,7 +67,7 @@ class UserController extends Controller
     public function notificationPreferences(): JsonResponse
     {
         $userId = Auth::id();
-        $prefs = $this->service->getNotificationPreferences($userId);
+        $prefs = UserFacade::getNotificationPreferences($userId);
 
         return response()->json([
             'success' => true,
@@ -87,7 +85,7 @@ class UserController extends Controller
     public function updateNotificationPreferences(UserNotificationPreferenceRequest $request): JsonResponse
     {
         $userId = Auth::id();
-        $prefs = $this->service->updateNotificationPreferences($userId, $request->validated()['preferences']);
+        $prefs = UserFacade::updateNotificationPreferences($userId, $request->validated()['preferences']);
 
         return $this->successResponse(
             $prefs->map(fn ($p) => [

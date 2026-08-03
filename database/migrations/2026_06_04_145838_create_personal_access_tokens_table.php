@@ -11,6 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Also created by the User module migration
+        // (app/Modules/User/Database/Migrations/2025_03_27_070932_create_personal_access_tokens_table.php)
+        // which runs first (earlier timestamp). Guard so a fresh migrate works
+        // on SQLite, where table names must be unique per database.
+        if (Schema::hasTable('personal_access_tokens')) {
+            return;
+        }
+
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->id();
             $table->morphs('tokenable');

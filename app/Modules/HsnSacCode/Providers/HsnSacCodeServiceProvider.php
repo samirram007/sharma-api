@@ -4,7 +4,9 @@ namespace Modules\HsnSacCode\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\HsnSacCode\Contracts\HsnSacCodeRepositoryInterface;
 use Modules\HsnSacCode\Contracts\HsnSacCodeServiceInterface;
+use Modules\HsnSacCode\Repositories\HsnSacCodeRepository;
 use Modules\HsnSacCode\Services\HsnSacCodeService;
 
 class HsnSacCodeServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class HsnSacCodeServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(HsnSacCodeServiceInterface::class, HsnSacCodeService::class);
+        $this->app->singleton(HsnSacCodeRepositoryInterface::class, HsnSacCodeRepository::class);
     }
 
     public function boot(): void

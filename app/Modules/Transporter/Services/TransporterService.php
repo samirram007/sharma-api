@@ -2,24 +2,16 @@
 
 namespace Modules\Transporter\Services;
 
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\Services\BaseService;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Transporter\Contracts\TransporterServiceInterface;
 use Modules\Transporter\Models\Transporter;
 
-class TransporterService implements TransporterServiceInterface
+class TransporterService extends BaseService implements TransporterServiceInterface
 {
-    protected $resource = ['account_ledger', 'address'];
+    protected string $modelClass = Transporter::class;
 
-    public function getAll(): Collection
-    {
-        return Transporter::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?Transporter
-    {
-        return Transporter::with($this->resource)->findOrFail($id);
-    }
+    protected array $defaultResource = ['account_ledger', 'address'];
 
     public function store(array $data): Transporter
     {
@@ -48,7 +40,7 @@ class TransporterService implements TransporterServiceInterface
 
         // 'ledgerable_id',
         // 'ledgerable_type'
-        return $transporter->load($this->resource);
+        return $transporter->load($this->defaultResource);
     }
 
     public function update(array $data, int $id): Transporter
@@ -90,13 +82,6 @@ class TransporterService implements TransporterServiceInterface
 
         }
 
-        return $transporter->fresh()->load($this->resource);
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = Transporter::findOrFail($id);
-
-        return $record->delete();
+        return $transporter->fresh()->load($this->defaultResource);
     }
 }

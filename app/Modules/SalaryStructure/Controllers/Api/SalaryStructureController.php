@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\SalaryStructure\Contracts\SalaryStructureServiceInterface;
+use Modules\SalaryStructure\Facades\SalaryStructureFacade;
 use Modules\SalaryStructure\Requests\SalaryStructureRequest;
 use Modules\SalaryStructure\Resources\SalaryStructureCollection;
 use Modules\SalaryStructure\Resources\SalaryStructureResource;
@@ -16,38 +16,36 @@ class SalaryStructureController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected SalaryStructureServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = SalaryStructureFacade::getAll();
 
         return new SalaryStructureCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = SalaryStructureFacade::getById($id);
 
         return new SalaryStructureResource($data);
     }
 
     public function store(SalaryStructureRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = SalaryStructureFacade::store($request->validated());
 
         return new SalaryStructureResource($data, $messages = 'SalaryStructure created successfully');
     }
 
     public function update(SalaryStructureRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = SalaryStructureFacade::update($request->validated(), $id);
 
         return new SalaryStructureResource($data, $messages = 'SalaryStructure updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'SalaryStructure');
+        return $this->deletedResponse(SalaryStructureFacade::delete($id), 'SalaryStructure');
     }
 }

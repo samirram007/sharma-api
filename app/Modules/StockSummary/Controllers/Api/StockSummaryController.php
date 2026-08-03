@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Modules\StockSummary\Contracts\StockSummaryServiceInterface;
+use Modules\StockSummary\Facades\StockSummaryFacade;
 use Modules\StockSummary\Requests\StockSummaryRequest;
 use Modules\StockSummary\Resources\StockInHandCollection;
 use Modules\StockSummary\Resources\StockInHandGodownWiseResource;
@@ -20,11 +20,9 @@ class StockSummaryController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected StockSummaryServiceInterface $service) {}
-
     public function stock_in_hand(): StockInHandCollection
     {
-        $data = $this->service->stockInHand();
+        $data = StockSummaryFacade::stockInHand();
 
         // dd($data);
         return new StockInHandCollection($data);
@@ -32,14 +30,14 @@ class StockSummaryController extends Controller
 
     public function stock_in_hand_item_wise(): AnonymousResourceCollection|array
     {
-        $data = $this->service->stock_in_hand_item_wise();
+        $data = StockSummaryFacade::stock_in_hand_item_wise();
 
         return StockInHandItemWiseResource::collection($data);
     }
 
     public function stock_in_hand_zone_wise(): AnonymousResourceCollection|array
     {
-        $data = $this->service->stock_in_hand_zone_wise();
+        $data = StockSummaryFacade::stock_in_hand_zone_wise();
 
         // dd($data);
         return StockInHandZoneWiseResource::collection($data);
@@ -47,7 +45,7 @@ class StockSummaryController extends Controller
 
     public function stock_in_hand_godown_wise(): AnonymousResourceCollection|array
     {
-        $data = $this->service->stock_in_hand_godown_wise();
+        $data = StockSummaryFacade::stock_in_hand_godown_wise();
 
         // dd($data);
         return StockInHandGodownWiseResource::collection($data);
@@ -55,7 +53,7 @@ class StockSummaryController extends Controller
 
     public function stock_in_hand_voucher_wise(): AnonymousResourceCollection|array
     {
-        $data = $this->service->stock_in_hand_voucher_wise();
+        $data = StockSummaryFacade::stock_in_hand_voucher_wise();
 
         // dd($data);
         return StockInHandVoucherWiseResource::collection($data);
@@ -63,7 +61,7 @@ class StockSummaryController extends Controller
 
     public function runningBalanceItems(): SuccessCollection
     {
-        $data = $this->service->getRunningBalanceItems();
+        $data = StockSummaryFacade::getRunningBalanceItems();
 
         return new SuccessCollection($data, 'Running balance items retrieved successfully.');
     }
@@ -71,49 +69,49 @@ class StockSummaryController extends Controller
     public function runningBalanceDetail(int $itemId): SuccessResource
     {
         $godownId = request()->integer('godown_id');
-        $data = $this->service->getRunningBalance($itemId, $godownId ?: null);
+        $data = StockSummaryFacade::getRunningBalance($itemId, $godownId ?: null);
 
         return new SuccessResource($data, 'Running balance details retrieved successfully.');
     }
 
     public function runningBalanceGodowns(): SuccessCollection
     {
-        $data = $this->service->getRunningBalanceGodowns();
+        $data = StockSummaryFacade::getRunningBalanceGodowns();
 
         return new SuccessCollection($data, 'Running balance godowns retrieved successfully.');
     }
 
     public function godownRunningBalanceItems(int $godownId): SuccessResource
     {
-        $data = $this->service->getGodownRunningBalanceItems($godownId);
+        $data = StockSummaryFacade::getGodownRunningBalanceItems($godownId);
 
         return new SuccessResource($data, 'Godown running balance items retrieved successfully.');
     }
 
     public function net_stock(StockSummaryRequest $request): SuccessResource
     {
-        $data = $this->service->netStock($request->validated());
+        $data = StockSummaryFacade::netStock($request->validated());
 
         return new StockSummaryResource($data);
     }
 
     public function purchase_order_outstanding(): SuccessResource
     {
-        $data = $this->service->purchaseOrderOutstanding();
+        $data = StockSummaryFacade::purchaseOrderOutstanding();
 
         return new StockSummaryResource($data);
     }
 
     public function saleble_stock(): SuccessResource
     {
-        $data = $this->service->salebleStock();
+        $data = StockSummaryFacade::salebleStock();
 
         return new StockSummaryResource($data);
     }
 
     public function sales_order_outstanding(): SuccessResource
     {
-        $data = $this->service->salesOrderOutstanding();
+        $data = StockSummaryFacade::salesOrderOutstanding();
 
         return new StockSummaryResource($data);
     }

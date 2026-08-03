@@ -5,7 +5,7 @@ namespace Modules\CompanyType\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\CompanyType\Contracts\CompanyTypeServiceInterface;
+use Modules\CompanyType\Facades\CompanyTypeFacade;
 use Modules\CompanyType\Requests\CompanyTypeRequest;
 use Modules\CompanyType\Resources\CompanyTypeCollection;
 use Modules\CompanyType\Resources\CompanyTypeResource;
@@ -14,18 +14,16 @@ class CompanyTypeController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected CompanyTypeServiceInterface $service) {}
-
     public function index(): JsonResponse
     {
-        $data = $this->service->getAll();
+        $data = CompanyTypeFacade::getAll();
 
         return (new CompanyTypeCollection($data))->response();
     }
 
     public function show(int $id): JsonResponse
     {
-        $data = $this->service->getById($id);
+        $data = CompanyTypeFacade::getById($id);
 
         return $this->resourceResponse(
             new CompanyTypeResource($data),
@@ -35,7 +33,7 @@ class CompanyTypeController extends Controller
 
     public function store(CompanyTypeRequest $request): JsonResponse
     {
-        $data = $this->service->store($request->validated());
+        $data = CompanyTypeFacade::store($request->validated());
 
         return $this->resourceResponse(
             new CompanyTypeResource($data),
@@ -46,7 +44,7 @@ class CompanyTypeController extends Controller
 
     public function update(CompanyTypeRequest $request, int $id): JsonResponse
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = CompanyTypeFacade::update($request->validated(), $id);
 
         return $this->resourceResponse(
             new CompanyTypeResource($data),
@@ -56,6 +54,6 @@ class CompanyTypeController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'CompanyType');
+        return $this->deletedResponse(CompanyTypeFacade::delete($id), 'CompanyType');
     }
 }

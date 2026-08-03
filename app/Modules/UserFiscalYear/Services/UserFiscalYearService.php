@@ -2,37 +2,15 @@
 
 namespace Modules\UserFiscalYear\Services;
 
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\Services\BaseService;
 use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
 use Modules\UserFiscalYear\Models\UserFiscalYear;
 
-class UserFiscalYearService implements UserFiscalYearServiceInterface
+class UserFiscalYearService extends BaseService implements UserFiscalYearServiceInterface
 {
-    protected $resource = ['user', 'fiscal_year.company'];
+    protected string $modelClass = UserFiscalYear::class;
 
-    public function getAll(): Collection
-    {
-        return UserFiscalYear::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?UserFiscalYear
-    {
-        return UserFiscalYear::with($this->resource)->findOrFail($id);
-    }
-
-    public function store(array $data): UserFiscalYear
-    {
-
-        return UserFiscalYear::create($data);
-    }
-
-    public function update(array $data, int $id): UserFiscalYear
-    {
-        $record = UserFiscalYear::findOrFail($id);
-        $record->update($data);
-
-        return $record->fresh();
-    }
+    protected array $defaultResource = ['user', 'fiscal_year.company'];
 
     public function saveReportingPeriod(array $data): UserFiscalYear
     {
@@ -48,15 +26,8 @@ class UserFiscalYearService implements UserFiscalYearServiceInterface
         return $record->fresh();
     }
 
-    public function delete(int $id): bool
-    {
-        $record = UserFiscalYear::findOrFail($id);
-
-        return $record->delete();
-    }
-
     public function getByUserId(int $userId): ?UserFiscalYear
     {
-        return UserFiscalYear::with($this->resource)->where('user_id', $userId)->first();
+        return UserFiscalYear::with($this->defaultResource)->where('user_id', $userId)->first();
     }
 }

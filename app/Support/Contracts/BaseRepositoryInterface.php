@@ -2,7 +2,9 @@
 
 namespace App\Support\Contracts;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 interface BaseRepositoryInterface
 {
@@ -35,10 +37,8 @@ interface BaseRepositoryInterface
 
     /**
      * Get all records.
-     *
-     * @return mixed
      */
-    public function all(array $with = []);
+    public function all(array $with = []): Collection;
 
     /**
      * Find a record by ID.
@@ -49,17 +49,42 @@ interface BaseRepositoryInterface
 
     /**
      * Get records matching conditions.
-     *
-     * @return mixed
      */
-    public function where(array $conditions, array $with = []);
+    public function where(array $conditions, array $with = []): Collection;
 
     /**
-     * Paginate records.
-     *
-     * @return mixed
+     * Paginate records (basic).
      */
-    public function paginate(int $perPage = 15, array $with = []);
+    public function paginate(int $perPage = 15, array $with = []): LengthAwarePaginator;
+
+    /**
+     * Set search term for the next query.
+     * Searches across searchable fields, or the given fields.
+     */
+    public function search(?string $search, array $fields = []): static;
+
+    /**
+     * Set filter conditions for the next query.
+     * Only applies filters for fields defined in filterableFields.
+     */
+    public function filter(array $filters): static;
+
+    /**
+     * Add sort order for the next query.
+     */
+    public function sortBy(string $column, string $direction = 'asc'): static;
+
+    /**
+     * Get paginated results with search, filter, and sort applied.
+     * Resets query state after execution.
+     */
+    public function getPaginated(int $perPage = 15): LengthAwarePaginator;
+
+    /**
+     * Get all results with search and filter applied (no pagination).
+     * Resets query state after execution.
+     */
+    public function getAllFiltered(): Collection;
 
     /**
      * Create a new record.
@@ -77,8 +102,6 @@ interface BaseRepositoryInterface
 
     /**
      * Delete a record by ID.
-     *
-     * @return bool
      */
-    public function delete(int $id);
+    public function delete(int $id): bool;
 }

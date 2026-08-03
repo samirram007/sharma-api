@@ -45,7 +45,12 @@ class OpeningEntryReportController extends Controller
             ->get();
 
         $data = [
-            'fiscal_year' => $fiscalYear->only(['id', 'name', 'start_date', 'end_date']),
+            'fiscalYear' => [
+                'id' => $fiscalYear->id,
+                'name' => $fiscalYear->name,
+                'startDate' => $fiscalYear->start_date?->toDateString(),
+                'endDate' => $fiscalYear->end_date?->toDateString(),
+            ],
             'vouchers' => $vouchers->map(function ($voucher) {
                 return [
                     'id' => $voucher->id,
@@ -92,6 +97,9 @@ class OpeningEntryReportController extends Controller
                                         'entryOrder' => $ge->entry_order,
                                         'godownId' => $ge->godown_id,
                                         'godownName' => $ge->godown?->name,
+                                        'batchNo' => $ge->batch_no,
+                                        'mfgDate' => $ge->mfg_date?->toDateString(),
+                                        'expiryDate' => $ge->expiry_date?->toDateString(),
                                         'actualQuantity' => (float) ($ge->actual_quantity ?? 0),
                                         'remarks' => $ge->remarks,
                                     ];

@@ -10,7 +10,8 @@ class MakeModuleService extends Command
     protected $signature = 'make:module-service
         {name : The module name in PascalCase (e.g., StockCategory)}
         {--model= : The model class name (defaults to the module name)}
-        {--force : Overwrite existing files}';
+        {--force : Overwrite existing files}
+        {--with-repository : Also scaffold a repository class and interface}';
 
     protected $description = 'Scaffold a service class and interface extending BaseService for a module';
 
@@ -34,8 +35,26 @@ class MakeModuleService extends Command
 
         // Create service
         $servicePath = "{$modulePath}/Services/{$name}Service.php";
-        if ($this->writeFile($servicePath, $this->buildService($name, $model), $force)) {
+        if ($this->writeFile($servicePath, $this->buildService($name, $model, $this->option('with-repository')), $force)) {
             $this->info("Created: {$servicePath}");
+        }
+
+        // Optionally scaffold repository
+        if ($this->option('with-repository')) {
+            File::ensureDirectoryExists("{$modulePath}/Repositories");
+            File::ensureDirectoryExists("{$modulePath}/Facades");
+
+            $repoInterfacePath = "{$modulePath}/Contracts/{$name}RepositoryInterface.php";
+            if ($this->writeFile($repoInterfacePath, $this->buildRepositoryInterface($name, $model), $force)) {
+                $this->info("Created: {$repoInterfacePath}");
+            }
+
+            $repoPath = "{$modulePath}/Repositories/{$name}Repository.php";
+            if ($this->writeFile($repoPath, $this->buildRepository($name, $model), $force)) {
+                $this->info("Created: {$repoPath}");
+            }
+
+            $this->warn('Remember to bind the repository in your service provider and add it to the service constructor.');
         }
 
         $this->newLine();
@@ -67,6 +86,7 @@ class MakeModuleService extends Command
 
 namespace {$namespace};
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use {$modelNamespace};
 
@@ -77,16 +97,94 @@ interface {$name}ServiceInterface
     public function store(array \$data): {$model};
     public function update(array \$data, int \$id): {$model};
     public function delete(int \$id): bool;
+
+    /**
+     * Get paginated results with optional server-side search.
+     */
+    public function getPaginated(int \$perPage = 15): LengthAwarePaginator;
+    public function searchAndPaginate(?string \$search, int \$perPage = 15, array \$searchFields = []): LengthAwarePaginator;
 }
 
 PHP;
     }
 
-    protected function buildService(string $name, string $model): string
+    protected function buildService(string $name, string $model, bool $withRepository = false): string
     {
         $namespace = "Modules\\{$name}\\Services";
         $interfaceNamespace = "Modules\\{$name}\\Contracts\\{$name}ServiceInterface";
         $modelNamespace = "Modules\\{$name}\\Models\\{$model}";
+
+        if ($withRepository) {
+            $repoInterfaceNamespace = "Modules\\{$name}\\Contracts\\{$name}RepositoryInterface";
+
+            return <<<PHP
+<?php
+
+namespace {$namespace};
+
+use App\Support\Services\BaseService;
+use {$interfaceNamespace};
+use {$modelNamespace};
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
+
+class {$name}Service extends BaseService implements {$name}ServiceInterface
+{
+    protected string \$modelClass = {$model}::class;
+
+    protected array \$defaultResource = [
+        //
+    ];
+
+    public function __construct(
+        protected {$name}RepositoryInterface \$repository
+    ) {
+        parent::__construct();
+    }
+
+    public function getAll(): Collection
+    {
+        return \$this->getAllRecords();
+    }
+
+    public function getById(int \$id): ?{$model}
+    {
+        return \$this->findOrFail(\$id);
+    }
+
+    public function store(array \$data): {$model}
+    {
+        return \$this->createRecord(\$data);
+    }
+
+    public function update(array \$data, int \$id): {$model}
+    {
+        return \$this->updateRecord(\$id, \$data);
+    }
+
+    public function delete(int \$id): bool
+    {
+        return \$this->deleteRecord(\$id);
+    }
+
+    public function getPaginated(int \$perPage = 15): LengthAwarePaginator
+    {
+        return \$this->repository
+            ->with(\$this->defaultResource)
+            ->getPaginated(\$perPage);
+    }
+
+    public function searchAndPaginate(?string \$search, int \$perPage = 15, array \$searchFields = []): LengthAwarePaginator
+    {
+        return \$this->repository
+            ->with(\$this->defaultResource)
+            ->search(\$search, \$searchFields)
+            ->getPaginated(\$perPage);
+    }
+}
+
+PHP;
+        }
 
         return <<<PHP
 <?php
@@ -96,6 +194,7 @@ namespace {$namespace};
 use App\Support\Services\BaseService;
 use {$interfaceNamespace};
 use {$modelNamespace};
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class {$name}Service extends BaseService implements {$name}ServiceInterface
@@ -130,6 +229,77 @@ class {$name}Service extends BaseService implements {$name}ServiceInterface
     {
         return \$this->deleteRecord(\$id);
     }
+
+    public function getPaginated(int \$perPage = 15): LengthAwarePaginator
+    {
+        return parent::getPaginated(\$perPage);
+    }
+
+    public function searchAndPaginate(?string \$search, int \$perPage = 15, array \$searchFields = []): LengthAwarePaginator
+    {
+        return parent::searchAndPaginate(\$search, \$perPage, \$searchFields);
+    }
+}
+
+PHP;
+    }
+
+    protected function buildRepositoryInterface(string $name, string $model): string
+    {
+        $namespace = "Modules\\{$name}\\Contracts";
+
+        return <<<PHP
+<?php
+
+namespace {$namespace};
+
+use App\Support\Contracts\BaseRepositoryInterface;
+
+interface {$name}RepositoryInterface extends BaseRepositoryInterface
+{
+    // Add custom repository methods here
+}
+
+PHP;
+    }
+
+    protected function buildRepository(string $name, string $model): string
+    {
+        $namespace = "Modules\\{$name}\\Repositories";
+        $interfaceNamespace = "Modules\\{$name}\\Contracts\\{$name}RepositoryInterface";
+        $modelNamespace = "Modules\\{$name}\\Models\\{$model}";
+
+        return <<<PHP
+<?php
+
+namespace {$namespace};
+
+use App\Support\Repositories\BaseRepository;
+use {$interfaceNamespace};
+use {$modelNamespace};
+
+class {$name}Repository extends BaseRepository implements {$name}RepositoryInterface
+{
+    /**
+     * Fields that can be searched via the search() method.
+     */
+    protected array \$searchableFields = [
+        // 'name', 'code', 'email',
+    ];
+
+    /**
+     * Fields that can be filtered via the filter() method.
+     */
+    protected array \$filterableFields = [
+        // 'status', 'category_id', 'group_id',
+    ];
+
+    public function __construct({$model} \$model)
+    {
+        parent::__construct(\$model);
+    }
+
+    // Add custom repository methods here
 }
 
 PHP;

@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\DistributorBook\Contracts\DistributorBookServiceInterface;
+use Modules\DistributorBook\Facades\DistributorBookFacade;
 use Modules\DistributorBook\Requests\DistributorBookRequest;
 use Modules\DistributorBook\Resources\DistributorBookCollection;
 use Modules\DistributorBook\Resources\DistributorBookResource;
@@ -17,38 +17,36 @@ class DistributorBookController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected DistributorBookServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = DistributorBookFacade::getAll();
 
         return new DistributorBookCollection($data);
     }
 
     public function show(int $id): SuccessCollection
     {
-        $data = $this->service->getById($id);
+        $data = DistributorBookFacade::getById($id);
 
         return new VoucherCollection($data);
     }
 
     public function store(DistributorBookRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = DistributorBookFacade::store($request->validated());
 
         return new DistributorBookResource($data, $messages = 'DistributorBook created successfully');
     }
 
     public function update(DistributorBookRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = DistributorBookFacade::update($request->validated(), $id);
 
         return new DistributorBookResource($data, $messages = 'DistributorBook updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'DistributorBook');
+        return $this->deletedResponse(DistributorBookFacade::delete($id), 'DistributorBook');
     }
 }

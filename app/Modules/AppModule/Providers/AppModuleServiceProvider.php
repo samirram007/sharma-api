@@ -4,7 +4,9 @@ namespace Modules\AppModule\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\AppModule\Contracts\AppModuleRepositoryInterface;
 use Modules\AppModule\Contracts\AppModuleServiceInterface;
+use Modules\AppModule\Repositories\AppModuleRepository;
 use Modules\AppModule\Services\AppModuleService;
 
 class AppModuleServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class AppModuleServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AppModuleServiceInterface::class, AppModuleService::class);
+        $this->app->singleton(AppModuleRepositoryInterface::class, AppModuleRepository::class);
     }
 
     public function boot(): void

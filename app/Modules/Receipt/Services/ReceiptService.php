@@ -2,41 +2,13 @@
 
 namespace Modules\Receipt\Services;
 
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\Services\BaseService;
 use Modules\Receipt\Contracts\ReceiptServiceInterface;
 use Modules\Receipt\Models\Receipt;
 
-class ReceiptService implements ReceiptServiceInterface
+class ReceiptService extends BaseService implements ReceiptServiceInterface
 {
-    protected $resource = [];
+    protected string $modelClass = Receipt::class;
 
-    public function getAll(): Collection
-    {
-        return Receipt::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?Receipt
-    {
-        return Receipt::with($this->resource)->findOrFail($id);
-    }
-
-    public function store(array $data): Receipt
-    {
-        return Receipt::create($data);
-    }
-
-    public function update(array $data, int $id): Receipt
-    {
-        $record = Receipt::findOrFail($id);
-        $record->update($data);
-
-        return $record->fresh();
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = Receipt::findOrFail($id);
-
-        return $record->delete();
-    }
+    protected array $defaultResource = [];
 }

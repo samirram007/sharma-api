@@ -2,18 +2,6 @@
 
 namespace Modules\OrderStockJournal\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\OrderStockJournal\Models\OrderStockJournal;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface OrderStockJournalServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?OrderStockJournal;
-
-    public function store(array $data): OrderStockJournal;
-
-    public function update(array $data, int $id): OrderStockJournal;
-
-    public function delete(int $id): bool;
-}
+interface OrderStockJournalServiceInterface extends BaseServiceInterface {}

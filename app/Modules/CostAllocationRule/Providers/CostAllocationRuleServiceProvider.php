@@ -4,7 +4,9 @@ namespace Modules\CostAllocationRule\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\CostAllocationRule\Contracts\CostAllocationRuleRepositoryInterface;
 use Modules\CostAllocationRule\Contracts\CostAllocationRuleServiceInterface;
+use Modules\CostAllocationRule\Repositories\CostAllocationRuleRepository;
 use Modules\CostAllocationRule\Services\CostAllocationRuleService;
 
 class CostAllocationRuleServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class CostAllocationRuleServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(CostAllocationRuleServiceInterface::class, CostAllocationRuleService::class);
+        $this->app->singleton(CostAllocationRuleRepositoryInterface::class, CostAllocationRuleRepository::class);
     }
 
     public function boot(): void

@@ -5,7 +5,7 @@ namespace Modules\Setting\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\Setting\Contracts\SettingServiceInterface;
+use Modules\Setting\Facades\SettingFacade;
 use Modules\Setting\Requests\SettingRequest;
 use Modules\Setting\Resources\SettingCollection;
 use Modules\Setting\Resources\SettingResource;
@@ -14,18 +14,16 @@ class SettingController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected SettingServiceInterface $service) {}
-
     public function index(): JsonResponse
     {
-        $data = $this->service->getAll();
+        $data = SettingFacade::getAll();
 
         return (new SettingCollection($data))->response();
     }
 
     public function show(int $id): JsonResponse
     {
-        $data = $this->service->getById($id);
+        $data = SettingFacade::getById($id);
 
         return $this->resourceResponse(
             new SettingResource($data),
@@ -35,7 +33,7 @@ class SettingController extends Controller
 
     public function store(SettingRequest $request): JsonResponse
     {
-        $data = $this->service->store($request->validated());
+        $data = SettingFacade::store($request->validated());
 
         return $this->resourceResponse(
             new SettingResource($data),
@@ -46,7 +44,7 @@ class SettingController extends Controller
 
     public function update(SettingRequest $request, int $id): JsonResponse
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = SettingFacade::update($request->validated(), $id);
 
         return $this->resourceResponse(
             new SettingResource($data),
@@ -56,6 +54,6 @@ class SettingController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'Setting');
+        return $this->deletedResponse(SettingFacade::delete($id), 'Setting');
     }
 }

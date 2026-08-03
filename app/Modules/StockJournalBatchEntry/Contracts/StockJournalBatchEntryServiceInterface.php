@@ -2,18 +2,6 @@
 
 namespace Modules\StockJournalBatchEntry\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\StockJournalBatchEntry\Models\StockJournalBatchEntry;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface StockJournalBatchEntryServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?StockJournalBatchEntry;
-
-    public function store(array $data): StockJournalBatchEntry;
-
-    public function update(array $data, int $id): StockJournalBatchEntry;
-
-    public function delete(int $id): bool;
-}
+interface StockJournalBatchEntryServiceInterface extends BaseServiceInterface {}

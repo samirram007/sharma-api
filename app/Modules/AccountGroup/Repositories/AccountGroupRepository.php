@@ -8,6 +8,24 @@ use Modules\AccountGroup\Models\AccountGroup;
 
 class AccountGroupRepository extends BaseRepository implements AccountGroupRepositoryInterface
 {
+    /**
+     * Fields that can be searched via the search() method.
+     */
+    protected array $searchableFields = [
+        'name',
+        'code',
+        'description',
+        'icon',
+    ];
+
+    /**
+     * Fields that can be filtered via the filter() method.
+     */
+    protected array $filterableFields = [
+        // 'account_nature_id',
+        'status',
+    ];
+
     public function __construct(AccountGroup $model)
     {
         parent::__construct($model);

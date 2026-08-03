@@ -2,18 +2,6 @@
 
 namespace Modules\StockJournalGodownEntryPurge\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\StockJournalGodownEntryPurge\Models\StockJournalGodownEntryPurge;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface StockJournalGodownEntryPurgeServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?StockJournalGodownEntryPurge;
-
-    public function store(array $data): StockJournalGodownEntryPurge;
-
-    public function update(array $data, int $id): StockJournalGodownEntryPurge;
-
-    public function delete(int $id): bool;
-}
+interface StockJournalGodownEntryPurgeServiceInterface extends BaseServiceInterface {}

@@ -2,25 +2,17 @@
 
 namespace Modules\Supplier\Services;
 
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\Services\BaseService;
 use Illuminate\Support\Arr;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Supplier\Contracts\SupplierServiceInterface;
 use Modules\Supplier\Models\Supplier;
 
-class SupplierService implements SupplierServiceInterface
+class SupplierService extends BaseService implements SupplierServiceInterface
 {
-    protected $resource = ['account_ledger', 'address'];
+    protected string $modelClass = Supplier::class;
 
-    public function getAll(): Collection
-    {
-        return Supplier::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?Supplier
-    {
-        return Supplier::with($this->resource)->findOrFail($id);
-    }
+    protected array $defaultResource = ['account_ledger', 'address'];
 
     public function store(array $data): Supplier
     {
@@ -50,7 +42,7 @@ class SupplierService implements SupplierServiceInterface
 
         // 'ledgerable_id',
         // 'ledgerable_type'
-        return $supplier->load($this->resource);
+        return $supplier->load($this->defaultResource);
     }
 
     public function update(array $data, int $id): Supplier
@@ -92,13 +84,6 @@ class SupplierService implements SupplierServiceInterface
 
         }
 
-        return $supplier->fresh()->load($this->resource);
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = Supplier::findOrFail($id);
-
-        return $record->delete();
+        return $supplier->fresh()->load($this->defaultResource);
     }
 }

@@ -2,25 +2,17 @@
 
 namespace Modules\Employee\Services;
 
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\Services\BaseService;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Employee\Contracts\EmployeeServiceInterface;
 use Modules\Employee\Models\Employee;
 use Modules\User\Models\User;
 
-class EmployeeService implements EmployeeServiceInterface
+class EmployeeService extends BaseService implements EmployeeServiceInterface
 {
-    protected $resource = ['department', 'designation', 'address', 'user', 'account_ledger', 'employee_group', 'shift', 'grade'];
+    protected string $modelClass = Employee::class;
 
-    public function getAll(): Collection
-    {
-        return Employee::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?Employee
-    {
-        return Employee::with($this->resource)->findOrFail($id);
-    }
+    protected array $defaultResource = ['department', 'designation', 'address', 'user', 'account_ledger', 'employee_group', 'shift', 'grade'];
 
     public function store(array $data): Employee
     {
@@ -66,7 +58,7 @@ class EmployeeService implements EmployeeServiceInterface
             }
         }
 
-        return $employee->load($this->resource);
+        return $employee->load($this->defaultResource);
     }
 
     private function verifyUniqueLedgerName(string $name, ?int $id = null): string
@@ -150,13 +142,6 @@ class EmployeeService implements EmployeeServiceInterface
             }
         }
 
-        return $employee->fresh()->load($this->resource);
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = Employee::findOrFail($id);
-
-        return $record->delete();
+        return $employee->fresh()->load($this->defaultResource);
     }
 }

@@ -4,7 +4,9 @@ namespace Modules\DeliveryPlace\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\DeliveryPlace\Contracts\DeliveryPlaceRepositoryInterface;
 use Modules\DeliveryPlace\Contracts\DeliveryPlaceServiceInterface;
+use Modules\DeliveryPlace\Repositories\DeliveryPlaceRepository;
 use Modules\DeliveryPlace\Services\DeliveryPlaceService;
 
 class DeliveryPlaceServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class DeliveryPlaceServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(DeliveryPlaceServiceInterface::class, DeliveryPlaceService::class);
+        $this->app->singleton(DeliveryPlaceRepositoryInterface::class, DeliveryPlaceRepository::class);
     }
 
     public function boot(): void

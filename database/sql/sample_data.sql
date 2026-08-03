@@ -187,6 +187,7 @@ INSERT IGNORE INTO `account_ledgers` (`id`, `name`, `code`, `account_group_id`, 
 	(4000004, 'Rounding Off', 'ROUND', 40002, 'Minor rounding adjustments', 'active', NULL, 1, 1, NULL, NULL, NULL, NULL),
 	(4000005, 'Exchange Difference Loss', 'FXLOSS', 40002, 'Loss due to currency revaluation', 'active', NULL, 1, 1, NULL, NULL, NULL, NULL),
 	(4000006, 'Salary Expense', 'SALARY', 40002, 'Employee salary and wages', 'active', NULL, 0, 0, NULL, NULL, NULL, NULL),
+	(4000007, 'Manufacturing', 'MANUF', 40002, 'Manufacturing / stock conversion account for Manufacturing Journal vouchers', 'active', NULL, 1, 0, NULL, NULL, NULL, NULL),
 	(5000001, 'Capital Account', 'CAPITAL', 50001, 'Owner’s capital', 'active', NULL, 1, 0, NULL, NULL, NULL, NULL),
 	(5000002, 'Drawings', 'DRAWING', 50001, 'Withdrawals by proprietor', 'active', NULL, 1, 0, NULL, NULL, NULL, NULL),
 	(5000003, 'Profit & Loss Account', 'PLACC', 50002, 'System ledger for profit and loss summary', 'active', NULL, 1, 1, NULL, NULL, NULL, NULL);

@@ -4,7 +4,9 @@ namespace Modules\StockJournalBatchEntry\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\StockJournalBatchEntry\Contracts\StockJournalBatchEntryRepositoryInterface;
 use Modules\StockJournalBatchEntry\Contracts\StockJournalBatchEntryServiceInterface;
+use Modules\StockJournalBatchEntry\Repositories\StockJournalBatchEntryRepository;
 use Modules\StockJournalBatchEntry\Services\StockJournalBatchEntryService;
 
 class StockJournalBatchEntryServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class StockJournalBatchEntryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(StockJournalBatchEntryServiceInterface::class, StockJournalBatchEntryService::class);
+        $this->app->singleton(StockJournalBatchEntryRepositoryInterface::class, StockJournalBatchEntryRepository::class);
     }
 
     public function boot(): void

@@ -4,7 +4,9 @@ namespace Modules\OrderStockJournal\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\OrderStockJournal\Contracts\OrderStockJournalRepositoryInterface;
 use Modules\OrderStockJournal\Contracts\OrderStockJournalServiceInterface;
+use Modules\OrderStockJournal\Repositories\OrderStockJournalRepository;
 use Modules\OrderStockJournal\Services\OrderStockJournalService;
 
 class OrderStockJournalServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class OrderStockJournalServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(OrderStockJournalServiceInterface::class, OrderStockJournalService::class);
+        $this->app->singleton(OrderStockJournalRepositoryInterface::class, OrderStockJournalRepository::class);
     }
 
     public function boot(): void

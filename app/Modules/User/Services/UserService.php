@@ -2,31 +2,18 @@
 
 namespace Modules\User\Services;
 
+use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Modules\User\Contracts\UserServiceInterface;
 use Modules\User\Models\User;
 use Modules\User\Models\UserNotificationPreference;
 
-class UserService implements UserServiceInterface
+class UserService extends BaseService implements UserServiceInterface
 {
-    protected $resources = ['roles'];
+    protected string $modelClass = User::class;
 
-    public function getAll(): Collection
-    {
-        // return User::all()->load($this->resources);
-        return User::with($this->resources)->get();
-    }
-
-    public function getById(int $id): User
-    {
-        return User::findOrFail($id);
-    }
-
-    public function store(array $data): User
-    {
-        return User::create($data);
-    }
+    protected array $defaultResource = ['roles'];
 
     public function findOrCreateSocialUser($socialUser, string $provider): User
     {
@@ -79,21 +66,6 @@ class UserService implements UserServiceInterface
         if ($avatarUrl && $user->avatar !== $avatarUrl) {
             $user->update(['avatar' => $avatarUrl]);
         }
-    }
-
-    public function update(array $data, int $id): User
-    {
-        $record = User::findOrFail($id);
-        $record->update($data);
-
-        return $record->fresh();
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = User::findOrFail($id);
-
-        return $record->delete();
     }
 
     // ── Notification Preferences ────────────────────────────────

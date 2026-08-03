@@ -2,51 +2,29 @@
 
 namespace Modules\Payment\Services;
 
+use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Payment\Contracts\PaymentServiceInterface;
 use Modules\Payment\Models\Payment;
+use Modules\Voucher\Models\Voucher;
 use Modules\VoucherReference\Models\VoucherReference;
 
-class PaymentService implements PaymentServiceInterface
+class PaymentService extends BaseService implements PaymentServiceInterface
 {
-    protected $resource = [];
+    protected string $modelClass = Payment::class;
 
-    public function getAll(): Collection
-    {
-        return Payment::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?Payment
-    {
-        return Payment::with($this->resource)->findOrFail($id);
-    }
-
-    public function store(array $data): Payment
-    {
-        return Payment::create($data);
-    }
-
-    public function update(array $data, int $id): Payment
-    {
-        $record = Payment::findOrFail($id);
-        $record->update($data);
-
-        return $record->fresh();
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = Payment::findOrFail($id);
-
-        return $record->delete();
-    }
+    protected array $defaultResource = [];
 
     public function getPaymentsByFreightId(int $freight_id): Collection
     {
-        $freightPaymentReferences = VoucherReference::where('reference_id', $freight_id)
+        $paymentVoucherIds = VoucherReference::where('ref_voucher_id', $freight_id)
             ->where('type', 'freight_payment')
-            ->get();
+            ->pluck('voucher_id');
 
-        return Payment::with($this->resource)->where('freight_id', $freight_id)->get();
+        if ($paymentVoucherIds->isEmpty()) {
+            return collect();
+        }
+
+        return Voucher::whereIn('id', $paymentVoucherIds)->get();
     }
 }

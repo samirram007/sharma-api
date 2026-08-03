@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('journal_no');
             $table->date('journal_date');
             $table->unsignedBigInteger('voucher_id')->nullable();
-            $table->string('type'); // 'in', 'out', 'transfer', 'production'
+            $table->string('type'); // 'in', 'out', 'transfer', 'production', 'conv'
             $table->text('remarks')->nullable();
 
             $table->timestamps();

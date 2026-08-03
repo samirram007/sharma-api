@@ -271,6 +271,21 @@ class VoucherTypeSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'id' => 2008,
+                'parent_id' => null,
+                'name' => 'Conversion Journal',
+                'code' => 'CVNJ',
+                'voucher_category_id' => 2,
+                'description' => 'For recording stock conversion processes (raw materials into finished goods)',
+                'is_financial' => true,
+                'is_hidden' => false,
+                'is_system' => false,
+                'status' => 'active',
+                'icon' => 'FaExchangeAlt',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
 
             // Statutory Category (ID 3)
             [

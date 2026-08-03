@@ -88,6 +88,7 @@ class MenuFeatureSeeder extends Seeder
             ['app_module_id' => $adminModuleId, 'name' => 'Year End Process Menu', 'code' => 'YEAR_END_PROCESS_MENU_VIEW', 'icon' => 'Archive'],
             ['app_module_id' => $adminModuleId, 'name' => 'Close Fiscal Year Menu', 'code' => 'CLOSE_FISCAL_YEAR_MENU_VIEW', 'icon' => 'Archive'],
             ['app_module_id' => $adminModuleId, 'name' => 'Opening Journal Menu',  'code' => 'OPENING_JOURNAL_MENU_VIEW',  'icon' => 'DoorEnter'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Opening Balance Setup Menu', 'code' => 'OPENING_BALANCE_MENU_VIEW', 'icon' => 'Scale'],
 
             // ── Settings & Help ──────────────────────────────────
             ['app_module_id' => $adminModuleId, 'name' => 'Settings Menu',         'code' => 'SETTINGS_MENU_VIEW',         'icon' => 'Settings'],

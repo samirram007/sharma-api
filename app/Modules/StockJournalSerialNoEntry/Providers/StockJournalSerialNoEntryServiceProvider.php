@@ -4,7 +4,9 @@ namespace Modules\StockJournalSerialNoEntry\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\StockJournalSerialNoEntry\Contracts\StockJournalSerialNoEntryRepositoryInterface;
 use Modules\StockJournalSerialNoEntry\Contracts\StockJournalSerialNoEntryServiceInterface;
+use Modules\StockJournalSerialNoEntry\Repositories\StockJournalSerialNoEntryRepository;
 use Modules\StockJournalSerialNoEntry\Services\StockJournalSerialNoEntryService;
 
 class StockJournalSerialNoEntryServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class StockJournalSerialNoEntryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(StockJournalSerialNoEntryServiceInterface::class, StockJournalSerialNoEntryService::class);
+        $this->app->singleton(StockJournalSerialNoEntryRepositoryInterface::class, StockJournalSerialNoEntryRepository::class);
     }
 
     public function boot(): void

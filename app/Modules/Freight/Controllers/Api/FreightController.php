@@ -8,7 +8,7 @@ use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Freight\Contracts\FreightServiceInterface;
+use Modules\Freight\Facades\FreightFacade;
 use Modules\Freight\Requests\FreightRequest;
 use Modules\Freight\Resources\FreightCollection;
 use Modules\Freight\Resources\FreightResource;
@@ -19,11 +19,11 @@ class FreightController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected FreightServiceInterface $service) {}
+    public function __construct() {}
 
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = FreightFacade::getAll();
 
         return new FreightCollection($data);
     }
@@ -33,8 +33,8 @@ class FreightController extends Controller
         $perPage = (int) $request->input('per_page', 10);
         $page = (int) $request->input('page', 1);
         $filters = $request->only(['search', 'freight_status']);
-        $data = $this->service->getDeliveryNote($page, $perPage, $filters);
-        $overallTotalFare = $this->service->getDeliveryNoteOverallTotalFare($filters);
+        $data = FreightFacade::getDeliveryNote($page, $perPage, $filters);
+        $overallTotalFare = FreightFacade::getDeliveryNoteOverallTotalFare($filters);
 
         return (new VoucherCollection($data))->additional([
             'aggregates' => [
@@ -45,21 +45,21 @@ class FreightController extends Controller
 
     public function godown_wise(): SuccessCollection
     {
-        $data = $this->service->godownWiseReport();
+        $data = FreightFacade::godownWiseReport();
 
         return new SuccessCollection($data);
     }
 
     public function zone_wise(): SuccessCollection
     {
-        $data = $this->service->zoneWiseReport();
+        $data = FreightFacade::zoneWiseReport();
 
         return new SuccessCollection($data);
     }
 
     public function delivery_note_zone_wise(): SuccessCollection
     {
-        $data = $this->service->deliveryNoteZoneWiseReport();
+        $data = FreightFacade::deliveryNoteZoneWiseReport();
 
         return new SuccessCollection($data);
     }
@@ -68,7 +68,7 @@ class FreightController extends Controller
     {
         $zoneId = $request->integer('zone_id');
         $godownId = $request->integer('godown_id');
-        $data = $this->service->deliveryNoteGodownWiseReport(
+        $data = FreightFacade::deliveryNoteGodownWiseReport(
             $zoneId ?: null,
             $godownId ?: null
         );
@@ -78,62 +78,62 @@ class FreightController extends Controller
 
     public function transporter_wise(): SuccessCollection
     {
-        $data = $this->service->transporterWiseReport();
+        $data = FreightFacade::transporterWiseReport();
 
         return new VoucherCollection($data);
     }
 
     public function transporter_item_wise(): SuccessCollection
     {
-        $data = $this->service->transporterItemWiseReport();
+        $data = FreightFacade::transporterItemWiseReport();
 
         return new SuccessCollection($data);
     }
 
     public function vehicle_wise(): SuccessCollection
     {
-        $data = $this->service->vehicleWiseReport();
+        $data = FreightFacade::vehicleWiseReport();
 
         return new VoucherCollection($data);
     }
 
     public function voucher_wise(): SuccessCollection
     {
-        $data = $this->service->voucherWiseReport();
+        $data = FreightFacade::voucherWiseReport();
 
         return new VoucherCollection($data);
     }
 
     public function billing_preference(): SuccessCollection
     {
-        $data = $this->service->billingPreferenceReport();
+        $data = FreightFacade::billingPreferenceReport();
 
         return new SuccessCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = FreightFacade::getById($id);
 
         return new FreightResource($data);
     }
 
     public function store(FreightRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = FreightFacade::store($request->validated());
 
         return new VoucherResource($data, $messages = 'Freight created successfully');
     }
 
     public function update(FreightRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = FreightFacade::update($request->validated(), $id);
 
         return new FreightResource($data, $messages = 'Freight updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'Freight');
+        return $this->deletedResponse(FreightFacade::delete($id), 'Freight');
     }
 }

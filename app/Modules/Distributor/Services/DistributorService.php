@@ -2,25 +2,17 @@
 
 namespace Modules\Distributor\Services;
 
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\Services\BaseService;
 use Illuminate\Support\Arr;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Distributor\Contracts\DistributorServiceInterface;
 use Modules\Distributor\Models\Distributor;
 
-class DistributorService implements DistributorServiceInterface
+class DistributorService extends BaseService implements DistributorServiceInterface
 {
-    protected $resource = ['account_ledger', 'address'];
+    protected string $modelClass = Distributor::class;
 
-    public function getAll(): Collection
-    {
-        return Distributor::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?Distributor
-    {
-        return Distributor::with($this->resource)->findOrFail($id);
-    }
+    protected array $defaultResource = ['account_ledger', 'address'];
 
     public function store(array $data): Distributor
     {
@@ -47,7 +39,7 @@ class DistributorService implements DistributorServiceInterface
 
         }
 
-        return $distributor->load($this->resource);
+        return $distributor->load($this->defaultResource);
     }
 
     private function verifyUniqueLedgerName(string $name, ?int $id = null): string
@@ -113,13 +105,6 @@ class DistributorService implements DistributorServiceInterface
 
         }
 
-        return $distributor->fresh()->load($this->resource);
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = Distributor::findOrFail($id);
-
-        return $record->delete();
+        return $distributor->fresh()->load($this->defaultResource);
     }
 }

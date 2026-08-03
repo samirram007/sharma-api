@@ -4,7 +4,9 @@ namespace Modules\DayBook\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\DayBook\Contracts\DayBookRepositoryInterface;
 use Modules\DayBook\Contracts\DayBookServiceInterface;
+use Modules\DayBook\Repositories\DayBookRepository;
 use Modules\DayBook\Services\DayBookService;
 
 class DayBookServiceProvider extends ServiceProvider
@@ -12,6 +14,8 @@ class DayBookServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(DayBookServiceInterface::class, DayBookService::class);
+
+        $this->app->singleton(DayBookRepositoryInterface::class, DayBookRepository::class);
     }
 
     public function boot(): void

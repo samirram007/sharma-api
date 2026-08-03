@@ -3,8 +3,8 @@
 namespace Modules\DistributorBook\Services;
 
 use App\Support\Services\BaseService;
-use Illuminate\Database\Eloquent\Collection;
 use Modules\DistributorBook\Contracts\DistributorBookServiceInterface;
+use Modules\DistributorBook\Facades\DistributorBookRepositoryFacade;
 use Modules\DistributorBook\Models\DistributorBook;
 
 class DistributorBookService extends BaseService implements DistributorBookServiceInterface
@@ -28,28 +28,7 @@ class DistributorBookService extends BaseService implements DistributorBookServi
         'referenced_by',
     ];
 
-    public function getAll(): Collection
-    {
-        return $this->getAllRecords();
-    }
+    protected string $repositoryFacadeClass = DistributorBookRepositoryFacade::class;
 
-    public function getById(int $id): ?DistributorBook
-    {
-        return $this->findOrFail($id);
-    }
-
-    public function store(array $data): DistributorBook
-    {
-        return $this->createRecord($data);
-    }
-
-    public function update(array $data, int $id): DistributorBook
-    {
-        return $this->updateRecord($id, $data);
-    }
-
-    public function delete(int $id): bool
-    {
-        return $this->deleteRecord($id);
-    }
+    public function __construct() {}
 }

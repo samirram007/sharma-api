@@ -4,7 +4,9 @@ namespace Modules\UserRole\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\UserRole\Contracts\UserRoleRepositoryInterface;
 use Modules\UserRole\Contracts\UserRoleServiceInterface;
+use Modules\UserRole\Repositories\UserRoleRepository;
 use Modules\UserRole\Services\UserRoleService;
 
 class UserRoleServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class UserRoleServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UserRoleServiceInterface::class, UserRoleService::class);
+        $this->app->singleton(UserRoleRepositoryInterface::class, UserRoleRepository::class);
     }
 
     public function boot(): void

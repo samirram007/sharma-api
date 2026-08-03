@@ -4,7 +4,9 @@ namespace Modules\Status\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Status\Contracts\StatusRepositoryInterface;
 use Modules\Status\Contracts\StatusServiceInterface;
+use Modules\Status\Repositories\StatusRepository;
 use Modules\Status\Services\StatusService;
 
 class StatusServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class StatusServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(StatusServiceInterface::class, StatusService::class);
+        $this->app->singleton(StatusRepositoryInterface::class, StatusRepository::class);
     }
 
     public function boot(): void

@@ -2,6 +2,7 @@
 
 namespace Modules\Menu\Services;
 
+use App\Support\Services\BaseService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -9,43 +10,11 @@ use Modules\AppModuleFeature\Models\AppModuleFeature;
 use Modules\Menu\Contracts\MenuServiceInterface;
 use Modules\Menu\Models\Menu;
 
-class MenuService implements MenuServiceInterface
+class MenuService extends BaseService implements MenuServiceInterface
 {
-    protected $resource = ['feature.module'];
+    protected string $modelClass = Menu::class;
 
-    public function getAll(): Collection
-    {
-
-        return Menu::with($this->resource)
-            ->orderBy('parent_id')
-            ->orderBy('sort_order')
-            ->get();
-    }
-
-    public function getById(int $id): ?Menu
-    {
-        return Menu::with($this->resource)->findOrFail($id);
-    }
-
-    public function store(array $data): Menu
-    {
-        return Menu::create($data);
-    }
-
-    public function update(array $data, int $id): Menu
-    {
-        $record = Menu::findOrFail($id);
-        $record->update($data);
-
-        return $record->fresh();
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = Menu::findOrFail($id);
-
-        return $record->delete();
-    }
+    protected array $defaultResource = ['feature.module'];
 
     /** Build the full hierarchical menu tree for admin management (up to 3 levels). */
     public function getTree(): Collection
@@ -67,7 +36,7 @@ class MenuService implements MenuServiceInterface
     /** Get child menus for a given parent. */
     public function getChildren(int $parentId): Collection
     {
-        return Menu::with($this->resource)
+        return Menu::with($this->defaultResource)
             ->where('parent_id', $parentId)
             ->orderBy('sort_order')
             ->get();
@@ -265,7 +234,7 @@ class MenuService implements MenuServiceInterface
     {
         $like = '%'.$query.'%';
 
-        return Menu::with($this->resource)
+        return Menu::with($this->defaultResource)
             ->where(function ($q) use ($like) {
                 $q->where('menu_name', 'like', $like)
                     ->orWhere('route', 'like', $like)

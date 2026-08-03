@@ -4,7 +4,9 @@ namespace Modules\VoucherCategory\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\VoucherCategory\Contracts\VoucherCategoryRepositoryInterface;
 use Modules\VoucherCategory\Contracts\VoucherCategoryServiceInterface;
+use Modules\VoucherCategory\Repositories\VoucherCategoryRepository;
 use Modules\VoucherCategory\Services\VoucherCategoryService;
 
 class VoucherCategoryServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class VoucherCategoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(VoucherCategoryServiceInterface::class, VoucherCategoryService::class);
+        $this->app->singleton(VoucherCategoryRepositoryInterface::class, VoucherCategoryRepository::class);
     }
 
     public function boot(): void

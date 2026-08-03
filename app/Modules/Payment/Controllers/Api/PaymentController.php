@@ -7,54 +7,55 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\Payment\Contracts\PaymentServiceInterface;
+use Modules\Payment\Facades\PaymentFacade;
 use Modules\Payment\Requests\PaymentRequest;
 use Modules\Payment\Resources\PaymentCollection;
 use Modules\Payment\Resources\PaymentResource;
+use Modules\Voucher\Resources\VoucherCollection;
 
 class PaymentController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected PaymentServiceInterface $service) {}
+    public function __construct() {}
 
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = PaymentFacade::getAll();
 
         return new PaymentCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = PaymentFacade::getById($id);
 
         return new PaymentResource($data);
     }
 
     public function store(PaymentRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = PaymentFacade::store($request->validated());
 
         return new PaymentResource($data, $messages = 'Payment created successfully');
     }
 
     public function update(PaymentRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = PaymentFacade::update($request->validated(), $id);
 
         return new PaymentResource($data, $messages = 'Payment updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'Payment');
+        return $this->deletedResponse(PaymentFacade::delete($id), 'Payment');
     }
 
     public function freightPayments(int $freight_id): SuccessCollection
     {
-        $data = $this->service->getPaymentsByFreightId($freight_id);
+        $data = PaymentFacade::getPaymentsByFreightId($freight_id);
 
-        return new PaymentCollection($data);
+        return new VoucherCollection($data, 'Freight payments fetched successfully');
     }
 }

@@ -2,15 +2,19 @@
 
 namespace Modules\ReceiptNoteReport\Services;
 
+use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Modules\ReceiptNoteReport\Contracts\ReceiptNoteReportServiceInterface;
 use Modules\Voucher\Contracts\VoucherServiceInterface;
 use Modules\Voucher\Models\Voucher;
 
-class ReceiptNoteReportService
+class ReceiptNoteReportService extends BaseService implements ReceiptNoteReportServiceInterface
 {
-    protected $resource = [
+    protected string $modelClass = Voucher::class;
+
+    protected array $defaultResource = [
         'voucher_type',
         'voucher_entries.account_ledger',
         'stock_journal.stock_journal_entries.rate_unit',
@@ -28,21 +32,21 @@ class ReceiptNoteReportService
 
     public function __construct(protected VoucherServiceInterface $voucherService) {}
 
-    public function getAll(array $params = []): LengthAwarePaginator
+    public function getAll(): LengthAwarePaginator
     {
         $userFiscalYear = auth()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
 
-        $query = Voucher::with($this->resource)
+        $query = Voucher::with($this->defaultResource)
             ->where('voucher_type_id', 2002)
             ->where('fiscal_year_id', $userFiscalYear->fiscal_year_id)
             ->whereBetween('voucher_date', [$userFiscalYear->start_date, $userFiscalYear->end_date]);
 
         // Search filter
-        if (! empty($params['search'])) {
-            $search = $params['search'];
+        $search = request()->input('search');
+        if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('voucher_no', 'like', "%{$search}%")
                     ->orWhere('remarks', 'like', "%{$search}%")
@@ -53,9 +57,11 @@ class ReceiptNoteReportService
         }
 
         // Sorting
-        if (! empty($params['sort_by'])) {
-            $sortOrder = ! empty($params['sort_order']) && strtolower($params['sort_order']) === 'desc' ? 'desc' : 'asc';
-            match ($params['sort_by']) {
+        $sortBy = request()->input('sort_by');
+        if (! empty($sortBy)) {
+            $sortOrder = request()->input('sort_order', 'asc');
+            $sortOrder = strtolower($sortOrder) === 'desc' ? 'desc' : 'asc';
+            match ($sortBy) {
                 'voucher_date' => $query->reorder()->orderBy('voucher_date', $sortOrder),
                 'voucher_no' => $query->reorder()->orderBy('voucher_no', $sortOrder),
                 'amount' => $query->reorder()->orderBy(
@@ -66,7 +72,7 @@ class ReceiptNoteReportService
             };
         }
 
-        $perPage = $params['per_page'] ?? 10;
+        $perPage = request()->integer('per_page', 15);
         $vouchers = $query->paginate($perPage);
         $vouchers->through(fn (Voucher $voucher) => $this->voucherService->attachLedgerInfo($voucher));
 

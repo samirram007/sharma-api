@@ -2,18 +2,6 @@
 
 namespace Modules\Post\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Post\Models\Post;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface PostServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): Post;
-
-    public function store(array $data): Post;
-
-    public function update(array $data, int $id): Post;
-
-    public function delete(int $id): bool;
-}
+interface PostServiceInterface extends BaseServiceInterface {}

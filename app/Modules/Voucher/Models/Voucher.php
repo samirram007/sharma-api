@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 use Modules\AccountsJournal\Models\AccountsJournal;
 use Modules\Company\Models\Company;
 use Modules\FiscalYear\Models\FiscalYear;
@@ -19,6 +20,14 @@ use Modules\VoucherParty\Models\VoucherParty;
 use Modules\VoucherReference\Models\VoucherReference;
 use Modules\VoucherType\Models\VoucherType;
 
+/**
+ * @property int $id
+ * @property string $voucher_no
+ * @property Carbon $voucher_date
+ * @property string|null $remarks
+ * @property int|null $stock_journal_id
+ * @property Carbon $created_at
+ */
 class Voucher extends Model
 {
     use Blameable;

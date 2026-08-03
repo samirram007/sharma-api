@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\VoucherClassification\Contracts\VoucherClassificationServiceInterface;
+use Modules\VoucherClassification\Facades\VoucherClassificationFacade;
 use Modules\VoucherClassification\Requests\VoucherClassificationRequest;
 use Modules\VoucherClassification\Resources\VoucherClassificationCollection;
 use Modules\VoucherClassification\Resources\VoucherClassificationResource;
@@ -16,38 +16,36 @@ class VoucherClassificationController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected VoucherClassificationServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = VoucherClassificationFacade::getAll();
 
         return new VoucherClassificationCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = VoucherClassificationFacade::getById($id);
 
         return new VoucherClassificationResource($data);
     }
 
     public function store(VoucherClassificationRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = VoucherClassificationFacade::store($request->validated());
 
         return new VoucherClassificationResource($data, $messages = 'VoucherClassification created successfully');
     }
 
     public function update(VoucherClassificationRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = VoucherClassificationFacade::update($request->validated(), $id);
 
         return new VoucherClassificationResource($data, $messages = 'VoucherClassification updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'VoucherClassification');
+        return $this->deletedResponse(VoucherClassificationFacade::delete($id), 'VoucherClassification');
     }
 }

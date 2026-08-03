@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // This module migration runs before the core
+        // database/migrations/2026_06_04_145838_create_personal_access_tokens_table.php
+        // (earlier timestamp), so it creates the table; the core migration is guarded.
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->id();
             $table->morphs('tokenable');

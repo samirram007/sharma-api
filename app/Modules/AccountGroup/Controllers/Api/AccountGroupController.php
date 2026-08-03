@@ -17,16 +17,10 @@ class AccountGroupController extends Controller
 {
     use ApiResponseTrait;
 
-    protected $service;
-
-    public function __construct(protected AccountGroupFacade $accountGroupFacade)
-    {
-        $this->service = $accountGroupFacade;
-    }
+    public function __construct() {}
 
     public function index(): SuccessCollection
     {
-
         $data = AccountGroupFacade::getAll();
 
         return new AccountGroupCollection($data);
@@ -34,7 +28,7 @@ class AccountGroupController extends Controller
 
     public function show(int $id): ?SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = AccountGroupFacade::getById($id);
 
         // dd($data);
         return new AccountGroupResource($data, $message = 'AccountGroup retrieved successfully');
@@ -42,7 +36,7 @@ class AccountGroupController extends Controller
 
     public function store(AccountGroupRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = AccountGroupFacade::store($request->validated());
 
         return
             new AccountGroupResource(
@@ -54,20 +48,20 @@ class AccountGroupController extends Controller
     public function update(AccountGroupRequest $request, int $id): SuccessResource
     {
 
-        $data = $this->service->update($request->validated(), $id);
+        $data = AccountGroupFacade::update($request->validated(), $id);
 
         return new AccountGroupResource($data, $message = 'AccountGroup updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'AccountGroup');
+        return $this->deletedResponse(AccountGroupFacade::delete($id), 'AccountGroup');
     }
 
     public function current_liability_groups(): SuccessCollection
     {
 
-        $data = $this->service->getCurrentLiabilityGroups();
+        $data = AccountGroupFacade::getCurrentLiabilityGroups();
 
         return new AccountGroupCollection($data);
     }

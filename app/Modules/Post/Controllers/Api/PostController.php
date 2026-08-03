@@ -5,7 +5,7 @@ namespace Modules\Post\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\Post\Contracts\PostServiceInterface;
+use Modules\Post\Facades\PostFacade;
 use Modules\Post\Requests\PostRequest;
 use Modules\Post\Resources\PostCollection;
 use Modules\Post\Resources\PostResource;
@@ -14,18 +14,16 @@ class PostController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected PostServiceInterface $service) {}
-
     public function index(): JsonResponse
     {
-        $data = $this->service->getAll();
+        $data = PostFacade::getAll();
 
         return (new PostCollection($data))->response();
     }
 
     public function show(int $id): JsonResponse
     {
-        $data = $this->service->getById($id);
+        $data = PostFacade::getById($id);
 
         return $this->resourceResponse(
             new PostResource($data),
@@ -35,7 +33,7 @@ class PostController extends Controller
 
     public function store(PostRequest $request): JsonResponse
     {
-        $data = $this->service->store($request->validated());
+        $data = PostFacade::store($request->validated());
 
         return $this->resourceResponse(
             new PostResource($data),
@@ -46,7 +44,7 @@ class PostController extends Controller
 
     public function update(PostRequest $request, int $id): JsonResponse
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = PostFacade::update($request->validated(), $id);
 
         return $this->resourceResponse(
             new PostResource($data),
@@ -56,6 +54,6 @@ class PostController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'Post');
+        return $this->deletedResponse(PostFacade::delete($id), 'Post');
     }
 }

@@ -20,7 +20,10 @@ return new class extends Migration
             $table->string('status')->default('active');
 
             $table->timestamps();
-            $table->unique(['transporter_id', 'vehicle_number'], 'unique_transporter_vehicle');
+            // Note: index name is prefixed with 'delivery_' because the Vehicle
+            // module migration already uses 'unique_transporter_vehicle' and
+            // SQLite requires index names to be unique database-wide.
+            $table->unique(['transporter_id', 'vehicle_number'], 'unique_delivery_transporter_vehicle');
         });
     }
 

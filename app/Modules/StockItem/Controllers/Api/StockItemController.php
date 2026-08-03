@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\StockItem\Contracts\StockItemServiceInterface;
+use Modules\StockItem\Facades\StockItemFacade;
 use Modules\StockItem\Requests\StockItemRequest;
 use Modules\StockItem\Resources\StockItemCollection;
 use Modules\StockItem\Resources\StockItemResource;
@@ -16,44 +16,42 @@ class StockItemController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected StockItemServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = StockItemFacade::getAll();
 
         return new StockItemCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = StockItemFacade::getById($id);
 
         return new StockItemResource($data);
     }
 
     public function store(StockItemRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = StockItemFacade::store($request->validated());
 
         return new StockItemResource($data, $messages = 'StockItem created successfully');
     }
 
     public function update(StockItemRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = StockItemFacade::update($request->validated(), $id);
 
         return new StockItemResource($data, $messages = 'StockItem updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'StockItem');
+        return $this->deletedResponse(StockItemFacade::delete($id), 'StockItem');
     }
 
     public function purchasable_stock_items(): SuccessCollection
     {
-        $data = $this->service->getPurchasableStockItems();
+        $data = StockItemFacade::getPurchasableStockItems();
 
         return new StockItemCollection($data);
     }

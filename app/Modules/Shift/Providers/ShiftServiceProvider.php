@@ -4,7 +4,9 @@ namespace Modules\Shift\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Shift\Contracts\ShiftRepositoryInterface;
 use Modules\Shift\Contracts\ShiftServiceInterface;
+use Modules\Shift\Repositories\ShiftRepository;
 use Modules\Shift\Services\ShiftService;
 
 class ShiftServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class ShiftServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(ShiftServiceInterface::class, ShiftService::class);
+        $this->app->singleton(ShiftRepositoryInterface::class, ShiftRepository::class);
     }
 
     public function boot(): void

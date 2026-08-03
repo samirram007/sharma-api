@@ -4,7 +4,9 @@ namespace Modules\Language\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Language\Contracts\LanguageRepositoryInterface;
 use Modules\Language\Contracts\LanguageServiceInterface;
+use Modules\Language\Repositories\LanguageRepository;
 use Modules\Language\Services\LanguageService;
 
 class LanguageServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class LanguageServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(LanguageServiceInterface::class, LanguageService::class);
+        $this->app->singleton(LanguageRepositoryInterface::class, LanguageRepository::class);
     }
 
     public function boot(): void

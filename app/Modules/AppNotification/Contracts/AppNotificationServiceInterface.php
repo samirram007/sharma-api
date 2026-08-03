@@ -2,18 +2,12 @@
 
 namespace Modules\AppNotification\Contracts;
 
+use App\Support\Contracts\BaseServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Modules\AppNotification\Models\AppNotification;
 
-interface AppNotificationServiceInterface
+interface AppNotificationServiceInterface extends BaseServiceInterface
 {
-    public function getAll(array $params = []): LengthAwarePaginator;
-
-    public function getById(int $id): AppNotification;
-
-    public function store(array $data): AppNotification;
-
     public function getForUser(int $userId, array $params = []): LengthAwarePaginator;
 
     public function getUnreadForUser(int $userId): Collection;
@@ -29,6 +23,4 @@ interface AppNotificationServiceInterface
     public function markAllAsRead(int $userId): bool;
 
     public function getUnreadCount(int $userId): int;
-
-    public function delete(int $id): bool;
 }

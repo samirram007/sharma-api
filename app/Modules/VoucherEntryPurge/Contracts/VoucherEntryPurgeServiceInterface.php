@@ -2,18 +2,6 @@
 
 namespace Modules\VoucherEntryPurge\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\VoucherEntryPurge\Models\VoucherEntryPurge;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface VoucherEntryPurgeServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?VoucherEntryPurge;
-
-    public function store(array $data): VoucherEntryPurge;
-
-    public function update(array $data, int $id): VoucherEntryPurge;
-
-    public function delete(int $id): bool;
-}
+interface VoucherEntryPurgeServiceInterface extends BaseServiceInterface {}

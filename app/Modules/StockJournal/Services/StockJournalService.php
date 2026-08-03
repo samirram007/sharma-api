@@ -2,17 +2,19 @@
 
 namespace Modules\StockJournal\Services;
 
+use App\Support\Services\BaseService;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Validator;
 use Modules\StockJournal\Contracts\StockJournalServiceInterface;
 use Modules\StockJournal\Models\StockJournal;
 use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
 use Modules\StockJournalEntry\Requests\StockJournalEntryRequest;
 
-class StockJournalService implements StockJournalServiceInterface
+class StockJournalService extends BaseService implements StockJournalServiceInterface
 {
-    protected $resource = [];
+    protected string $modelClass = StockJournal::class;
+
+    protected array $defaultResource = [];
 
     protected $stockJournalEntryService;
 
@@ -20,16 +22,6 @@ class StockJournalService implements StockJournalServiceInterface
         StockJournalEntryServiceInterface $stockJournalEntryService,
     ) {
         $this->stockJournalEntryService = $stockJournalEntryService;
-    }
-
-    public function getAll(): Collection
-    {
-        return StockJournal::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?StockJournal
-    {
-        return StockJournal::with($this->resource)->findOrFail($id);
     }
 
     public function store(array $data): StockJournal
@@ -134,12 +126,5 @@ class StockJournalService implements StockJournalServiceInterface
                 $this->stockJournalEntryService->delete($existingEntry->id);
             }
         }
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = StockJournal::findOrFail($id);
-
-        return $record->delete();
     }
 }

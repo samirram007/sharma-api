@@ -3,32 +3,40 @@
 namespace Modules\AppNotification\Services;
 
 use App\Events\AppNotificationCreated;
+use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\AppNotification\Contracts\AppNotificationServiceInterface;
+use Modules\AppNotification\Facades\AppNotificationRepositoryFacade;
 use Modules\AppNotification\Models\AppNotification;
 use Modules\User\Contracts\UserServiceInterface;
 
-class AppNotificationService implements AppNotificationServiceInterface
+class AppNotificationService extends BaseService implements AppNotificationServiceInterface
 {
+    protected string $modelClass = AppNotification::class;
+
+    protected array $defaultResource = [];
+
     public function __construct(
         protected UserServiceInterface $userService
     ) {}
 
-    public function getAll(array $params = []): LengthAwarePaginator
+    public function getAll(): LengthAwarePaginator
     {
-        $perPage = $params['per_page'] ?? 15;
-        $query = AppNotification::query();
+        $perPage = request()->integer('per_page', 15);
+        $query = AppNotificationRepositoryFacade::query();
 
         // Filter by read/unread status
-        if (isset($params['is_read'])) {
-            $isRead = filter_var($params['is_read'], FILTER_VALIDATE_BOOLEAN);
-            $query->where('is_read', $isRead);
+        $isRead = request()->input('is_read');
+        if ($isRead !== null) {
+            $isReadBool = filter_var($isRead, FILTER_VALIDATE_BOOLEAN);
+            $query->where('is_read', $isReadBool);
         }
 
         // Filter by notification type
-        if (! empty($params['type'])) {
-            $types = explode(',', $params['type']);
+        $type = request()->input('type');
+        if (! empty($type)) {
+            $types = explode(',', $type);
             $query->whereIn('type', $types);
         }
 
@@ -38,12 +46,12 @@ class AppNotificationService implements AppNotificationServiceInterface
 
     public function getById(int $id): AppNotification
     {
-        return AppNotification::findOrFail($id);
+        return AppNotificationRepositoryFacade::find($id);
     }
 
     public function store(array $data): AppNotification
     {
-        $notification = AppNotification::create($data);
+        $notification = AppNotificationRepositoryFacade::create($data);
 
         // Broadcast the notification to the recipient user in real-time
         if (isset($data['user_id'])) {
@@ -211,7 +219,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         $notifications = [];
 
         if (empty($dispatchDetail['source'])) {
-            $notifications[] = AppNotification::create([
+            $notifications[] = AppNotificationRepositoryFacade::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
                 'message' => 'Source location is missing',
@@ -223,7 +231,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         if (empty($dispatchDetail['destination']) && empty($dispatchDetail['destinationSecondary'])) {
-            $notifications[] = AppNotification::create([
+            $notifications[] = AppNotificationRepositoryFacade::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
                 'message' => 'Destination is missing',
@@ -235,7 +243,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         if (! isset($dispatchDetail['weight']) || (float) $dispatchDetail['weight'] <= 0) {
-            $notifications[] = AppNotification::create([
+            $notifications[] = AppNotificationRepositoryFacade::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
                 'message' => 'Freight weight is missing or zero',
@@ -247,7 +255,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         if (! isset($dispatchDetail['rate']) || (float) $dispatchDetail['rate'] <= 0) {
-            $notifications[] = AppNotification::create([
+            $notifications[] = AppNotificationRepositoryFacade::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
                 'message' => 'Rate is missing or zero',
@@ -259,7 +267,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         if (empty($dispatchDetail['freightBasis'])) {
-            $notifications[] = AppNotification::create([
+            $notifications[] = AppNotificationRepositoryFacade::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
                 'message' => 'Freight basis is not set',
@@ -271,7 +279,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         if (empty($dispatchDetail['carrierName'])) {
-            $notifications[] = AppNotification::create([
+            $notifications[] = AppNotificationRepositoryFacade::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
                 'message' => 'Transporter/carrier is missing',
@@ -283,7 +291,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         if (! isset($dispatchDetail['totalFare']) || (float) $dispatchDetail['totalFare'] <= 0) {
-            $notifications[] = AppNotification::create([
+            $notifications[] = AppNotificationRepositoryFacade::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
                 'message' => 'Total fare is missing or zero',
@@ -295,7 +303,7 @@ class AppNotificationService implements AppNotificationServiceInterface
         }
 
         if (empty($dispatchDetail['motorVehicleNo'])) {
-            $notifications[] = AppNotification::create([
+            $notifications[] = AppNotificationRepositoryFacade::create([
                 'type' => 'warning',
                 'title' => 'Incomplete Freight Data',
                 'message' => 'Vehicle number is missing',
@@ -311,7 +319,7 @@ class AppNotificationService implements AppNotificationServiceInterface
 
     public function markAsRead(int $id): bool
     {
-        $notification = AppNotification::findOrFail($id);
+        $notification = AppNotificationRepositoryFacade::find($id);
 
         return $notification->update(['is_read' => true]);
     }
@@ -325,7 +333,7 @@ class AppNotificationService implements AppNotificationServiceInterface
 
     public function delete(int $id): bool
     {
-        $notification = AppNotification::findOrFail($id);
+        $notification = AppNotificationRepositoryFacade::find($id);
 
         return $notification->delete();
     }

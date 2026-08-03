@@ -2,20 +2,10 @@
 
 namespace Modules\AccountGroup\Contracts;
 
+use App\Support\Contracts\BaseServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
-use Modules\AccountGroup\Models\AccountGroup;
 
-interface AccountGroupServiceInterface
+interface AccountGroupServiceInterface extends BaseServiceInterface
 {
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?AccountGroup;
-
-    public function store(array $data): AccountGroup;
-
-    public function update(array $data, int $id): AccountGroup;
-
-    public function delete(int $id): bool;
-
     public function getCurrentLiabilityGroups(): Collection;
 }

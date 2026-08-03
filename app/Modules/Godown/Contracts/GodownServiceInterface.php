@@ -2,21 +2,12 @@
 
 namespace Modules\Godown\Contracts;
 
+use App\Support\Contracts\BaseServiceInterface;
 use Illuminate\Support\Collection;
 use Modules\Godown\Models\Godown;
 
-interface GodownServiceInterface
+interface GodownServiceInterface extends BaseServiceInterface
 {
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?Godown;
-
-    public function store(array $data): Godown;
-
-    public function update(array $data, int $id): Godown;
-
-    public function delete(int $id): bool;
-
     public function getGodownItemStocks(int $item_id): Collection;
 
     public function getGodownItemBatches(int $item_id, int $godown_id): Collection;

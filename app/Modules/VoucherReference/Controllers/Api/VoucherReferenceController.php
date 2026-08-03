@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
+use Modules\VoucherReference\Facades\VoucherReferenceFacade;
 use Modules\VoucherReference\Requests\VoucherReferenceRequest;
 use Modules\VoucherReference\Resources\VoucherReferenceCollection;
 use Modules\VoucherReference\Resources\VoucherReferenceResource;
@@ -16,38 +16,36 @@ class VoucherReferenceController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected VoucherReferenceServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = VoucherReferenceFacade::getAll();
 
         return new VoucherReferenceCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = VoucherReferenceFacade::getById($id);
 
         return new VoucherReferenceResource($data);
     }
 
     public function store(VoucherReferenceRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = VoucherReferenceFacade::store($request->validated());
 
         return new VoucherReferenceResource($data, $messages = 'VoucherReference created successfully');
     }
 
     public function update(VoucherReferenceRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = VoucherReferenceFacade::update($request->validated(), $id);
 
         return new VoucherReferenceResource($data, $messages = 'VoucherReference updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'VoucherReference');
+        return $this->deletedResponse(VoucherReferenceFacade::delete($id), 'VoucherReference');
     }
 }

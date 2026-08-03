@@ -4,7 +4,9 @@ namespace Modules\VoucherClassification\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\VoucherClassification\Contracts\VoucherClassificationRepositoryInterface;
 use Modules\VoucherClassification\Contracts\VoucherClassificationServiceInterface;
+use Modules\VoucherClassification\Repositories\VoucherClassificationRepository;
 use Modules\VoucherClassification\Services\VoucherClassificationService;
 
 class VoucherClassificationServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class VoucherClassificationServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(VoucherClassificationServiceInterface::class, VoucherClassificationService::class);
+        $this->app->singleton(VoucherClassificationRepositoryInterface::class, VoucherClassificationRepository::class);
     }
 
     public function boot(): void

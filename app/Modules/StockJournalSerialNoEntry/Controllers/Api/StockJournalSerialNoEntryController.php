@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\StockJournalSerialNoEntry\Contracts\StockJournalSerialNoEntryServiceInterface;
+use Modules\StockJournalSerialNoEntry\Facades\StockJournalSerialNoEntryFacade;
 use Modules\StockJournalSerialNoEntry\Requests\StockJournalSerialNoEntryRequest;
 use Modules\StockJournalSerialNoEntry\Resources\StockJournalSerialNoEntryCollection;
 use Modules\StockJournalSerialNoEntry\Resources\StockJournalSerialNoEntryResource;
@@ -16,38 +16,36 @@ class StockJournalSerialNoEntryController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected StockJournalSerialNoEntryServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = StockJournalSerialNoEntryFacade::getAll();
 
         return new StockJournalSerialNoEntryCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = StockJournalSerialNoEntryFacade::getById($id);
 
         return new StockJournalSerialNoEntryResource($data);
     }
 
     public function store(StockJournalSerialNoEntryRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = StockJournalSerialNoEntryFacade::store($request->validated());
 
         return new StockJournalSerialNoEntryResource($data, $messages = 'StockJournalSerialNoEntry created successfully');
     }
 
     public function update(StockJournalSerialNoEntryRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = StockJournalSerialNoEntryFacade::update($request->validated(), $id);
 
         return new StockJournalSerialNoEntryResource($data, $messages = 'StockJournalSerialNoEntry updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'StockJournalSerialNoEntry');
+        return $this->deletedResponse(StockJournalSerialNoEntryFacade::delete($id), 'StockJournalSerialNoEntry');
     }
 }

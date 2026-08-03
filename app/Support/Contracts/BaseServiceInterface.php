@@ -2,15 +2,17 @@
 
 namespace App\Support\Contracts;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 interface BaseServiceInterface
 {
     /**
-     * Get all records with default eager loading.
+     * Get all records — returns paginated results when ?per_page or ?search
+     * is present in the request, otherwise returns a simple collection.
      */
-    public function getAll(): Collection;
+    public function getAll(): Collection|LengthAwarePaginator;
 
     /**
      * Find a record by ID with default eager loading.

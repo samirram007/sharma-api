@@ -2,36 +2,34 @@
 
 namespace Modules\VoucherReference\Services;
 
+use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
 use Modules\VoucherReference\Models\VoucherReference;
 
-class VoucherReferenceService implements VoucherReferenceServiceInterface
+class VoucherReferenceService extends BaseService implements VoucherReferenceServiceInterface
 {
-    protected $resource = ['voucher', 'reference_voucher'];
+    protected string $modelClass = VoucherReference::class;
 
-    public function getAll(): Collection
-    {
-        return VoucherReference::with($this->resource)->get();
-    }
+    protected array $defaultResource = ['voucher', 'reference_voucher'];
 
     public function getByVoucherId(int $voucherId): Collection
     {
-        return VoucherReference::with($this->resource)
+        return VoucherReference::with($this->defaultResource)
             ->where('voucher_id', $voucherId)
             ->get();
     }
 
     public function getByReferenceVoucherId(int $voucherId): Collection
     {
-        return VoucherReference::with($this->resource)
+        return VoucherReference::with($this->defaultResource)
             ->where('ref_voucher_id', $voucherId)
             ->get();
     }
 
     public function getByVoucherIdAndReferenceVoucherId(int $voucherId, int $refVoucherId): ?VoucherReference
     {
-        return VoucherReference::with($this->resource)
+        return VoucherReference::with($this->defaultResource)
             ->where('voucher_id', $voucherId)
             ->where('ref_voucher_id', $refVoucherId)
             ->first();
@@ -39,34 +37,9 @@ class VoucherReferenceService implements VoucherReferenceServiceInterface
 
     public function getByVoucherIdOrReferenceVoucherId(int $voucherId, int $refVoucherId): ?Collection
     {
-        return VoucherReference::with($this->resource)
+        return VoucherReference::with($this->defaultResource)
             ->where('voucher_id', $voucherId)
             ->OrWhere('ref_voucher_id', $refVoucherId)
             ->get();
-    }
-
-    public function getById(int $id): ?VoucherReference
-    {
-        return VoucherReference::with($this->resource)->findOrFail($id);
-    }
-
-    public function store(array $data): VoucherReference
-    {
-        return VoucherReference::create($data);
-    }
-
-    public function update(array $data, int $id): VoucherReference
-    {
-        $record = VoucherReference::findOrFail($id);
-        $record->update($data);
-
-        return $record->fresh();
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = VoucherReference::findOrFail($id);
-
-        return $record->delete();
     }
 }

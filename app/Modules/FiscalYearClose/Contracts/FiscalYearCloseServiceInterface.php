@@ -2,7 +2,9 @@
 
 namespace Modules\FiscalYearClose\Contracts;
 
-interface FiscalYearCloseServiceInterface
+use App\Support\Contracts\BaseServiceInterface;
+
+interface FiscalYearCloseServiceInterface extends BaseServiceInterface
 {
     /**
      * Close a fiscal year:

@@ -1,0 +1,3517 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method Illuminate\\Pagination\\AbstractPaginator\:\:lastPage\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Resources/SuccessCollection.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Pagination\\AbstractPaginator\:\:total\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Resources/SuccessCollection.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$accounting_effect\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/AccountLedger/Services/AccountLedgerService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\AccountNature\\Controllers\\Api\\AccountNatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountNature/Controllers/Api/AccountNatureController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\AccountNature\\Controllers\\Api\\AccountNatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountNature/Controllers/Api/AccountNatureController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\AccountNature\\Controllers\\Api\\AccountNatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountNature/Controllers/Api/AccountNatureController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\AccountNature\\Controllers\\Api\\AccountNatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountNature/Controllers/Api/AccountNatureController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\AccountNature\\Controllers\\Api\\AccountNatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountNature/Controllers/Api/AccountNatureController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\AccountingPeriod\\Controllers\\Api\\AccountingPeriodFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountingPeriod/Controllers/Api/AccountingPeriodController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\AccountingPeriod\\Controllers\\Api\\AccountingPeriodFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountingPeriod/Controllers/Api/AccountingPeriodController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\AccountingPeriod\\Controllers\\Api\\AccountingPeriodFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountingPeriod/Controllers/Api/AccountingPeriodController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\AccountingPeriod\\Controllers\\Api\\AccountingPeriodFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountingPeriod/Controllers/Api/AccountingPeriodController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\AccountingPeriod\\Controllers\\Api\\AccountingPeriodFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountingPeriod/Controllers/Api/AccountingPeriodController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\AccountsJournal\\Controllers\\Api\\AccountsJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountsJournal/Controllers/Api/AccountsJournalController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\AccountsJournal\\Controllers\\Api\\AccountsJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountsJournal/Controllers/Api/AccountsJournalController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\AccountsJournal\\Controllers\\Api\\AccountsJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountsJournal/Controllers/Api/AccountsJournalController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\AccountsJournal\\Controllers\\Api\\AccountsJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountsJournal/Controllers/Api/AccountsJournalController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\AccountsJournal\\Controllers\\Api\\AccountsJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AccountsJournal/Controllers/Api/AccountsJournalController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Address\\Controllers\\Api\\AddressFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Address/Controllers/Api/AddressController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Address\\Controllers\\Api\\AddressFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Address/Controllers/Api/AddressController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Address\\Controllers\\Api\\AddressFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Address/Controllers/Api/AddressController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Address\\Controllers\\Api\\AddressFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Address/Controllers/Api/AddressController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Address\\Controllers\\Api\\AddressFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Address/Controllers/Api/AddressController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Agent\\Controllers\\Api\\AgentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Agent/Controllers/Api/AgentController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Agent\\Controllers\\Api\\AgentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Agent/Controllers/Api/AgentController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Agent\\Controllers\\Api\\AgentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Agent/Controllers/Api/AgentController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Agent\\Controllers\\Api\\AgentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Agent/Controllers/Api/AgentController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Agent\\Controllers\\Api\\AgentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Agent/Controllers/Api/AgentController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\AppMaintenance\\Controllers\\Api\\AppMaintenanceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppMaintenance/Controllers/Api/AppMaintenanceController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\AppMaintenance\\Controllers\\Api\\AppMaintenanceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppMaintenance/Controllers/Api/AppMaintenanceController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\AppMaintenance\\Controllers\\Api\\AppMaintenanceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppMaintenance/Controllers/Api/AppMaintenanceController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\AppMaintenance\\Controllers\\Api\\AppMaintenanceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppMaintenance/Controllers/Api/AppMaintenanceController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\AppMaintenance\\Controllers\\Api\\AppMaintenanceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppMaintenance/Controllers/Api/AppMaintenanceController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\AppModule\\Controllers\\Api\\AppModuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModule/Controllers/Api/AppModuleController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\AppModule\\Controllers\\Api\\AppModuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModule/Controllers/Api/AppModuleController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\AppModule\\Controllers\\Api\\AppModuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModule/Controllers/Api/AppModuleController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\AppModule\\Controllers\\Api\\AppModuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModule/Controllers/Api/AppModuleController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\AppModule\\Controllers\\Api\\AppModuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModule/Controllers/Api/AppModuleController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\AppModuleFeature\\Controllers\\Api\\AppModuleFeatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModuleFeature/Controllers/Api/AppModuleFeatureController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\AppModuleFeature\\Controllers\\Api\\AppModuleFeatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModuleFeature/Controllers/Api/AppModuleFeatureController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\AppModuleFeature\\Controllers\\Api\\AppModuleFeatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModuleFeature/Controllers/Api/AppModuleFeatureController.php
+
+		-
+			message: '#^Call to static method getByRoleAndModule\(\) on an unknown class Modules\\AppModuleFeature\\Controllers\\Api\\AppModuleFeatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModuleFeature/Controllers/Api/AppModuleFeatureController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\AppModuleFeature\\Controllers\\Api\\AppModuleFeatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModuleFeature/Controllers/Api/AppModuleFeatureController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\AppModuleFeature\\Controllers\\Api\\AppModuleFeatureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/AppModuleFeature/Controllers/Api/AppModuleFeatureController.php
+
+		-
+			message: '#^Call to an undefined method Laravel\\Socialite\\Contracts\\Provider\:\:stateless\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Modules/Auth/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Call to static method create\(\) on an unknown class Modules\\Auth\\Models\\Auth\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Auth/Database/Seeders/AuthSeeder.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Support\\Facades\\Auth\:\:refresh\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Modules/Auth/Services/AuthService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Branch\\Controllers\\Api\\BranchFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Branch/Controllers/Api/BranchController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Branch\\Controllers\\Api\\BranchFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Branch/Controllers/Api/BranchController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Branch\\Controllers\\Api\\BranchFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Branch/Controllers/Api/BranchController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Branch\\Controllers\\Api\\BranchFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Branch/Controllers/Api/BranchController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Branch\\Controllers\\Api\\BranchFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Branch/Controllers/Api/BranchController.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\Company\\Facades\\CompanyRepositoryFacade\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Modules/Company/Services/CompanyService.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\Company\\Facades\\CompanyRepositoryFacade\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/Modules/Company/Services/CompanyService.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\Company\\Facades\\CompanyRepositoryFacade\:\:query\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Modules/Company/Services/CompanyService.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\Company\\Facades\\CompanyRepositoryFacade\:\:with\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Modules/Company/Services/CompanyService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\CompanyType\\Controllers\\Api\\CompanyTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CompanyType/Controllers/Api/CompanyTypeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\CompanyType\\Controllers\\Api\\CompanyTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CompanyType/Controllers/Api/CompanyTypeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\CompanyType\\Controllers\\Api\\CompanyTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CompanyType/Controllers/Api/CompanyTypeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\CompanyType\\Controllers\\Api\\CompanyTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CompanyType/Controllers/Api/CompanyTypeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\CompanyType\\Controllers\\Api\\CompanyTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CompanyType/Controllers/Api/CompanyTypeController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\CostAllocationRule\\Controllers\\Api\\CostAllocationRuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostAllocationRule/Controllers/Api/CostAllocationRuleController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\CostAllocationRule\\Controllers\\Api\\CostAllocationRuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostAllocationRule/Controllers/Api/CostAllocationRuleController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\CostAllocationRule\\Controllers\\Api\\CostAllocationRuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostAllocationRule/Controllers/Api/CostAllocationRuleController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\CostAllocationRule\\Controllers\\Api\\CostAllocationRuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostAllocationRule/Controllers/Api/CostAllocationRuleController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\CostAllocationRule\\Controllers\\Api\\CostAllocationRuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostAllocationRule/Controllers/Api/CostAllocationRuleController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\CostCategory\\Controllers\\Api\\CostCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostCategory/Controllers/Api/CostCategoryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\CostCategory\\Controllers\\Api\\CostCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostCategory/Controllers/Api/CostCategoryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\CostCategory\\Controllers\\Api\\CostCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostCategory/Controllers/Api/CostCategoryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\CostCategory\\Controllers\\Api\\CostCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostCategory/Controllers/Api/CostCategoryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\CostCategory\\Controllers\\Api\\CostCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostCategory/Controllers/Api/CostCategoryController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\CostCenter\\Controllers\\Api\\CostCenterFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostCenter/Controllers/Api/CostCenterController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\CostCenter\\Controllers\\Api\\CostCenterFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostCenter/Controllers/Api/CostCenterController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\CostCenter\\Controllers\\Api\\CostCenterFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostCenter/Controllers/Api/CostCenterController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\CostCenter\\Controllers\\Api\\CostCenterFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostCenter/Controllers/Api/CostCenterController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\CostCenter\\Controllers\\Api\\CostCenterFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/CostCenter/Controllers/Api/CostCenterController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Country\\Controllers\\Api\\CountryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Country/Controllers/Api/CountryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Country\\Controllers\\Api\\CountryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Country/Controllers/Api/CountryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Country\\Controllers\\Api\\CountryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Country/Controllers/Api/CountryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Country\\Controllers\\Api\\CountryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Country/Controllers/Api/CountryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Country\\Controllers\\Api\\CountryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Country/Controllers/Api/CountryController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Currency\\Controllers\\Api\\CurrencyFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Currency/Controllers/Api/CurrencyController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Currency\\Controllers\\Api\\CurrencyFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Currency/Controllers/Api/CurrencyController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Currency\\Controllers\\Api\\CurrencyFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Currency/Controllers/Api/CurrencyController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Currency\\Controllers\\Api\\CurrencyFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Currency/Controllers/Api/CurrencyController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Currency\\Controllers\\Api\\CurrencyFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Currency/Controllers/Api/CurrencyController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Customer\\Controllers\\Api\\CustomerFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Customer/Controllers/Api/CustomerController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Customer\\Controllers\\Api\\CustomerFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Customer/Controllers/Api/CustomerController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Customer\\Controllers\\Api\\CustomerFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Customer/Controllers/Api/CustomerController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Customer\\Controllers\\Api\\CustomerFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Customer/Controllers/Api/CustomerController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Customer\\Controllers\\Api\\CustomerFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Customer/Controllers/Api/CustomerController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$end_date\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Modules/DayBook/Services/DayBookService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$fiscal_year_id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Modules/DayBook/Services/DayBookService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$start_date\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Modules/DayBook/Services/DayBookService.php
+
+		-
+			message: '#^Undefined variable\: \$params$#'
+			identifier: variable.undefined
+			count: 2
+			path: app/Modules/DayBook/Services/DayBookService.php
+
+		-
+			message: '#^Variable \$params in empty\(\) is never defined\.$#'
+			identifier: empty.variable
+			count: 2
+			path: app/Modules/DayBook/Services/DayBookService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\DeliveryPlace\\Controllers\\Api\\DeliveryPlaceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryPlace/Controllers/Api/DeliveryPlaceController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\DeliveryPlace\\Controllers\\Api\\DeliveryPlaceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryPlace/Controllers/Api/DeliveryPlaceController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\DeliveryPlace\\Controllers\\Api\\DeliveryPlaceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryPlace/Controllers/Api/DeliveryPlaceController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\DeliveryPlace\\Controllers\\Api\\DeliveryPlaceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryPlace/Controllers/Api/DeliveryPlaceController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\DeliveryPlace\\Controllers\\Api\\DeliveryPlaceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryPlace/Controllers/Api/DeliveryPlaceController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\DeliveryRoute\\Controllers\\Api\\DeliveryRouteFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryRoute/Controllers/Api/DeliveryRouteController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\DeliveryRoute\\Controllers\\Api\\DeliveryRouteFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryRoute/Controllers/Api/DeliveryRouteController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\DeliveryRoute\\Controllers\\Api\\DeliveryRouteFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryRoute/Controllers/Api/DeliveryRouteController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\DeliveryRoute\\Controllers\\Api\\DeliveryRouteFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryRoute/Controllers/Api/DeliveryRouteController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\DeliveryRoute\\Controllers\\Api\\DeliveryRouteFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryRoute/Controllers/Api/DeliveryRouteController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\DeliveryVehicle\\Controllers\\Api\\DeliveryVehicleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryVehicle/Controllers/Api/DeliveryVehicleController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\DeliveryVehicle\\Controllers\\Api\\DeliveryVehicleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryVehicle/Controllers/Api/DeliveryVehicleController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\DeliveryVehicle\\Controllers\\Api\\DeliveryVehicleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryVehicle/Controllers/Api/DeliveryVehicleController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\DeliveryVehicle\\Controllers\\Api\\DeliveryVehicleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryVehicle/Controllers/Api/DeliveryVehicleController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\DeliveryVehicle\\Controllers\\Api\\DeliveryVehicleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DeliveryVehicle/Controllers/Api/DeliveryVehicleController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Department\\Controllers\\Api\\DepartmentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Department/Controllers/Api/DepartmentController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Department\\Controllers\\Api\\DepartmentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Department/Controllers/Api/DepartmentController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Department\\Controllers\\Api\\DepartmentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Department/Controllers/Api/DepartmentController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Department\\Controllers\\Api\\DepartmentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Department/Controllers/Api/DepartmentController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Department\\Controllers\\Api\\DepartmentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Department/Controllers/Api/DepartmentController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Designation\\Controllers\\Api\\DesignationFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Designation/Controllers/Api/DesignationController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Designation\\Controllers\\Api\\DesignationFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Designation/Controllers/Api/DesignationController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Designation\\Controllers\\Api\\DesignationFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Designation/Controllers/Api/DesignationController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Designation\\Controllers\\Api\\DesignationFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Designation/Controllers/Api/DesignationController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Designation\\Controllers\\Api\\DesignationFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Designation/Controllers/Api/DesignationController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Distributor\\Controllers\\Api\\DistributorFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Distributor/Controllers/Api/DistributorController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Distributor\\Controllers\\Api\\DistributorFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Distributor/Controllers/Api/DistributorController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Distributor\\Controllers\\Api\\DistributorFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Distributor/Controllers/Api/DistributorController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Distributor\\Controllers\\Api\\DistributorFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Distributor/Controllers/Api/DistributorController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Distributor\\Controllers\\Api\\DistributorFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Distributor/Controllers/Api/DistributorController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\DistributorBook\\Controllers\\Api\\DistributorBookFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DistributorBook/Controllers/Api/DistributorBookController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\DistributorBook\\Controllers\\Api\\DistributorBookFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DistributorBook/Controllers/Api/DistributorBookController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\DistributorBook\\Controllers\\Api\\DistributorBookFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DistributorBook/Controllers/Api/DistributorBookController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\DistributorBook\\Controllers\\Api\\DistributorBookFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DistributorBook/Controllers/Api/DistributorBookController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\DistributorBook\\Controllers\\Api\\DistributorBookFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DistributorBook/Controllers/Api/DistributorBookController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Document\\Controllers\\Api\\DocumentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Document/Controllers/Api/DocumentController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Document\\Controllers\\Api\\DocumentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Document/Controllers/Api/DocumentController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Document\\Controllers\\Api\\DocumentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Document/Controllers/Api/DocumentController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Document\\Controllers\\Api\\DocumentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Document/Controllers/Api/DocumentController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Document\\Controllers\\Api\\DocumentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Document/Controllers/Api/DocumentController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\DocumentUser\\Controllers\\Api\\DocumentUserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DocumentUser/Controllers/Api/DocumentUserController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\DocumentUser\\Controllers\\Api\\DocumentUserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DocumentUser/Controllers/Api/DocumentUserController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\DocumentUser\\Controllers\\Api\\DocumentUserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DocumentUser/Controllers/Api/DocumentUserController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\DocumentUser\\Controllers\\Api\\DocumentUserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DocumentUser/Controllers/Api/DocumentUserController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\DocumentUser\\Controllers\\Api\\DocumentUserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/DocumentUser/Controllers/Api/DocumentUserController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Employee\\Controllers\\Api\\EmployeeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Employee/Controllers/Api/EmployeeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Employee\\Controllers\\Api\\EmployeeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Employee/Controllers/Api/EmployeeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Employee\\Controllers\\Api\\EmployeeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Employee/Controllers/Api/EmployeeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Employee\\Controllers\\Api\\EmployeeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Employee/Controllers/Api/EmployeeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Employee\\Controllers\\Api\\EmployeeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Employee/Controllers/Api/EmployeeController.php
+
+		-
+			message: '#^Call to an undefined method Modules\\Employee\\Services\\EmployeeService\:\:getUniqueCode\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/Employee/Services/EmployeeService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\EmployeeGroup\\Controllers\\Api\\EmployeeGroupFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/EmployeeGroup/Controllers/Api/EmployeeGroupController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\EmployeeGroup\\Controllers\\Api\\EmployeeGroupFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/EmployeeGroup/Controllers/Api/EmployeeGroupController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\EmployeeGroup\\Controllers\\Api\\EmployeeGroupFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/EmployeeGroup/Controllers/Api/EmployeeGroupController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\EmployeeGroup\\Controllers\\Api\\EmployeeGroupFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/EmployeeGroup/Controllers/Api/EmployeeGroupController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\EmployeeGroup\\Controllers\\Api\\EmployeeGroupFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/EmployeeGroup/Controllers/Api/EmployeeGroupController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\FiscalYear\\Controllers\\Api\\FiscalYearFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/FiscalYear/Controllers/Api/FiscalYearController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\FiscalYear\\Controllers\\Api\\FiscalYearFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/FiscalYear/Controllers/Api/FiscalYearController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\FiscalYear\\Controllers\\Api\\FiscalYearFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/FiscalYear/Controllers/Api/FiscalYearController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\FiscalYear\\Controllers\\Api\\FiscalYearFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/FiscalYear/Controllers/Api/FiscalYearController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\FiscalYear\\Controllers\\Api\\FiscalYearFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/FiscalYear/Controllers/Api/FiscalYearController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\ForeignKeyDefinition\:\:after\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/FiscalYear/Database/Seeders/2026_06_29_000001_add_closed_columns_to_fiscal_years_table.php
+
+		-
+			message: '#^Call to static method close\(\) on an unknown class Modules\\FiscalYearClose\\Controllers\\Api\\FiscalYearCloseFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/FiscalYearClose/Controllers/Api/FiscalYearCloseController.php
+
+		-
+			message: '#^Call to static method preview\(\) on an unknown class Modules\\FiscalYearClose\\Controllers\\Api\\FiscalYearCloseFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/FiscalYearClose/Controllers/Api/FiscalYearCloseController.php
+
+		-
+			message: '#^Call to static method reopen\(\) on an unknown class Modules\\FiscalYearClose\\Controllers\\Api\\FiscalYearCloseFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/FiscalYearClose/Controllers/Api/FiscalYearCloseController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Collection\<int, Modules\\AccountLedger\\Models\\AccountLedger\>\|Modules\\AccountLedger\\Models\\AccountLedger\:\:\$account_group\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/FiscalYearClose/Services/FiscalYearCloseService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:stock_journal_godown_entries\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/FiscalYearClose/Services/FiscalYearCloseService.php
+
+		-
+			message: '#^Relation ''account_group'' is not found in Modules\\AccountLedger\\Models\\AccountLedger model\.$#'
+			identifier: larastan.relationExistence
+			count: 3
+			path: app/Modules/FiscalYearClose/Services/FiscalYearCloseService.php
+
+		-
+			message: '#^Call to static method open\(\) on an unknown class Modules\\FiscalYearOpen\\Controllers\\Api\\FiscalYearOpenFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/FiscalYearOpen/Controllers/Api/FiscalYearOpenController.php
+
+		-
+			message: '#^Call to static method preview\(\) on an unknown class Modules\\FiscalYearOpen\\Controllers\\Api\\FiscalYearOpenFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/FiscalYearOpen/Controllers/Api/FiscalYearOpenController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$account_ledger\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/FiscalYearOpen/Controllers/Api/OpeningEntryReportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$account_ledger_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/FiscalYearOpen/Controllers/Api/OpeningEntryReportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$entry_order\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/FiscalYearOpen/Controllers/Api/OpeningEntryReportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/FiscalYearOpen/Controllers/Api/OpeningEntryReportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$journal_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/FiscalYearOpen/Controllers/Api/OpeningEntryReportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$journal_no\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/FiscalYearOpen/Controllers/Api/OpeningEntryReportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$remarks\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/FiscalYearOpen/Controllers/Api/OpeningEntryReportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal_entries\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/FiscalYearOpen/Controllers/Api/OpeningEntryReportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/FiscalYearOpen/Controllers/Api/OpeningEntryReportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$account_ledger\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/FiscalYearOpen/Services/FiscalYearOpenService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal_entries\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/FiscalYearOpen/Services/FiscalYearOpenService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$account_group_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$end_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$fiscal_year_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$payment_status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$start_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$voucher_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$voucher_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$voucher_no\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$voucher_references\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Undefined variable\: \$source$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Modules/Freight/Services/FreightService.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\Godown\\Facades\\GodownFacade\:\:getZonesById\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Modules/Godown/Controllers/Api/GodownController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$actual_quantity\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Modules/Godown/Services/GodownService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$expiry_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Godown/Services/GodownService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$mfg_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Godown/Services/GodownService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal_entry\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Godown/Services/GodownService.php
+
+		-
+			message: '#^Call to an undefined method Modules\\Godown\\Services\\GodownService\:\:getUniqueCode\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/Godown/Services/GodownService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Grade\\Controllers\\Api\\GradeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Grade/Controllers/Api/GradeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Grade\\Controllers\\Api\\GradeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Grade/Controllers/Api/GradeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Grade\\Controllers\\Api\\GradeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Grade/Controllers/Api/GradeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Grade\\Controllers\\Api\\GradeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Grade/Controllers/Api/GradeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Grade\\Controllers\\Api\\GradeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Grade/Controllers/Api/GradeController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\GstRegistrationType\\Controllers\\Api\\GstRegistrationTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/GstRegistrationType/Controllers/Api/GstRegistrationTypeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\GstRegistrationType\\Controllers\\Api\\GstRegistrationTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/GstRegistrationType/Controllers/Api/GstRegistrationTypeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\GstRegistrationType\\Controllers\\Api\\GstRegistrationTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/GstRegistrationType/Controllers/Api/GstRegistrationTypeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\GstRegistrationType\\Controllers\\Api\\GstRegistrationTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/GstRegistrationType/Controllers/Api/GstRegistrationTypeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\GstRegistrationType\\Controllers\\Api\\GstRegistrationTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/GstRegistrationType/Controllers/Api/GstRegistrationTypeController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Holiday\\Controllers\\Api\\HolidayFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Holiday/Controllers/Api/HolidayController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Holiday\\Controllers\\Api\\HolidayFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Holiday/Controllers/Api/HolidayController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Holiday\\Controllers\\Api\\HolidayFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Holiday/Controllers/Api/HolidayController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Holiday\\Controllers\\Api\\HolidayFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Holiday/Controllers/Api/HolidayController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Holiday\\Controllers\\Api\\HolidayFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Holiday/Controllers/Api/HolidayController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\HsnSacCode\\Controllers\\Api\\HsnSacCodeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/HsnSacCode/Controllers/Api/HsnSacCodeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\HsnSacCode\\Controllers\\Api\\HsnSacCodeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/HsnSacCode/Controllers/Api/HsnSacCodeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\HsnSacCode\\Controllers\\Api\\HsnSacCodeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/HsnSacCode/Controllers/Api/HsnSacCodeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\HsnSacCode\\Controllers\\Api\\HsnSacCodeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/HsnSacCode/Controllers/Api/HsnSacCodeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\HsnSacCode\\Controllers\\Api\\HsnSacCodeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/HsnSacCode/Controllers/Api/HsnSacCodeController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Language\\Controllers\\Api\\LanguageFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Language/Controllers/Api/LanguageController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Language\\Controllers\\Api\\LanguageFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Language/Controllers/Api/LanguageController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Language\\Controllers\\Api\\LanguageFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Language/Controllers/Api/LanguageController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Language\\Controllers\\Api\\LanguageFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Language/Controllers/Api/LanguageController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Language\\Controllers\\Api\\LanguageFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Language/Controllers/Api/LanguageController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\LeaveType\\Controllers\\Api\\LeaveTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/LeaveType/Controllers/Api/LeaveTypeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\LeaveType\\Controllers\\Api\\LeaveTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/LeaveType/Controllers/Api/LeaveTypeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\LeaveType\\Controllers\\Api\\LeaveTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/LeaveType/Controllers/Api/LeaveTypeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\LeaveType\\Controllers\\Api\\LeaveTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/LeaveType/Controllers/Api/LeaveTypeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\LeaveType\\Controllers\\Api\\LeaveTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/LeaveType/Controllers/Api/LeaveTypeController.php
+
+		-
+			message: '#^Call to static method batchDelete\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method batchUpdate\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method duplicate\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method exportJson\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method getRoleMenuPermissions\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method getTree\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method getUserMenuPermissions\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method getUserMenuTree\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method importJson\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method reorder\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method search\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Menu\\Controllers\\Api\\MenuFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Menu/Controllers/Api/MenuController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$permissions\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/Menu/Services/MenuService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Module\\Controllers\\Api\\ModuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Module/Controllers/Api/ModuleController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Module\\Controllers\\Api\\ModuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Module/Controllers/Api/ModuleController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Module\\Controllers\\Api\\ModuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Module/Controllers/Api/ModuleController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Module\\Controllers\\Api\\ModuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Module/Controllers/Api/ModuleController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Module\\Controllers\\Api\\ModuleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Module/Controllers/Api/ModuleController.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\OpeningBalance\\Facades\\OpeningBalanceFacade\:\:getSetupData\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Modules/OpeningBalance/Controllers/Api/OpeningBalanceController.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\OpeningBalance\\Facades\\OpeningBalanceFacade\:\:getStatus\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Modules/OpeningBalance/Controllers/Api/OpeningBalanceController.php
+
+		-
+			message: '#^Call to an undefined static method Modules\\OpeningBalance\\Facades\\OpeningBalanceFacade\:\:store\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Modules/OpeningBalance/Controllers/Api/OpeningBalanceController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Collection\<int, Modules\\AccountLedger\\Models\\AccountLedger\>\|Modules\\AccountLedger\\Models\\AccountLedger\:\:\$account_group\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/OpeningBalance/Services/OpeningBalanceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/OpeningBalance/Services/OpeningBalanceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/OpeningBalance/Services/OpeningBalanceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$no_of_decimal_places\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/OpeningBalance/Services/OpeningBalanceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal_entries\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/OpeningBalance/Services/OpeningBalanceService.php
+
+		-
+			message: '#^Access to an undefined property Modules\\AccountLedger\\Models\\AccountLedger\:\:\$account_group\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/OpeningBalance/Services/OpeningBalanceService.php
+
+		-
+			message: '#^Relation ''account_group'' is not found in Modules\\AccountLedger\\Models\\AccountLedger model\.$#'
+			identifier: larastan.relationExistence
+			count: 3
+			path: app/Modules/OpeningBalance/Services/OpeningBalanceService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\OrderJournal\\Controllers\\Api\\OrderJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/OrderJournal/Controllers/Api/OrderJournalController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\OrderJournal\\Controllers\\Api\\OrderJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/OrderJournal/Controllers/Api/OrderJournalController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\OrderJournal\\Controllers\\Api\\OrderJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/OrderJournal/Controllers/Api/OrderJournalController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\OrderJournal\\Controllers\\Api\\OrderJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/OrderJournal/Controllers/Api/OrderJournalController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\OrderJournal\\Controllers\\Api\\OrderJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/OrderJournal/Controllers/Api/OrderJournalController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\OrderStockJournal\\Controllers\\Api\\OrderStockJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/OrderStockJournal/Controllers/Api/OrderStockJournalController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\OrderStockJournal\\Controllers\\Api\\OrderStockJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/OrderStockJournal/Controllers/Api/OrderStockJournalController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\OrderStockJournal\\Controllers\\Api\\OrderStockJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/OrderStockJournal/Controllers/Api/OrderStockJournalController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\OrderStockJournal\\Controllers\\Api\\OrderStockJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/OrderStockJournal/Controllers/Api/OrderStockJournalController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\OrderStockJournal\\Controllers\\Api\\OrderStockJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/OrderStockJournal/Controllers/Api/OrderStockJournalController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\PaymentVoucher\\Controllers\\Api\\PaymentVoucherFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PaymentVoucher/Controllers/Api/PaymentVoucherController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\PaymentVoucher\\Controllers\\Api\\PaymentVoucherFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PaymentVoucher/Controllers/Api/PaymentVoucherController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\PaymentVoucher\\Controllers\\Api\\PaymentVoucherFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PaymentVoucher/Controllers/Api/PaymentVoucherController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\PaymentVoucher\\Controllers\\Api\\PaymentVoucherFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PaymentVoucher/Controllers/Api/PaymentVoucherController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\PaymentVoucher\\Controllers\\Api\\PaymentVoucherFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PaymentVoucher/Controllers/Api/PaymentVoucherController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\PhysicalStockCount\\Controllers\\Api\\PhysicalStockCountFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Controllers/Api/PhysicalStockCountController.php
+
+		-
+			message: '#^Call to static method generateAdjustment\(\) on an unknown class Modules\\PhysicalStockCount\\Controllers\\Api\\PhysicalStockCountFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Controllers/Api/PhysicalStockCountController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\PhysicalStockCount\\Controllers\\Api\\PhysicalStockCountFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Controllers/Api/PhysicalStockCountController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\PhysicalStockCount\\Controllers\\Api\\PhysicalStockCountFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Controllers/Api/PhysicalStockCountController.php
+
+		-
+			message: '#^Call to static method populateSystemQuantities\(\) on an unknown class Modules\\PhysicalStockCount\\Controllers\\Api\\PhysicalStockCountFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Controllers/Api/PhysicalStockCountController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\PhysicalStockCount\\Controllers\\Api\\PhysicalStockCountFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Controllers/Api/PhysicalStockCountController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\PhysicalStockCount\\Controllers\\Api\\PhysicalStockCountFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Controllers/Api/PhysicalStockCountController.php
+
+		-
+			message: '#^Call to static method verify\(\) on an unknown class Modules\\PhysicalStockCount\\Controllers\\Api\\PhysicalStockCountFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Controllers/Api/PhysicalStockCountController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$difference\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Services/PhysicalStockCountService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$entry_order\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Services/PhysicalStockCountService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/PhysicalStockCount/Services/PhysicalStockCountService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$physical_quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Services/PhysicalStockCountService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_item_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Services/PhysicalStockCountService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$system_quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/PhysicalStockCount/Services/PhysicalStockCountService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Post\\Controllers\\Api\\PostFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Post/Controllers/Api/PostController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Post\\Controllers\\Api\\PostFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Post/Controllers/Api/PostController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Post\\Controllers\\Api\\PostFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Post/Controllers/Api/PostController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Post\\Controllers\\Api\\PostFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Post/Controllers/Api/PostController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Post\\Controllers\\Api\\PostFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Post/Controllers/Api/PostController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Purchase\\Controllers\\Api\\PurchaseFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Purchase/Controllers/Api/PurchaseController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Purchase\\Controllers\\Api\\PurchaseFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Purchase/Controllers/Api/PurchaseController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Purchase\\Controllers\\Api\\PurchaseFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Purchase/Controllers/Api/PurchaseController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Purchase\\Controllers\\Api\\PurchaseFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Purchase/Controllers/Api/PurchaseController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Purchase\\Controllers\\Api\\PurchaseFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Purchase/Controllers/Api/PurchaseController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$end_date\.$#'
+			identifier: property.notFound
+			count: 5
+			path: app/Modules/ReceiptNoteReport/Services/ReceiptNoteReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$fiscal_year_id\.$#'
+			identifier: property.notFound
+			count: 5
+			path: app/Modules/ReceiptNoteReport/Services/ReceiptNoteReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$start_date\.$#'
+			identifier: property.notFound
+			count: 5
+			path: app/Modules/ReceiptNoteReport/Services/ReceiptNoteReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$end_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/ReceiptVoucher/Services/ReceiptVoucherService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$fiscal_year_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/ReceiptVoucher/Services/ReceiptVoucherService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$start_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/ReceiptVoucher/Services/ReceiptVoucherService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Role\\Controllers\\Api\\RoleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Role/Controllers/Api/RoleController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Role\\Controllers\\Api\\RoleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Role/Controllers/Api/RoleController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Role\\Controllers\\Api\\RoleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Role/Controllers/Api/RoleController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Role\\Controllers\\Api\\RoleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Role/Controllers/Api/RoleController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Role\\Controllers\\Api\\RoleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Role/Controllers/Api/RoleController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\RolePermission\\Controllers\\Api\\RolePermissionFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/RolePermission/Controllers/Api/RolePermissionController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\RolePermission\\Controllers\\Api\\RolePermissionFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/RolePermission/Controllers/Api/RolePermissionController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\RolePermission\\Controllers\\Api\\RolePermissionFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/RolePermission/Controllers/Api/RolePermissionController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\RolePermission\\Controllers\\Api\\RolePermissionFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/RolePermission/Controllers/Api/RolePermissionController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\RolePermission\\Controllers\\Api\\RolePermissionFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/RolePermission/Controllers/Api/RolePermissionController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Salary\\Controllers\\Api\\SalaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Salary/Controllers/Api/SalaryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Salary\\Controllers\\Api\\SalaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Salary/Controllers/Api/SalaryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Salary\\Controllers\\Api\\SalaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Salary/Controllers/Api/SalaryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Salary\\Controllers\\Api\\SalaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Salary/Controllers/Api/SalaryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Salary\\Controllers\\Api\\SalaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Salary/Controllers/Api/SalaryController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\SalaryComponent\\Controllers\\Api\\SalaryComponentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/SalaryComponent/Controllers/Api/SalaryComponentController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\SalaryComponent\\Controllers\\Api\\SalaryComponentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/SalaryComponent/Controllers/Api/SalaryComponentController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\SalaryComponent\\Controllers\\Api\\SalaryComponentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/SalaryComponent/Controllers/Api/SalaryComponentController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\SalaryComponent\\Controllers\\Api\\SalaryComponentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/SalaryComponent/Controllers/Api/SalaryComponentController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\SalaryComponent\\Controllers\\Api\\SalaryComponentFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/SalaryComponent/Controllers/Api/SalaryComponentController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\SalaryStructure\\Controllers\\Api\\SalaryStructureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/SalaryStructure/Controllers/Api/SalaryStructureController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\SalaryStructure\\Controllers\\Api\\SalaryStructureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/SalaryStructure/Controllers/Api/SalaryStructureController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\SalaryStructure\\Controllers\\Api\\SalaryStructureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/SalaryStructure/Controllers/Api/SalaryStructureController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\SalaryStructure\\Controllers\\Api\\SalaryStructureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/SalaryStructure/Controllers/Api/SalaryStructureController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\SalaryStructure\\Controllers\\Api\\SalaryStructureFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/SalaryStructure/Controllers/Api/SalaryStructureController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Setting\\Controllers\\Api\\SettingFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Setting/Controllers/Api/SettingController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Setting\\Controllers\\Api\\SettingFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Setting/Controllers/Api/SettingController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Setting\\Controllers\\Api\\SettingFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Setting/Controllers/Api/SettingController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Setting\\Controllers\\Api\\SettingFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Setting/Controllers/Api/SettingController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Setting\\Controllers\\Api\\SettingFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Setting/Controllers/Api/SettingController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Shift\\Controllers\\Api\\ShiftFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Shift/Controllers/Api/ShiftController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Shift\\Controllers\\Api\\ShiftFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Shift/Controllers/Api/ShiftController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Shift\\Controllers\\Api\\ShiftFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Shift/Controllers/Api/ShiftController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Shift\\Controllers\\Api\\ShiftFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Shift/Controllers/Api/ShiftController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Shift\\Controllers\\Api\\ShiftFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Shift/Controllers/Api/ShiftController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\State\\Controllers\\Api\\StateFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/State/Controllers/Api/StateController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\State\\Controllers\\Api\\StateFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/State/Controllers/Api/StateController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\State\\Controllers\\Api\\StateFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/State/Controllers/Api/StateController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\State\\Controllers\\Api\\StateFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/State/Controllers/Api/StateController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\State\\Controllers\\Api\\StateFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/State/Controllers/Api/StateController.php
+
+		-
+			message: '#^Called ''first'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Modules/State/Database/Seeders/StateSeeder.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Status\\Controllers\\Api\\StatusFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Status/Controllers/Api/StatusController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Status\\Controllers\\Api\\StatusFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Status/Controllers/Api/StatusController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Status\\Controllers\\Api\\StatusFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Status/Controllers/Api/StatusController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Status\\Controllers\\Api\\StatusFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Status/Controllers/Api/StatusController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Status\\Controllers\\Api\\StatusFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Status/Controllers/Api/StatusController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockCategory\\Controllers\\Api\\StockCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockCategory/Controllers/Api/StockCategoryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockCategory\\Controllers\\Api\\StockCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockCategory/Controllers/Api/StockCategoryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockCategory\\Controllers\\Api\\StockCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockCategory/Controllers/Api/StockCategoryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockCategory\\Controllers\\Api\\StockCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockCategory/Controllers/Api/StockCategoryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockCategory\\Controllers\\Api\\StockCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockCategory/Controllers/Api/StockCategoryController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockGroup\\Controllers\\Api\\StockGroupFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockGroup/Controllers/Api/StockGroupController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockGroup\\Controllers\\Api\\StockGroupFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockGroup/Controllers/Api/StockGroupController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockGroup\\Controllers\\Api\\StockGroupFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockGroup/Controllers/Api/StockGroupController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockGroup\\Controllers\\Api\\StockGroupFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockGroup/Controllers/Api/StockGroupController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockGroup\\Controllers\\Api\\StockGroupFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockGroup/Controllers/Api/StockGroupController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockItem\\Controllers\\Api\\StockItemFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItem/Controllers/Api/ItemPriceController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockItem\\Controllers\\Api\\StockItemFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItem/Controllers/Api/ItemPriceController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockItem\\Controllers\\Api\\StockItemFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItem/Controllers/Api/ItemPriceController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockItem\\Controllers\\Api\\StockItemFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItem/Controllers/Api/ItemPriceController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockItem\\Controllers\\Api\\StockItemFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItem/Controllers/Api/ItemPriceController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockItemBatch\\Controllers\\Api\\StockItemBatchFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemBatch/Controllers/Api/StockItemBatchController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockItemBatch\\Controllers\\Api\\StockItemBatchFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemBatch/Controllers/Api/StockItemBatchController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockItemBatch\\Controllers\\Api\\StockItemBatchFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemBatch/Controllers/Api/StockItemBatchController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockItemBatch\\Controllers\\Api\\StockItemBatchFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemBatch/Controllers/Api/StockItemBatchController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockItemBatch\\Controllers\\Api\\StockItemBatchFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemBatch/Controllers/Api/StockItemBatchController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockItemBrand\\Controllers\\Api\\StockItemBrandFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemBrand/Controllers/Api/StockItemBrandController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockItemBrand\\Controllers\\Api\\StockItemBrandFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemBrand/Controllers/Api/StockItemBrandController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockItemBrand\\Controllers\\Api\\StockItemBrandFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemBrand/Controllers/Api/StockItemBrandController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockItemBrand\\Controllers\\Api\\StockItemBrandFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemBrand/Controllers/Api/StockItemBrandController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockItemBrand\\Controllers\\Api\\StockItemBrandFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemBrand/Controllers/Api/StockItemBrandController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockItemGodown\\Controllers\\Api\\StockItemGodownFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemGodown/Controllers/Api/StockItemGodownController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockItemGodown\\Controllers\\Api\\StockItemGodownFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemGodown/Controllers/Api/StockItemGodownController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockItemGodown\\Controllers\\Api\\StockItemGodownFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemGodown/Controllers/Api/StockItemGodownController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockItemGodown\\Controllers\\Api\\StockItemGodownFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemGodown/Controllers/Api/StockItemGodownController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockItemGodown\\Controllers\\Api\\StockItemGodownFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemGodown/Controllers/Api/StockItemGodownController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockItemPrice\\Controllers\\Api\\StockItemPriceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemPrice/Controllers/Api/StockItemPriceController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockItemPrice\\Controllers\\Api\\StockItemPriceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemPrice/Controllers/Api/StockItemPriceController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockItemPrice\\Controllers\\Api\\StockItemPriceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemPrice/Controllers/Api/StockItemPriceController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockItemPrice\\Controllers\\Api\\StockItemPriceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemPrice/Controllers/Api/StockItemPriceController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockItemPrice\\Controllers\\Api\\StockItemPriceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemPrice/Controllers/Api/StockItemPriceController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockItemSerial\\Controllers\\Api\\StockItemSerialFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemSerial/Controllers/Api/StockItemSerialController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockItemSerial\\Controllers\\Api\\StockItemSerialFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemSerial/Controllers/Api/StockItemSerialController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockItemSerial\\Controllers\\Api\\StockItemSerialFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemSerial/Controllers/Api/StockItemSerialController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockItemSerial\\Controllers\\Api\\StockItemSerialFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemSerial/Controllers/Api/StockItemSerialController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockItemSerial\\Controllers\\Api\\StockItemSerialFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockItemSerial/Controllers/Api/StockItemSerialController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockJournal\\Controllers\\Api\\StockJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournal/Controllers/Api/StockJournalController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockJournal\\Controllers\\Api\\StockJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournal/Controllers/Api/StockJournalController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockJournal\\Controllers\\Api\\StockJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournal/Controllers/Api/StockJournalController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockJournal\\Controllers\\Api\\StockJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournal/Controllers/Api/StockJournalController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockJournal\\Controllers\\Api\\StockJournalFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournal/Controllers/Api/StockJournalController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockJournalBatchEntry\\Controllers\\Api\\StockJournalBatchEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalBatchEntry/Controllers/Api/StockJournalBatchEntryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockJournalBatchEntry\\Controllers\\Api\\StockJournalBatchEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalBatchEntry/Controllers/Api/StockJournalBatchEntryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockJournalBatchEntry\\Controllers\\Api\\StockJournalBatchEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalBatchEntry/Controllers/Api/StockJournalBatchEntryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockJournalBatchEntry\\Controllers\\Api\\StockJournalBatchEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalBatchEntry/Controllers/Api/StockJournalBatchEntryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockJournalBatchEntry\\Controllers\\Api\\StockJournalBatchEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalBatchEntry/Controllers/Api/StockJournalBatchEntryController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockJournalEntry\\Controllers\\Api\\StockJournalEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalEntry/Controllers/Api/StockJournalEntryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockJournalEntry\\Controllers\\Api\\StockJournalEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalEntry/Controllers/Api/StockJournalEntryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockJournalEntry\\Controllers\\Api\\StockJournalEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalEntry/Controllers/Api/StockJournalEntryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockJournalEntry\\Controllers\\Api\\StockJournalEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalEntry/Controllers/Api/StockJournalEntryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockJournalEntry\\Controllers\\Api\\StockJournalEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalEntry/Controllers/Api/StockJournalEntryController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/StockJournalEntry/Services/StockJournalEntryService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockJournalEntryPurge\\Controllers\\Api\\StockJournalEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalEntryPurge/Controllers/Api/StockJournalEntryPurgeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockJournalEntryPurge\\Controllers\\Api\\StockJournalEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalEntryPurge/Controllers/Api/StockJournalEntryPurgeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockJournalEntryPurge\\Controllers\\Api\\StockJournalEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalEntryPurge/Controllers/Api/StockJournalEntryPurgeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockJournalEntryPurge\\Controllers\\Api\\StockJournalEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalEntryPurge/Controllers/Api/StockJournalEntryPurgeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockJournalEntryPurge\\Controllers\\Api\\StockJournalEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalEntryPurge/Controllers/Api/StockJournalEntryPurgeController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockJournalGodownEntry\\Controllers\\Api\\StockJournalGodownEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Controllers/Api/StockJournalGodownEntryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockJournalGodownEntry\\Controllers\\Api\\StockJournalGodownEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Controllers/Api/StockJournalGodownEntryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockJournalGodownEntry\\Controllers\\Api\\StockJournalGodownEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Controllers/Api/StockJournalGodownEntryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockJournalGodownEntry\\Controllers\\Api\\StockJournalGodownEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Controllers/Api/StockJournalGodownEntryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockJournalGodownEntry\\Controllers\\Api\\StockJournalGodownEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Controllers/Api/StockJournalGodownEntryController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_item\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Models/StockJournalGodownEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:alternate_unit\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Models/StockJournalGodownEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:rate_unit\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Models/StockJournalGodownEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:rate_unit_ratio\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Models/StockJournalGodownEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:stock_journal\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Models/StockJournalGodownEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:stock_unit\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Models/StockJournalGodownEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:voucher\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Models/StockJournalGodownEntry.php
+
+		-
+			message: '#^Relation ''stock_journal_godown_entry_purge'' is not found in Modules\\StockJournalGodownEntry\\Models\\StockJournalGodownEntry model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Modules/StockJournalGodownEntry/Models/StockJournalGodownEntry.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockJournalGodownEntryPurge\\Controllers\\Api\\StockJournalGodownEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntryPurge/Controllers/Api/StockJournalGodownEntryPurgeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockJournalGodownEntryPurge\\Controllers\\Api\\StockJournalGodownEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntryPurge/Controllers/Api/StockJournalGodownEntryPurgeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockJournalGodownEntryPurge\\Controllers\\Api\\StockJournalGodownEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntryPurge/Controllers/Api/StockJournalGodownEntryPurgeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockJournalGodownEntryPurge\\Controllers\\Api\\StockJournalGodownEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntryPurge/Controllers/Api/StockJournalGodownEntryPurgeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockJournalGodownEntryPurge\\Controllers\\Api\\StockJournalGodownEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalGodownEntryPurge/Controllers/Api/StockJournalGodownEntryPurgeController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockJournalSerialNoEntry\\Controllers\\Api\\StockJournalSerialNoEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalSerialNoEntry/Controllers/Api/StockJournalSerialNoEntryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockJournalSerialNoEntry\\Controllers\\Api\\StockJournalSerialNoEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalSerialNoEntry/Controllers/Api/StockJournalSerialNoEntryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockJournalSerialNoEntry\\Controllers\\Api\\StockJournalSerialNoEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalSerialNoEntry/Controllers/Api/StockJournalSerialNoEntryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockJournalSerialNoEntry\\Controllers\\Api\\StockJournalSerialNoEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalSerialNoEntry/Controllers/Api/StockJournalSerialNoEntryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockJournalSerialNoEntry\\Controllers\\Api\\StockJournalSerialNoEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalSerialNoEntry/Controllers/Api/StockJournalSerialNoEntryController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockJournalStorageUnitEntry\\Controllers\\Api\\StockJournalStorageUnitEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Controllers/Api/StockJournalStorageUnitEntryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockJournalStorageUnitEntry\\Controllers\\Api\\StockJournalStorageUnitEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Controllers/Api/StockJournalStorageUnitEntryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockJournalStorageUnitEntry\\Controllers\\Api\\StockJournalStorageUnitEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Controllers/Api/StockJournalStorageUnitEntryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockJournalStorageUnitEntry\\Controllers\\Api\\StockJournalStorageUnitEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Controllers/Api/StockJournalStorageUnitEntryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockJournalStorageUnitEntry\\Controllers\\Api\\StockJournalStorageUnitEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Controllers/Api/StockJournalStorageUnitEntryController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_item\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Models/StockJournalStorageUnitEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:alternate_unit\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Models/StockJournalStorageUnitEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:rate_unit\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Models/StockJournalStorageUnitEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:rate_unit_ratio\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Models/StockJournalStorageUnitEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:stock_journal\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Models/StockJournalStorageUnitEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:stock_unit\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Models/StockJournalStorageUnitEntry.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:voucher\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Models/StockJournalStorageUnitEntry.php
+
+		-
+			message: '#^Class Modules\\StockJournalStorageUnitEntry\\Models\\MovementType not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Models/StockJournalStorageUnitEntry.php
+
+		-
+			message: '#^Relation ''stock_journal_storage_unit_entry_purge'' is not found in Modules\\StockJournalStorageUnitEntry\\Models\\StockJournalStorageUnitEntry model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntry/Models/StockJournalStorageUnitEntry.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockJournalStorageUnitEntryPurge\\Controllers\\Api\\StockJournalStorageUnitEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntryPurge/Controllers/Api/StockJournalStorageUnitEntryPurgeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockJournalStorageUnitEntryPurge\\Controllers\\Api\\StockJournalStorageUnitEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntryPurge/Controllers/Api/StockJournalStorageUnitEntryPurgeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockJournalStorageUnitEntryPurge\\Controllers\\Api\\StockJournalStorageUnitEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntryPurge/Controllers/Api/StockJournalStorageUnitEntryPurgeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockJournalStorageUnitEntryPurge\\Controllers\\Api\\StockJournalStorageUnitEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntryPurge/Controllers/Api/StockJournalStorageUnitEntryPurgeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockJournalStorageUnitEntryPurge\\Controllers\\Api\\StockJournalStorageUnitEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockJournalStorageUnitEntryPurge/Controllers/Api/StockJournalStorageUnitEntryPurgeController.php
+
+		-
+			message: '#^Call to static method getGodownRunningBalanceItems\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method getRunningBalance\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method getRunningBalanceGodowns\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method getRunningBalanceItems\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method netStock\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method purchaseOrderOutstanding\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method salebleStock\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method salesOrderOutstanding\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method stockInHand\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method stock_in_hand_godown_wise\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method stock_in_hand_item_wise\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method stock_in_hand_voucher_wise\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Call to static method stock_in_hand_zone_wise\(\) on an unknown class Modules\\StockSummary\\Controllers\\Api\\StockSummaryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockSummary/Controllers/Api/StockSummaryController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Modules/StockSummary/Services/StockSummaryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Modules/StockSummary/Services/StockSummaryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$no_of_decimal_places\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Modules/StockSummary/Services/StockSummaryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal\.$#'
+			identifier: property.notFound
+			count: 5
+			path: app/Modules/StockSummary/Services/StockSummaryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal_entry\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/StockSummary/Services/StockSummaryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal_godown_entries\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/StockSummary/Services/StockSummaryService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StockUnit\\Controllers\\Api\\StockUnitFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockUnit/Controllers/Api/StockUnitController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StockUnit\\Controllers\\Api\\StockUnitFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockUnit/Controllers/Api/StockUnitController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StockUnit\\Controllers\\Api\\StockUnitFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockUnit/Controllers/Api/StockUnitController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StockUnit\\Controllers\\Api\\StockUnitFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockUnit/Controllers/Api/StockUnitController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StockUnit\\Controllers\\Api\\StockUnitFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StockUnit/Controllers/Api/StockUnitController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\StorageUnit\\Controllers\\Api\\StorageUnitFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StorageUnit/Controllers/Api/StorageUnitController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\StorageUnit\\Controllers\\Api\\StorageUnitFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StorageUnit/Controllers/Api/StorageUnitController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\StorageUnit\\Controllers\\Api\\StorageUnitFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StorageUnit/Controllers/Api/StorageUnitController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\StorageUnit\\Controllers\\Api\\StorageUnitFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StorageUnit/Controllers/Api/StorageUnitController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\StorageUnit\\Controllers\\Api\\StorageUnitFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/StorageUnit/Controllers/Api/StorageUnitController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Supplier\\Controllers\\Api\\SupplierFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Supplier/Controllers/Api/SupplierController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Supplier\\Controllers\\Api\\SupplierFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Supplier/Controllers/Api/SupplierController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Supplier\\Controllers\\Api\\SupplierFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Supplier/Controllers/Api/SupplierController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Supplier\\Controllers\\Api\\SupplierFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Supplier/Controllers/Api/SupplierController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Supplier\\Controllers\\Api\\SupplierFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Supplier/Controllers/Api/SupplierController.php
+
+		-
+			message: '#^Call to an undefined method Modules\\Supplier\\Services\\SupplierService\:\:verifyUniqueLedgerName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/Supplier/Services/SupplierService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\TestItem\\Controllers\\Api\\TestItemFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/TestItem/Controllers/Api/TestItemController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\TestItem\\Controllers\\Api\\TestItemFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/TestItem/Controllers/Api/TestItemController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\TestItem\\Controllers\\Api\\TestItemFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/TestItem/Controllers/Api/TestItemController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\TestItem\\Controllers\\Api\\TestItemFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/TestItem/Controllers/Api/TestItemController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\TestItem\\Controllers\\Api\\TestItemFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/TestItem/Controllers/Api/TestItemController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Transporter\\Controllers\\Api\\TransporterFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Transporter/Controllers/Api/TransporterController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Transporter\\Controllers\\Api\\TransporterFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Transporter/Controllers/Api/TransporterController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Transporter\\Controllers\\Api\\TransporterFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Transporter/Controllers/Api/TransporterController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Transporter\\Controllers\\Api\\TransporterFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Transporter/Controllers/Api/TransporterController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Transporter\\Controllers\\Api\\TransporterFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Transporter/Controllers/Api/TransporterController.php
+
+		-
+			message: '#^Call to an undefined method Modules\\Transporter\\Services\\TransporterService\:\:verifyUniqueLedgerName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/Transporter/Services/TransporterService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\UniqueQuantityCode\\Controllers\\Api\\UniqueQuantityCodeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/UniqueQuantityCode/Controllers/Api/UniqueQuantityCodeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\UniqueQuantityCode\\Controllers\\Api\\UniqueQuantityCodeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/UniqueQuantityCode/Controllers/Api/UniqueQuantityCodeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\UniqueQuantityCode\\Controllers\\Api\\UniqueQuantityCodeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/UniqueQuantityCode/Controllers/Api/UniqueQuantityCodeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\UniqueQuantityCode\\Controllers\\Api\\UniqueQuantityCodeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/UniqueQuantityCode/Controllers/Api/UniqueQuantityCodeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\UniqueQuantityCode\\Controllers\\Api\\UniqueQuantityCodeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/UniqueQuantityCode/Controllers/Api/UniqueQuantityCodeController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Uqc\\Controllers\\Api\\UqcFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Uqc/Controllers/Api/UqcController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Uqc\\Controllers\\Api\\UqcFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Uqc/Controllers/Api/UqcController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Uqc\\Controllers\\Api\\UqcFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Uqc/Controllers/Api/UqcController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Uqc\\Controllers\\Api\\UqcFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Uqc/Controllers/Api/UqcController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Uqc\\Controllers\\Api\\UqcFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Uqc/Controllers/Api/UqcController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\User\\Controllers\\Api\\UserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/User/Controllers/Api/UserController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\User\\Controllers\\Api\\UserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/User/Controllers/Api/UserController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\User\\Controllers\\Api\\UserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/User/Controllers/Api/UserController.php
+
+		-
+			message: '#^Call to static method getNotificationPreferences\(\) on an unknown class Modules\\User\\Controllers\\Api\\UserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/User/Controllers/Api/UserController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\User\\Controllers\\Api\\UserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/User/Controllers/Api/UserController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\User\\Controllers\\Api\\UserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/User/Controllers/Api/UserController.php
+
+		-
+			message: '#^Call to static method updateNotificationPreferences\(\) on an unknown class Modules\\User\\Controllers\\Api\\UserFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/User/Controllers/Api/UserController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/UserFiscalYear/Controllers/Api/UserFiscalYearController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\UserRole\\Controllers\\Api\\UserRoleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/UserRole/Controllers/Api/UserRoleController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\UserRole\\Controllers\\Api\\UserRoleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/UserRole/Controllers/Api/UserRoleController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\UserRole\\Controllers\\Api\\UserRoleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/UserRole/Controllers/Api/UserRoleController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\UserRole\\Controllers\\Api\\UserRoleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/UserRole/Controllers/Api/UserRoleController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\UserRole\\Controllers\\Api\\UserRoleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/UserRole/Controllers/Api/UserRoleController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:permissions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Modules/UserRole/Models/UserRole.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Vehicle\\Controllers\\Api\\VehicleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Vehicle/Controllers/Api/VehicleController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Vehicle\\Controllers\\Api\\VehicleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Vehicle/Controllers/Api/VehicleController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Vehicle\\Controllers\\Api\\VehicleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Vehicle/Controllers/Api/VehicleController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Vehicle\\Controllers\\Api\\VehicleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Vehicle/Controllers/Api/VehicleController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Vehicle\\Controllers\\Api\\VehicleFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Vehicle/Controllers/Api/VehicleController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\Vendor\\Controllers\\Api\\VendorFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Vendor/Controllers/Api/VendorController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\Vendor\\Controllers\\Api\\VendorFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Vendor/Controllers/Api/VendorController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\Vendor\\Controllers\\Api\\VendorFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Vendor/Controllers/Api/VendorController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\Vendor\\Controllers\\Api\\VendorFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Vendor/Controllers/Api/VendorController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\Vendor\\Controllers\\Api\\VendorFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/Vendor/Controllers/Api/VendorController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$credit\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Voucher/Models/Voucher.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$debit\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Voucher/Models/Voucher.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$account_ledger\.$#'
+			identifier: property.notFound
+			count: 6
+			path: app/Modules/Voucher/Services/VoucherService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$company_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Voucher/Services/VoucherService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$credit\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Voucher/Services/VoucherService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$debit\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Voucher/Services/VoucherService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Voucher/Services/VoucherService.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\VoucherCategory\\Controllers\\Api\\VoucherCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherCategory/Controllers/Api/VoucherCategoryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\VoucherCategory\\Controllers\\Api\\VoucherCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherCategory/Controllers/Api/VoucherCategoryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\VoucherCategory\\Controllers\\Api\\VoucherCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherCategory/Controllers/Api/VoucherCategoryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\VoucherCategory\\Controllers\\Api\\VoucherCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherCategory/Controllers/Api/VoucherCategoryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\VoucherCategory\\Controllers\\Api\\VoucherCategoryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherCategory/Controllers/Api/VoucherCategoryController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\VoucherClassification\\Controllers\\Api\\VoucherClassificationFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherClassification/Controllers/Api/VoucherClassificationController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\VoucherClassification\\Controllers\\Api\\VoucherClassificationFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherClassification/Controllers/Api/VoucherClassificationController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\VoucherClassification\\Controllers\\Api\\VoucherClassificationFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherClassification/Controllers/Api/VoucherClassificationController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\VoucherClassification\\Controllers\\Api\\VoucherClassificationFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherClassification/Controllers/Api/VoucherClassificationController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\VoucherClassification\\Controllers\\Api\\VoucherClassificationFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherClassification/Controllers/Api/VoucherClassificationController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\VoucherDispatchDetail\\Controllers\\Api\\VoucherDispatchDetailFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherDispatchDetail/Controllers/Api/VoucherDispatchDetailController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\VoucherDispatchDetail\\Controllers\\Api\\VoucherDispatchDetailFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherDispatchDetail/Controllers/Api/VoucherDispatchDetailController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\VoucherDispatchDetail\\Controllers\\Api\\VoucherDispatchDetailFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherDispatchDetail/Controllers/Api/VoucherDispatchDetailController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\VoucherDispatchDetail\\Controllers\\Api\\VoucherDispatchDetailFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherDispatchDetail/Controllers/Api/VoucherDispatchDetailController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\VoucherDispatchDetail\\Controllers\\Api\\VoucherDispatchDetailFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherDispatchDetail/Controllers/Api/VoucherDispatchDetailController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\VoucherEntry\\Controllers\\Api\\VoucherEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherEntry/Controllers/Api/VoucherEntryController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\VoucherEntry\\Controllers\\Api\\VoucherEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherEntry/Controllers/Api/VoucherEntryController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\VoucherEntry\\Controllers\\Api\\VoucherEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherEntry/Controllers/Api/VoucherEntryController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\VoucherEntry\\Controllers\\Api\\VoucherEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherEntry/Controllers/Api/VoucherEntryController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\VoucherEntry\\Controllers\\Api\\VoucherEntryFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherEntry/Controllers/Api/VoucherEntryController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\VoucherEntryPurge\\Controllers\\Api\\VoucherEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherEntryPurge/Controllers/Api/VoucherEntryPurgeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\VoucherEntryPurge\\Controllers\\Api\\VoucherEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherEntryPurge/Controllers/Api/VoucherEntryPurgeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\VoucherEntryPurge\\Controllers\\Api\\VoucherEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherEntryPurge/Controllers/Api/VoucherEntryPurgeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\VoucherEntryPurge\\Controllers\\Api\\VoucherEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherEntryPurge/Controllers/Api/VoucherEntryPurgeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\VoucherEntryPurge\\Controllers\\Api\\VoucherEntryPurgeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherEntryPurge/Controllers/Api/VoucherEntryPurgeController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\VoucherParty\\Controllers\\Api\\VoucherPartyFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherParty/Controllers/Api/VoucherPartyController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\VoucherParty\\Controllers\\Api\\VoucherPartyFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherParty/Controllers/Api/VoucherPartyController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\VoucherParty\\Controllers\\Api\\VoucherPartyFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherParty/Controllers/Api/VoucherPartyController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\VoucherParty\\Controllers\\Api\\VoucherPartyFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherParty/Controllers/Api/VoucherPartyController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\VoucherParty\\Controllers\\Api\\VoucherPartyFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherParty/Controllers/Api/VoucherPartyController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\VoucherPaymentMode\\Controllers\\Api\\VoucherPaymentModeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherPaymentMode/Controllers/Api/VoucherPaymentModeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\VoucherPaymentMode\\Controllers\\Api\\VoucherPaymentModeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherPaymentMode/Controllers/Api/VoucherPaymentModeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\VoucherPaymentMode\\Controllers\\Api\\VoucherPaymentModeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherPaymentMode/Controllers/Api/VoucherPaymentModeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\VoucherPaymentMode\\Controllers\\Api\\VoucherPaymentModeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherPaymentMode/Controllers/Api/VoucherPaymentModeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\VoucherPaymentMode\\Controllers\\Api\\VoucherPaymentModeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherPaymentMode/Controllers/Api/VoucherPaymentModeController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\VoucherReference\\Controllers\\Api\\VoucherReferenceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherReference/Controllers/Api/VoucherReferenceController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\VoucherReference\\Controllers\\Api\\VoucherReferenceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherReference/Controllers/Api/VoucherReferenceController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\VoucherReference\\Controllers\\Api\\VoucherReferenceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherReference/Controllers/Api/VoucherReferenceController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\VoucherReference\\Controllers\\Api\\VoucherReferenceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherReference/Controllers/Api/VoucherReferenceController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\VoucherReference\\Controllers\\Api\\VoucherReferenceFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherReference/Controllers/Api/VoucherReferenceController.php
+
+		-
+			message: '#^Call to static method delete\(\) on an unknown class Modules\\VoucherType\\Controllers\\Api\\VoucherTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherType/Controllers/Api/VoucherTypeController.php
+
+		-
+			message: '#^Call to static method getAll\(\) on an unknown class Modules\\VoucherType\\Controllers\\Api\\VoucherTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherType/Controllers/Api/VoucherTypeController.php
+
+		-
+			message: '#^Call to static method getById\(\) on an unknown class Modules\\VoucherType\\Controllers\\Api\\VoucherTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherType/Controllers/Api/VoucherTypeController.php
+
+		-
+			message: '#^Call to static method store\(\) on an unknown class Modules\\VoucherType\\Controllers\\Api\\VoucherTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherType/Controllers/Api/VoucherTypeController.php
+
+		-
+			message: '#^Call to static method update\(\) on an unknown class Modules\\VoucherType\\Controllers\\Api\\VoucherTypeFacade\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Modules/VoucherType/Controllers/Api/VoucherTypeController.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 1
+			path: app/Support/Repositories/BaseRepository.php

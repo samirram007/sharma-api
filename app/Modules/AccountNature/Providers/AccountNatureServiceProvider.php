@@ -4,7 +4,9 @@ namespace Modules\AccountNature\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\AccountNature\Contracts\AccountNatureRepositoryInterface;
 use Modules\AccountNature\Contracts\AccountNatureServiceInterface;
+use Modules\AccountNature\Repositories\AccountNatureRepository;
 use Modules\AccountNature\Services\AccountNatureService;
 
 class AccountNatureServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class AccountNatureServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AccountNatureServiceInterface::class, AccountNatureService::class);
+        $this->app->singleton(AccountNatureRepositoryInterface::class, AccountNatureRepository::class);
     }
 
     public function boot(): void

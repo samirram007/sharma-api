@@ -2,18 +2,6 @@
 
 namespace Modules\Holiday\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Holiday\Models\Holiday;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface HolidayServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?Holiday;
-
-    public function store(array $data): Holiday;
-
-    public function update(array $data, int $id): Holiday;
-
-    public function delete(int $id): bool;
-}
+interface HolidayServiceInterface extends BaseServiceInterface {}

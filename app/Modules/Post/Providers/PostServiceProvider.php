@@ -4,7 +4,9 @@ namespace Modules\Post\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Post\Contracts\PostRepositoryInterface;
 use Modules\Post\Contracts\PostServiceInterface;
+use Modules\Post\Repositories\PostRepository;
 use Modules\Post\Services\PostService;
 
 class PostServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class PostServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(PostServiceInterface::class, PostService::class);
+        $this->app->singleton(PostRepositoryInterface::class, PostRepository::class);
     }
 
     public function boot(): void

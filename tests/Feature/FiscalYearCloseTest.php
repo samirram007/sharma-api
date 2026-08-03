@@ -9,6 +9,9 @@ use Modules\StockJournal\Contracts\StockJournalServiceInterface;
 use Modules\StockJournal\Models\StockJournal;
 use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
 use Modules\StockJournalEntry\Models\StockJournalEntry;
+use Modules\User\Models\User;
+use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
+use Modules\UserFiscalYear\Models\UserFiscalYear;
 use Modules\Voucher\Models\Voucher;
 use Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
 use Modules\VoucherType\Models\VoucherType;
@@ -48,6 +51,7 @@ function makeFiscalYear(): FiscalYear
     $fy->start_date = '2025-04-01';
     $fy->end_date = '2026-03-31';
     $fy->status = 'active';
+    $fy->company_id = 1;
 
     return $fy;
 }
@@ -78,6 +82,7 @@ function resetVouchersTable(): void
         $table->date('voucher_date');
         $table->unsignedBigInteger('voucher_type_id')->default(1);
         $table->unsignedBigInteger('fiscal_year_id')->default(1);
+        $table->unsignedBigInteger('company_id')->default(1);
         $table->unsignedBigInteger('stock_journal_id')->nullable();
         $table->string('module')->nullable();
         $table->boolean('is_effecting')->default(true);
@@ -134,20 +139,23 @@ beforeEach(function () {
 
     DB::shouldReceive('table')->andReturn($this->queryMock);
 
-    // Mock the three service dependencies
+    // Mock the four service dependencies
     $this->voucherEntryService = Mockery::mock(VoucherEntryServiceInterface::class);
     $this->stockJournalService = Mockery::mock(StockJournalServiceInterface::class);
     $this->stockJournalEntrySvc = Mockery::mock(StockJournalEntryServiceInterface::class);
+    $this->userFiscalYearService = Mockery::mock(UserFiscalYearServiceInterface::class);
 
     // Bind mocks into the container so app() resolves them
     $this->app->instance(VoucherEntryServiceInterface::class, $this->voucherEntryService);
     $this->app->instance(StockJournalServiceInterface::class, $this->stockJournalService);
     $this->app->instance(StockJournalEntryServiceInterface::class, $this->stockJournalEntrySvc);
+    $this->app->instance(UserFiscalYearServiceInterface::class, $this->userFiscalYearService);
 
     $this->service = new FiscalYearCloseService(
         $this->voucherEntryService,
         $this->stockJournalService,
         $this->stockJournalEntrySvc,
+        $this->userFiscalYearService,
     );
 });
 
@@ -307,6 +315,28 @@ test('throws exception when no stock data exists', function () {
 
     invokeProtectedMethod($this->service, 'createClosingStockVoucher', [$fy, $vt]);
 })->throws(Exception::class, 'No stock quantities to close');
+
+test('throws when fiscal year belongs to a different company', function () {
+    // Authenticate so auth()->id() resolves inside the trait
+    $user = Mockery::mock(User::class)->makePartial();
+    $user->id = 7;
+    $this->actingAs($user);
+
+    $fy = makeFiscalYear();
+    $fy->company_id = 1;
+
+    // The current user's active UserFiscalYear points to a fiscal year of company 2
+    $userFiscalYear = Mockery::mock(UserFiscalYear::class)->makePartial();
+    $userFiscalYear->fiscal_year = Mockery::mock(FiscalYear::class)->makePartial();
+    $userFiscalYear->fiscal_year->company_id = 2;
+
+    $this->userFiscalYearService
+        ->shouldReceive('getByUserId')
+        ->once()
+        ->andReturn($userFiscalYear);
+
+    invokeProtectedMethod($this->service, 'validateCompanyAccess', [$fy]);
+})->throws(Exception::class, 'belongs to a different company');
 
 test('voucher metadata is correct', function () {
     $fy = makeFiscalYear();

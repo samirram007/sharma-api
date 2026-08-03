@@ -72,8 +72,8 @@ class DatabaseSeeder extends Seeder
             // FiscalYearSeeder::class,
             //     // CompanySeeder::class,
 
-            // VoucherCategorySeeder::class,
-            // VoucherTypeSeeder::class,
+            VoucherCategorySeeder::class,
+            VoucherTypeSeeder::class,
             // VoucherClassificationSeeder::class,
 
             // UniqueQuantityCodeSeeder::class,

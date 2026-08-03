@@ -4,7 +4,9 @@ namespace Modules\TestItem\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\TestItem\Contracts\TestItemRepositoryInterface;
 use Modules\TestItem\Contracts\TestItemServiceInterface;
+use Modules\TestItem\Repositories\TestItemRepository;
 use Modules\TestItem\Services\TestItemService;
 
 class TestItemServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class TestItemServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(TestItemServiceInterface::class, TestItemService::class);
+        $this->app->singleton(TestItemRepositoryInterface::class, TestItemRepository::class);
     }
 
     public function boot(): void

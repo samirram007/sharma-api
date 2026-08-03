@@ -3,8 +3,8 @@
 namespace Modules\StorageUnit\Services;
 
 use App\Support\Services\BaseService;
-use Illuminate\Database\Eloquent\Collection;
 use Modules\StorageUnit\Contracts\StorageUnitServiceInterface;
+use Modules\StorageUnit\Facades\StorageUnitRepositoryFacade;
 use Modules\StorageUnit\Models\StorageUnit;
 
 class StorageUnitService extends BaseService implements StorageUnitServiceInterface
@@ -17,28 +17,7 @@ class StorageUnitService extends BaseService implements StorageUnitServiceInterf
         'address',
     ];
 
-    public function getAll(): Collection
-    {
-        return $this->getAllRecords();
-    }
+    protected string $repositoryFacadeClass = StorageUnitRepositoryFacade::class;
 
-    public function getById(int $id): ?StorageUnit
-    {
-        return $this->findOrFail($id);
-    }
-
-    public function store(array $data): StorageUnit
-    {
-        return $this->createRecord($data);
-    }
-
-    public function update(array $data, int $id): StorageUnit
-    {
-        return $this->updateRecord($id, $data);
-    }
-
-    public function delete(int $id): bool
-    {
-        return $this->deleteRecord($id);
-    }
+    public function __construct() {}
 }

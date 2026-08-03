@@ -2,18 +2,11 @@
 
 namespace Modules\UserRole\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\UserRole\Models\UserRole;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface UserRoleServiceInterface
+interface UserRoleServiceInterface extends BaseServiceInterface
 {
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?UserRole;
-
-    public function store(array $data): UserRole|bool|null;
-
-    public function update(array $data, int $id): UserRole;
-
-    public function delete(int $id): bool;
+    // Inherits BaseServiceInterface::store(array $data): Model — the previous
+    // `store(): UserRole|bool|null` declaration was incompatible with the base
+    // signature (return type widening) and caused a fatal error on interface load.
 }

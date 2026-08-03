@@ -2,9 +2,10 @@
 
 namespace Modules\StockSummary\Contracts;
 
+use App\Support\Contracts\BaseServiceInterface;
 use Modules\StockSummary\Models\StockSummary;
 
-interface StockSummaryServiceInterface
+interface StockSummaryServiceInterface extends BaseServiceInterface
 {
     public function stockInHand(): array;
 

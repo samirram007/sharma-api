@@ -2,8 +2,8 @@
 
 namespace Modules\ReceiptVoucher\Services;
 
+use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Validator;
 use Modules\ReceiptVoucher\Contracts\ReceiptVoucherServiceInterface;
 use Modules\ReceiptVoucher\Models\ReceiptVoucher;
@@ -12,9 +12,11 @@ use Modules\Voucher\Models\Voucher;
 use Modules\Voucher\Requests\VoucherRequest;
 use Modules\VoucherReference\Models\VoucherReference;
 
-class ReceiptVoucherService implements ReceiptVoucherServiceInterface
+class ReceiptVoucherService extends BaseService implements ReceiptVoucherServiceInterface
 {
-    protected $resource = [
+    protected string $modelClass = ReceiptVoucher::class;
+
+    protected array $defaultResource = [
         'voucher_type',
         'voucher_entries.account_ledger',
         'stock_journal.stock_journal_entries.rate_unit',
@@ -43,7 +45,7 @@ class ReceiptVoucherService implements ReceiptVoucherServiceInterface
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
-        $vouchers = Voucher::with($this->resource)
+        $vouchers = Voucher::with($this->defaultResource)
             ->where('fiscal_year_id', $userFiscalYear->fiscal_year_id)
             ->where('voucher_type_id', 1003) // Assuming 1003 is the ID for Receipt Voucher type
             ->whereBetween('voucher_date', [$startDate, $endDate])
@@ -52,31 +54,6 @@ class ReceiptVoucherService implements ReceiptVoucherServiceInterface
         // dd($vouchers->toArray());
         // Optionally map each voucher to include party/transaction detection
         return $vouchers->map(fn (Voucher $voucher) => $this->voucherService->attachLedgerInfo($voucher));
-    }
-
-    public function getById(int $id): ?ReceiptVoucher
-    {
-        return ReceiptVoucher::with($this->resource)->findOrFail($id);
-    }
-
-    public function store(array $data): ReceiptVoucher
-    {
-        return ReceiptVoucher::create($data);
-    }
-
-    public function update(array $data, int $id): ReceiptVoucher
-    {
-        $record = ReceiptVoucher::findOrFail($id);
-        $record->update($data);
-
-        return $record->fresh();
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = ReceiptVoucher::findOrFail($id);
-
-        return $record->delete();
     }
 
     public function getFreightReceiptByFreightId(int $freight_id): Collection

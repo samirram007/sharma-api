@@ -4,7 +4,9 @@ namespace Modules\Uqc\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Uqc\Contracts\UqcRepositoryInterface;
 use Modules\Uqc\Contracts\UqcServiceInterface;
+use Modules\Uqc\Repositories\UqcRepository;
 use Modules\Uqc\Services\UqcService;
 
 class UqcServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class UqcServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UqcServiceInterface::class, UqcService::class);
+        $this->app->singleton(UqcRepositoryInterface::class, UqcRepository::class);
     }
 
     public function boot(): void

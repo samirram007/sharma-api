@@ -4,7 +4,9 @@ namespace Modules\AccountsJournal\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\AccountsJournal\Contracts\AccountsJournalRepositoryInterface;
 use Modules\AccountsJournal\Contracts\AccountsJournalServiceInterface;
+use Modules\AccountsJournal\Repositories\AccountsJournalRepository;
 use Modules\AccountsJournal\Services\AccountsJournalService;
 
 class AccountsJournalServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class AccountsJournalServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AccountsJournalServiceInterface::class, AccountsJournalService::class);
+        $this->app->singleton(AccountsJournalRepositoryInterface::class, AccountsJournalRepository::class);
     }
 
     public function boot(): void

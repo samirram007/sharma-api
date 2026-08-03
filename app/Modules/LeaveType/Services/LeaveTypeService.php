@@ -3,36 +3,15 @@
 namespace Modules\LeaveType\Services;
 
 use App\Support\Services\BaseService;
-use Illuminate\Database\Eloquent\Collection;
 use Modules\LeaveType\Contracts\LeaveTypeServiceInterface;
+use Modules\LeaveType\Facades\LeaveTypeRepositoryFacade;
 use Modules\LeaveType\Models\LeaveType;
 
 class LeaveTypeService extends BaseService implements LeaveTypeServiceInterface
 {
     protected string $modelClass = LeaveType::class;
 
-    public function getAll(): Collection
-    {
-        return $this->getAllRecords();
-    }
+    protected string $repositoryFacadeClass = LeaveTypeRepositoryFacade::class;
 
-    public function getById(int $id): ?LeaveType
-    {
-        return $this->findOrFail($id);
-    }
-
-    public function store(array $data): LeaveType
-    {
-        return $this->createRecord($data);
-    }
-
-    public function update(array $data, int $id): LeaveType
-    {
-        return $this->updateRecord($id, $data);
-    }
-
-    public function delete(int $id): bool
-    {
-        return $this->deleteRecord($id);
-    }
+    public function __construct() {}
 }

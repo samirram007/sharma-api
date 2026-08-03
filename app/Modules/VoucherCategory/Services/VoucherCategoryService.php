@@ -3,8 +3,8 @@
 namespace Modules\VoucherCategory\Services;
 
 use App\Support\Services\BaseService;
-use Illuminate\Database\Eloquent\Collection;
 use Modules\VoucherCategory\Contracts\VoucherCategoryServiceInterface;
+use Modules\VoucherCategory\Facades\VoucherCategoryRepositoryFacade;
 use Modules\VoucherCategory\Models\VoucherCategory;
 
 class VoucherCategoryService extends BaseService implements VoucherCategoryServiceInterface
@@ -15,28 +15,7 @@ class VoucherCategoryService extends BaseService implements VoucherCategoryServi
         'voucher_types',
     ];
 
-    public function getAll(): Collection
-    {
-        return $this->getAllRecords();
-    }
+    protected string $repositoryFacadeClass = VoucherCategoryRepositoryFacade::class;
 
-    public function getById(int $id): ?VoucherCategory
-    {
-        return $this->findOrFail($id);
-    }
-
-    public function store(array $data): VoucherCategory
-    {
-        return $this->createRecord($data);
-    }
-
-    public function update(array $data, int $id): VoucherCategory
-    {
-        return $this->updateRecord($id, $data);
-    }
-
-    public function delete(int $id): bool
-    {
-        return $this->deleteRecord($id);
-    }
+    public function __construct() {}
 }

@@ -2,6 +2,7 @@
 
 namespace Modules\StockSummary\Services;
 
+use App\Support\Services\BaseService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Modules\Godown\Models\Godown;
@@ -10,9 +11,11 @@ use Modules\StockSummary\Contracts\StockSummaryServiceInterface;
 use Modules\StockSummary\Models\StockSummary;
 use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
 
-class StockSummaryService implements StockSummaryServiceInterface
+class StockSummaryService extends BaseService implements StockSummaryServiceInterface
 {
-    protected $resource = [];
+    protected string $modelClass = StockSummary::class;
+
+    protected array $defaultResource = [];
 
     protected $userFiscalYearService;
 
@@ -21,7 +24,12 @@ class StockSummaryService implements StockSummaryServiceInterface
     public function __construct(UserFiscalYearServiceInterface $userFiscalYearService)
     {
         $this->userFiscalYearService = $userFiscalYearService;
-        $this->userFiscalYear = $this->userFiscalYearService->getByUserId(auth()->id());
+        // auth()->id() is null outside HTTP (CLI / queue / tests) — guard so the
+        // service can be constructed without an authenticated user.
+        $userId = auth()->id();
+        $this->userFiscalYear = $userId
+            ? $this->userFiscalYearService->getByUserId($userId)
+            : null;
     }
 
     /**

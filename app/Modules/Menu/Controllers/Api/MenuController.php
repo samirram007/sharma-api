@@ -9,7 +9,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\AppModuleFeature\Resources\AppModuleFeatureCollection;
-use Modules\Menu\Contracts\MenuServiceInterface;
+use Modules\Menu\Facades\MenuFacade;
 use Modules\Menu\Requests\MenuRequest;
 use Modules\Menu\Resources\MenuCollection;
 use Modules\Menu\Resources\MenuResource;
@@ -18,47 +18,43 @@ class MenuController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected MenuServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
+        $data = MenuFacade::getAll();
 
-        $data = $this->service->getAll();
-
-        // dd($data);
         return new MenuCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = MenuFacade::getById($id);
 
         return new MenuResource($data);
     }
 
     public function store(MenuRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = MenuFacade::store($request->validated());
 
         return new MenuResource($data, 'Menu entry created successfully');
     }
 
     public function update(MenuRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = MenuFacade::update($request->validated(), $id);
 
         return new MenuResource($data, 'Menu entry updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'Menu entry');
+        return $this->deletedResponse(MenuFacade::delete($id), 'Menu entry');
     }
 
     /** Get hierarchical tree of all menu entries for management UI. */
     public function tree(): SuccessCollection
     {
-        $data = $this->service->getTree();
+        $data = MenuFacade::getTree();
 
         return new MenuCollection($data);
     }
@@ -76,7 +72,7 @@ class MenuController extends Controller
             'items.*.parent_id' => 'nullable|integer|exists:menu,id',
         ]);
 
-        $this->service->reorder($request->input('items'));
+        MenuFacade::reorder($request->input('items'));
 
         return response()->json([
             'success' => true,
@@ -97,7 +93,7 @@ class MenuController extends Controller
             'data' => 'required|array',
         ]);
 
-        $this->service->batchUpdate($request->input('ids'), $request->input('data'));
+        MenuFacade::batchUpdate($request->input('ids'), $request->input('data'));
 
         return response()->json([
             'success' => true,
@@ -117,7 +113,7 @@ class MenuController extends Controller
             'ids.*' => 'required|integer|exists:menu,id',
         ]);
 
-        $deleted = $this->service->batchDelete($request->input('ids'));
+        $deleted = MenuFacade::batchDelete($request->input('ids'));
 
         return response()->json([
             'success' => true,
@@ -131,7 +127,7 @@ class MenuController extends Controller
      */
     public function duplicate(int $id): SuccessResource
     {
-        $data = $this->service->duplicate($id);
+        $data = MenuFacade::duplicate($id);
 
         return new MenuResource($data, 'Menu entry duplicated successfully');
     }
@@ -141,7 +137,7 @@ class MenuController extends Controller
      */
     public function export(): JsonResponse
     {
-        $data = $this->service->exportJson();
+        $data = MenuFacade::exportJson();
 
         return response()->json([
             'success' => true,
@@ -161,7 +157,7 @@ class MenuController extends Controller
             'items' => 'required|array|min:1',
         ]);
 
-        $count = $this->service->importJson($request->input('items'));
+        $count = MenuFacade::importJson($request->input('items'));
 
         return response()->json([
             'success' => true,
@@ -181,7 +177,7 @@ class MenuController extends Controller
             'per_page' => 'nullable|integer|min:1|max:100',
         ]);
 
-        $results = $this->service->search(
+        $results = MenuFacade::search(
             $request->input('search'),
             $request->input('per_page', 20)
         );
@@ -206,7 +202,7 @@ class MenuController extends Controller
      */
     public function userMenu(): JsonResponse
     {
-        $permissions = $this->service->getUserMenuPermissions();
+        $permissions = MenuFacade::getUserMenuPermissions();
 
         return response()->json([
             'success' => true,
@@ -221,7 +217,7 @@ class MenuController extends Controller
      */
     public function userMenuTree(): JsonResponse
     {
-        $tree = $this->service->getUserMenuTree();
+        $tree = MenuFacade::getUserMenuTree();
 
         return response()->json([
             'success' => true,
@@ -236,7 +232,7 @@ class MenuController extends Controller
      */
     public function roleMenuPermissions(int $roleId): SuccessCollection
     {
-        $data = $this->service->getRoleMenuPermissions($roleId);
+        $data = MenuFacade::getRoleMenuPermissions($roleId);
 
         return new AppModuleFeatureCollection($data);
     }

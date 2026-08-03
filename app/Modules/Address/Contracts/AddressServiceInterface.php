@@ -2,18 +2,6 @@
 
 namespace Modules\Address\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Address\Models\Address;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface AddressServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?Address;
-
-    public function store(array $data): Address;
-
-    public function update(array $data, int $id): Address;
-
-    public function delete(int $id): bool;
-}
+interface AddressServiceInterface extends BaseServiceInterface {}

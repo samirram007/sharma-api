@@ -2,24 +2,15 @@
 
 namespace Modules\Voucher\Contracts;
 
+use App\Support\Contracts\BaseServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Voucher\Models\Voucher;
 
-interface VoucherServiceInterface
+interface VoucherServiceInterface extends BaseServiceInterface
 {
-    public function getAll(): Collection;
-
     public function getByModule(string $module): Collection;
 
     public function getByVoucherType(int $voucherTypeId): Collection;
-
-    public function getById(int $id): ?Voucher;
-
-    public function store(array $data): Voucher;
-
-    public function update(array $data, int $id): Voucher;
-
-    public function delete(int $id): bool;
 
     public function attachLedgerInfo(Voucher $voucher): Voucher;
 }

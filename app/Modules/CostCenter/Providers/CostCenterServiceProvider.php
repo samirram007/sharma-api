@@ -4,7 +4,9 @@ namespace Modules\CostCenter\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\CostCenter\Contracts\CostCenterRepositoryInterface;
 use Modules\CostCenter\Contracts\CostCenterServiceInterface;
+use Modules\CostCenter\Repositories\CostCenterRepository;
 use Modules\CostCenter\Services\CostCenterService;
 
 class CostCenterServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class CostCenterServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(CostCenterServiceInterface::class, CostCenterService::class);
+        $this->app->singleton(CostCenterRepositoryInterface::class, CostCenterRepository::class);
     }
 
     public function boot(): void

@@ -1,0 +1,23 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+
+    level: 2
+
+    paths:
+        - app/Modules
+        - app/Support
+        - app/Traits
+        - app/Providers
+        - app/Http
+        - app/Enums
+
+    excludePaths:
+        - app/Modules/*/Tests/*
+        - app/Modules/*/Database/Migrations/*
+        - app/Modules/*/Routes/*
+        - app/Modules/*/Resources/*
+        - app/Modules/*/Requests/*
+        - app/Modules/*/Facades/*

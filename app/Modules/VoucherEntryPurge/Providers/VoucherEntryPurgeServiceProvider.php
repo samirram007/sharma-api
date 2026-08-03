@@ -4,7 +4,9 @@ namespace Modules\VoucherEntryPurge\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\VoucherEntryPurge\Contracts\VoucherEntryPurgeRepositoryInterface;
 use Modules\VoucherEntryPurge\Contracts\VoucherEntryPurgeServiceInterface;
+use Modules\VoucherEntryPurge\Repositories\VoucherEntryPurgeRepository;
 use Modules\VoucherEntryPurge\Services\VoucherEntryPurgeService;
 
 class VoucherEntryPurgeServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class VoucherEntryPurgeServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(VoucherEntryPurgeServiceInterface::class, VoucherEntryPurgeService::class);
+        $this->app->singleton(VoucherEntryPurgeRepositoryInterface::class, VoucherEntryPurgeRepository::class);
     }
 
     public function boot(): void

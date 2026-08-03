@@ -4,7 +4,9 @@ namespace Modules\SalaryStructure\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\SalaryStructure\Contracts\SalaryStructureRepositoryInterface;
 use Modules\SalaryStructure\Contracts\SalaryStructureServiceInterface;
+use Modules\SalaryStructure\Repositories\SalaryStructureRepository;
 use Modules\SalaryStructure\Services\SalaryStructureService;
 
 class SalaryStructureServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class SalaryStructureServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(SalaryStructureServiceInterface::class, SalaryStructureService::class);
+        $this->app->singleton(SalaryStructureRepositoryInterface::class, SalaryStructureRepository::class);
     }
 
     public function boot(): void

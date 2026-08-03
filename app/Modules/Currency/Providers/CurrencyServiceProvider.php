@@ -4,7 +4,9 @@ namespace Modules\Currency\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Currency\Contracts\CurrencyRepositoryInterface;
 use Modules\Currency\Contracts\CurrencyServiceInterface;
+use Modules\Currency\Repositories\CurrencyRepository;
 use Modules\Currency\Services\CurrencyService;
 
 class CurrencyServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class CurrencyServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(CurrencyServiceInterface::class, CurrencyService::class);
+        $this->app->singleton(CurrencyRepositoryInterface::class, CurrencyRepository::class);
     }
 
     public function boot(): void

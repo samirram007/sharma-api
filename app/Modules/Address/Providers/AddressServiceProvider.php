@@ -4,7 +4,9 @@ namespace Modules\Address\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Address\Contracts\AddressRepositoryInterface;
 use Modules\Address\Contracts\AddressServiceInterface;
+use Modules\Address\Repositories\AddressRepository;
 use Modules\Address\Services\AddressService;
 
 class AddressServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class AddressServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AddressServiceInterface::class, AddressService::class);
+        $this->app->singleton(AddressRepositoryInterface::class, AddressRepository::class);
     }
 
     public function boot(): void

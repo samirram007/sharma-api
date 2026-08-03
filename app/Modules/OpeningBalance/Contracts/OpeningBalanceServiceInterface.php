@@ -2,7 +2,9 @@
 
 namespace Modules\OpeningBalance\Contracts;
 
-interface OpeningBalanceServiceInterface
+use App\Support\Contracts\BaseServiceInterface;
+
+interface OpeningBalanceServiceInterface extends BaseServiceInterface
 {
     /**
      * Get setup data for opening balance wizard:
@@ -18,7 +20,7 @@ interface OpeningBalanceServiceInterface
      * - Creates an OPNJL voucher with voucher entries for ledger balances
      * - Creates stock journal entries for stock quantities
      */
-    public function store(array $data): array;
+    public function storeOpeningBalance(array $data): array;
 
     /**
      * Check if an opening balance already exists for the current fiscal year

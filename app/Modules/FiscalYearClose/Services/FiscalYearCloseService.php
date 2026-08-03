@@ -3,7 +3,9 @@
 namespace Modules\FiscalYearClose\Services;
 
 use App\Enums\MovementType;
+use App\Support\Services\BaseService;
 use App\Support\Traits\HasItemAverageRate;
+use App\Support\Traits\ScopesCompany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -13,23 +15,30 @@ use Modules\FiscalYearClose\Contracts\FiscalYearCloseServiceInterface;
 use Modules\StockJournal\Contracts\StockJournalServiceInterface;
 use Modules\StockJournal\Models\StockJournal;
 use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
+use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
 use Modules\Voucher\Models\Voucher;
 use Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
 use Modules\VoucherType\Models\VoucherType;
 
-class FiscalYearCloseService implements FiscalYearCloseServiceInterface
+class FiscalYearCloseService extends BaseService implements FiscalYearCloseServiceInterface
 {
     use HasItemAverageRate;
+    use ScopesCompany;
+
+    protected string $modelClass = FiscalYear::class;
 
     public function __construct(
         protected VoucherEntryServiceInterface $voucherEntryService,
         protected StockJournalServiceInterface $stockJournalService,
         protected StockJournalEntryServiceInterface $stockJournalEntryService,
+        protected UserFiscalYearServiceInterface $userFiscalYearService,
     ) {}
 
     public function preview(int $fiscalYearId): array
     {
         $fiscalYear = FiscalYear::findOrFail($fiscalYearId);
+
+        $this->validateCompanyAccess($fiscalYear);
 
         // Count all vouchers in this FY
         $totalVouchers = Voucher::where('fiscal_year_id', $fiscalYearId)->count();
@@ -77,6 +86,8 @@ class FiscalYearCloseService implements FiscalYearCloseServiceInterface
     {
         $fiscalYear = FiscalYear::findOrFail($fiscalYearId);
 
+        $this->validateCompanyAccess($fiscalYear);
+
         if ($fiscalYear->closed_at) {
             throw new \Exception("Fiscal Year '{$fiscalYear->name}' is already closed.");
         }
@@ -123,6 +134,8 @@ class FiscalYearCloseService implements FiscalYearCloseServiceInterface
     public function reopen(int $fiscalYearId): array
     {
         $fiscalYear = FiscalYear::findOrFail($fiscalYearId);
+
+        $this->validateCompanyAccess($fiscalYear);
 
         if (! $fiscalYear->closed_at) {
             throw new \Exception("Fiscal Year '{$fiscalYear->name}' is not closed.");
@@ -228,6 +241,7 @@ class FiscalYearCloseService implements FiscalYearCloseServiceInterface
             'voucher_date' => $fiscalYear->end_date,
             'voucher_type_id' => $voucherType->id,
             'fiscal_year_id' => $fiscalYear->id,
+            'company_id' => $fiscalYear->company_id,
             'remarks' => "Account closing for fiscal year {$fiscalYear->name}",
             'status' => 'active',
             'is_effecting' => false,
@@ -266,30 +280,32 @@ class FiscalYearCloseService implements FiscalYearCloseServiceInterface
             }
         }
 
-        // Add offsetting entry to Capital account
+        // Add offsetting entry to Capital account.
+        // Each P&L ledger's net_balance is SUM(debit) - SUM(credit), so a positive P&L
+        // total (debits exceed credits) is a net LOSS and a negative total is a net PROFIT.
         $totalPLBalance = collect($plLedgers)->sum(fn ($lb) => (float) $lb->net_balance);
         $entryOrder++;
 
         if ($capitalLedger) {
             if ($totalPLBalance > 0) {
-                // Net profit → Credit to Capital
-                $this->voucherEntryService->store([
-                    'voucher_id' => $closingVoucher->id,
-                    'entry_order' => $entryOrder,
-                    'account_ledger_id' => $capitalLedger->id,
-                    'credit' => $totalPLBalance,
-                    'debit' => 0,
-                    'remarks' => "Net profit transferred from P&L for {$fiscalYear->name}",
-                ]);
-            } else {
                 // Net loss → Debit to Capital
                 $this->voucherEntryService->store([
                     'voucher_id' => $closingVoucher->id,
                     'entry_order' => $entryOrder,
                     'account_ledger_id' => $capitalLedger->id,
-                    'debit' => abs($totalPLBalance),
+                    'debit' => $totalPLBalance,
                     'credit' => 0,
                     'remarks' => "Net loss transferred from P&L for {$fiscalYear->name}",
+                ]);
+            } else {
+                // Net profit → Credit to Capital
+                $this->voucherEntryService->store([
+                    'voucher_id' => $closingVoucher->id,
+                    'entry_order' => $entryOrder,
+                    'account_ledger_id' => $capitalLedger->id,
+                    'debit' => 0,
+                    'credit' => abs($totalPLBalance),
+                    'remarks' => "Net profit transferred from P&L for {$fiscalYear->name}",
                 ]);
             }
         }
@@ -349,12 +365,22 @@ class FiscalYearCloseService implements FiscalYearCloseServiceInterface
                 stock_journal_entries.stock_item_id,
                 stock_journal_godown_entries.godown_id,
                 stock_journal_entries.stock_unit_id,
+                stock_journal_godown_entries.batch_no,
+                stock_journal_godown_entries.mfg_date,
+                stock_journal_godown_entries.expiry_date,
                 SUM(CASE
                     WHEN stock_journal_godown_entries.movement_type = ? THEN stock_journal_godown_entries.actual_quantity
                     ELSE -stock_journal_godown_entries.actual_quantity
                 END) as net_quantity
             ', [MovementType::IN->value])
-            ->groupBy('stock_journal_entries.stock_item_id', 'stock_journal_godown_entries.godown_id', 'stock_journal_entries.stock_unit_id')
+            ->groupBy(
+                'stock_journal_entries.stock_item_id',
+                'stock_journal_godown_entries.godown_id',
+                'stock_journal_entries.stock_unit_id',
+                'stock_journal_godown_entries.batch_no',
+                'stock_journal_godown_entries.mfg_date',
+                'stock_journal_godown_entries.expiry_date'
+            )
             ->having('net_quantity', '!=', 0)
             ->get();
 
@@ -396,6 +422,9 @@ class FiscalYearCloseService implements FiscalYearCloseServiceInterface
                 $godownEntryData[] = [
                     'entry_order' => $godownOrder,
                     'godown_id' => $ge->godown_id,
+                    'batch_no' => $ge->batch_no,
+                    'mfg_date' => $ge->mfg_date,
+                    'expiry_date' => $ge->expiry_date,
                     'actual_quantity' => $absQty,
                     'billing_quantity' => $absQty,
                     'rate' => $avgRate > 0 ? $avgRate : null,
@@ -425,6 +454,7 @@ class FiscalYearCloseService implements FiscalYearCloseServiceInterface
             'voucher_date' => $fiscalYear->end_date,
             'voucher_type_id' => $voucherType->id,
             'fiscal_year_id' => $fiscalYear->id,
+            'company_id' => $fiscalYear->company_id,
             'stock_journal_id' => $stockJournal->id,
             'remarks' => "Stock closing for fiscal year {$fiscalYear->name}",
             'status' => 'active',

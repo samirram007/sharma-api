@@ -2,28 +2,16 @@
 
 namespace Modules\Godown\Services;
 
+use App\Support\Services\BaseService;
 use Illuminate\Support\Collection;
 use Modules\Godown\Contracts\GodownServiceInterface;
 use Modules\Godown\Models\Godown;
 
-class GodownService implements GodownServiceInterface
+class GodownService extends BaseService implements GodownServiceInterface
 {
-    protected $resource = ['parent', 'address'];
+    protected string $modelClass = Godown::class;
 
-    public function getAll(): Collection
-    {
-        $data = Godown::with($this->resource)->get();
-
-        // dd($data->toArray());
-        return $data;
-        // return Godown::get()->load($this->resource);
-    }
-
-    public function getById(int $id): ?Godown
-    {
-        // dd(Godown::with($this->resource)->findOrFail($id));
-        return Godown::with($this->resource)->findOrFail($id);
-    }
+    protected array $defaultResource = ['parent', 'address'];
 
     public function store(array $data): Godown
     {
@@ -46,7 +34,7 @@ class GodownService implements GodownServiceInterface
             $godown->address()->create($data['address']);
         }
 
-        return $godown->load($this->resource);
+        return $godown->load($this->defaultResource);
     }
 
     public function update(array $data, int $id): Godown
@@ -74,14 +62,7 @@ class GodownService implements GodownServiceInterface
             }
         }
 
-        return $godown->fresh()->load($this->resource);
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = Godown::findOrFail($id);
-
-        return $record->delete();
+        return $godown->fresh()->load($this->defaultResource);
     }
 
     public function getGodownItemStocks(int $item_id): Collection

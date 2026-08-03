@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\ServiceProvider;
 use Modules\Agent\Models\Agent;
 use Modules\Company\Models\Company;
@@ -31,6 +32,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Several migrations use `$table->blamable()` which adds `created_by` and
+        // `updated_by` columns (matching the App\Traits\Blameable model trait).
+        // Registered here so `php artisan migrate` works outside of tests.
+        Blueprint::macro('blamable', function () {
+            /** @var Blueprint $this */
+            $this->unsignedBigInteger('created_by')->nullable();
+            $this->unsignedBigInteger('updated_by')->nullable();
+        });
+
         Relation::enforceMorphMap([
 
             'agent' => Agent::class,

@@ -4,7 +4,9 @@ namespace Modules\AccountingPeriod\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\AccountingPeriod\Contracts\AccountingPeriodRepositoryInterface;
 use Modules\AccountingPeriod\Contracts\AccountingPeriodServiceInterface;
+use Modules\AccountingPeriod\Repositories\AccountingPeriodRepository;
 use Modules\AccountingPeriod\Services\AccountingPeriodService;
 
 class AccountingPeriodServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class AccountingPeriodServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AccountingPeriodServiceInterface::class, AccountingPeriodService::class);
+        $this->app->singleton(AccountingPeriodRepositoryInterface::class, AccountingPeriodRepository::class);
     }
 
     public function boot(): void

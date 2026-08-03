@@ -2,18 +2,6 @@
 
 namespace Modules\StockItemBatch\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\StockItemBatch\Models\StockItemBatch;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface StockItemBatchServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?StockItemBatch;
-
-    public function store(array $data): StockItemBatch;
-
-    public function update(array $data, int $id): StockItemBatch;
-
-    public function delete(int $id): bool;
-}
+interface StockItemBatchServiceInterface extends BaseServiceInterface {}

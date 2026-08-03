@@ -4,7 +4,9 @@ namespace Modules\AccountLedger\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\AccountLedger\Contracts\AccountLedgerRepositoryInterface;
 use Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
+use Modules\AccountLedger\Repositories\AccountLedgerRepository;
 use Modules\AccountLedger\Services\AccountLedgerService;
 
 class AccountLedgerServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class AccountLedgerServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AccountLedgerServiceInterface::class, AccountLedgerService::class);
+        $this->app->singleton(AccountLedgerRepositoryInterface::class, AccountLedgerRepository::class);
     }
 
     public function boot(): void

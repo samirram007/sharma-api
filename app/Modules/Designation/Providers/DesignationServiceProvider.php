@@ -4,7 +4,9 @@ namespace Modules\Designation\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Designation\Contracts\DesignationRepositoryInterface;
 use Modules\Designation\Contracts\DesignationServiceInterface;
+use Modules\Designation\Repositories\DesignationRepository;
 use Modules\Designation\Services\DesignationService;
 
 class DesignationServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class DesignationServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(DesignationServiceInterface::class, DesignationService::class);
+        $this->app->singleton(DesignationRepositoryInterface::class, DesignationRepository::class);
     }
 
     public function boot(): void

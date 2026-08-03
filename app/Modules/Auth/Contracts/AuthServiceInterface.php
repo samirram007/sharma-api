@@ -2,9 +2,10 @@
 
 namespace Modules\Auth\Contracts;
 
+use App\Support\Contracts\BaseServiceInterface;
 use Modules\User\Models\User;
 
-interface AuthServiceInterface
+interface AuthServiceInterface extends BaseServiceInterface
 {
     public function login(array $data): string|array;
 
@@ -19,4 +20,6 @@ interface AuthServiceInterface
     public function profile(): User; // or array
 
     public function changePassword(array $data): void;
+
+    public function forgotPassword(array $data): void;
 }

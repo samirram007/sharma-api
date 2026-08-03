@@ -4,7 +4,9 @@ namespace Modules\DeliveryVehicle\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\DeliveryVehicle\Contracts\DeliveryVehicleRepositoryInterface;
 use Modules\DeliveryVehicle\Contracts\DeliveryVehicleServiceInterface;
+use Modules\DeliveryVehicle\Repositories\DeliveryVehicleRepository;
 use Modules\DeliveryVehicle\Services\DeliveryVehicleService;
 
 class DeliveryVehicleServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class DeliveryVehicleServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(DeliveryVehicleServiceInterface::class, DeliveryVehicleService::class);
+        $this->app->singleton(DeliveryVehicleRepositoryInterface::class, DeliveryVehicleRepository::class);
     }
 
     public function boot(): void

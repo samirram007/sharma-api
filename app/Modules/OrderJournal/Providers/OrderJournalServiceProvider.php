@@ -4,7 +4,9 @@ namespace Modules\OrderJournal\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\OrderJournal\Contracts\OrderJournalRepositoryInterface;
 use Modules\OrderJournal\Contracts\OrderJournalServiceInterface;
+use Modules\OrderJournal\Repositories\OrderJournalRepository;
 use Modules\OrderJournal\Services\OrderJournalService;
 
 class OrderJournalServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class OrderJournalServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(OrderJournalServiceInterface::class, OrderJournalService::class);
+        $this->app->singleton(OrderJournalRepositoryInterface::class, OrderJournalRepository::class);
     }
 
     public function boot(): void

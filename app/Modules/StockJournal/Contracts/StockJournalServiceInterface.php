@@ -2,18 +2,6 @@
 
 namespace Modules\StockJournal\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\StockJournal\Models\StockJournal;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface StockJournalServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?StockJournal;
-
-    public function store(array $data): StockJournal;
-
-    public function update(array $data, int $id): StockJournal;
-
-    public function delete(int $id): bool;
-}
+interface StockJournalServiceInterface extends BaseServiceInterface {}

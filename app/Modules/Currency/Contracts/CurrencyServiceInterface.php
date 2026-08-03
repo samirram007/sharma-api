@@ -2,18 +2,6 @@
 
 namespace Modules\Currency\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Currency\Models\Currency;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface CurrencyServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): Currency;
-
-    public function store(array $data): Currency;
-
-    public function update(array $data, int $id): Currency;
-
-    public function delete(int $id): bool;
-}
+interface CurrencyServiceInterface extends BaseServiceInterface {}

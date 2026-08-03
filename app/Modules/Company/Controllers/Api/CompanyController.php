@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Modules\Company\Contracts\CompanyServiceInterface;
+use Modules\Company\Facades\CompanyFacade;
 use Modules\Company\Requests\CompanyRequest;
 use Modules\Company\Resources\CompanyCollection;
 use Modules\Company\Resources\CompanyResource;
@@ -16,12 +15,11 @@ class CompanyController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected CompanyServiceInterface $service) {}
+    public function __construct() {}
 
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        $status = $request->get('status');
-        $data = $this->service->getAll($status);
+        $data = CompanyFacade::getAll();
 
         // dd($data->toArray());
         return (new CompanyCollection($data))->response();
@@ -29,7 +27,7 @@ class CompanyController extends Controller
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = CompanyFacade::getById($id);
 
         return new CompanyResource($data, $messages = 'Company retrieved successfully');
 
@@ -37,7 +35,7 @@ class CompanyController extends Controller
 
     public function store(CompanyRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = CompanyFacade::store($request->validated());
 
         return new CompanyResource($data, $messages = 'Company created successfully');
 
@@ -45,7 +43,7 @@ class CompanyController extends Controller
 
     public function update(CompanyRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = CompanyFacade::update($request->validated(), $id);
 
         return new CompanyResource($data, $messages = 'Company updated successfully');
 
@@ -53,6 +51,6 @@ class CompanyController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'Company');
+        return $this->deletedResponse(CompanyFacade::delete($id), 'Company');
     }
 }

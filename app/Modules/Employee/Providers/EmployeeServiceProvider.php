@@ -4,13 +4,16 @@ namespace Modules\Employee\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Employee\Contracts\EmployeeRepositoryInterface;
 use Modules\Employee\Contracts\EmployeeServiceInterface;
+use Modules\Employee\Repositories\EmployeeRepository;
 use Modules\Employee\Services\EmployeeService;
 
 class EmployeeServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->app->bind(EmployeeRepositoryInterface::class, EmployeeRepository::class);
         $this->app->bind(EmployeeServiceInterface::class, EmployeeService::class);
     }
 

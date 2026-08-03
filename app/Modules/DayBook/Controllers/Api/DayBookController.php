@@ -8,7 +8,7 @@ use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\DayBook\Contracts\DayBookServiceInterface;
+use Modules\DayBook\Facades\DayBookFacade;
 use Modules\DayBook\Requests\DayBookRequest;
 use Modules\DayBook\Resources\DayBookResource;
 use Modules\Voucher\Resources\VoucherCollection;
@@ -18,12 +18,11 @@ class DayBookController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected DayBookServiceInterface $service) {}
+    public function __construct() {}
 
-    public function index(Request $request): SuccessCollection
+    public function index(): SuccessCollection
     {
-        $params = $request->only(['search', 'voucher_type_id', 'billing_preference', 'status', 'sort_by', 'sort_order', 'page', 'per_page']);
-        $data = $this->service->getAll($params);
+        $data = DayBookFacade::getAll();
 
         return new VoucherCollection($data);
     }
@@ -31,14 +30,14 @@ class DayBookController extends Controller
     public function dayBooksSelf(Request $request): SuccessCollection
     {
         $params = $request->only(['search', 'voucher_type_id', 'billing_preference', 'status', 'sort_by', 'sort_order', 'page', 'per_page']);
-        $data = $this->service->dayBooksSelf($params);
+        $data = DayBookFacade::dayBooksSelf($params);
 
         return new VoucherCollection($data);
     }
 
     public function usedVoucherTypes(): JsonResponse
     {
-        $types = $this->service->getUsedVoucherTypes();
+        $types = DayBookFacade::getUsedVoucherTypes();
 
         return response()->json([
             'success' => true,
@@ -48,27 +47,27 @@ class DayBookController extends Controller
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = DayBookFacade::getById($id);
 
         return new DayBookResource($data);
     }
 
     public function store(DayBookRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = DayBookFacade::store($request->validated());
 
         return new DayBookResource($data, $messages = 'DayBook created successfully');
     }
 
     public function update(DayBookRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = DayBookFacade::update($request->validated(), $id);
 
         return new DayBookResource($data, $messages = 'DayBook updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'DayBook');
+        return $this->deletedResponse(DayBookFacade::delete($id), 'DayBook');
     }
 }

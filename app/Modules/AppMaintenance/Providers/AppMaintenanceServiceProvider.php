@@ -4,7 +4,9 @@ namespace Modules\AppMaintenance\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\AppMaintenance\Contracts\AppMaintenanceRepositoryInterface;
 use Modules\AppMaintenance\Contracts\AppMaintenanceServiceInterface;
+use Modules\AppMaintenance\Repositories\AppMaintenanceRepository;
 use Modules\AppMaintenance\Services\AppMaintenanceService;
 
 class AppMaintenanceServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class AppMaintenanceServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AppMaintenanceServiceInterface::class, AppMaintenanceService::class);
+        $this->app->singleton(AppMaintenanceRepositoryInterface::class, AppMaintenanceRepository::class);
     }
 
     public function boot(): void

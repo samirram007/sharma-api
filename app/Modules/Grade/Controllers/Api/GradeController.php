@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\Grade\Contracts\GradeServiceInterface;
+use Modules\Grade\Facades\GradeFacade;
 use Modules\Grade\Requests\GradeRequest;
 use Modules\Grade\Resources\GradeCollection;
 use Modules\Grade\Resources\GradeResource;
@@ -16,38 +16,36 @@ class GradeController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected GradeServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = GradeFacade::getAll();
 
         return new GradeCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = GradeFacade::getById($id);
 
         return new GradeResource($data);
     }
 
     public function store(GradeRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = GradeFacade::store($request->validated());
 
         return new GradeResource($data, $messages = 'Grade created successfully');
     }
 
     public function update(GradeRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = GradeFacade::update($request->validated(), $id);
 
         return new GradeResource($data, $messages = 'Grade updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'Grade');
+        return $this->deletedResponse(GradeFacade::delete($id), 'Grade');
     }
 }

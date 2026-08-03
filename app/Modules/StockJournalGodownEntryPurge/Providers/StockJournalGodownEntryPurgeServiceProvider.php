@@ -4,7 +4,9 @@ namespace Modules\StockJournalGodownEntryPurge\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\StockJournalGodownEntryPurge\Contracts\StockJournalGodownEntryPurgeRepositoryInterface;
 use Modules\StockJournalGodownEntryPurge\Contracts\StockJournalGodownEntryPurgeServiceInterface;
+use Modules\StockJournalGodownEntryPurge\Repositories\StockJournalGodownEntryPurgeRepository;
 use Modules\StockJournalGodownEntryPurge\Services\StockJournalGodownEntryPurgeService;
 
 class StockJournalGodownEntryPurgeServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class StockJournalGodownEntryPurgeServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(StockJournalGodownEntryPurgeServiceInterface::class, StockJournalGodownEntryPurgeService::class);
+        $this->app->singleton(StockJournalGodownEntryPurgeRepositoryInterface::class, StockJournalGodownEntryPurgeRepository::class);
     }
 
     public function boot(): void

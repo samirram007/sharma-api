@@ -4,7 +4,9 @@ namespace Modules\StockItemPrice\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\StockItemPrice\Contracts\StockItemPriceRepositoryInterface;
 use Modules\StockItemPrice\Contracts\StockItemPriceServiceInterface;
+use Modules\StockItemPrice\Repositories\StockItemPriceRepository;
 use Modules\StockItemPrice\Services\StockItemPriceService;
 
 class StockItemPriceServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class StockItemPriceServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(StockItemPriceServiceInterface::class, StockItemPriceService::class);
+        $this->app->singleton(StockItemPriceRepositoryInterface::class, StockItemPriceRepository::class);
     }
 
     public function boot(): void

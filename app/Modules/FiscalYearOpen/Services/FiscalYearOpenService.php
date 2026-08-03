@@ -2,32 +2,42 @@
 
 namespace Modules\FiscalYearOpen\Services;
 
+use App\Support\Services\BaseService;
 use App\Support\Traits\HasItemAverageRate;
+use App\Support\Traits\ScopesCompany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\FiscalYear\Models\FiscalYear;
 use Modules\FiscalYearOpen\Contracts\FiscalYearOpenServiceInterface;
 use Modules\StockJournal\Contracts\StockJournalServiceInterface;
 use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
+use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
 use Modules\UserFiscalYear\Models\UserFiscalYear;
 use Modules\Voucher\Models\Voucher;
 use Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
 use Modules\VoucherType\Models\VoucherType;
 
-class FiscalYearOpenService implements FiscalYearOpenServiceInterface
+class FiscalYearOpenService extends BaseService implements FiscalYearOpenServiceInterface
 {
     use HasItemAverageRate;
+    use ScopesCompany;
+
+    protected string $modelClass = FiscalYear::class;
 
     public function __construct(
         protected VoucherEntryServiceInterface $voucherEntryService,
         protected StockJournalServiceInterface $stockJournalService,
         protected StockJournalEntryServiceInterface $stockJournalEntryService,
+        protected UserFiscalYearServiceInterface $userFiscalYearService,
     ) {}
 
     public function preview(int $newFiscalYearId, int $previousFiscalYearId): array
     {
         $newFy = FiscalYear::findOrFail($newFiscalYearId);
         $prevFy = FiscalYear::findOrFail($previousFiscalYearId);
+
+        $this->validateCompanyAccess($newFy);
+        $this->validateCompanyAccess($prevFy);
 
         if (! $prevFy->closed_at) {
             throw new \Exception("Previous Fiscal Year '{$prevFy->name}' must be closed before opening a new one.");
@@ -55,12 +65,12 @@ class FiscalYearOpenService implements FiscalYearOpenServiceInterface
 
                 $nature = $ledger->account_group?->account_nature;
                 if ($nature && in_array($nature->code, ['AST', 'LIA', 'EQY'])) {
-                    $balanceSheetLedgers[] = [
-                        'ledger_id' => $ledger->id,
-                        'ledger_name' => $ledger->name,
-                        'nature' => $nature->code,
-                        'balance' => ($entry->debit ?? 0) - ($entry->credit ?? 0),
-                    ];
+                $balanceSheetLedgers[] = [
+                    'ledgerId' => $ledger->id,
+                    'ledgerName' => $ledger->name,
+                    'nature' => $nature->code,
+                    'balance' => ($entry->debit ?? 0) - ($entry->credit ?? 0),
+                ];
                 }
             }
         }
@@ -70,26 +80,39 @@ class FiscalYearOpenService implements FiscalYearOpenServiceInterface
         if ($closingStockVoucher?->stock_journal) {
             foreach ($closingStockVoucher->stock_journal->stock_journal_entries as $entry) {
                 $godownEntries = $entry->stock_journal_godown_entries->map(fn ($ge) => [
-                    'godown_id' => $ge->godown_id,
-                    'godown_name' => $ge->godown->name ?? null,
+                    'godownId' => $ge->godown_id,
+                    'godownName' => $ge->godown->name ?? null,
                     'quantity' => (float) $ge->actual_quantity,
+                    'batchNo' => $ge->batch_no,
+                    'mfgDate' => $ge->mfg_date?->toDateString(),
+                    'expiryDate' => $ge->expiry_date?->toDateString(),
                 ]);
                 $stockItems[] = [
-                    'item_id' => $entry->stock_item_id,
-                    'item_name' => $entry->stock_item->name ?? null,
-                    'total_quantity' => (float) $entry->actual_quantity,
+                    'itemId' => $entry->stock_item_id,
+                    'itemName' => $entry->stock_item->name ?? null,
+                    'totalQuantity' => (float) $entry->actual_quantity,
                     'godowns' => $godownEntries,
                 ];
             }
         }
 
         return [
-            'previous_fiscal_year' => $prevFy->only(['id', 'name', 'start_date', 'end_date']),
-            'new_fiscal_year' => $newFy->only(['id', 'name', 'start_date', 'end_date']),
-            'balance_sheet_ledgers' => $balanceSheetLedgers,
-            'total_ledgers' => count($balanceSheetLedgers),
-            'stock_items' => $stockItems,
-            'total_stock_items' => count($stockItems),
+            'previousFiscalYear' => [
+                'id' => $prevFy->id,
+                'name' => $prevFy->name,
+                'startDate' => $prevFy->start_date?->toDateString(),
+                'endDate' => $prevFy->end_date?->toDateString(),
+            ],
+            'newFiscalYear' => [
+                'id' => $newFy->id,
+                'name' => $newFy->name,
+                'startDate' => $newFy->start_date?->toDateString(),
+                'endDate' => $newFy->end_date?->toDateString(),
+            ],
+            'balanceSheetLedgers' => $balanceSheetLedgers,
+            'totalLedgers' => count($balanceSheetLedgers),
+            'stockItems' => $stockItems,
+            'totalStockItems' => count($stockItems),
         ];
     }
 
@@ -97,6 +120,9 @@ class FiscalYearOpenService implements FiscalYearOpenServiceInterface
     {
         $newFy = FiscalYear::findOrFail($newFiscalYearId);
         $prevFy = FiscalYear::findOrFail($previousFiscalYearId);
+
+        $this->validateCompanyAccess($newFy);
+        $this->validateCompanyAccess($prevFy);
 
         if (! $prevFy->closed_at) {
             throw new \Exception("Previous Fiscal Year '{$prevFy->name}' must be closed before opening a new one.");
@@ -123,20 +149,22 @@ class FiscalYearOpenService implements FiscalYearOpenServiceInterface
             // Step 2: Create the unified OpeningJournal voucher
             $openingJournalVoucher = $this->createOpeningJournalVoucher($newFy, $prevFy, $openingJournalVoucherType);
 
-            // Step 3: Update all UserFiscalYear records to point to the new FY
-            UserFiscalYear::query()->update([
-                'fiscal_year_id' => $newFy->id,
-                'start_date' => $newFy->start_date,
-                'end_date' => $newFy->end_date,
-            ]);
+            // Step 3: Update UserFiscalYear records to point to the new FY (scoped to this company)
+            $companyId = $newFy->company_id;
+            UserFiscalYear::whereHas('fiscal_year', fn ($q) => $q->where('company_id', $companyId))
+                ->update([
+                    'fiscal_year_id' => $newFy->id,
+                    'start_date' => $newFy->start_date,
+                    'end_date' => $newFy->end_date,
+                ]);
 
             DB::commit();
 
             return [
                 'success' => true,
                 'message' => "Fiscal Year '{$newFy->name}' opened successfully with opening balances from '{$prevFy->name}'.",
-                'opening_journal_voucher_id' => $openingJournalVoucher->id,
-                'new_fiscal_year_id' => $newFy->id,
+                'openingJournalVoucherId' => $openingJournalVoucher->id,
+                'newFiscalYearId' => $newFy->id,
             ];
         } catch (\Exception $e) {
             DB::rollBack();
@@ -178,6 +206,7 @@ class FiscalYearOpenService implements FiscalYearOpenServiceInterface
             'voucher_date' => $newFy->start_date,
             'voucher_type_id' => $voucherType->id,
             'fiscal_year_id' => $newFy->id,
+            'company_id' => $newFy->company_id,
             'remarks' => "Unified opening entry carrying forward balances and stock from {$prevFy->name} to {$newFy->name}",
             'status' => 'active',
             'is_effecting' => true,
@@ -273,6 +302,9 @@ class FiscalYearOpenService implements FiscalYearOpenServiceInterface
                     $godownEntryData[] = [
                         'entry_order' => $godownOrder,
                         'godown_id' => $ge->godown_id,
+                        'batch_no' => $ge->batch_no,
+                        'mfg_date' => $ge->mfg_date?->toDateString(),
+                        'expiry_date' => $ge->expiry_date?->toDateString(),
                         'actual_quantity' => $qty,
                         'billing_quantity' => $qty,
                         'rate' => $avgRate > 0 ? $avgRate : null,

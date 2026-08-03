@@ -2,18 +2,6 @@
 
 namespace Modules\Status\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Status\Models\Status;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface StatusServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?Status;
-
-    public function store(array $data): Status;
-
-    public function update(array $data, int $id): Status;
-
-    public function delete(int $id): bool;
-}
+interface StatusServiceInterface extends BaseServiceInterface {}

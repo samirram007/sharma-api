@@ -5,7 +5,7 @@ namespace Modules\Language\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\Language\Contracts\LanguageServiceInterface;
+use Modules\Language\Facades\LanguageFacade;
 use Modules\Language\Requests\LanguageRequest;
 use Modules\Language\Resources\LanguageCollection;
 use Modules\Language\Resources\LanguageResource;
@@ -14,18 +14,16 @@ class LanguageController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected LanguageServiceInterface $service) {}
-
     public function index(): JsonResponse
     {
-        $data = $this->service->getAll();
+        $data = LanguageFacade::getAll();
 
         return (new LanguageCollection($data))->response();
     }
 
     public function show(int $id): JsonResponse
     {
-        $data = $this->service->getById($id);
+        $data = LanguageFacade::getById($id);
 
         return $this->resourceResponse(
             new LanguageResource($data),
@@ -35,7 +33,7 @@ class LanguageController extends Controller
 
     public function store(LanguageRequest $request): JsonResponse
     {
-        $data = $this->service->store($request->validated());
+        $data = LanguageFacade::store($request->validated());
 
         return $this->resourceResponse(
             new LanguageResource($data),
@@ -46,7 +44,7 @@ class LanguageController extends Controller
 
     public function update(LanguageRequest $request, int $id): JsonResponse
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = LanguageFacade::update($request->validated(), $id);
 
         return $this->resourceResponse(
             new LanguageResource($data),
@@ -56,6 +54,6 @@ class LanguageController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'Language');
+        return $this->deletedResponse(LanguageFacade::delete($id), 'Language');
     }
 }

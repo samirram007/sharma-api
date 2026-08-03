@@ -2,18 +2,6 @@
 
 namespace Modules\Vehicle\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Vehicle\Models\Vehicle;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface VehicleServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?Vehicle;
-
-    public function store(array $data): Vehicle;
-
-    public function update(array $data, int $id): Vehicle;
-
-    public function delete(int $id): bool;
-}
+interface VehicleServiceInterface extends BaseServiceInterface {}

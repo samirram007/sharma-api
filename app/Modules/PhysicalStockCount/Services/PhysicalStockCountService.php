@@ -3,7 +3,7 @@
 namespace Modules\PhysicalStockCount\Services;
 
 use App\Enums\MovementType;
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\Services\BaseService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,9 +15,11 @@ use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
 use Modules\Voucher\Models\Voucher;
 use Modules\VoucherType\Models\VoucherType;
 
-class PhysicalStockCountService implements PhysicalStockCountServiceInterface
+class PhysicalStockCountService extends BaseService implements PhysicalStockCountServiceInterface
 {
-    protected $resource = [
+    protected string $modelClass = PhysicalStockCount::class;
+
+    protected array $defaultResource = [
         'godown',
         'counted_by_user',
         'items.stock_item.stock_unit',
@@ -28,16 +30,6 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
         protected StockJournalServiceInterface $stockJournalService,
         protected StockJournalEntryServiceInterface $stockJournalEntryService,
     ) {}
-
-    public function getAll(): Collection
-    {
-        return PhysicalStockCount::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?PhysicalStockCount
-    {
-        return PhysicalStockCount::with($this->resource)->findOrFail($id);
-    }
 
     public function store(array $data): PhysicalStockCount
     {
@@ -52,7 +44,7 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
             }
         }
 
-        return $count->fresh($this->resource);
+        return $count->fresh($this->defaultResource);
     }
 
     public function update(array $data, int $id): PhysicalStockCount
@@ -84,7 +76,7 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
             }
         }
 
-        return $record->fresh($this->resource);
+        return $record->fresh($this->defaultResource);
     }
 
     public function delete(int $id): bool
@@ -152,7 +144,7 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
             ]);
         }
 
-        return $count->fresh($this->resource);
+        return $count->fresh($this->defaultResource);
     }
 
     public function verify(int $countId): PhysicalStockCount
@@ -171,7 +163,7 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
 
         $count->update(['status' => 'verified']);
 
-        return $count->fresh($this->resource);
+        return $count->fresh($this->defaultResource);
     }
 
     public function generateAdjustment(int $countId): PhysicalStockCount
@@ -252,6 +244,6 @@ class PhysicalStockCountService implements PhysicalStockCountServiceInterface
             throw $e;
         }
 
-        return $count->fresh($this->resource);
+        return $count->fresh($this->defaultResource);
     }
 }

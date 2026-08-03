@@ -2,23 +2,16 @@
 
 namespace Modules\Menu\Contracts;
 
+use App\Support\Contracts\BaseServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Menu\Models\Menu;
 
-interface MenuServiceInterface
+interface MenuServiceInterface extends BaseServiceInterface
 {
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?Menu;
-
-    public function store(array $data): Menu;
-
-    public function update(array $data, int $id): Menu;
-
-    public function delete(int $id): bool;
-
     public function getTree(): Collection;
+
+    public function getChildren(int $parentId): Collection;
 
     public function reorder(array $items): bool;
 

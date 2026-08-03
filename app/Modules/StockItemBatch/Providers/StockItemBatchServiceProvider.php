@@ -4,7 +4,9 @@ namespace Modules\StockItemBatch\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\StockItemBatch\Contracts\StockItemBatchRepositoryInterface;
 use Modules\StockItemBatch\Contracts\StockItemBatchServiceInterface;
+use Modules\StockItemBatch\Repositories\StockItemBatchRepository;
 use Modules\StockItemBatch\Services\StockItemBatchService;
 
 class StockItemBatchServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class StockItemBatchServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(StockItemBatchServiceInterface::class, StockItemBatchService::class);
+        $this->app->singleton(StockItemBatchRepositoryInterface::class, StockItemBatchRepository::class);
     }
 
     public function boot(): void

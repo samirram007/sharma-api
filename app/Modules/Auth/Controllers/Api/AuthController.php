@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Modules\Auth\Contracts\AuthServiceInterface;
 use Modules\Auth\Requests\ChangePasswordRequest;
+use Modules\Auth\Requests\ForgotPasswordRequest;
 use Modules\Auth\Requests\LoginRequest;
 use Modules\Auth\Requests\RegisterRequest;
 use Modules\User\Contracts\UserServiceInterface;
@@ -60,6 +61,18 @@ class AuthController extends Controller
         $token = $this->authService->register($request->validated());
 
         return $this->respondWithToken($token, 'User created successfully');
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
+    {
+        $this->authService->forgotPassword($request->validated());
+
+        // Generic message — never reveals whether the email is registered.
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'If that email address is registered, we have sent a password reset link to it.',
+        ]);
     }
 
     public function logout(): JsonResponse

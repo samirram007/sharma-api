@@ -2,6 +2,7 @@
 
 namespace Modules\StockJournalEntry\Services;
 
+use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Validator;
 use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
@@ -9,23 +10,15 @@ use Modules\StockJournalEntry\Models\StockJournalEntry;
 use Modules\StockJournalGodownEntry\Contracts\StockJournalGodownEntryServiceInterface;
 use Modules\StockJournalGodownEntry\Requests\StockJournalGodownEntryRequest;
 
-class StockJournalEntryService implements StockJournalEntryServiceInterface
+class StockJournalEntryService extends BaseService implements StockJournalEntryServiceInterface
 {
-    protected $resource = ['rate_unit'];
+    protected string $modelClass = StockJournalEntry::class;
+
+    protected array $defaultResource = ['rate_unit'];
 
     public function __construct(
         protected StockJournalGodownEntryServiceInterface $stockJournalGodownEntryService,
     ) {}
-
-    public function getAll(): Collection
-    {
-        return StockJournalEntry::with($this->resource)->get();
-    }
-
-    public function getById(int $id): ?StockJournalEntry
-    {
-        return StockJournalEntry::with($this->resource)->findOrFail($id);
-    }
 
     public function store(array $data): StockJournalEntry
     {
@@ -86,16 +79,9 @@ class StockJournalEntryService implements StockJournalEntryServiceInterface
 
     public function getByStockJournalId(int $stockJournalId): Collection
     {
-        return StockJournalEntry::with($this->resource)
+        return StockJournalEntry::with($this->defaultResource)
             ->where('stock_journal_id', $stockJournalId)
             ->get();
-    }
-
-    public function delete(int $id): bool
-    {
-        $record = StockJournalEntry::findOrFail($id);
-
-        return $record->delete();
     }
 
     private function checkDelete($data, $record)

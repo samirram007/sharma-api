@@ -7,7 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Modules\StockJournal\Contracts\StockJournalServiceInterface;
+use Modules\StockJournal\Facades\StockJournalFacade;
 use Modules\StockJournal\Requests\StockJournalRequest;
 use Modules\StockJournal\Resources\StockJournalCollection;
 use Modules\StockJournal\Resources\StockJournalResource;
@@ -16,38 +16,36 @@ class StockJournalController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(protected StockJournalServiceInterface $service) {}
-
     public function index(): SuccessCollection
     {
-        $data = $this->service->getAll();
+        $data = StockJournalFacade::getAll();
 
         return new StockJournalCollection($data);
     }
 
     public function show(int $id): SuccessResource
     {
-        $data = $this->service->getById($id);
+        $data = StockJournalFacade::getById($id);
 
         return new StockJournalResource($data);
     }
 
     public function store(StockJournalRequest $request): SuccessResource
     {
-        $data = $this->service->store($request->validated());
+        $data = StockJournalFacade::store($request->validated());
 
         return new StockJournalResource($data, $messages = 'StockJournal created successfully');
     }
 
     public function update(StockJournalRequest $request, int $id): SuccessResource
     {
-        $data = $this->service->update($request->validated(), $id);
+        $data = StockJournalFacade::update($request->validated(), $id);
 
         return new StockJournalResource($data, $messages = 'StockJournal updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
-        return $this->deletedResponse($this->service->delete($id), 'StockJournal');
+        return $this->deletedResponse(StockJournalFacade::delete($id), 'StockJournal');
     }
 }

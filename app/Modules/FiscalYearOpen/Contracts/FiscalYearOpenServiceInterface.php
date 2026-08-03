@@ -2,7 +2,9 @@
 
 namespace Modules\FiscalYearOpen\Contracts;
 
-interface FiscalYearOpenServiceInterface
+use App\Support\Contracts\BaseServiceInterface;
+
+interface FiscalYearOpenServiceInterface extends BaseServiceInterface
 {
     /**
      * Open a new fiscal year by:

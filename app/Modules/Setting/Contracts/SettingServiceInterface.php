@@ -2,18 +2,6 @@
 
 namespace Modules\Setting\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Setting\Models\Setting;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface SettingServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): Setting;
-
-    public function store(array $data): Setting;
-
-    public function update(array $data, int $id): Setting;
-
-    public function delete(int $id): bool;
-}
+interface SettingServiceInterface extends BaseServiceInterface {}

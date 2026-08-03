@@ -2,18 +2,6 @@
 
 namespace Modules\Receipt\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Receipt\Models\Receipt;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface ReceiptServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?Receipt;
-
-    public function store(array $data): Receipt;
-
-    public function update(array $data, int $id): Receipt;
-
-    public function delete(int $id): bool;
-}
+interface ReceiptServiceInterface extends BaseServiceInterface {}

@@ -4,7 +4,9 @@ namespace Modules\DistributorBook\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\DistributorBook\Contracts\DistributorBookRepositoryInterface;
 use Modules\DistributorBook\Contracts\DistributorBookServiceInterface;
+use Modules\DistributorBook\Repositories\DistributorBookRepository;
 use Modules\DistributorBook\Services\DistributorBookService;
 
 class DistributorBookServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class DistributorBookServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(DistributorBookServiceInterface::class, DistributorBookService::class);
+        $this->app->singleton(DistributorBookRepositoryInterface::class, DistributorBookRepository::class);
     }
 
     public function boot(): void

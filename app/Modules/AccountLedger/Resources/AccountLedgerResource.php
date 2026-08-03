@@ -3,6 +3,7 @@
 namespace Modules\AccountLedger\Resources;
 
 use App\Http\Resources\SuccessResource;
+use App\Support\Traits\CamelCaseResource;
 use App\Traits\HasPolymorphicResource;
 use Illuminate\Http\Request;
 use Modules\AccountGroup\Resources\AccountGroupResource;
@@ -10,7 +11,7 @@ use Modules\AccountNature\Resources\AccountNatureResource;
 
 class AccountLedgerResource extends SuccessResource
 {
-    use App\Support\Traits\CamelCaseResource;
+
     use CamelCaseResource;
     use HasPolymorphicResource;
 

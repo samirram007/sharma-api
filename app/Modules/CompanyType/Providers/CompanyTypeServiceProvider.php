@@ -4,7 +4,9 @@ namespace Modules\CompanyType\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\CompanyType\Contracts\CompanyTypeRepositoryInterface;
 use Modules\CompanyType\Contracts\CompanyTypeServiceInterface;
+use Modules\CompanyType\Repositories\CompanyTypeRepository;
 use Modules\CompanyType\Services\CompanyTypeService;
 
 class CompanyTypeServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class CompanyTypeServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(CompanyTypeServiceInterface::class, CompanyTypeService::class);
+        $this->app->singleton(CompanyTypeRepositoryInterface::class, CompanyTypeRepository::class);
     }
 
     public function boot(): void

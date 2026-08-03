@@ -4,7 +4,9 @@ namespace Modules\Vehicle\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Vehicle\Contracts\VehicleRepositoryInterface;
 use Modules\Vehicle\Contracts\VehicleServiceInterface;
+use Modules\Vehicle\Repositories\VehicleRepository;
 use Modules\Vehicle\Services\VehicleService;
 
 class VehicleServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class VehicleServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(VehicleServiceInterface::class, VehicleService::class);
+        $this->app->singleton(VehicleRepositoryInterface::class, VehicleRepository::class);
     }
 
     public function boot(): void

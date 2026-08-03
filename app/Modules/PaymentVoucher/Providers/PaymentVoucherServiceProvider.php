@@ -4,7 +4,9 @@ namespace Modules\PaymentVoucher\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\PaymentVoucher\Contracts\PaymentVoucherRepositoryInterface;
 use Modules\PaymentVoucher\Contracts\PaymentVoucherServiceInterface;
+use Modules\PaymentVoucher\Repositories\PaymentVoucherRepository;
 use Modules\PaymentVoucher\Services\PaymentVoucherService;
 
 class PaymentVoucherServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class PaymentVoucherServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(PaymentVoucherServiceInterface::class, PaymentVoucherService::class);
+        $this->app->singleton(PaymentVoucherRepositoryInterface::class, PaymentVoucherRepository::class);
     }
 
     public function boot(): void

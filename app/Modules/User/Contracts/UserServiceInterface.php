@@ -2,22 +2,13 @@
 
 namespace Modules\User\Contracts;
 
+use App\Support\Contracts\BaseServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\User\Models\User;
 
-interface UserServiceInterface
+interface UserServiceInterface extends BaseServiceInterface
 {
-    public function getAll(): Collection;
-
-    public function getById(int $id): User;
-
-    public function store(array $data): User;
-
     public function findOrCreateSocialUser($socialUser, string $provider): User;
-
-    public function update(array $data, int $id): User;
-
-    public function delete(int $id): bool;
 
     public function getNotificationPreferences(int $userId): Collection;
 

@@ -2,18 +2,6 @@
 
 namespace Modules\StockItemGodown\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\StockItemGodown\Models\StockItemGodown;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface StockItemGodownServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?StockItemGodown;
-
-    public function store(array $data): StockItemGodown;
-
-    public function update(array $data, int $id): StockItemGodown;
-
-    public function delete(int $id): bool;
-}
+interface StockItemGodownServiceInterface extends BaseServiceInterface {}

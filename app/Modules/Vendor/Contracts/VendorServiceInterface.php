@@ -2,18 +2,6 @@
 
 namespace Modules\Vendor\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Vendor\Models\Vendor;
+use App\Support\Contracts\BaseServiceInterface;
 
-interface VendorServiceInterface
-{
-    public function getAll(): Collection;
-
-    public function getById(int $id): ?Vendor;
-
-    public function store(array $data): Vendor;
-
-    public function update(array $data, int $id): Vendor;
-
-    public function delete(int $id): bool;
-}
+interface VendorServiceInterface extends BaseServiceInterface {}

@@ -4,7 +4,9 @@ namespace Modules\AppNotification\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\AppNotification\Contracts\AppNotificationRepositoryInterface;
 use Modules\AppNotification\Contracts\AppNotificationServiceInterface;
+use Modules\AppNotification\Repositories\AppNotificationRepository;
 use Modules\AppNotification\Services\AppNotificationService;
 
 class AppNotificationServiceProvider extends ServiceProvider
@@ -12,6 +14,8 @@ class AppNotificationServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AppNotificationServiceInterface::class, AppNotificationService::class);
+
+        $this->app->singleton(AppNotificationRepositoryInterface::class, AppNotificationRepository::class);
     }
 
     public function boot(): void

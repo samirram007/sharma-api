@@ -4,7 +4,9 @@ namespace Modules\Grade\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Grade\Contracts\GradeRepositoryInterface;
 use Modules\Grade\Contracts\GradeServiceInterface;
+use Modules\Grade\Repositories\GradeRepository;
 use Modules\Grade\Services\GradeService;
 
 class GradeServiceProvider extends ServiceProvider
@@ -12,6 +14,7 @@ class GradeServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(GradeServiceInterface::class, GradeService::class);
+        $this->app->singleton(GradeRepositoryInterface::class, GradeRepository::class);
     }
 
     public function boot(): void
