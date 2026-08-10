@@ -2,6 +2,7 @@
 
 namespace Modules\PhysicalStockCount\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PhysicalStockCountRequest extends FormRequest
@@ -32,5 +33,41 @@ class PhysicalStockCountRequest extends FormRequest
             'items.*.remarks' => 'nullable|string|max:500',
             'items.*.entry_order' => 'nullable|integer',
         ];
+    }
+
+    /**
+     * Serial numbers must be unique across the count sheet (a serial number
+     * identifies a single physical unit).
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function ($validator) {
+            $items = $this->input('items', []);
+
+            if (! is_array($items)) {
+                return;
+            }
+
+            $seen = [];
+            foreach ($items as $index => $item) {
+                if (! is_array($item)) {
+                    continue;
+                }
+
+                $serial = trim((string) ($item['serial_no'] ?? ''));
+                if ($serial === '') {
+                    continue;
+                }
+
+                if (isset($seen[$serial])) {
+                    $validator->errors()->add(
+                        "items.{$index}.serial_no",
+                        "Serial number '{$serial}' is already used on another row."
+                    );
+                }
+
+                $seen[$serial] = true;
+            }
+        });
     }
 }

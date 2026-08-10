@@ -71,7 +71,12 @@ trait Cacheable
             Log::warning("Cache corruption detected (__PHP_Incomplete_Class) for key: {$key}. Clearing corrupted entry.");
             Cache::forget($key);
 
-            return $callback();
+            // Recompute and re-store immediately so the next request hits a
+            // valid entry instead of repeating the corruption + re-query cycle.
+            $fresh = $callback();
+            Cache::put($key, $fresh, env('CACHE_TTL', 3600));
+
+            return $fresh;
         }
 
         return $value;

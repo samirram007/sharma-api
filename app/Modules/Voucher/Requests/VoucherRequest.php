@@ -22,6 +22,7 @@ class VoucherRequest extends FormRequest
             'voucher_class_id' => ['sometimes', 'nullable', 'numeric', 'exists:voucher_classifications,id'],
             'module' => ['sometimes', 'nullable', 'string', 'max:255'],
             'remarks' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'payment_mode' => ['sometimes', 'nullable', 'string', 'max:255'],
             'status' => ['sometimes', 'required', 'string', 'max:255'],
             'fiscal_year_id' => ['sometimes', 'required', 'numeric', 'exists:fiscal_years,id'],
             'company_id' => ['sometimes', 'required', 'numeric', 'exists:companies,id'],

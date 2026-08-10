@@ -3,10 +3,25 @@
 namespace Modules\StockSummary\Contracts;
 
 use App\Support\Contracts\BaseServiceInterface;
+use Illuminate\Support\Carbon;
 use Modules\StockSummary\Models\StockSummary;
 
 interface StockSummaryServiceInterface extends BaseServiceInterface
 {
+    /**
+     * Closing stock for the current fiscal year. Returns the frozen closing stock
+     * journal entries when a CLSSK closing journal exists, otherwise computes the
+     * running closing stock live from stock movements (item → godown → batch).
+     */
+    public function closingStock(): array;
+
+    /**
+     * Running closing stock (net balance per item/godown/batch) for a given
+     * fiscal year, computed live from stock movements. Fallback source when no
+     * frozen CLSSK closing journal exists for the fiscal year.
+     */
+    public function runningClosingStockItems(int $fiscalYearId, ?Carbon $asOfDate = null): array;
+
     public function stockInHand(): array;
 
     public function stock_in_hand_item_wise(): array;

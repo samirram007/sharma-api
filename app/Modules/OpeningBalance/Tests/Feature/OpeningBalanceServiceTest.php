@@ -112,7 +112,7 @@ describe('OpeningBalanceService edge cases', function () {
     it('throws exception when getStatus is called without authenticated user', function () {
         // No actingAs → Auth::id() returns null
         expect(fn () => OpeningBalanceFacade::getStatus())
-            ->toThrow(\Exception::class);
+            ->toThrow(Exception::class);
     });
 
     it('throws exception when user has no UserFiscalYear set', function () {
@@ -121,7 +121,7 @@ describe('OpeningBalanceService edge cases', function () {
 
         // User exists but has no UserFiscalYear → service will fail
         expect(fn () => OpeningBalanceFacade::getStatus())
-            ->toThrow(\Exception::class, 'UserFiscalYear not set');
+            ->toThrow(Exception::class, 'UserFiscalYear not set');
     });
 });
 

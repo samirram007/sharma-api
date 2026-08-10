@@ -25,11 +25,13 @@ class Menu extends Model
         'is_visible',
         'description',
         'is_group',
+        'is_top_menu',
     ];
 
     protected $casts = [
         'is_visible' => 'boolean',
         'is_group' => 'boolean',
+        'is_top_menu' => 'boolean',
         'sort_order' => 'integer',
     ];
 

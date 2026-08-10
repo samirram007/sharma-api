@@ -9,6 +9,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Modules\StockSummary\Facades\StockSummaryFacade;
 use Modules\StockSummary\Requests\StockSummaryRequest;
+use Modules\StockSummary\Resources\ClosingStockResource;
 use Modules\StockSummary\Resources\StockInHandCollection;
 use Modules\StockSummary\Resources\StockInHandGodownWiseResource;
 use Modules\StockSummary\Resources\StockInHandItemWiseResource;
@@ -19,6 +20,13 @@ use Modules\StockSummary\Resources\StockSummaryResource;
 class StockSummaryController extends Controller
 {
     use ApiResponseTrait;
+
+    public function closing_stock(): ClosingStockResource
+    {
+        $data = StockSummaryFacade::closingStock();
+
+        return new ClosingStockResource($data, 'Closing stock retrieved successfully.');
+    }
 
     public function stock_in_hand(): StockInHandCollection
     {

@@ -4,7 +4,7 @@ This file gives Freebuff context about the **AIPT backend** (Laravel API). See t
 
 ## What is this?
 
-Laravel 13 API for **AIPT** (Accounts | Inventory | Payroll | Tax). Modular monolith: ~110 self-contained domain modules under `app/Modules/` (110 controller files). Serves the `sharma-frontend` React SPA.
+Laravel 13 API for **AIPT** (Accounts | Inventory | Payroll | Tax). Modular monolith: ~112 self-contained domain modules under `app/Modules/` (112 controller files). Serves the `sharma-frontend` React SPA.
 
 ## Quickstart / Commands
 
@@ -27,7 +27,7 @@ Laravel 13 API for **AIPT** (Accounts | Inventory | Payroll | Tax). Modular mono
 ### Key directories
 ```
 app/
-  Modules/       — ~110 domain modules (the core)
+  Modules/       — ~112 domain modules (the core)
   Enums/         — PHP enums (GstType, CostingMethod, StorageUnitType, TypeOfSupply…)
   Events/        — AppNotificationCreated, etc.
   Helpers/       — ApiErrorResponse
@@ -48,7 +48,7 @@ routes/api.php   — utility routes only (clear, reload, enums, cookie-test)
 ```
 
 ### Module structure
-Each of the ~110 modules follows:
+Each of the ~112 modules follows:
 ```
 app/Modules/{Module}/
   Controllers/Api/{Module}Controller.php
@@ -157,8 +157,8 @@ Related: `app/Modules/OpeningBalance/` also creates `OPNJL` vouchers (manual ope
 
 ## API Endpoint Inventory
 
-The full inventory of **609 API routes** (auth, utility, ~95 CRUD resources, custom endpoints per module) lives in the repo-root `knowledge.md` under **"API Endpoint Inventory"** — regenerate with `php artisan route:list --path=api`. Highlights for this backend:
-- ~95 `apiResource` CRUD resources (5 routes each) + ~9 modules with **no `jwt.cookies` protection** (public CRUD — see Gotchas).
+The full inventory of **617 API routes** (auth, utility, 98 CRUD resources, custom endpoints per module) lives in the repo-root `knowledge.md` under **"API Endpoint Inventory"** — regenerate with `php artisan route:list --path=api`. Highlights for this backend:
+- 98 `apiResource` CRUD resources (5 routes each) + 9 modules with **no `jwt.cookies` protection** (public CRUD — detailed audit + risk table in Gotchas item 1).
 - Custom endpoints per module: AccountLedger filter lists, Freight report views (`freights_*_wise`), StockSummary stock reports, Menu bulk ops, FiscalYearClose/Open workflow, OpeningBalance, ReceiptNoteReport grouped views, Dashboard widgets, PhysicalStockCount workflow.
 
 ## Conventions
@@ -171,7 +171,21 @@ The full inventory of **609 API routes** (auth, utility, ~95 CRUD resources, cus
 - **Testing:** Pest 4; `phpunit.xml` uses SQLite `:memory:` for tests.
 
 ## Gotchas & Known Issues (verified during audit — needs fixing)
-1. **9 route files have NO `jwt.cookies`** → fully public CRUD: `AppMaintenance`, `Country`, `Currency`, `Journal`, `Language`, `Module`, `Post`, `Setting`, `State`. High risk (Journals + Settings are sensitive).
+1. **9 route files have NO `jwt.cookies`** → fully public CRUD (audit re-verified Aug 2026: `grep -L jwt.cookies` on every `app/Modules/*/Routes/api.php` AND `route:list` middleware resolution both agree on exactly these 9). Each exposes the full 5-route `apiResource` (index/store/show/update/destroy) with **no auth, no rate limiting, reachable in production**. `AppMaintenance`, `Country`, `Currency`, `Journal`, `Language`, `Module`, `Post`, `Setting`, `State`.
+
+| Module | Table (real columns) | Unauthenticated writes | Read exposure | Risk |
+|---|---|---|---|---|
+| `Journal` | `journals` (voucher_id, entry_index, account_ledger_id, debit/credit_amount) | Writes 500 (fillable `name` is not a column) — **`DELETE` works** | Whitelisted `id`/`name` only (name→null) | **High** — financial rows deletable by anyone |
+| `Setting` | `settings` (property, value) | Writes 500 (same mismatch) — **`DELETE` works** | Whitelisted `id`/`name` only (name→null) | **High** — app config rows deletable by anyone |
+| `Currency` | `currencies` (code, exchange_rate, status, format, separators…) | **Yes — full CRUD works** | `CamelCaseResource` → **all columns** | **Med-high** — exchange_rate/status readable + tamperable |
+| `Language` | `languages` (code, locale, direction, is_default) | Partial (INSERT fails: unique NOT NULL code/locale) — `DELETE` works | Whitelisted `id`/`name` | Medium — can delete default language |
+| `Country` | `countries` (phone_code, iso_code) | **Yes — full CRUD works** | `CamelCaseResource` → all columns | Low-med (reference data) |
+| `State` | `states` (code, country_id, gst_code) | **Yes — full CRUD works** | `CamelCaseResource` → all columns | Low-med (GST reference) |
+| `AppMaintenance` | `app_maintenances` (name) | Yes — full CRUD | All columns | Low (scaffold) |
+| `Post` | `posts` (name) | Yes — full CRUD | `id`/`name` | Low (scaffold) |
+| `Module` | `modules` — **table doesn't exist anywhere** | No — every endpoint 500s | — | Low (broken scaffold) |
+
+Bottom line: `journals` + `settings` are the true red flags (destructive delete on financial/config data), `currencies` is a fully functional public CRUD, and the rest are mostly low-sensitivity scaffold/reference modules. Fix is a one-liner per file: add `->middleware(['jwt.cookies'])` to each of the 9 `Routes/api.php` (same as the other ~103 modules).
 2. **No server-side authorization/RBAC.** Frontend gates by permissions, backend enforces none — any authenticated user can hit `users`/`roles`/`permissions` CRUD directly (IDOR risk).
 3. **CORS:** `config/cors.php` uses `allowed_origins => ['*']` with `supports_credentials => true` — invalid combo (wildcard + credentials is rejected by browsers). Should be explicit origins.
 4. **Utility routes:** `/api/clear` (any authenticated user can clear caches) and `/api/reload` (`migrate:refresh --seed` — **drops all tables**; only local-env guarded). `/api/cookie-test` echoes the JWT cookie.

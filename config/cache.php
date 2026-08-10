@@ -126,11 +126,18 @@ return [
     |--------------------------------------------------------------------------
     |
     | This value determines the classes that can be unserialized from cache
-    | storage. By default, no PHP classes will be unserialized from your
-    | cache to prevent gadget chain attacks if your APP_KEY is leaked.
+    | storage. Laravel's default (false) allows NO classes to be unserialized,
+    | which turns every cached object into __PHP_Incomplete_Class. That default
+    | breaks this app's repository caching (Cacheable/BaseRepository), which
+    | intentionally caches Eloquent models and collections. Setting this to
+    | true restores normal object deserialization (pre-Laravel-11.2 behavior).
+    |
+    | Security note: only keep cache data that your own application writes.
+    | The cache store lives in the application database, so an attacker who
+    | could poison it would already have full database access.
     |
     */
 
-    'serializable_classes' => false,
+    'serializable_classes' => true,
 
 ];

@@ -42,6 +42,7 @@ class Voucher extends Model
         'reference_date',
         'voucher_type_id',
         'remarks',
+        'payment_mode',
         'status',
         'fiscal_year_id',
         'company_id',
@@ -52,6 +53,13 @@ class Voucher extends Model
         'effects_account',
         'effects_stock',
     ];
+
+    /**
+     * Set by VoucherService for list responses — tells VoucherResource to skip
+     * serializing voucherEntries (edit screens load them via getById instead).
+     * Plain property, not persisted, not serialized.
+     */
+    public bool $isListMode = false;
 
     protected $casts = [
         'created_at' => 'datetime',
@@ -156,6 +164,14 @@ class Voucher extends Model
 
     public function getPaymentStatusAttribute()
     {
+        // Bulk-resolved value set by VoucherService for collection responses —
+        // skips the 2-4 fresh queries + lazy loads this accessor would otherwise
+        // run for every voucher during list serialization. Stored as a relation
+        // (not an attribute) so it can never leak into a save()/isDirty() call.
+        if (isset($this->relations['payment_status'])) {
+            return $this->relations['payment_status'];
+        }
+
         $paymentReference = $this->referenced_by()->whereIn('type', ['payment', 'freight_payment'])->get();
         $paymentVouchersIds = $paymentReference->pluck('voucher_id')->toArray();
         // \Log::info($paymentVouchersIds);

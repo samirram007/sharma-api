@@ -13,7 +13,7 @@ class AccountLedgerServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(AccountLedgerServiceInterface::class, AccountLedgerService::class);
+        $this->app->singleton(AccountLedgerServiceInterface::class, AccountLedgerService::class);
         $this->app->singleton(AccountLedgerRepositoryInterface::class, AccountLedgerRepository::class);
     }
 

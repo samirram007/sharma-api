@@ -35,6 +35,7 @@ class MenuSeeder extends Seeder
             'icon' => 'LayoutDashboard',
             'parent' => $general,
             'sort_order' => 10,
+            'is_top_menu' => true,
         ]);
 
         // ── Transactions ─────────────────────────────────────────
@@ -64,13 +65,21 @@ class MenuSeeder extends Seeder
             'sort_order' => 10,
         ]);
 
+        // Voucher types directly under Transactions (each gated by its own menu-view permission)
+        $this->create(['menu_name' => 'Received (GRN)', 'route' => '/transactions/vouchers/receipt_note', 'app_module_feature_code' => 'RECEIPT_NOTE_MENU_VIEW', 'icon' => 'TruckDelivery', 'parent' => $transactions, 'sort_order' => 20, 'is_top_menu' => true]);
+        $this->create(['menu_name' => 'Delivery Note', 'route' => '/transactions/vouchers/delivery_note', 'app_module_feature_code' => 'DELIVERY_NOTE_MENU_VIEW', 'icon' => 'Truck', 'parent' => $transactions, 'sort_order' => 30, 'is_top_menu' => true]);
+        $this->create(['menu_name' => 'Conversion', 'route' => '/transactions/vouchers/conversion_journal', 'app_module_feature_code' => 'CONVERSION_MENU_VIEW', 'icon' => 'ClipboardType', 'parent' => $transactions, 'sort_order' => 40, 'is_top_menu' => true]);
+        $this->create(['menu_name' => 'Physical Stock', 'route' => '/transactions/vouchers/physical_stock', 'app_module_feature_code' => 'PHYSICAL_STOCK_MENU_VIEW', 'icon' => 'Checklist', 'parent' => $transactions, 'sort_order' => 50]);
+        $this->create(['menu_name' => 'Opening Stock', 'route' => '/transactions/vouchers/opening_stock', 'app_module_feature_code' => 'OPENING_STOCK_MENU_VIEW', 'icon' => 'PackageOpen', 'parent' => $transactions, 'sort_order' => 60]);
+        $this->create(['menu_name' => 'Freight', 'route' => '/transactions/freight', 'app_module_feature_code' => 'FREIGHT_MENU_VIEW', 'icon' => 'TruckDelivery', 'parent' => $transactions, 'sort_order' => 70, 'is_top_menu' => true]);
+
         $this->create([
             'menu_name' => 'Day Book',
             'route' => '/reports/day_book',
             'app_module_feature_code' => 'DAYBOOK_MENU_VIEW',
             'icon' => 'Book',
-            'parent' => $accountsInTrans,
-            'sort_order' => 20,
+            'parent' => $transactions,
+            'sort_order' => 80,
         ]);
 
         // ── Masters ──────────────────────────────────────────────
@@ -258,23 +267,55 @@ class MenuSeeder extends Seeder
         $this->create(['menu_name' => 'Stock In Hand (Voucher Wise)', 'route' => '/reports/stock_summary/stock-in-hand-voucher-wise', 'app_module_feature_code' => 'STOCKSUMMARY_MENU_VIEW', 'icon' => 'FileInvoice', 'parent' => $stock, 'sort_order' => 50]);
         $this->create(['menu_name' => 'Opening Entry', 'route' => '/reports/opening_entry', 'app_module_feature_code' => 'OPENING_ENTRY_REPORT_MENU_VIEW', 'icon' => 'DoorEnter', 'parent' => $stock, 'sort_order' => 60]);
 
-        // Freight & Logistics
-        $freight = $this->create([
-            'menu_name' => 'Freight & Logistics',
-            'app_module_feature_code' => 'FREIGHT_MENU_VIEW',
+        // Receipt Note / Conversion / Manufacturing report leaves (directly under Reports,
+        // each gated by its own report-view feature for role-based access)
+        $this->create(['menu_name' => 'Receipt Note Report', 'route' => '/reports/receipt_note_report', 'app_module_feature_code' => 'RECEIPT_NOTE_REPORT_MENU_VIEW', 'icon' => 'FileText', 'parent' => $reports, 'sort_order' => 41]);
+        $this->create(['menu_name' => 'Conversion Journal Report', 'route' => '/reports/conversion_journal_report', 'app_module_feature_code' => 'CONVERSION_JOURNAL_REPORT_MENU_VIEW', 'icon' => 'BuildingFactory', 'parent' => $reports, 'sort_order' => 42, 'is_top_menu' => true]);
+        $this->create(['menu_name' => 'Manufacturing Journal Report', 'route' => '/reports/manufacturing_journal_report', 'app_module_feature_code' => 'MANUFACTURING_JOURNAL_REPORT_MENU_VIEW', 'icon' => 'BuildingFactory', 'parent' => $reports, 'sort_order' => 43]);
+
+        // Delivery Note Reports (gated by DELIVERY_NOTE_REPORT_MENU_VIEW so a
+        // Delivery Note Employee role sees only its own reports)
+        $deliveryNoteReports = $this->create([
+            'menu_name' => 'Delivery Note Reports',
+            'app_module_feature_code' => 'DELIVERY_NOTE_REPORT_MENU_VIEW',
             'icon' => 'Truck',
             'parent' => $reports,
-            'sort_order' => 40,
+            'sort_order' => 50,
             'is_group' => true,
         ]);
 
-        $this->create(['menu_name' => 'Delivery Note (Zone Wise)', 'route' => '/reports/freight/delivery-note-zone-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'MapPin', 'parent' => $freight, 'sort_order' => 10]);
-        $this->create(['menu_name' => 'Delivery Note (Godown Wise)', 'route' => '/reports/freight/delivery-note-godown-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'BuildingWarehouse', 'parent' => $freight, 'sort_order' => 20]);
-        $this->create(['menu_name' => 'Freight (Zone Wise)', 'route' => '/reports/freight/freight-zone-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'Route', 'parent' => $freight, 'sort_order' => 30]);
-        $this->create(['menu_name' => 'Freight (Transporter Wise)', 'route' => '/reports/freight/freight-transporter-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'Truck', 'parent' => $freight, 'sort_order' => 40]);
-        $this->create(['menu_name' => 'Freight (Transporter Item Wise)', 'route' => '/reports/freight/freight-transporter-item-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'Truck', 'parent' => $freight, 'sort_order' => 50]);
-        $this->create(['menu_name' => 'Freight (Voucher Wise)', 'route' => '/reports/freight/freight-voucher-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'FileText', 'parent' => $freight, 'sort_order' => 60]);
-        $this->create(['menu_name' => 'Freight (Godown Wise)', 'route' => '/reports/freight/freight-godown-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'BuildingWarehouse', 'parent' => $freight, 'sort_order' => 70]);
+        $this->create(['menu_name' => 'Delivery Note (Zone Wise)', 'route' => '/reports/freight/delivery-note-zone-wise', 'app_module_feature_code' => 'DELIVERY_NOTE_REPORT_MENU_VIEW', 'icon' => 'MapPin', 'parent' => $deliveryNoteReports, 'sort_order' => 10]);
+        $this->create(['menu_name' => 'Delivery Note (Godown Wise)', 'route' => '/reports/freight/delivery-note-godown-wise', 'app_module_feature_code' => 'DELIVERY_NOTE_REPORT_MENU_VIEW', 'icon' => 'BuildingWarehouse', 'parent' => $deliveryNoteReports, 'sort_order' => 20]);
+
+        // Freight Reports (gated by FREIGHT_REPORT_MENU_VIEW)
+        $freightReports = $this->create([
+            'menu_name' => 'Freight Reports',
+            'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW',
+            'icon' => 'Truck',
+            'parent' => $reports,
+            'sort_order' => 60,
+            'is_group' => true,
+        ]);
+
+        $this->create(['menu_name' => 'Freight (Zone Wise)', 'route' => '/reports/freight/freight-zone-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'Route', 'parent' => $freightReports, 'sort_order' => 10]);
+        $this->create(['menu_name' => 'Freight (Transporter Wise)', 'route' => '/reports/freight/freight-transporter-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'Truck', 'parent' => $freightReports, 'sort_order' => 20]);
+        $this->create(['menu_name' => 'Freight (Transporter Item Wise)', 'route' => '/reports/freight/freight-transporter-item-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'Truck', 'parent' => $freightReports, 'sort_order' => 30]);
+        $this->create(['menu_name' => 'Freight (Voucher Wise)', 'route' => '/reports/freight/freight-voucher-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'FileText', 'parent' => $freightReports, 'sort_order' => 40]);
+        $this->create(['menu_name' => 'Freight (Godown Wise)', 'route' => '/reports/freight/freight-godown-wise', 'app_module_feature_code' => 'FREIGHT_REPORT_MENU_VIEW', 'icon' => 'BuildingWarehouse', 'parent' => $freightReports, 'sort_order' => 50]);
+
+        // Opening Stock Reports (gated by OPENING_STOCK_REPORT_MENU_VIEW so an
+        // Opening Stock Employee role sees only its own reports/setup pages)
+        $openingStockReports = $this->create([
+            'menu_name' => 'Opening Stock Reports',
+            'app_module_feature_code' => 'OPENING_STOCK_REPORT_MENU_VIEW',
+            'icon' => 'DoorEnter',
+            'parent' => $reports,
+            'sort_order' => 70,
+            'is_group' => true,
+        ]);
+
+        $this->create(['menu_name' => 'Opening Entry Report', 'route' => '/reports/opening_entry', 'app_module_feature_code' => 'OPENING_ENTRY_REPORT_MENU_VIEW', 'icon' => 'DoorEnter', 'parent' => $openingStockReports, 'sort_order' => 10]);
+        $this->create(['menu_name' => 'Opening Balance Setup', 'route' => '/transactions/opening-balance', 'app_module_feature_code' => 'OPENING_BALANCE_MENU_VIEW', 'icon' => 'Scale', 'parent' => $openingStockReports, 'sort_order' => 20]);
 
         // ── Year-End Process ─────────────────────────────────────
         $yearEnd = $this->create([

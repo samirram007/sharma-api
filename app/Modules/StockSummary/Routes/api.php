@@ -7,6 +7,7 @@ use Modules\StockSummary\Controllers\Api\StockSummaryController;
 
 Route::group(['middleware' => ['jwt.cookies']], function () {
     //
+    Route::get('/stock_summaries/closing_stock', [StockSummaryController::class, 'closing_stock']);
     Route::get('/stock_summaries/stock_in_hand', [StockSummaryController::class, 'stock_in_hand']);
     Route::get('/stock_summaries/stock_in_hand_item_wise', [StockSummaryController::class, 'stock_in_hand_item_wise']);
     Route::get('/stock_summaries/stock_in_hand_zone_wise', [StockSummaryController::class, 'stock_in_hand_zone_wise']);

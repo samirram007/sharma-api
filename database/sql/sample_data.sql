@@ -4,6 +4,26 @@ INSERT INTO `users` (`id`, `name`,`username`,`user_type`, `email`, `email_verifi
 	(2, 'Manager User', 'manager@admin.com', 'user','manager@admin.com', '2025-06-14 17:39:14', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'zuUppGB7Bl','active', '2025-06-14 17:39:14', '2025-06-14 17:39:14');
 
 
+-- Demo users pre-linked to the module-specific Employee roles (password: 'password')
+INSERT IGNORE INTO `users` (`id`, `name`,`username`,`user_type`, `email`, `email_verified_at`, `password`, `remember_token`,`status`, `created_at`, `updated_at`) VALUES
+	(3, 'Received Note User', 'received@admin.com','user', 'received@admin.com', '2025-06-14 17:39:14', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL,'active', '2025-06-14 17:39:14', '2025-06-14 17:39:14'),
+	(4, 'Delivery Note User', 'delivery@admin.com','user', 'delivery@admin.com', '2025-06-14 17:39:14', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL,'active', '2025-06-14 17:39:14', '2025-06-14 17:39:14'),
+	(5, 'Freight User', 'freight@admin.com','user', 'freight@admin.com', '2025-06-14 17:39:14', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL,'active', '2025-06-14 17:39:14', '2025-06-14 17:39:14'),
+	(6, 'Conversion User', 'conversion@admin.com','user', 'conversion@admin.com', '2025-06-14 17:39:14', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL,'active', '2025-06-14 17:39:14', '2025-06-14 17:39:14'),
+	(7, 'Physical Stock User', 'physical@admin.com','user', 'physical@admin.com', '2025-06-14 17:39:14', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL,'active', '2025-06-14 17:39:14', '2025-06-14 17:39:14'),
+	(8, 'Opening Stock User', 'opening@admin.com','user', 'opening@admin.com', '2025-06-14 17:39:14', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL,'active', '2025-06-14 17:39:14', '2025-06-14 17:39:14');
+
+
+-- Link demo users to their module-specific Employee roles (role ids come from RoleSeeder: 10007-10010)
+INSERT IGNORE INTO `user_roles` (`user_id`, `role_id`) VALUES
+	((SELECT id FROM `users` WHERE email = 'received@admin.com' LIMIT 1), 10007),
+	((SELECT id FROM `users` WHERE email = 'delivery@admin.com' LIMIT 1), 10008),
+	((SELECT id FROM `users` WHERE email = 'freight@admin.com' LIMIT 1), 10009),
+	((SELECT id FROM `users` WHERE email = 'conversion@admin.com' LIMIT 1), 10010),
+	((SELECT id FROM `users` WHERE email = 'physical@admin.com' LIMIT 1), 10011),
+	((SELECT id FROM `users` WHERE email = 'opening@admin.com' LIMIT 1), 10012);
+
+
 INSERT INTO `shifts` (`id`, `name`, `code`, `status`, `icon`, `created_at`, `updated_at`) VALUES
 	(101, 'Morning Shift', 'MS', 'active', NULL, '2025-10-12 22:03:40', '2025-10-12 22:03:40'),
 	(102, 'Day Shift', 'DS', 'active', NULL, '2025-10-12 22:05:41', '2025-10-12 22:05:41'),

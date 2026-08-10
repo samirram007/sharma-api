@@ -13,6 +13,7 @@ use Modules\OpeningBalance\Contracts\OpeningBalanceServiceInterface;
 use Modules\StockItem\Models\StockItem;
 use Modules\StockJournal\Contracts\StockJournalServiceInterface;
 use Modules\StockJournalEntry\Contracts\StockJournalEntryServiceInterface;
+use Modules\StockSummary\Contracts\StockSummaryServiceInterface;
 use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
 use Modules\Voucher\Models\Voucher;
 use Modules\VoucherEntry\Contracts\VoucherEntryServiceInterface;
@@ -29,6 +30,7 @@ class OpeningBalanceService extends BaseService implements OpeningBalanceService
         protected VoucherEntryServiceInterface $voucherEntryService,
         protected StockJournalServiceInterface $stockJournalService,
         protected StockJournalEntryServiceInterface $stockJournalEntryService,
+        protected StockSummaryServiceInterface $stockSummaryService,
     ) {
         // Auth::id() is null outside HTTP (CLI / queue / tests) — guard so the
         // service can be constructed without an authenticated user.
@@ -52,6 +54,9 @@ class OpeningBalanceService extends BaseService implements OpeningBalanceService
         $prevFyClosed = $prevFy && $prevFy->closed_at;
         $prevClosingVoucher = null;
         $prevClosingStockVoucher = null;
+        $stockSource = null;
+        // item_id => running closing stock item (item → godown → batch tree)
+        $runningByItem = collect();
 
         if ($prevFyClosed) {
             $prevClosingVoucher = Voucher::where('fiscal_year_id', $prevFy->id)
@@ -64,6 +69,20 @@ class OpeningBalanceService extends BaseService implements OpeningBalanceService
                 ->with('stock_journal.stock_journal_entries.stock_item.stock_unit',
                     'stock_journal.stock_journal_entries.stock_journal_godown_entries.godown')
                 ->first();
+
+            if ($prevClosingStockVoucher?->stock_journal) {
+                $stockSource = 'closing_journal';
+            } else {
+                // No frozen CLSSK closing journal — fall back to the previous FY's
+                // RUNNING balance (same computation the fiscal year close uses to
+                // freeze closing stock), so stock prefills still work when the
+                // previous year has movements but no frozen closing stock.
+                $stockSource = 'running';
+                $runningByItem = collect(
+                    $this->stockSummaryService
+                        ->runningClosingStockItems($prevFy->id, $prevFy->end_date)
+                )->keyBy('item_id');
+            }
         }
 
         // Get all balance sheet ledgers (Asset, Liability, Equity)
@@ -109,8 +128,12 @@ class OpeningBalanceService extends BaseService implements OpeningBalanceService
 
         $stockItemData = [];
         foreach ($stockItems as $item) {
-            // Try to find pre-filled quantities from previous FY closing stock
+            // Try to find pre-filled quantities from previous FY closing stock.
+            // The closing stock voucher (CLSSK) stores batch details directly on
+            // its godown entries (batch_no / mfg_date / expiry_date), so we can
+            // surface a read-only batch reference alongside the prefilled qty.
             $prefilledGodowns = [];
+            $prefilledBatches = []; // godown_id => [ batch_no => [...] ]
 
             if ($prevClosingStockVoucher?->stock_journal) {
                 $matchingEntries = $prevClosingStockVoucher->stock_journal->stock_journal_entries
@@ -119,6 +142,43 @@ class OpeningBalanceService extends BaseService implements OpeningBalanceService
                 foreach ($matchingEntries as $entry) {
                     foreach ($entry->stock_journal_godown_entries as $ge) {
                         $prefilledGodowns[$ge->godown_id] = ($prefilledGodowns[$ge->godown_id] ?? 0) + (float) $ge->actual_quantity;
+
+                        $batchKey = (string) ($ge->batch_no ?: '');
+                        $prefilledBatches[$ge->godown_id][$batchKey] = [
+                            'batch_no' => $ge->batch_no,
+                            'mfg_date' => $ge->mfg_date?->toDateString(),
+                            'expiry_date' => $ge->expiry_date?->toDateString(),
+                            'quantity' => ($prefilledBatches[$ge->godown_id][$batchKey]['quantity'] ?? 0) + (float) $ge->actual_quantity,
+                        ];
+                    }
+                }
+            } elseif ($runningItem = $runningByItem->get($item->id)) {
+                // Running-balance fallback: map the item → godown → batch tree
+                // into the same prefilled shape the CLSSK path produces, so the
+                // wizard can pre-fill quantities (and batch references) from the
+                // previous FY's live stock balance.
+                foreach ($runningItem['godown_details'] as $godownDetail) {
+                    $batches = $godownDetail['batch_details'] ?? [];
+
+                    if (empty($batches)) {
+                        $batches = [['quantity' => $godownDetail['closing_quantity'] ?? 0]];
+                    }
+
+                    foreach ($batches as $batch) {
+                        $qty = (float) ($batch['quantity'] ?? 0);
+                        if ($qty <= 0) {
+                            continue;
+                        }
+
+                        $prefilledGodowns[$godownDetail['godown_id']] = ($prefilledGodowns[$godownDetail['godown_id']] ?? 0) + $qty;
+
+                        $batchKey = (string) ($batch['batch_no'] ?: '');
+                        $prefilledBatches[$godownDetail['godown_id']][$batchKey] = [
+                            'batch_no' => $batch['batch_no'] ?? null,
+                            'mfg_date' => $batch['mfg_date'] ?? null,
+                            'expiry_date' => $batch['expiry_date'] ?? null,
+                            'quantity' => ($prefilledBatches[$godownDetail['godown_id']][$batchKey]['quantity'] ?? 0) + $qty,
+                        ];
                     }
                 }
             }
@@ -129,6 +189,7 @@ class OpeningBalanceService extends BaseService implements OpeningBalanceService
                     'godown_id' => $godown->id,
                     'godown_name' => $godown->name,
                     'prefilled_quantity' => $prefilledGodowns[$godown->id] ?? 0,
+                    'batches' => array_values($prefilledBatches[$godown->id] ?? []),
                 ];
             }
 
@@ -162,6 +223,7 @@ class OpeningBalanceService extends BaseService implements OpeningBalanceService
             'has_existing_opening' => $existingOpening,
             'ledgers' => $ledgerData,
             'total_ledgers' => count($ledgerData),
+            'stock_source' => $stockSource,
             'stock_items' => $stockItemData,
             'total_stock_items' => count($stockItemData),
             'godowns' => $godowns->map(fn ($g) => [
@@ -388,6 +450,9 @@ class OpeningBalanceService extends BaseService implements OpeningBalanceService
                 $godownEntryData[] = [
                     'entry_order' => $godownOrder,
                     'godown_id' => $ge['godown_id'],
+                    'batch_no' => $ge['batch_no'] ?? null,
+                    'mfg_date' => $ge['mfg_date'] ?? null,
+                    'expiry_date' => $ge['expiry_date'] ?? null,
                     'actual_quantity' => $qty,
                     'movement_type' => MovementType::IN->value,
                     'remarks' => "Opening stock for {$fy->name}",

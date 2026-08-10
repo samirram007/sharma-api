@@ -3,7 +3,6 @@
 namespace Modules\OpeningBalance\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Modules\AccountGroup\Models\AccountGroup;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\AccountNature\Models\AccountNature;
@@ -18,6 +17,7 @@ use Modules\StockUnit\Models\StockUnit;
 use Modules\User\Models\User;
 use Modules\UserFiscalYear\Models\UserFiscalYear;
 use Modules\Voucher\Models\Voucher;
+use Modules\VoucherCategory\Models\VoucherCategory;
 use Modules\VoucherEntry\Models\VoucherEntry;
 use Modules\VoucherType\Models\VoucherType;
 use Tests\TestCase;
@@ -55,15 +55,21 @@ class OpeningBalanceTest extends TestCase
         parent::setUp();
 
         // ── Fiscal Year ──
+        $this->companyId = 1;
         $this->fiscalYear = FiscalYear::create([
             'name' => 'FY 2025-26',
             'start_date' => '2025-04-01',
             'end_date' => '2026-03-31',
             'status' => 'active',
+            'company_id' => $this->companyId,
         ]);
 
         // ── User with UserFiscalYear ──
-        $this->user = User::factory()->create();
+        $this->user = User::create([
+            'name' => 'Opening Balance Test User',
+            'email' => 'opening-balance-test@example.com',
+            'password' => 'password',
+        ]);
         UserFiscalYear::create([
             'user_id' => $this->user->id,
             'fiscal_year_id' => $this->fiscalYear->id,
@@ -72,11 +78,16 @@ class OpeningBalanceTest extends TestCase
         ]);
         $this->actingAs($this->user);
 
-        // ── VoucherType (OPNJL) ──
+        // ── VoucherCategory & VoucherType (OPNJL) ──
+        $this->voucherCategory = VoucherCategory::create([
+            'name' => 'System',
+            'code' => 'SYS',
+        ]);
         $this->opnJalVoucherType = VoucherType::create([
             'name' => 'Opening Journal',
             'code' => 'OPNJL',
             'status' => 'active',
+            'voucher_category_id' => $this->voucherCategory->id,
         ]);
 
         // ── Account Natures & Groups ──
@@ -574,6 +585,7 @@ class OpeningBalanceTest extends TestCase
             'end_date' => '2025-03-31',
             'status' => 'closed',
             'closed_at' => '2025-04-01 00:00:00',
+            'company_id' => $this->companyId,
         ]);
 
         $response = $this->getJson('/api/opening-balance/setup-data');
@@ -607,6 +619,7 @@ class OpeningBalanceTest extends TestCase
             'end_date' => '2025-03-31',
             'status' => 'closed',
             'closed_at' => '2025-04-01 00:00:00',
+            'company_id' => $this->companyId,
         ]);
 
         // ── Account natures with codes matching the service filter ──
@@ -638,6 +651,7 @@ class OpeningBalanceTest extends TestCase
         // ── CLSAC VoucherType & Voucher ──
         $clsacType = VoucherType::create([
             'name' => 'Closing Accounts', 'code' => 'CLSAC', 'status' => 'active',
+            'voucher_category_id' => $this->voucherCategory->id,
         ]);
 
         $clsacVoucher = Voucher::create([
@@ -713,11 +727,13 @@ class OpeningBalanceTest extends TestCase
             'end_date' => '2025-03-31',
             'status' => 'closed',
             'closed_at' => '2025-04-01 00:00:00',
+            'company_id' => $this->companyId,
         ]);
 
         // ── CLSSK VoucherType & Voucher ──
         $clsskType = VoucherType::create([
             'name' => 'Closing Stock', 'code' => 'CLSSK', 'status' => 'active',
+            'voucher_category_id' => $this->voucherCategory->id,
         ]);
 
         $clsskVoucher = Voucher::create([
@@ -769,6 +785,10 @@ class OpeningBalanceTest extends TestCase
         $response->assertStatus(200);
         $data = $response->json('data');
 
+        // ── Assert the source is the frozen closing journal ──
+        $this->assertSame('closing_journal', $data['stock_source'],
+            'Should report closing_journal when a CLSSK journal exists');
+
         // ── Assert prefilled_quantity for the stock item in the test godown ──
         $itemData = collect($data['stock_items'])->firstWhere('item_id', $this->stockItem->id);
         $this->assertNotNull($itemData, 'Stock item should appear in setup data');
@@ -779,6 +799,82 @@ class OpeningBalanceTest extends TestCase
             'Stock item should have prefilled_quantity = 250 from CLSSK godown entry');
     }
 
+    public function test_get_setup_data_falls_back_to_running_balance_when_no_clssk_voucher(): void
+    {
+        // ── Prev FY (closed) with stock movements but NO CLSSK voucher ──
+        $prevFy = FiscalYear::create([
+            'name' => 'FY 2024-25',
+            'start_date' => '2024-04-01',
+            'end_date' => '2025-03-31',
+            'status' => 'closed',
+            'closed_at' => '2025-04-01 00:00:00',
+            'company_id' => $this->companyId,
+        ]);
+
+        // ── Purchase VoucherType & Voucher (IN movement in the prev FY) ──
+        $purchaseType = VoucherType::create([
+            'name' => 'Purchase', 'code' => 'PURCH', 'status' => 'active',
+            'voucher_category_id' => $this->voucherCategory->id,
+        ]);
+
+        $purchaseVoucher = Voucher::create([
+            'voucher_no' => 'PURCH-'.$prevFy->id.'-test',
+            'voucher_date' => '2025-01-15',
+            'voucher_type_id' => $purchaseType->id,
+            'fiscal_year_id' => $prevFy->id,
+            'remarks' => 'Purchase in FY 2024-25',
+            'status' => 'active',
+            'is_effecting' => true,
+            'effects_account' => false,
+            'effects_stock' => true,
+            'module' => 'stock',
+        ]);
+
+        $stockJournal = StockJournal::create([
+            'journal_no' => 'PURCH-'.$prevFy->id.'-test',
+            'journal_date' => '2025-01-15',
+            'type' => 'PURCHASE',
+            'remarks' => 'Purchase stock entry',
+        ]);
+
+        $purchaseVoucher->update(['stock_journal_id' => $stockJournal->id]);
+
+        $stockJournalEntry = StockJournalEntry::create([
+            'stock_journal_id' => $stockJournal->id,
+            'entry_order' => 1,
+            'stock_item_id' => $this->stockItem->id,
+            'stock_unit_id' => $this->stockUnit->id,
+            'actual_quantity' => 250,
+            'movement_type' => 'in',
+        ]);
+
+        StockJournalGodownEntry::create([
+            'stock_journal_entry_id' => $stockJournalEntry->id,
+            'entry_order' => 1,
+            'godown_id' => $this->godown->id,
+            'actual_quantity' => 250,
+            'movement_type' => 'in',
+        ]);
+
+        // ── Call API ──
+        $response = $this->getJson('/api/opening-balance/setup-data');
+
+        $response->assertStatus(200);
+        $data = $response->json('data');
+
+        // ── Assert the fallback source + prefilled quantity from running balance ──
+        $this->assertSame('running', $data['stock_source'],
+            'Should fall back to the running balance when no CLSSK closing journal exists');
+
+        $itemData = collect($data['stock_items'])->firstWhere('item_id', $this->stockItem->id);
+        $this->assertNotNull($itemData, 'Stock item should appear in setup data');
+
+        $godownData = collect($itemData['godowns'])->firstWhere('godown_id', $this->godown->id);
+        $this->assertNotNull($godownData, 'Godown should appear in stock item data');
+        $this->assertSame(250.0, (float) $godownData['prefilled_quantity'],
+            'Stock item should have prefilled_quantity = 250 from the running balance');
+    }
+
     public function test_get_setup_data_shows_no_prefill_when_prev_fy_not_closed(): void
     {
         // Previous FY exists but is NOT closed (no closed_at)
@@ -787,6 +883,7 @@ class OpeningBalanceTest extends TestCase
             'start_date' => '2024-04-01',
             'end_date' => '2025-03-31',
             'status' => 'active',
+            'company_id' => $this->companyId,
             // No closed_at — year is still open
         ]);
 
@@ -827,6 +924,7 @@ class OpeningBalanceTest extends TestCase
             'end_date' => '2024-03-31',
             'status' => 'closed',
             'closed_at' => '2024-04-01 00:00:00',
+            'company_id' => $this->companyId,
         ]);
         $newerFy = FiscalYear::create([
             'name' => 'FY 2024-25',
@@ -834,6 +932,7 @@ class OpeningBalanceTest extends TestCase
             'end_date' => '2025-03-31',
             'status' => 'closed',
             'closed_at' => '2025-04-01 00:00:00',
+            'company_id' => $this->companyId,
         ]);
 
         $response = $this->getJson('/api/opening-balance/setup-data');
@@ -859,6 +958,7 @@ class OpeningBalanceTest extends TestCase
             'end_date' => '2025-04-01',  // Same as current FY start_date (2025-04-01)
             'status' => 'closed',
             'closed_at' => '2025-04-01 00:00:00',
+            'company_id' => $this->companyId,
         ]);
 
         $response = $this->getJson('/api/opening-balance/setup-data');
@@ -879,6 +979,7 @@ class OpeningBalanceTest extends TestCase
             'start_date' => '2026-04-01',
             'end_date' => '2027-03-31',
             'status' => 'active',
+            'company_id' => $this->companyId,
         ]);
 
         $response = $this->getJson('/api/opening-balance/setup-data');
@@ -901,6 +1002,7 @@ class OpeningBalanceTest extends TestCase
             'end_date' => '2024-06-30',
             'status' => 'closed',
             'closed_at' => '2024-07-01 00:00:00',
+            'company_id' => $this->companyId,
         ]);
         FiscalYear::create([
             'name' => 'Late FY',
@@ -908,6 +1010,7 @@ class OpeningBalanceTest extends TestCase
             'end_date' => '2025-03-15',
             'status' => 'closed',
             'closed_at' => '2025-04-01 00:00:00',
+            'company_id' => $this->companyId,
         ]);
         FiscalYear::create([
             'name' => 'Latest FY',
@@ -915,6 +1018,7 @@ class OpeningBalanceTest extends TestCase
             'end_date' => '2025-03-31',
             'status' => 'closed',
             'closed_at' => '2025-04-01 00:00:00',
+            'company_id' => $this->companyId,
         ]);
 
         $response = $this->getJson('/api/opening-balance/setup-data');
@@ -938,6 +1042,7 @@ class OpeningBalanceTest extends TestCase
             'end_date' => '2026-02-28',    // Ends before current FY end but after start
             'status' => 'closed',
             'closed_at' => '2026-03-01 00:00:00',
+            'company_id' => $this->companyId,
         ]);
 
         $response = $this->getJson('/api/opening-balance/setup-data');

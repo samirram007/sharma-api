@@ -28,7 +28,7 @@ class ConversionJournalReportService extends BaseService implements ConversionJo
 
     public function getAll(): LengthAwarePaginator
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
@@ -111,7 +111,7 @@ class ConversionJournalReportService extends BaseService implements ConversionJo
 
     public function getGroupedByStockItem(array $params = []): Collection
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
@@ -152,7 +152,7 @@ class ConversionJournalReportService extends BaseService implements ConversionJo
 
     public function getGroupedByGodown(array $params = []): Collection
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
@@ -192,7 +192,7 @@ class ConversionJournalReportService extends BaseService implements ConversionJo
 
     public function getGroupedByDate(array $params = []): Collection
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }

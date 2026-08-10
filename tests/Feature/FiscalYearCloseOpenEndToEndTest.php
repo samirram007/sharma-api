@@ -16,6 +16,7 @@ use Modules\StockJournalEntry\Models\StockJournalEntry;
 use Modules\StockJournalEntry\Services\StockJournalEntryService;
 use Modules\StockJournalGodownEntry\Models\StockJournalGodownEntry;
 use Modules\StockJournalGodownEntry\Services\StockJournalGodownEntryService;
+use Modules\StockSummary\Services\StockSummaryService;
 use Modules\StockUnit\Models\StockUnit;
 use Modules\User\Models\User;
 use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
@@ -159,6 +160,7 @@ beforeEach(function () {
         new StockJournalService($stockJournalEntryService),
         $stockJournalEntryService,
         $this->userFiscalYearService,
+        new StockSummaryService($this->userFiscalYearService),
     );
 });
 
@@ -182,7 +184,7 @@ test('close() creates closing account + stock vouchers and closes the fiscal yea
         ->first();
 
     expect($clsac)->not->toBeNull();
-    expect($clsac->id)->toBe($result['closing_account_voucher_id']);
+    expect($clsac->id)->toBe($result['closingAccountVoucherId']);
     expect($clsac->company_id)->toBe($this->companyId);
     expect($clsac->fiscal_year_id)->toBe($this->fy1->id);
     expect($clsac->module)->toBe('system');
@@ -220,7 +222,7 @@ test('close() creates closing account + stock vouchers and closes the fiscal yea
         ->first();
 
     expect($clssk)->not->toBeNull();
-    expect($clssk->id)->toBe($result['closing_stock_voucher_id']);
+    expect($clssk->id)->toBe($result['closingStockVoucherId']);
     expect($clssk->company_id)->toBe($this->companyId);
     expect($clssk->module)->toBe('system');
     expect($clssk->effects_stock)->toBeTrue();

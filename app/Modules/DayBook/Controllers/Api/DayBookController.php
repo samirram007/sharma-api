@@ -29,7 +29,7 @@ class DayBookController extends Controller
 
     public function dayBooksSelf(Request $request): SuccessCollection
     {
-        $params = $request->only(['search', 'voucher_type_id', 'billing_preference', 'status', 'sort_by', 'sort_order', 'page', 'per_page']);
+        $params = $request->only(['search', 'voucher_type_id', 'billing_preference', 'stock_journal_type', 'status', 'sort_by', 'sort_order', 'page', 'per_page']);
         $data = DayBookFacade::dayBooksSelf($params);
 
         return new VoucherCollection($data);

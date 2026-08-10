@@ -27,6 +27,7 @@ class DayBookService extends BaseService implements DayBookServiceInterface
         'voucher_party.state',
         'voucher_party.country',
         'voucher_dispatch_detail',
+        'voucher_references.reference_voucher.voucher_dispatch_detail',
         'referenced_by',
         'company',
         'fiscal_year',
@@ -36,7 +37,7 @@ class DayBookService extends BaseService implements DayBookServiceInterface
 
     public function getAll(): LengthAwarePaginator
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
@@ -76,6 +77,17 @@ class DayBookService extends BaseService implements DayBookServiceInterface
                 : explode(',', $billingPreference);
             $query->whereHas('voucher_dispatch_detail', function ($q) use ($preferences) {
                 $q->whereIn('billing_preference', $preferences);
+            });
+        }
+
+        // Stock journal type filter (accepts comma-separated types or array)
+        $stockJournalType = request()->input('stock_journal_type');
+        if (! empty($stockJournalType)) {
+            $types = is_array($stockJournalType)
+                ? $stockJournalType
+                : explode(',', $stockJournalType);
+            $query->whereHas('stock_journal', function ($q) use ($types) {
+                $q->whereIn('type', $types);
             });
         }
 
@@ -148,7 +160,7 @@ class DayBookService extends BaseService implements DayBookServiceInterface
 
     public function dayBooksSelf(array $params = []): LengthAwarePaginator
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
@@ -188,6 +200,17 @@ class DayBookService extends BaseService implements DayBookServiceInterface
                 : explode(',', $billingPreference);
             $query->whereHas('voucher_dispatch_detail', function ($q) use ($preferences) {
                 $q->whereIn('billing_preference', $preferences);
+            });
+        }
+
+        // Stock journal type filter (accepts comma-separated types or array)
+        $stockJournalType = request()->input('stock_journal_type');
+        if (! empty($stockJournalType)) {
+            $types = is_array($stockJournalType)
+                ? $stockJournalType
+                : explode(',', $stockJournalType);
+            $query->whereHas('stock_journal', function ($q) use ($types) {
+                $q->whereIn('type', $types);
             });
         }
 
@@ -257,7 +280,7 @@ class DayBookService extends BaseService implements DayBookServiceInterface
 
     public function getUsedVoucherTypes(): Collection
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }

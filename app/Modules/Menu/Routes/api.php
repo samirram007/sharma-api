@@ -37,6 +37,7 @@ Route::middleware(['jwt.cookies'])->group(function () {
     // ── User-facing endpoints (moved from Auth module) ──────────
     Route::get('/user/menu', [MenuController::class, 'userMenu']);
     Route::get('/auth/menus', [MenuController::class, 'userMenuTree']);
+    Route::get('/auth/top_menus', [MenuController::class, 'userTopMenuTree']);
 
     // ── Role permissions (moved from AppModuleFeature module) ───
     Route::get('/role/{role_id}/menu-permissions', [MenuController::class, 'roleMenuPermissions']);

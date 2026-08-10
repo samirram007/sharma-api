@@ -26,6 +26,7 @@ class MenuResource extends SuccessResource
             'status' => $this->status,
             'isVisible' => $this->is_visible,
             'isGroup' => $this->is_group,
+            'isTopMenu' => $this->is_top_menu,
             'description' => $this->description,
             'feature' => $this->when(
                 $this->relationLoaded('feature') && $this->feature,

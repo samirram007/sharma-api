@@ -73,12 +73,19 @@ class FiscalYearCloseService extends BaseService implements FiscalYearCloseServi
             ->count('stock_journal_godown_entries.godown_id');
 
         return [
-            'fiscal_year' => $fiscalYear->only(['id', 'name', 'start_date', 'end_date']),
-            'total_vouchers' => $totalVouchers,
-            'total_ledgers_with_balance' => $ledgerBalances->count(),
-            'total_stock_items' => $stockItems,
-            'total_godowns' => $godownsWithStock,
-            'is_closed' => $fiscalYear->closed_at !== null,
+            // camelCase keys — mirrors FiscalYearOpenService::preview() and the
+            // unified API convention (the frontend schema expects these).
+            'fiscalYear' => [
+                'id' => $fiscalYear->id,
+                'name' => $fiscalYear->name,
+                'startDate' => $fiscalYear->start_date?->toDateString(),
+                'endDate' => $fiscalYear->end_date?->toDateString(),
+            ],
+            'totalVouchers' => $totalVouchers,
+            'totalLedgersWithBalance' => $ledgerBalances->count(),
+            'totalStockItems' => $stockItems,
+            'totalGodowns' => $godownsWithStock,
+            'isClosed' => $fiscalYear->closed_at !== null,
         ];
     }
 
@@ -118,8 +125,8 @@ class FiscalYearCloseService extends BaseService implements FiscalYearCloseServi
             return [
                 'success' => true,
                 'message' => "Fiscal Year '{$fiscalYear->name}' closed successfully.",
-                'closing_account_voucher_id' => $closingAccountVoucher->id,
-                'closing_stock_voucher_id' => $closingStockVoucher->id,
+                'closingAccountVoucherId' => $closingAccountVoucher->id,
+                'closingStockVoucherId' => $closingStockVoucher->id,
             ];
         } catch (\Exception $e) {
             DB::rollBack();

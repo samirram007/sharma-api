@@ -2,7 +2,9 @@
 
 namespace Modules\Freight\Requests;
 
+use App\Enums\QuantityType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class FreightRequest extends FormRequest
 {
@@ -15,10 +17,20 @@ class FreightRequest extends FormRequest
     {
         $rules = [
             'delivery_note_id' => ['required', 'numeric', 'exists:vouchers,id'],
+            // Dispatch-detail fields edited on the freight screen — persisted back
+            // onto the delivery note's voucher_dispatch_details by the service.
+            'transporter' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'vehicle_number' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'source' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'destination' => ['sometimes', 'nullable', 'string', 'max:255'],
             'distance' => ['sometimes', 'nullable', 'numeric'],
             'rate' => ['sometimes', 'nullable', 'numeric'],
             'distance_unit_id' => ['sometimes', 'nullable', 'numeric', 'exists:stock_units,id'],
             'rate_unit_id' => ['sometimes', 'nullable', 'numeric', 'exists:stock_units,id'],
+            'weight_unit_id' => ['sometimes', 'nullable', 'numeric', 'exists:stock_units,id'],
+            'volume_unit_id' => ['sometimes', 'nullable', 'numeric', 'exists:stock_units,id'],
+            'freight_basis' => ['sometimes', 'nullable', Rule::enum(QuantityType::class)],
+            'discount' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'quantity' => ['sometimes', 'nullable', 'numeric'],
             'weight' => ['sometimes', 'nullable', 'numeric'],
             'volume' => ['sometimes', 'nullable', 'numeric'],

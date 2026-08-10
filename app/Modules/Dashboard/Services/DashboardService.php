@@ -168,7 +168,7 @@ class DashboardService extends BaseService implements DashboardServiceInterface
      */
     protected function getUserFiscalYearPeriod(): array
     {
-        $userFiscalYear = auth()->user()?->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()?->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             return [null, null, null];
         }

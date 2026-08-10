@@ -36,6 +36,10 @@ class OpeningBalanceSetupResource extends SuccessResource
                 'prefilledBalance' => $l['prefilled_balance'],
             ]),
             'totalLedgers' => $this['total_ledgers'],
+            // Where the stock prefills came from: the frozen CLSSK closing journal
+            // ('closing_journal') or a live running balance computed from the
+            // previous fiscal year's stock movements ('running' — no closing journal).
+            'stockSource' => $this['stock_source'],
             'stockItems' => collect($this['stock_items'])->map(fn ($s) => [
                 'itemId' => $s['item_id'],
                 'itemName' => $s['item_name'],
@@ -46,6 +50,12 @@ class OpeningBalanceSetupResource extends SuccessResource
                     'godownId' => $g['godown_id'],
                     'godownName' => $g['godown_name'],
                     'prefilledQuantity' => $g['prefilled_quantity'],
+                    'batches' => collect($g['batches'] ?? [])->map(fn ($b) => [
+                        'batchNo' => $b['batch_no'],
+                        'mfgDate' => $b['mfg_date'],
+                        'expiryDate' => $b['expiry_date'],
+                        'quantity' => $b['quantity'],
+                    ]),
                 ]),
             ]),
             'totalStockItems' => $this['total_stock_items'],

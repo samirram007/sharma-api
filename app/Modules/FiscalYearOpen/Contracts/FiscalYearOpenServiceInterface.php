@@ -11,8 +11,12 @@ interface FiscalYearOpenServiceInterface extends BaseServiceInterface
      * - Creating opening account voucher with carry-forward balances
      * - Creating opening stock voucher with carry-forward quantities
      * - Updating user fiscal years to point to the new FY
+     *
+     * When `$stockItems` (user-edited item → godown → batch quantities from the
+     * preview screen) is non-empty, they override the frozen previous-FY
+     * closing stock journal when building the opening stock entries.
      */
-    public function open(int $newFiscalYearId, int $previousFiscalYearId): array;
+    public function open(int $newFiscalYearId, int $previousFiscalYearId, array $stockItems = []): array;
 
     /**
      * Preview what would be carried forward before opening

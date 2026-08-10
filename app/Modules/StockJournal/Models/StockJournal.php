@@ -27,6 +27,11 @@ class StockJournal extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        // The DB column is a DATE; casting normalizes any client date format
+        // (e.g. the ISO-8601 '2026-04-01T00:00:00.000Z' that the frontend
+        // sends for a JS Date) to 'Y-m-d' before insert — without it MariaDB
+        // rejects the raw ISO string (see Voucher::$casts for the same pattern).
+        'journal_date' => 'date',
     ];
 
     protected static function boot()

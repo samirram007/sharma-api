@@ -101,11 +101,14 @@ class PhysicalStockCountService extends BaseService implements PhysicalStockCoun
         // Clear existing items to re-populate
         $count->items()->delete();
 
-        // Query system stock quantities for this godown and fiscal year
+        // Query system stock quantities for this godown and fiscal year. The rate
+        // comes from the most recent stock movement for that item/batch (falling
+        // back to the item's standard cost) so count rows are pre-valued.
         $stockData = DB::table('stock_journal_godown_entries')
             ->join('stock_journal_entries', 'stock_journal_godown_entries.stock_journal_entry_id', '=', 'stock_journal_entries.id')
             ->join('stock_journals', 'stock_journal_entries.stock_journal_id', '=', 'stock_journals.id')
             ->join('vouchers', 'stock_journals.id', '=', 'vouchers.stock_journal_id')
+            ->leftJoin('stock_items', 'stock_items.id', '=', 'stock_journal_entries.stock_item_id')
             ->where('stock_journal_godown_entries.godown_id', $count->godown_id)
             ->where('vouchers.fiscal_year_id', $count->fiscal_year_id)
             ->selectRaw('
@@ -117,9 +120,33 @@ class PhysicalStockCountService extends BaseService implements PhysicalStockCoun
                 ROUND(SUM(CASE
                     WHEN stock_journal_godown_entries.movement_type = ? THEN stock_journal_godown_entries.actual_quantity
                     ELSE -stock_journal_godown_entries.actual_quantity
-                END), 4) as net_quantity
-            ', [MovementType::IN])
+                END), 4) as net_quantity,
+                COALESCE(
+                    (
+                        SELECT sjge2.rate
+                        FROM stock_journal_godown_entries AS sjge2
+                        JOIN stock_journal_entries AS sje2 ON sje2.id = sjge2.stock_journal_entry_id
+                        JOIN stock_journals AS sj2 ON sj2.id = sje2.stock_journal_id
+                        JOIN vouchers AS v2 ON v2.stock_journal_id = sj2.id
+                        WHERE v2.fiscal_year_id = ?
+                            AND sjge2.godown_id = stock_journal_godown_entries.godown_id
+                            AND sje2.stock_item_id = stock_journal_entries.stock_item_id
+                            AND COALESCE(sjge2.batch_no, \'\') = COALESCE(stock_journal_godown_entries.batch_no, \'\')
+                            AND COALESCE(sjge2.mfg_date, \'\') = COALESCE(stock_journal_godown_entries.mfg_date, \'\')
+                            AND COALESCE(sjge2.expiry_date, \'\') = COALESCE(stock_journal_godown_entries.expiry_date, \'\')
+                        ORDER BY sj2.journal_date DESC, sj2.id DESC
+                        LIMIT 1
+                    ),
+                    -- one stock_items row per item, so MAX() is safe and keeps
+                    -- the query compatible with ONLY_FULL_GROUP_BY
+                    MAX(stock_items.standard_cost)
+                ) as rate
+            ', [MovementType::IN->value, $count->fiscal_year_id])
+            // The correlated rate subquery references the outer godown_id, so
+            // it must be grouped too for ONLY_FULL_GROUP_BY (MariaDB/MySQL 5.7+).
+            // The query filters by a single godown, so this never merges rows.
             ->groupBy(
+                'stock_journal_godown_entries.godown_id',
                 'stock_journal_entries.stock_item_id',
                 'stock_journal_godown_entries.batch_no',
                 'stock_journal_godown_entries.mfg_date',
@@ -140,6 +167,7 @@ class PhysicalStockCountService extends BaseService implements PhysicalStockCoun
                 'serial_no' => $data->serial_no,
                 'system_quantity' => $data->net_quantity,
                 'physical_quantity' => 0,
+                'rate' => (float) $data->rate,
                 'entry_order' => $entryOrder,
             ]);
         }
@@ -155,11 +183,8 @@ class PhysicalStockCountService extends BaseService implements PhysicalStockCoun
             throw new \Exception('Count sheet is already '.$count->status.'.');
         }
 
-        // Ensure all items have physical quantities entered
-        $emptyItems = $count->items()->where('physical_quantity', 0)->count();
-        if ($emptyItems > 0) {
-            throw new \Exception("{$emptyItems} item(s) have zero physical quantity. Please enter counts for all items before verifying.");
-        }
+        // A physical quantity of 0 is a valid count (item fully missing = a
+        // complete loss), so no minimum-quantity check is enforced here.
 
         $count->update(['status' => 'verified']);
 
@@ -174,7 +199,7 @@ class PhysicalStockCountService extends BaseService implements PhysicalStockCoun
             throw new \Exception('Count sheet must be verified before generating adjustment.');
         }
 
-        $diffItems = $count->items()->where('difference', '!=', 0)->get();
+        $diffItems = $count->items()->with('stock_item')->where('difference', '!=', 0)->get();
 
         if ($diffItems->isEmpty()) {
             throw new \Exception('No variances found. No adjustment needed.');
@@ -184,26 +209,62 @@ class PhysicalStockCountService extends BaseService implements PhysicalStockCoun
         try {
             $voucherType = VoucherType::where('code', 'SKADJ')->firstOrFail();
 
+            // Summarize the variances so the journal/voucher narrations describe
+            // the count sheet properly (how many loss vs surplus lines).
+            $lossCount = $diffItems->filter(fn ($i) => (float) $i->difference > 0)->count();
+            $surplusCount = $diffItems->filter(fn ($i) => (float) $i->difference < 0)->count();
+            $netDiff = round((float) $diffItems->sum('difference'), 4);
+            $summary = sprintf(
+                'Stock adjustment from physical count #%s at %s — %s loss line(s), %s surplus line(s), net diff %s',
+                $count->id,
+                $count->godown->name,
+                $lossCount,
+                $surplusCount,
+                $netDiff
+            );
+
             // Create StockJournal for adjustment
             $stockJournal = $this->stockJournalService->store([
                 'journal_no' => 'SKADJ-'.$count->id.'-'.now()->format('Ymd'),
                 'journal_date' => now(),
                 'type' => 'ADJUSTMENT',
-                'remarks' => "Stock adjustment from physical count #{$count->id} at {$count->godown->name}",
+                'remarks' => $summary,
             ]);
 
             foreach ($diffItems as $item) {
                 $diff = (float) $item->difference;
-                $movementType = $diff > 0 ? MovementType::OUT : MovementType::IN;
+                // difference = system - physical; a positive difference means stock is
+                // missing / LOSS (OUT), a negative difference means surplus (IN).
+                $movementType = $diff > 0 ? MovementType::OUT->value : MovementType::IN->value;
                 $qty = abs($diff);
+                // Rates are auto-filled on populate/picker select; fall back to
+                // the item's standard cost when no rate was recorded.
+                $rate = (float) $item->rate;
+                if ($rate <= 0) {
+                    $rate = (float) ($item->stock_item?->standard_cost ?? 0);
+                }
+
+                // Describe each entry line: item + batch + book vs physical.
+                $nature = $diff > 0 ? 'Stock loss' : 'Stock surplus';
+                $itemName = $item->stock_item?->name ?? "Item #{$item->stock_item_id}";
+                $batchPart = $item->batch_no ? " (batch: {$item->batch_no})" : '';
 
                 $godownEntryData = [
                     [
                         'entry_order' => 1,
                         'godown_id' => $count->godown_id,
                         'actual_quantity' => $qty,
+                        'billing_quantity' => $qty,
+                        'rate' => $rate,
+                        'amount' => round($qty * $rate, 2),
                         'movement_type' => $movementType,
-                        'remarks' => "Physical count adjustment - system: {$item->system_quantity}, physical: {$item->physical_quantity}",
+                        // Carry the batch info through so the adjustment entry
+                        // keeps the batch of the counted stock.
+                        'batch_no' => $item->batch_no,
+                        'mfg_date' => $item->mfg_date?->format('Y-m-d'),
+                        'expiry_date' => $item->expiry_date?->format('Y-m-d'),
+                        'serial_no' => $item->serial_no,
+                        'remarks' => "{$nature} - {$itemName}{$batchPart} - book: {$item->system_quantity}, physical: {$item->physical_quantity}",
                     ],
                 ];
 
@@ -224,7 +285,7 @@ class PhysicalStockCountService extends BaseService implements PhysicalStockCoun
                 'voucher_type_id' => $voucherType->id,
                 'fiscal_year_id' => $count->fiscal_year_id,
                 'stock_journal_id' => $stockJournal->id,
-                'remarks' => "Stock adjustment from physical count #{$count->id} at {$count->godown->name}",
+                'remarks' => $summary,
                 'status' => 'active',
                 'is_effecting' => true,
                 'effects_account' => false,

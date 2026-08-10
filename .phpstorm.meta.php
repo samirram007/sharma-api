@@ -2102,7 +2102,7 @@ namespace PHPSTORM_META {
             'view.finder' => \Illuminate\View\FileViewFinder::class,
         ]));
 
-    override(\auth()->user(), map([
+    override(\auth()->guard()->user(), map([
         '' => \Modules\User\Models\User::class,
     ]));
     override(\Illuminate\Contracts\Auth\Guard::user(), map([
@@ -3682,7 +3682,7 @@ namespace PHPSTORM_META {
     override(\optional(0), type(0));
 
             registerArgumentsSet('auth', );
-        registerArgumentsSet('configs', 
+        registerArgumentsSet('configs',
 'concurrency.default','hashing.driver','hashing.bcrypt.rounds','hashing.bcrypt.verify','hashing.bcrypt.limit',
 'hashing.argon.memory','hashing.argon.threads','hashing.argon.time','hashing.argon.verify','hashing.rehash_on_login',
 'view.paths','view.compiled','app.name','app.env','app.debug',
@@ -3785,11 +3785,11 @@ namespace PHPSTORM_META {
 'ide-helper.use_generics_annotations','ide-helper.macro_default_return_types.Illuminate\\Http\\Client\\Factory','ide-helper.additional_relation_types','ide-helper.additional_relation_return_types','ide-helper.enforce_nullable_relationships',
 'ide-helper.soft_deletes_force_nullable','ide-helper.post_migrate','tinker.commands','tinker.alias','tinker.dont_alias',
 'tinker.trust_project',);
-        registerArgumentsSet('middleware', 
+        registerArgumentsSet('middleware',
 'web','api','auth','auth.basic','auth.session',
 'cache.headers','can','guest','password.confirm','precognitive',
 'signed','throttle','verified','jwt.cookies',);
-        registerArgumentsSet('routes', 
+        registerArgumentsSet('routes',
 'sanctum.csrf-cookie','account_groups.index','account_groups.store','account_groups.show','account_groups.update',
 'account_groups.destroy','account_ledgers.index','account_ledgers.store','account_ledgers.show',
 'account_ledgers.update','account_ledgers.destroy','account_natures.index','account_natures.store',
@@ -3892,7 +3892,7 @@ namespace PHPSTORM_META {
 'voucher_references.destroy','voucher_types.index','voucher_types.store','voucher_types.show','voucher_types.update',
 'voucher_types.destroy',
 'storage.local','storage.local.upload',);
-        registerArgumentsSet('views', 
+        registerArgumentsSet('views',
 'welcome','laravel-exceptions-renderer::components.badge','laravel-exceptions-renderer::components.empty-state','laravel-exceptions-renderer::components.file-with-line','laravel-exceptions-renderer::components.formatted-source',
 'laravel-exceptions-renderer::components.frame','laravel-exceptions-renderer::components.frame-code','laravel-exceptions-renderer::components.header','laravel-exceptions-renderer::components.http-method','laravel-exceptions-renderer::components.icons.alert',
 'laravel-exceptions-renderer::components.icons.check','laravel-exceptions-renderer::components.icons.chevron-left','laravel-exceptions-renderer::components.icons.chevron-right','laravel-exceptions-renderer::components.icons.chevrons-down-up','laravel-exceptions-renderer::components.icons.chevrons-left',
@@ -3906,7 +3906,7 @@ namespace PHPSTORM_META {
 'laravel-exceptions::layout','laravel-exceptions::minimal','notifications::email','pagination::bootstrap-3','pagination::bootstrap-4',
 'pagination::bootstrap-5','pagination::semantic-ui','pagination::simple-bootstrap-3','pagination::simple-bootstrap-4','pagination::simple-bootstrap-5',
 'pagination::simple-tailwind','pagination::tailwind',);
-        registerArgumentsSet('translations', 
+        registerArgumentsSet('translations',
 'D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.auth.failed','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.auth.password','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.auth.throttle','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.pagination.previous','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.pagination.next',
 'D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.passwords.reset','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.passwords.sent','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.passwords.throttled','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.passwords.token','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.passwords.user',
 'D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.accepted','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.accepted_if','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.active_url','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.after','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.after_or_equal',
@@ -3937,7 +3937,7 @@ namespace PHPSTORM_META {
 'D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.size.string','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.starts_with','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.string','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.timezone','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.unique',
 'D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.uploaded','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.uppercase','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.url','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.ulid','D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.uuid',
 'D:.Project.AIPT.sharma-api.vendor.laravel.framework.src.Illuminate.Translation.lang.en.validation.custom.attribute-name.rule-name',);
-        registerArgumentsSet('env', 
+        registerArgumentsSet('env',
 'APP_NAME','APP_ENV','APP_KEY','APP_DEBUG','APP_URL',
 'APP_LOCALE','APP_FALLBACK_LOCALE','APP_FAKER_LOCALE','APP_MAINTENANCE_DRIVER','BCRYPT_ROUNDS',
 'LOG_CHANNEL','LOG_STACK','LOG_DEPRECATIONS_CHANNEL','LOG_LEVEL','DB_CONNECTION',
@@ -3950,7 +3950,7 @@ namespace PHPSTORM_META {
 'MAIL_FROM_NAME','AWS_ACCESS_KEY_ID','AWS_SECRET_ACCESS_KEY','AWS_DEFAULT_REGION','AWS_BUCKET',
 'AWS_USE_PATH_STYLE_ENDPOINT','JWT_SECRET','JWT_TTL','JWT_REFRESH_TTL','JWT_ALGO',
 'SANCTUM_STATEFUL_DOMAINS','VITE_APP_NAME',);
-        
+
                 expectedArguments(\Illuminate\Support\Facades\Gate::has(), 0, argumentsSet('auth'));
     expectedArguments(\Illuminate\Support\Facades\Gate::allows(), 0, argumentsSet('auth'));
     expectedArguments(\Illuminate\Support\Facades\Gate::denies(), 0, argumentsSet('auth'));
@@ -4014,5 +4014,5 @@ namespace PHPSTORM_META {
                 expectedArguments(\Illuminate\Contracts\Translation\Translator::get(), 0, argumentsSet('translations'));
                 expectedArguments(\env(), 0, argumentsSet('env'));
                 expectedArguments(\Illuminate\Support\Env::get(), 0, argumentsSet('env'));
-            
+
 }

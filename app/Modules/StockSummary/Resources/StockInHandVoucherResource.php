@@ -17,6 +17,7 @@ class StockInHandVoucherResource extends SuccessResource
 
             'voucherId' => $this['voucher_id'],
             'voucherType' => $this['voucher_type'],
+            'stockJournalType' => $this['stock_journal_type'] ?? null,
             'voucherNo' => $this['voucher_no'],
             'voucherDate' => $this['voucher_date'],
             'openingQuantity' => $this['opening_quantity'] ?? 0,

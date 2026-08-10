@@ -34,7 +34,7 @@ class ReceiptNoteReportService extends BaseService implements ReceiptNoteReportS
 
     public function getAll(): LengthAwarePaginator
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
@@ -81,7 +81,7 @@ class ReceiptNoteReportService extends BaseService implements ReceiptNoteReportS
 
     public function getGroupedByLedger(array $params = []): Collection
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
@@ -115,7 +115,7 @@ class ReceiptNoteReportService extends BaseService implements ReceiptNoteReportS
 
     public function getGroupedByDate(array $params = []): Collection
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
@@ -144,7 +144,7 @@ class ReceiptNoteReportService extends BaseService implements ReceiptNoteReportS
 
     public function getGroupedByStockItem(array $params = []): Collection
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
@@ -178,7 +178,7 @@ class ReceiptNoteReportService extends BaseService implements ReceiptNoteReportS
 
     public function getGroupedByGodown(array $params = []): Collection
     {
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }

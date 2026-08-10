@@ -33,6 +33,9 @@ interface MenuServiceInterface extends BaseServiceInterface
     /** Get hierarchical menu tree filtered by the user's role permissions. */
     public function getUserMenuTree(): array;
 
+    /** Get top-navigation menu tree (is_top_menu) filtered by the user's role permissions. */
+    public function getTopMenuTree(): array;
+
     /** Get all features with their permission status for a given role. */
     public function getRoleMenuPermissions(int $roleId): Collection;
 }

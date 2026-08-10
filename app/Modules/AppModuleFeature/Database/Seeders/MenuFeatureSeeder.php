@@ -23,6 +23,11 @@ class MenuFeatureSeeder extends Seeder
             ['app_module_id' => $adminModuleId, 'name' => 'Transaction Menu',      'code' => 'TRANSACTION_MENU_VIEW',      'icon' => 'Book'],
             ['app_module_id' => $adminModuleId, 'name' => 'Accounts Menu',         'code' => 'ACCOUNTS_MENU_VIEW',         'icon' => 'Book'],
             ['app_module_id' => $adminModuleId, 'name' => 'Vouchers Menu',         'code' => 'VOUCHERS_MENU_VIEW',         'icon' => 'ClipboardList'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Received (GRN) Menu',   'code' => 'RECEIPT_NOTE_MENU_VIEW',     'icon' => 'TruckDelivery'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Delivery Note Menu',    'code' => 'DELIVERY_NOTE_MENU_VIEW',    'icon' => 'Truck'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Conversion Menu',        'code' => 'CONVERSION_MENU_VIEW',       'icon' => 'ClipboardType'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Physical Stock Menu',    'code' => 'PHYSICAL_STOCK_MENU_VIEW',   'icon' => 'Checklist'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Opening Stock Menu',     'code' => 'OPENING_STOCK_MENU_VIEW',    'icon' => 'PackageOpen'],
             ['app_module_id' => $adminModuleId, 'name' => 'Day Book Menu',         'code' => 'DAYBOOK_MENU_VIEW',          'icon' => 'Book'],
 
             // ── Masters ──────────────────────────────────────────
@@ -83,6 +88,11 @@ class MenuFeatureSeeder extends Seeder
             ['app_module_id' => $adminModuleId, 'name' => 'Opening Entry Report',  'code' => 'OPENING_ENTRY_REPORT_MENU_VIEW', 'icon' => 'DoorEnter'],
             ['app_module_id' => $adminModuleId, 'name' => 'Freight Menu',          'code' => 'FREIGHT_MENU_VIEW',          'icon' => 'Truck'],
             ['app_module_id' => $adminModuleId, 'name' => 'Freight Report Menu',   'code' => 'FREIGHT_REPORT_MENU_VIEW',   'icon' => 'FileText'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Receipt Note Report Menu', 'code' => 'RECEIPT_NOTE_REPORT_MENU_VIEW', 'icon' => 'FileText'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Delivery Note Report Menu', 'code' => 'DELIVERY_NOTE_REPORT_MENU_VIEW', 'icon' => 'FileText'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Conversion Journal Report Menu', 'code' => 'CONVERSION_JOURNAL_REPORT_MENU_VIEW', 'icon' => 'FileText'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Manufacturing Journal Report Menu', 'code' => 'MANUFACTURING_JOURNAL_REPORT_MENU_VIEW', 'icon' => 'BuildingFactory'],
+            ['app_module_id' => $adminModuleId, 'name' => 'Opening Stock Reports Menu', 'code' => 'OPENING_STOCK_REPORT_MENU_VIEW', 'icon' => 'Scale'],
 
             // ── Year-End ─────────────────────────────────────────
             ['app_module_id' => $adminModuleId, 'name' => 'Year End Process Menu', 'code' => 'YEAR_END_PROCESS_MENU_VIEW', 'icon' => 'Archive'],

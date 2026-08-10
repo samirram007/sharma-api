@@ -18,6 +18,10 @@ class StoreOpeningBalanceRequest extends FormRequest
             'stock_entries.*.godowns' => ['nullable', 'array'],
             'stock_entries.*.godowns.*.godown_id' => ['required', 'integer', 'exists:godowns,id'],
             'stock_entries.*.godowns.*.quantity' => ['required', 'numeric', 'min:0'],
+            // Optional batch details carried forward from the previous FY closing stock
+            'stock_entries.*.godowns.*.batch_no' => ['nullable', 'string', 'max:255'],
+            'stock_entries.*.godowns.*.mfg_date' => ['nullable', 'date'],
+            'stock_entries.*.godowns.*.expiry_date' => ['nullable', 'date'],
         ];
     }
 

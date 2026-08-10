@@ -19,6 +19,7 @@ class FreightReceiptVoucherRequest extends FormRequest
             'amount' => 'required|numeric|min:1',
             'receipt_date' => 'required|date',
             'remark' => 'sometimes|nullable|string|max:255',
+            'remarks' => 'sometimes|nullable|string|max:255',
             'party_ledger_id' => 'required|exists:account_ledgers,id',
             'transaction_ledger_id' => 'required|exists:account_ledgers,id',
 

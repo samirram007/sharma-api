@@ -48,6 +48,7 @@ class VoucherDispatchDetailResource extends SuccessResource
             'packingCharges' => $this->packing_charges,
             'insuranceCharges' => $this->insurance_charges,
             'otherCharges' => $this->other_charges,
+            'discount' => $this->discount,
             'freightCharges' => $this->freight_charges,
             'totalFare' => $this->total_fare,
             'weightUnit' => new StockUnitResource($this->whenLoaded('weightUnit')),

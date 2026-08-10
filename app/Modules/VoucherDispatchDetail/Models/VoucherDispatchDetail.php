@@ -47,6 +47,7 @@ class VoucherDispatchDetail extends Model
         'packing_charges',
         'insurance_charges',
         'other_charges',
+        'discount',
         'freight_charges',
         'total_fare',
     ];
@@ -65,6 +66,7 @@ class VoucherDispatchDetail extends Model
         'packing_charges' => 'decimal:2',
         'insurance_charges' => 'decimal:2',
         'other_charges' => 'decimal:2',
+        'discount' => 'decimal:2',
         'freight_charges' => 'decimal:2',
         'total_fare' => 'decimal:2',
         'freight_basis' => QuantityType::class,

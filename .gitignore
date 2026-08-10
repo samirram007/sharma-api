@@ -22,6 +22,9 @@
 /storage/pail
 /vendor
 _ide_helper.php
+# One-off DB inspection/debug scripts (contain local DB credentials)
+_inspect_*.php
+_revert_*.php
 Homestead.json
 Homestead.yaml
 Thumbs.db

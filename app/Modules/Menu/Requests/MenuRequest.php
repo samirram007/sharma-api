@@ -23,6 +23,7 @@ class MenuRequest extends FormRequest
             'status' => ['sometimes', 'string', 'in:active,inactive'],
             'is_visible' => ['sometimes', 'boolean'],
             'is_group' => ['sometimes', 'boolean'],
+            'is_top_menu' => ['sometimes', 'boolean'],
             'description' => ['nullable', 'string', 'max:500'],
         ];
 

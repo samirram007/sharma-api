@@ -2,17 +2,25 @@
 
 namespace Modules\StockSummary\Services;
 
+use App\Enums\MovementType;
 use App\Support\Services\BaseService;
+use App\Support\Traits\HasItemAverageRate;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Modules\FiscalYear\Models\FiscalYear;
 use Modules\Godown\Models\Godown;
 use Modules\StockItem\Models\StockItem;
+use Modules\StockJournal\Models\StockJournal;
 use Modules\StockSummary\Contracts\StockSummaryServiceInterface;
 use Modules\StockSummary\Models\StockSummary;
 use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
+use Modules\Voucher\Models\Voucher;
 
 class StockSummaryService extends BaseService implements StockSummaryServiceInterface
 {
+    use HasItemAverageRate;
+
     protected string $modelClass = StockSummary::class;
 
     protected array $defaultResource = [];
@@ -33,23 +41,310 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     }
 
     /**
+     * The closing-stock "as of" date — the user's reporting-period end date when
+     * set, otherwise the fiscal year end (full-year view). Normalized to a Carbon
+     * so downstream ?Carbon hints and date formatting are safe.
+     */
+    protected function getAsOfDate(?FiscalYear $fiscalYear = null): ?Carbon
+    {
+        // Self-resolve the fiscal year when the caller didn't pass one, so every
+        // caller shares the same fallback chain (reporting-period end, else FY end).
+        $fiscalYear ??= FiscalYear::find($this->userFiscalYear?->fiscal_year_id);
+
+        $asOfDate = $this->userFiscalYear?->end_date ?? $fiscalYear?->end_date;
+
+        return $asOfDate ? Carbon::parse($asOfDate) : null;
+    }
+
+    /**
+     * Closing Stock — as of the current fiscal year.
+     *
+     * If a closing stock journal (CLSSK voucher) already exists for the fiscal year,
+     * the frozen closing entries are returned (source: 'closing_journal'). Otherwise the
+     * closing stock is computed live from the stock movements (source: 'running'), using
+     * the same net-quantity-per-item/godown/batch logic and weighted average rates that
+     * FiscalYearCloseService::createClosingStockVoucher() uses.
+     */
+    public function closingStock(): array
+    {
+        $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+        $fiscalYear = FiscalYear::find($fiscalYearId);
+
+        $asOfDate = $this->getAsOfDate($fiscalYear);
+
+        // Look for an existing closing stock journal (CLSSK voucher) for this FY
+        $closingVoucher = Voucher::where('fiscal_year_id', $fiscalYearId)
+            ->whereHas('voucher_type', fn ($q) => $q->where('code', 'CLSSK'))
+            ->with([
+                'stock_journal.stock_journal_entries.stock_item.stock_unit',
+                'stock_journal.stock_journal_entries.stock_journal_godown_entries.godown',
+            ])
+            ->first();
+
+        if ($closingVoucher?->stock_journal) {
+            // Frozen closing journal — always shown as-is (FY-end freeze).
+            $items = $this->buildClosingStockFromJournal($closingVoucher->stock_journal);
+            $source = 'closing_journal';
+        } else {
+            $items = $this->buildRunningClosingStock($fiscalYearId, $asOfDate);
+            $source = 'running';
+        }
+
+        $totalQuantity = array_sum(array_column($items, 'closing_quantity'));
+        $totalAmount = array_sum(array_column($items, 'closing_amount'));
+
+        return [
+            'source' => $source,
+            'as_of_date' => $source === 'running' ? $asOfDate?->format('Y-m-d') : null,
+            'closing_voucher_id' => $closingVoucher?->id,
+            'closing_voucher_no' => $closingVoucher?->voucher_no,
+            'closing_date' => $closingVoucher?->voucher_date?->format('Y-m-d'),
+            'fiscal_year' => $fiscalYear?->only(['id', 'name', 'start_date', 'end_date']),
+            'total_items' => count($items),
+            'total_quantity' => round($totalQuantity, 4),
+            'total_amount' => round($totalAmount, 2),
+            'items' => $items,
+        ];
+    }
+
+    /**
+     * Running closing stock for a specific fiscal year — net balance per item,
+     * godown and batch computed live from stock movements (the same calculation
+     * the fiscal year close uses to freeze closing stock), valued at the item's
+     * weighted average inward rate.
+     *
+     * Used as a fallback when no frozen CLSSK closing journal exists for the
+     * fiscal year (e.g. the previous year was never closed), so opening stock
+     * can still be pre-filled from the last year's running balance.
+     */
+    public function runningClosingStockItems(int $fiscalYearId, ?Carbon $asOfDate = null): array
+    {
+        return $this->buildRunningClosingStock($fiscalYearId, $asOfDate);
+    }
+
+    /**
+     * Build the closing stock item tree (item → godown → batch) from a frozen
+     * CLOSING stock journal created by FiscalYearClose.
+     */
+    protected function buildClosingStockFromJournal(StockJournal $journal): array
+    {
+        $items = [];
+
+        foreach ($journal->stock_journal_entries as $entry) {
+            $item = $entry->stock_item;
+            if (! $item) {
+                continue;
+            }
+
+            $godownGroups = $entry->stock_journal_godown_entries->groupBy('godown_id');
+            $godownDetails = [];
+            $itemQty = 0;
+            $itemAmount = 0;
+
+            foreach ($godownGroups as $godownId => $godownEntries) {
+                $first = $godownEntries->first();
+                $qty = (float) $godownEntries->sum('actual_quantity');
+                $amount = (float) $godownEntries->sum('amount');
+
+                $batchDetails = $godownEntries
+                    ->map(fn ($ge) => [
+                        'batch_no' => $ge->batch_no,
+                        'mfg_date' => $ge->mfg_date?->format('Y-m-d'),
+                        'expiry_date' => $ge->expiry_date?->format('Y-m-d'),
+                        'quantity' => (float) $ge->actual_quantity,
+                        'amount' => (float) $ge->amount,
+                        'rate' => $ge->rate !== null ? (float) $ge->rate : null,
+                    ])
+                    ->values()
+                    ->toArray();
+
+                $godownDetails[] = [
+                    'godown_id' => $first->godown_id,
+                    'godown_name' => $first->godown?->name,
+                    'godown_code' => $first->godown?->code,
+                    'closing_quantity' => $qty,
+                    'closing_amount' => $amount,
+                    'batch_details' => $batchDetails,
+                ];
+
+                $itemQty += $qty;
+                $itemAmount += $amount;
+            }
+
+            $items[] = [
+                'item_id' => $item->id,
+                'item_name' => $item->name,
+                'unit_code' => $item->stock_unit?->code,
+                'unit_name' => $item->stock_unit?->name,
+                'no_of_decimal_places' => $item->stock_unit?->no_of_decimal_places ?? 2,
+                'closing_quantity' => $itemQty,
+                'closing_amount' => $itemAmount,
+                'rate' => $itemQty > 0 ? round($itemAmount / $itemQty, 2) : null,
+                'godown_details' => $godownDetails,
+            ];
+        }
+
+        return $items;
+    }
+
+    /**
+     * Compute the running closing stock for the fiscal year — net quantity per
+     * item per godown per batch from the stock movements (same calculation the
+     * fiscal year close uses to freeze closing stock), valued at the item's
+     * weighted average inward rate.
+     *
+     * NOTE: unlike FiscalYearCloseService::createClosingStockVoucher(), this
+     * respects the not_purged scope and excludes purged godown entries — kept in
+     * sync with the other stock reports. If a running preview must match the
+     * freeze exactly, both queries should be aligned.
+     */
+    protected function buildRunningClosingStock(int $fiscalYearId, ?Carbon $asOfDate = null): array
+    {
+        $stockData = DB::table('stock_journal_godown_entries as sjge')
+            ->join('stock_journal_entries as sje', 'sjge.stock_journal_entry_id', '=', 'sje.id')
+            ->join('stock_journals as sj', 'sje.stock_journal_id', '=', 'sj.id')
+            ->join('vouchers as v', 'sj.id', '=', 'v.stock_journal_id')
+            ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
+            ->leftJoin('stock_units as su', 'si.stock_unit_id', '=', 'su.id')
+            ->leftJoin('godowns as g', 'sjge.godown_id', '=', 'g.id')
+            ->where('v.fiscal_year_id', $fiscalYearId)
+            // Only include movements up to the as-of date (reporting period end)
+            ->when($asOfDate, fn ($q) => $q->where('v.voucher_date', '<=', $asOfDate))
+            // Respect Eloquent's not_purged global scope
+            ->whereNotExists(function ($q) {
+                $q->select(DB::raw('1'))
+                    ->from('stock_journal_godown_entry_purges')
+                    ->whereColumn('stock_journal_godown_entry_purges.stock_journal_godown_entry_id', 'sjge.id');
+            })
+            ->selectRaw('
+                sje.stock_item_id,
+                si.name as item_name,
+                su.code as unit_code,
+                su.name as unit_name,
+                su.no_of_decimal_places,
+                sjge.godown_id,
+                g.name as godown_name,
+                g.code as godown_code,
+                sjge.batch_no,
+                sjge.mfg_date,
+                sjge.expiry_date,
+                SUM(CASE
+                    WHEN sjge.movement_type = ? THEN sjge.actual_quantity
+                    ELSE -sjge.actual_quantity
+                END) as net_quantity
+            ', [MovementType::IN->value])
+            ->groupBy(
+                'sje.stock_item_id',
+                'si.name',
+                'su.code',
+                'su.name',
+                'su.no_of_decimal_places',
+                'sjge.godown_id',
+                'g.name',
+                'g.code',
+                'sjge.batch_no',
+                'sjge.mfg_date',
+                'sjge.expiry_date'
+            )
+            ->having('net_quantity', '!=', 0)
+            ->get();
+
+        $groupedByItem = $stockData->groupBy('stock_item_id');
+        $items = [];
+
+        foreach ($groupedByItem as $itemId => $rows) {
+            $first = $rows->first();
+            $avgRate = $this->getItemAverageRate((int) $itemId, $fiscalYearId, $asOfDate);
+
+            $godownGroups = $rows->groupBy('godown_id');
+            $godownDetails = [];
+            $itemQty = 0;
+            $itemAmount = 0;
+
+            foreach ($godownGroups as $godownId => $godownRows) {
+                $firstGodown = $godownRows->first();
+                $godownQty = (float) $godownRows->sum(fn ($r) => abs((float) $r->net_quantity));
+                $godownAmount = round($avgRate * $godownQty, 2);
+
+                $batchDetails = $godownRows
+                    ->map(fn ($row) => [
+                        'batch_no' => $row->batch_no,
+                        'mfg_date' => $this->formatDbDate($row->mfg_date),
+                        'expiry_date' => $this->formatDbDate($row->expiry_date),
+                        'quantity' => abs((float) $row->net_quantity),
+                        'amount' => round($avgRate * abs((float) $row->net_quantity), 2),
+                        'rate' => $avgRate > 0 ? $avgRate : null,
+                    ])
+                    ->values()
+                    ->toArray();
+
+                $godownDetails[] = [
+                    'godown_id' => $firstGodown->godown_id,
+                    'godown_name' => $firstGodown->godown_name,
+                    'godown_code' => $firstGodown->godown_code,
+                    'closing_quantity' => $godownQty,
+                    'closing_amount' => $godownAmount,
+                    'batch_details' => $batchDetails,
+                ];
+
+                $itemQty += $godownQty;
+                $itemAmount += $godownAmount;
+            }
+
+            $items[] = [
+                'item_id' => (int) $itemId,
+                'item_name' => $first->item_name,
+                'unit_code' => $first->unit_code,
+                'unit_name' => $first->unit_name,
+                'no_of_decimal_places' => (int) ($first->no_of_decimal_places ?? 2),
+                'closing_quantity' => $itemQty,
+                'closing_amount' => $itemAmount,
+                'rate' => $avgRate > 0 ? $avgRate : null,
+                'godown_details' => $godownDetails,
+            ];
+        }
+
+        // Sort by item name for consistent ordering
+        usort($items, fn ($a, $b) => strcmp($a['item_name'], $b['item_name']));
+
+        return $items;
+    }
+
+    /**
+     * Normalize a raw DB date value to Y-m-d, returning null for empty/zero dates.
+     */
+    protected function formatDbDate($value): ?string
+    {
+        if (! $value || $value === '0000-00-00') {
+            return null;
+        }
+
+        $timestamp = strtotime($value);
+
+        return $timestamp === false ? null : date('Y-m-d', $timestamp);
+    }
+
+    /**
      * Stock In Hand — item-level summary
      * Formula: Closing Quantity = Opening Quantity + Operating Inward - Operating Outward
      */
     public function stockInHand(): array
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+        $asOfDate = $this->getAsOfDate();
 
         $items = StockItem::withWhereHas(
             'stock_journal_entries.stock_journal.voucher',
             fn ($q) => $q->where('fiscal_year_id', $fiscalYearId)
+                ->when($asOfDate, fn ($query) => $query->where('voucher_date', '<=', $asOfDate))
         )
             ->with([
                 'stock_unit',
-                'stock_journal_entries' => function ($q) use ($fiscalYearId) {
+                'stock_journal_entries' => function ($q) use ($fiscalYearId, $asOfDate) {
                     $q->whereHas(
                         'stock_journal.voucher',
                         fn ($v) => $v->where('fiscal_year_id', $fiscalYearId)
+                            ->when($asOfDate, fn ($query) => $query->where('voucher_date', '<=', $asOfDate))
                     )
                         ->with([
                             'stock_journal',
@@ -86,12 +381,14 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     public function stock_in_hand_item_wise(): array
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+        $asOfDate = $this->getAsOfDate();
 
         $items = StockItem::with([
             'stock_unit',
-            'stock_journal_entries' => function ($query) use ($fiscalYearId) {
-                $query->whereHas('stock_journal.voucher', function ($q) use ($fiscalYearId) {
-                    $q->where('fiscal_year_id', $fiscalYearId);
+            'stock_journal_entries' => function ($query) use ($fiscalYearId, $asOfDate) {
+                $query->whereHas('stock_journal.voucher', function ($q) use ($fiscalYearId, $asOfDate) {
+                    $q->where('fiscal_year_id', $fiscalYearId)
+                        ->when($asOfDate, fn ($query) => $query->where('voucher_date', '<=', $asOfDate));
                 })
                     ->with([
                         'stock_journal_godown_entries.godown',
@@ -213,6 +510,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     public function stock_in_hand_godown_wise(): array
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+        $asOfDate = $this->getAsOfDate();
 
         // Single flat query using direct DB joins instead of deep Eloquent withWhereHas chains
         $rows = DB::table('stock_journal_godown_entries as sjge')
@@ -223,6 +521,8 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
             ->leftJoin('stock_units as su', 'si.stock_unit_id', '=', 'su.id')
             ->where('v.fiscal_year_id', $fiscalYearId)
+            // Only include movements up to the as-of date (reporting period end)
+            ->when($asOfDate, fn ($q) => $q->where('v.voucher_date', '<=', $asOfDate))
             // Respect Eloquent's not_purged global scope
             ->whereNotExists(function ($q) {
                 $q->select(DB::raw('1'))
@@ -347,6 +647,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     public function stock_in_hand_zone_wise(): array
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+        $asOfDate = $this->getAsOfDate();
 
         // Get all zones
         $zones = DB::table('godowns')
@@ -363,6 +664,8 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
             ->leftJoin('stock_units as su', 'si.stock_unit_id', '=', 'su.id')
             ->where('v.fiscal_year_id', $fiscalYearId)
+            // Only include movements up to the as-of date (reporting period end)
+            ->when($asOfDate, fn ($q) => $q->where('v.voucher_date', '<=', $asOfDate))
             // Respect Eloquent's not_purged global scope
             ->whereNotExists(function ($q) {
                 $q->select(DB::raw('1'))
@@ -509,14 +812,17 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     public function stock_in_hand_voucher_wise(): array
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+        $asOfDate = $this->getAsOfDate();
 
         $items = StockItem::with([
             'stock_unit',
-            'stock_journal_entries' => function ($query) use ($fiscalYearId) {
-                $query->whereHas('stock_journal.voucher', function ($q) use ($fiscalYearId) {
-                    $q->where('fiscal_year_id', $fiscalYearId);
+            'stock_journal_entries' => function ($query) use ($fiscalYearId, $asOfDate) {
+                $query->whereHas('stock_journal.voucher', function ($q) use ($fiscalYearId, $asOfDate) {
+                    $q->where('fiscal_year_id', $fiscalYearId)
+                        ->when($asOfDate, fn ($query) => $query->where('voucher_date', '<=', $asOfDate));
                 })->with([
                     'stock_journal.voucher.voucher_type',
+                    'stock_journal_godown_entries',
                 ]);
             },
         ])->get();
@@ -573,9 +879,29 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 $operatingOutAmt = $this->sumMovementAmount($vOperating, 'out');
                 $netAmt = $openingAmt + $operatingInAmt - $operatingOutAmt;
 
+                // Batch / serial / godown-level detail lines for this voucher
+                // (e.g. SKADJ physical-count adjustments) so the report can show
+                // exactly which batch or serial number was moved.
+                $lineDetails = $entries
+                    ->flatMap(fn ($e) => $e->stock_journal_godown_entries->map(fn ($ge) => [
+                        'stock_item_id' => $e->stock_item_id,
+                        'batch_no' => $ge->batch_no,
+                        'serial_no' => $ge->serial_no,
+                        'mfg_date' => $ge->mfg_date?->format('Y-m-d'),
+                        'expiry_date' => $ge->expiry_date?->format('Y-m-d'),
+                        'movement_type' => $ge->movement_type,
+                        'quantity' => (float) $ge->actual_quantity,
+                        'rate' => (float) $ge->rate,
+                        'amount' => (float) $ge->amount,
+                        'remarks' => $ge->remarks,
+                    ]))
+                    ->values()
+                    ->toArray();
+
                 $voucherCollection[] = [
                     'voucher_id' => $voucher->id,
                     'voucher_type' => $voucher->voucher_type->name,
+                    'stock_journal_type' => $entries->first()->stock_journal?->type ?? null,
                     'voucher_no' => $voucher->voucher_no,
                     'voucher_date' => $voucher->voucher_date,
                     'opening_quantity' => $openingQty,
@@ -586,6 +912,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                     'outward_amount' => $operatingOutAmt,
                     'closing_quantity' => $net,
                     'closing_amount' => $netAmt,
+                    'line_details' => $lineDetails,
                 ];
             }
 
@@ -820,7 +1147,9 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
 
             $runningBalance += $inward - $outward;
 
-            // Get godown details for this transaction
+            // Get godown details for this transaction — one aggregated row per godown,
+            // plus per-godown batch/serial detail lines so the report shows exactly
+            // which batch or serial number moved (e.g. SKADJ physical-count adjustments).
             $godownDetails = $entries->flatMap(fn ($e) => $e->stock_journal_godown_entries)
                 ->groupBy('godown_id')
                 ->map(function ($geEntries) {
@@ -828,12 +1157,25 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                     $qtyIn = $this->sumMovement($geEntries, 'in');
                     $qtyOut = $this->sumMovement($geEntries, 'out');
 
+                    $detailLines = $geEntries->map(fn ($ge) => [
+                        'batchNo' => $ge->batch_no,
+                        'serialNo' => $ge->serial_no,
+                        'mfgDate' => $ge->mfg_date?->format('Y-m-d'),
+                        'expiryDate' => $ge->expiry_date?->format('Y-m-d'),
+                        'movementType' => $ge->movement_type,
+                        'quantity' => (float) $ge->actual_quantity,
+                        'rate' => (float) $ge->rate,
+                        'amount' => (float) $ge->amount,
+                        'remarks' => $ge->remarks,
+                    ])->values()->toArray();
+
                     return [
                         'godown_id' => $ge->godown_id,
                         'godown_name' => $ge->godown->name ?? null,
                         'inward_quantity' => $qtyIn,
                         'outward_quantity' => $qtyOut,
                         'net_quantity' => $qtyIn - $qtyOut,
+                        'detailLines' => $detailLines,
                     ];
                 })
                 ->values()

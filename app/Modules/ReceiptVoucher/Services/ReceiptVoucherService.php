@@ -27,6 +27,7 @@ class ReceiptVoucherService extends BaseService implements ReceiptVoucherService
         'voucher_party.state',
         'voucher_party.country',
         'voucher_dispatch_detail',
+        'voucher_references.reference_voucher.voucher_dispatch_detail',
         'company',
         'fiscal_year',
     ];
@@ -38,8 +39,8 @@ class ReceiptVoucherService extends BaseService implements ReceiptVoucherService
 
     public function getAll(): Collection
     {
-        // $user = auth()->user();
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        // $user = auth()->guard()->user();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         $startDate = $userFiscalYear->start_date;
         $endDate = $userFiscalYear->end_date;
         if (! $userFiscalYear) {
@@ -106,7 +107,10 @@ class ReceiptVoucherService extends BaseService implements ReceiptVoucherService
                 'voucher_type_id' => 1003,
                 'voucher_date' => $data['receipt_date'] ?? date('Y-m-d'),
                 'module' => 'receipt_voucher',
-                'remarks' => $data['remark'] ?? null,
+                // The frontend sends `remarks` (plural); `remark` is kept as a
+                // fallback for older clients.
+                'remarks' => $data['remarks'] ?? $data['remark'] ?? null,
+                'payment_mode' => $data['payment_mode'] ?? null,
                 'effects_account' => true,
                 'effects_stock' => false,
                 'is_effecting' => true,

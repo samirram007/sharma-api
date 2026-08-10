@@ -56,7 +56,7 @@ class AccountLedgerService extends BaseService implements AccountLedgerServiceIn
 
     private function calculateLedgerBalance(AccountLedger $ledger): float
     {
-        $user = auth()->user();
+        $user = auth()->guard()->user();
 
         if (! $user) {
             return 0.0;

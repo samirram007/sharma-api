@@ -5,8 +5,10 @@ namespace Modules\Freight\Services;
 use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
+use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Freight\Contracts\FreightServiceInterface;
 use Modules\Freight\Models\Freight;
 use Modules\Godown\Contracts\GodownServiceInterface;
@@ -15,8 +17,8 @@ use Modules\Voucher\Contracts\VoucherServiceInterface;
 use Modules\Voucher\Models\Voucher;
 use Modules\Voucher\Requests\VoucherRequest;
 use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
+use Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
 use Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
-use Modules\VoucherDispatchDetail\Services\VoucherDispatchDetailService;
 use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
 
 class FreightService extends BaseService implements FreightServiceInterface
@@ -60,7 +62,14 @@ class FreightService extends BaseService implements FreightServiceInterface
     {
         [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
 
-        $query = Voucher::with($this->defaultResource)
+        // Stock journal hierarchy is eager-loaded so the frontend can auto-fill
+        // the freight dispatch-details Weight from the delivery note's entries
+        // (same shape as getDeliveryNotesWithStockJournals()).
+        $query = Voucher::with(array_merge($this->defaultResource, [
+            'stock_journal.stock_journal_entries.stock_item',
+            'stock_journal.stock_journal_entries.stock_unit',
+            'stock_journal.stock_journal_entries.stock_journal_godown_entries.godown',
+        ]))
             ->where('vouchers.voucher_type_id', $this->deliverNoteVoucherTypeID)
             ->whereNotNull('vouchers.stock_journal_id')
             // Fiscal year period scope (uses user's custom reporting period from user_fiscal_years)
@@ -431,7 +440,7 @@ class FreightService extends BaseService implements FreightServiceInterface
     private function getUserFiscalYearPeriod(): array
     {
 
-        $userFiscalYear = auth()->user()->user_fiscal_year()->first();
+        $userFiscalYear = auth()->guard()->user()->user_fiscal_year()->first();
         if (! $userFiscalYear) {
             throw new \Exception('UserFiscalYear not set for the user.');
         }
@@ -654,8 +663,8 @@ class FreightService extends BaseService implements FreightServiceInterface
 
             $dispatch = $deliveryNote->voucher_dispatch_detail;
             $transporterName = $dispatch?->carrier_name ?? 'Unknown';
-            $vehicleNumber = $dispatch?->motor_vehicle_no ?? ';
-            $source = $dispatch?->source ?? ';
+            $vehicleNumber = $dispatch?->motor_vehicle_no ?? '';
+            $source = $dispatch?->source ?? '';
             $destination = $dispatch?->destination ?? '';
             $voucherId = $freightVoucher->id;
             $voucherNo = $freightVoucher->voucher_no;
@@ -788,18 +797,105 @@ class FreightService extends BaseService implements FreightServiceInterface
             throw new \Exception('Delivery Note ID is required to create Freight record.');
         }
 
-        // Pipeline Step 1: Fetch and validate the delivery note
-        $deliveryNote = $this->validateDeliveryNoteStep($deliveryNoteId);
-        $dispatchDetail = $deliveryNote->voucher_dispatch_detail;
+        // The dispatch-detail sync and the sales-voucher creation must be atomic:
+        // if voucher creation fails, the dispatch detail must not stay updated.
+        // (VoucherService::store() opens its own nested transaction, which Laravel
+        // handles via a savepoint inside this one.)
+        return DB::transaction(function () use ($data, $deliveryNoteId) {
+            // Pipeline Step 1: Fetch and validate the delivery note
+            $deliveryNote = $this->validateDeliveryNoteStep($deliveryNoteId);
 
-        // Pipeline Step 2: Check for existing freight reference (duplicate handling)
-        $existingVoucher = $this->checkExistingFreightStep($deliveryNoteId, $dispatchDetail);
-        if ($existingVoucher) {
-            return $existingVoucher;
+            // Pipeline Step 2: Persist the freight form's dispatch values (transporter,
+            // vehicle, weight, rate, charges, total fare) onto the delivery note's
+            // voucher_dispatch_details — otherwise Dispatch Details stay stale and the
+            // freight bill is built from outdated fare data.
+            $this->syncDispatchDetailFromFreightStep($deliveryNote, $data);
+
+            // Re-read the dispatch detail so the voucher entries and duplicate check
+            // below use the fare the user actually entered on the freight screen.
+            $dispatchDetail = VoucherDispatchDetail::where('voucher_id', $deliveryNote->id)->first();
+
+            // Pipeline Step 3: Check for existing freight reference (duplicate handling)
+            $existingVoucher = $this->checkExistingFreightStep($deliveryNoteId, $dispatchDetail);
+            if ($existingVoucher) {
+                return $existingVoucher;
+            }
+
+            // Pipeline Step 4: Build and store the sales voucher
+            return $this->buildAndStoreVoucherStep($deliveryNote, $dispatchDetail, $deliveryNoteId);
+        });
+    }
+
+    /**
+     * Persist the freight bill's dispatch/freight fields onto the delivery note's
+     * voucher_dispatch_detail record (create when missing, update when present).
+     *
+     * The delivery note owns the dispatch details; the freight screen edits the
+     * same fields (transporter, vehicle, weight, rate, charges, total fare), so
+     * they must be written back here — otherwise the Dispatch Details shown on
+     * the delivery note and in the freight reports never reflect the freight bill.
+     */
+    protected function syncDispatchDetailFromFreightStep(Voucher $deliveryNote, array $data): void
+    {
+        $existing = $deliveryNote->voucher_dispatch_detail;
+
+        // Fare fields the freight form can legitimately leave at 0 (e.g. when they
+        // were entered only via the Dispatch Details dialog). A 0/empty value from
+        // the freight form must never clobber a rate/fare already saved on the
+        // delivery note — the dialog is the authoritative source for these and the
+        // freight bill amount is derived from them.
+        $fareFields = ['rate', 'total_fare', 'freight_charges', 'discount'];
+
+        $dispatchData = array_filter([
+            'carrier_name' => $data['transporter'] ?? null,
+            'motor_vehicle_no' => $data['vehicle_number'] ?? null,
+            'source' => $data['source'] ?? null,
+            'destination' => $data['destination'] ?? null,
+            'quantity' => $data['quantity'] ?? null,
+            'weight' => $data['weight'] ?? null,
+            'weight_unit_id' => $data['weight_unit_id'] ?? null,
+            'volume' => $data['volume'] ?? null,
+            'volume_unit_id' => $data['volume_unit_id'] ?? null,
+            'distance' => $data['distance'] ?? null,
+            'distance_unit_id' => $data['distance_unit_id'] ?? null,
+            'freight_basis' => $data['freight_basis'] ?? null,
+            'rate' => $data['rate'] ?? null,
+            'rate_unit_id' => $data['rate_unit_id'] ?? null,
+            'freight_charges' => $data['freight_charges'] ?? null,
+            'total_fare' => $data['total_fare'] ?? null,
+            'discount' => $data['discount'] ?? null,
+        ], function ($value, $key) use ($existing, $fareFields) {
+            if ($value === null || $value === '') {
+                return false;
+            }
+
+            // Preserve an existing non-zero fare when the freight form sends 0 for
+            // a fare field (the form's rate defaults to 0 when never touched).
+            if (in_array($key, $fareFields, true)
+                && (float) $value == 0
+                && $existing
+                && (float) ($existing->{$key} ?? 0) > 0
+            ) {
+                return false;
+            }
+
+            return true;
+        }, ARRAY_FILTER_USE_BOTH);
+
+        if (empty($dispatchData)) {
+            return;
         }
 
-        // Pipeline Step 3: Build and store the sales voucher
-        return $this->buildAndStoreVoucherStep($deliveryNote, $dispatchDetail, $deliveryNoteId);
+        $dispatchData['voucher_id'] = $deliveryNote->id;
+
+        $rules = (new VoucherDispatchDetailRequest)->rules();
+        $validated = Validator::make($dispatchData, $rules)->validate();
+
+        if ($existing) {
+            $this->voucherDispatchDetailService->update($validated, $existing->id);
+        } else {
+            $this->voucherDispatchDetailService->store($validated);
+        }
     }
 
     /**
@@ -907,20 +1003,97 @@ class FreightService extends BaseService implements FreightServiceInterface
         return $salesVoucher->load('company');
     }
 
-    public function payment_voucher(array $data): Collection
+    /**
+     * Create a receipt voucher for a freight payment received against a delivery note.
+     *
+     * Modeled on buildAndStoreVoucherStep(): the delivery note is the source for
+     * company/fiscal year, party ledger and reference info, and the voucher is
+     * validated against VoucherRequest rules before being stored.
+     *
+     * The receipt is linked back to the delivery note with a `freight_payment`
+     * reference (the same type used by the freight payment lookups in
+     * ReceiptVoucherService / PaymentService), so it is recognised as a payment.
+     *
+     * Expected input keys:
+     * - delivery_note_id (required)
+     * - transaction_ledger_id (required) — cash/bank ledger receiving the money
+     * - amount (optional, defaults to the dispatch detail total_fare)
+     * - receipt_date, payment_mode, remarks (optional)
+     */
+    public function payment_voucher(array $data): Voucher
     {
-        $deliverNoteId = $data['delivery_note_id'] ?? null;
-        if ($deliverNoteId) {
-            $deliveryNote = $this->voucherService->getById($deliverNoteId);
-            if (! $deliveryNote) {
-                throw new \Exception('Delivery Note not found with ID: '.$deliverNoteId);
-            }
+        $deliveryNoteId = $data['delivery_note_id'] ?? null;
+        if (! $deliveryNoteId) {
+            throw new \Exception('Delivery Note ID is required to create a freight receipt voucher.');
         }
+
+        $deliveryNote = $this->voucherService->getById($deliveryNoteId);
+        if (! $deliveryNote instanceof Voucher) {
+            throw new \Exception('Delivery Note not found with ID: '.$deliveryNoteId);
+        }
+
+        // The cash/bank ledger receiving the payment (from the freight payment form)
+        $transactionLedgerId = $data['transaction_ledger_id'] ?? null;
+        $transactionLedger = $transactionLedgerId
+            ? $this->accountLedgerService->getById((int) $transactionLedgerId)
+            : null;
+        if (! $transactionLedger instanceof AccountLedger) {
+            throw new \Exception('Transaction (cash/bank) ledger is required to create the freight receipt voucher.');
+        }
+
+        // Default to the full dispatch fare unless a (partial) amount is provided
+        $amount = $data['amount'] ?? null;
+        if ($amount === null || $amount === '') {
+            $dispatchDetail = VoucherDispatchDetail::where('voucher_id', $deliveryNote->id)->first();
+            $amount = $dispatchDetail->total_fare ?? 0;
+        }
+        $amount = (float) $amount;
 
         $receiptVoucherData = [
             'voucher_type_id' => $this->receiptVoucherTypeID,
+            'voucher_date' => $data['receipt_date'] ?? date('Y-m-d'),
+            'company_id' => $deliveryNote->company_id,
+            'fiscal_year_id' => $deliveryNote->fiscal_year_id,
+            'module' => 'receipt_voucher',
+            'reference_no' => $deliveryNote->voucher_no,
+            'reference_date' => $deliveryNote->voucher_date,
+            'remarks' => $data['remarks'] ?? $data['remark'] ?? 'being the payment received towards freight charges pertaining to Delivery Note ID : '
+                .$deliveryNoteId.' dated '.date_format($deliveryNote->voucher_date, 'd-M-Y'),
+            'payment_mode' => $data['payment_mode'] ?? null,
+            'party_ledger' => $deliveryNote->party_ledger,
+            'transaction_ledger' => [
+                'id' => $transactionLedger->id,
+                'name' => $transactionLedger->name,
+                'code' => $transactionLedger->code,
+                'account_group_id' => $transactionLedger->account_group_id,
+            ],
+            'voucher_entries' => [
+                [
+                    'entry_order' => 1,
+                    'account_ledger_id' => $transactionLedger->id,
+                    'debit' => $amount,
+                    'credit' => 0,
+                ],
+                [
+                    'entry_order' => 2,
+                    'account_ledger_id' => $deliveryNote->party_ledger['id'],
+                    'debit' => 0,
+                    'credit' => $amount,
+                ],
+            ],
+            'voucher_reference' => [
+                'ref_voucher_id' => $deliveryNoteId,
+                'type' => 'freight_payment',
+            ],
         ];
 
+        $voucherRules = (new VoucherRequest)->rules();
+        $validatedVoucherData = Validator::make($receiptVoucherData, $voucherRules)->validate();
+
+        $receiptVoucherStored = $this->voucherService->store($validatedVoucherData);
+        $receiptVoucher = $this->voucherService->getById($receiptVoucherStored->id);
+
+        return $receiptVoucher->load('company');
     }
 
     public function update(array $data, int $id): Freight

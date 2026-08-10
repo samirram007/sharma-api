@@ -52,6 +52,42 @@ class RoleSeeder extends Seeder
                 'code' => 'AGENT',
                 'status' => 'active',
             ],
+            [
+                'id' => 10007,
+                'name' => 'Received Note Employee',
+                'code' => 'RECEIPT_NOTE_EMPLOYEE',
+                'status' => 'active',
+            ],
+            [
+                'id' => 10008,
+                'name' => 'Delivery Note Employee',
+                'code' => 'DELIVERY_NOTE_EMPLOYEE',
+                'status' => 'active',
+            ],
+            [
+                'id' => 10009,
+                'name' => 'Freight Employee',
+                'code' => 'FREIGHT_EMPLOYEE',
+                'status' => 'active',
+            ],
+            [
+                'id' => 10010,
+                'name' => 'Conversion Employee',
+                'code' => 'CONVERSION_EMPLOYEE',
+                'status' => 'active',
+            ],
+            [
+                'id' => 10011,
+                'name' => 'Physical Stock Employee',
+                'code' => 'PHYSICAL_STOCK_EMPLOYEE',
+                'status' => 'active',
+            ],
+            [
+                'id' => 10012,
+                'name' => 'Opening Stock Employee',
+                'code' => 'OPENING_STOCK_EMPLOYEE',
+                'status' => 'active',
+            ],
         ];
 
         foreach ($roles as $role) {

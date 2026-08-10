@@ -209,6 +209,7 @@ class MenuService extends BaseService implements MenuServiceInterface
                 'route' => $menu->route,
                 'icon' => $menu->icon,
                 'is_group' => $menu->is_group,
+                'is_top_menu' => $menu->is_top_menu,
                 'sort_order' => $menu->sort_order,
                 'status' => $menu->status,
                 'is_visible' => $menu->is_visible,
@@ -249,6 +250,28 @@ class MenuService extends BaseService implements MenuServiceInterface
     }
 
     /**
+     * Collect all allowed feature IDs across the authenticated user's roles.
+     */
+    private function getAllowedFeatureIds(): array
+    {
+        $user = Auth::user();
+        if (! $user) {
+            return [];
+        }
+
+        $allowedFeatureIds = collect();
+        foreach ($user->roles as $role) {
+            $allowedFeatureIds = $allowedFeatureIds->merge(
+                $role->permissions
+                    ->where('is_allowed', true)
+                    ->pluck('app_module_feature_id')
+            );
+        }
+
+        return $allowedFeatureIds->unique()->values()->toArray();
+    }
+
+    /**
      * Collect all allowed feature codes for the authenticated user's roles.
      */
     public function getUserMenuPermissions(): array
@@ -276,21 +299,7 @@ class MenuService extends BaseService implements MenuServiceInterface
      */
     public function getUserMenuTree(): array
     {
-        $user = Auth::user();
-        if (! $user) {
-            return [];
-        }
-
-        // Collect all allowed feature IDs across the user's roles
-        $allowedFeatureIds = collect();
-        foreach ($user->roles as $role) {
-            $allowedFeatureIds = $allowedFeatureIds->merge(
-                $role->permissions
-                    ->where('is_allowed', true)
-                    ->pluck('app_module_feature_id')
-            );
-        }
-        $allowedFeatureIds = $allowedFeatureIds->unique()->values()->toArray();
+        $allowedFeatureIds = $this->getAllowedFeatureIds();
 
         if (empty($allowedFeatureIds)) {
             return [];
@@ -333,6 +342,63 @@ class MenuService extends BaseService implements MenuServiceInterface
     }
 
     /**
+     * Build and return the top-navigation menu tree (is_top_menu = true),
+     * filtered by the authenticated user's role permissions.
+     *
+     * Every menu flagged is_top_menu — at ANY hierarchy level (root or nested) —
+     * becomes a top-nav entry, so admins can promote existing sidebar items
+     * (e.g. Conversion) to the header nav without re-parenting them.
+     *
+     * Unlike the sidebar tree (getUserMenuTree), top menus are NOT filtered by
+     * is_visible — the is_top_menu flag itself is the explicit opt-in, so an
+     * admin can hide an item from the sidebar while keeping it in the top nav.
+     */
+    public function getTopMenuTree(): array
+    {
+        $allowedFeatureIds = $this->getAllowedFeatureIds();
+
+        if (empty($allowedFeatureIds)) {
+            return [];
+        }
+
+        // Fetch every top-menu entry regardless of parent level
+        // (permission-filtered, loading up to 3 levels of children).
+        // Flagged children are excluded from a parent's dropdown so a menu
+        // never appears twice (once as a dropdown item, once as its own link).
+        $topMenus = Menu::with([
+            'children' => function ($query) use ($allowedFeatureIds) {
+                $query->whereIn('app_module_feature_id', $allowedFeatureIds)
+                    ->where('status', 'active')
+                    ->where('is_top_menu', false)
+                    ->orderBy('sort_order');
+            },
+            'children.feature',
+            'children.children' => function ($query) use ($allowedFeatureIds) {
+                $query->whereIn('app_module_feature_id', $allowedFeatureIds)
+                    ->where('status', 'active')
+                    ->where('is_top_menu', false)
+                    ->orderBy('sort_order');
+            },
+            'children.children.feature',
+            'children.children.children' => function ($query) use ($allowedFeatureIds) {
+                $query->whereIn('app_module_feature_id', $allowedFeatureIds)
+                    ->where('status', 'active')
+                    ->where('is_top_menu', false)
+                    ->orderBy('sort_order');
+            },
+            'children.children.children.feature',
+            'feature',
+        ])
+            ->whereIn('app_module_feature_id', $allowedFeatureIds)
+            ->where('status', 'active')
+            ->where('is_top_menu', true)
+            ->orderBy('sort_order')
+            ->get();
+
+        return $this->buildMenuTree($topMenus);
+    }
+
+    /**
      * Get all AppModuleFeatures with their permission status for a given role.
      */
     public function getRoleMenuPermissions(int $roleId): Collection
@@ -355,6 +421,7 @@ class MenuService extends BaseService implements MenuServiceInterface
                 'route' => $menu->route,
                 'icon' => $menu->icon,
                 'isGroup' => $menu->is_group,
+                'isTopMenu' => $menu->is_top_menu,
                 'sortOrder' => $menu->sort_order,
                 'featureCode' => $menu->feature?->code,
                 'children' => [],

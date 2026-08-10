@@ -237,7 +237,76 @@ test('preview() returns the opening preview in camelCase matching the frontend s
     expect($capital['nature'])->toBe('LIA');
     expect((float) $capital['balance'])->toBe(-10000.0);
 
-    // Stock items: Item A, 100 KG in Main Godown
+    // Stock items come from the frozen CLSSK journal.
+    expect($data['stockSource'])->toBe('closing_journal');
+    expect($data['totalStockItems'])->toBe(1);
+
+    $stockItem = $data['stockItems'][0];
+    expect($stockItem['itemId'])->toBe($this->item->id);
+    expect($stockItem['itemName'])->toBe('Item A');
+    expect((float) $stockItem['totalQuantity'])->toBe(100.0);
+
+    $godownEntry = $stockItem['godowns'][0];
+    expect($godownEntry['godownId'])->toBe($this->godown->id);
+    expect($godownEntry['godownName'])->toBe('Main Godown');
+    expect((float) $godownEntry['quantity'])->toBe(100.0);
+});
+
+test('preview() falls back to the previous year running balance when no CLSSK journal exists', function () {
+    // Remove the frozen CLSSK closing journal.
+    StockJournalGodownEntry::query()->delete();
+    StockJournalEntry::query()->delete();
+    StockJournal::query()->delete();
+    $this->closingStockVoucher->delete();
+
+    // A live IN movement in the previous FY feeds the running balance: 100 KG @ 10.
+    $sourceVoucher = Voucher::create([
+        'voucher_no' => 'PUR-0001',
+        'voucher_date' => '2025-06-15',
+        'voucher_type_id' => $this->voucherTypes['CLSAC']->id,
+        'fiscal_year_id' => $this->prevFy->id,
+        'company_id' => $this->companyId,
+        'module' => 'purchase',
+        'remarks' => 'Test purchase',
+        'status' => 'active',
+    ]);
+    $sourceJournal = StockJournal::create([
+        'journal_no' => 'PUR-0001',
+        'journal_date' => '2025-06-15',
+        'type' => 'in',
+        'remarks' => 'Test purchase',
+    ]);
+    $sourceVoucher->update(['stock_journal_id' => $sourceJournal->id]);
+    $sourceEntry = StockJournalEntry::create([
+        'stock_journal_id' => $sourceJournal->id,
+        'entry_order' => 1,
+        'stock_item_id' => $this->item->id,
+        'stock_unit_id' => $this->unit->id,
+        'actual_quantity' => 100,
+        'billing_quantity' => 100,
+        'rate' => 10,
+        'rate_unit_id' => $this->unit->id,
+        'amount' => 1000,
+        'movement_type' => 'in',
+    ]);
+    StockJournalGodownEntry::create([
+        'stock_journal_entry_id' => $sourceEntry->id,
+        'entry_order' => 1,
+        'godown_id' => $this->godown->id,
+        'actual_quantity' => 100,
+        'billing_quantity' => 100,
+        'rate' => 10,
+        'amount' => 1000,
+        'movement_type' => 'in',
+    ]);
+
+    $response = $this->withToken($this->token)
+        ->getJson('/api/fiscal-years/'.$this->newFy->id.'/open-preview/'.$this->prevFy->id);
+
+    $response->assertOk();
+    $data = $response->json('data');
+
+    expect($data['stockSource'])->toBe('running');
     expect($data['totalStockItems'])->toBe(1);
 
     $stockItem = $data['stockItems'][0];

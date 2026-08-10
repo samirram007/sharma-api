@@ -226,6 +226,22 @@ class MenuController extends Controller
     }
 
     /**
+     * Get hierarchical top-navigation menu tree (is_top_menu = true)
+     * filtered by the authenticated user's role permissions.
+     * Used by the frontend header to render the top navigation.
+     * Route: GET /auth/top_menus
+     */
+    public function userTopMenuTree(): JsonResponse
+    {
+        $tree = MenuFacade::getTopMenuTree();
+
+        return response()->json([
+            'success' => true,
+            'data' => $tree,
+        ]);
+    }
+
+    /**
      * Get all menu features with their permission status for a given role.
      * Used by the Menu Manager UI.
      * Route: GET /role/{role_id}/menu-permissions

@@ -44,6 +44,7 @@ class VoucherDispatchDetailRequest extends FormRequest
             'packing_charges' => ['sometimes', 'nullable', 'numeric'],
             'insurance_charges' => ['sometimes', 'nullable', 'numeric'],
             'other_charges' => ['sometimes', 'nullable', 'numeric'],
+            'discount' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'freight_charges' => ['sometimes', 'nullable', 'numeric'],
             'total_fare' => ['sometimes', 'nullable', 'numeric'],
         ];
