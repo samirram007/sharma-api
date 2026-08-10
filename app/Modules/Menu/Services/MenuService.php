@@ -403,7 +403,7 @@ class MenuService extends BaseService implements MenuServiceInterface
      */
     public function getRoleMenuPermissions(int $roleId): Collection
     {
-        return AppModuleFeature::with(['role_permissions' => function ($q) use ($roleId) {
+        return AppModuleFeature::with(['module', 'role_permissions' => function ($q) use ($roleId) {
             $q->where('role_id', $roleId);
         }])->get();
     }
