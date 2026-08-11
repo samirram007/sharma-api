@@ -9,4 +9,8 @@ Route::middleware(['jwt.cookies'])->group(function () {
     // Notification Preferences
     Route::get('user/notification-preferences', [UserController::class, 'notificationPreferences']);
     Route::put('user/notification-preferences', [UserController::class, 'updateNotificationPreferences']);
+
+    // Print Preferences
+    Route::get('user/print-preferences', [UserController::class, 'printPreferences']);
+    Route::put('user/print-preferences', [UserController::class, 'updatePrintPreferences']);
 });

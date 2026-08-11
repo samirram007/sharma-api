@@ -76,7 +76,7 @@ class FreightService extends BaseService implements FreightServiceInterface
             ->where('vouchers.fiscal_year_id', $fiscalYearId)
             ->whereBetween('vouchers.voucher_date', [$startDate, $endDate]);
 
-        // Apply freight_status filter (pending = no freight bill yet, prepared = has freight bill, all = both)
+        // Apply freight_status filter (pending = fare not entered yet, prepared = fare entered, all = both)
         $this->applyFreightStatusFilter($query, $filters);
 
         // Date range filter
@@ -162,37 +162,39 @@ class FreightService extends BaseService implements FreightServiceInterface
     /**
      * Apply the freight_status filter to the delivery note query.
      *
-     * - 'prepared': Only delivery notes that already have a freight bill
-     * - 'pending' (default): Only delivery notes without a freight bill
-     * - 'all' or any other value: No filtering on freight status
-     *
-     * Matches the same logic used in store() to detect existing freight bills:
-     * A freight bill exists when a voucher_reference has ref_voucher_id = delivery note ID
-     * and the referencing voucher (voucher_id) has module='freight' and voucher_type_id=1006.
+     * The status is derived from the dispatch-detail fare, not from whether a
+     * freight bill exists:
+     * - 'prepared': Dispatch details carry a computed fare — both the base
+     *   freight charges and the total fare are filled in (> 0).
+     * - 'pending' (default): No fare computed yet — no dispatch detail row,
+     *   or either fare field is missing/zero.
+     * - 'all' or any other value: No filtering on freight status.
      */
     private function applyFreightStatusFilter($query, array $filters): void
     {
         $status = $filters['freight_status'] ?? 'pending';
 
-        // Build the subquery to find delivery note IDs that have a freight bill referencing them.
-        // This mirrors the logic in store() that checks:
-        //   voucher_references.ref_voucher_id = delivery_note_id
-        //   JOIN vouchers ON voucher_references.voucher_id = vouchers.id
-        //   WHERE vouchers.module = 'freight' AND vouchers.voucher_type_id = 1006
-        $freightedDnIdsQuery = function ($q) {
-            $q->select('vr.ref_voucher_id')
-                ->from('voucher_references as vr')
-                ->join('vouchers as v', 'vr.voucher_id', '=', 'v.id')
-                ->where('v.module', 'freight')
-                ->where('v.voucher_type_id', $this->salesVoucherTypeID);
-        };
-
-        if ($status === 'pending') {
-            // Exclude delivery notes that already have a freight bill
-            $query->whereNotIn('vouchers.id', $freightedDnIdsQuery);
-        } elseif ($status === 'prepared') {
-            // Only delivery notes that HAVE a freight bill
-            $query->whereIn('vouchers.id', $freightedDnIdsQuery);
+        if ($status === 'prepared') {
+            // Prepared = both fare fields are filled in on the dispatch detail.
+            $query->whereHas('voucher_dispatch_detail', function ($q) {
+                $q->where('total_fare', '>', 0)
+                    ->where('freight_charges', '>', 0);
+            });
+        } elseif ($status === 'pending') {
+            // Pending = no computed fare yet (no dispatch detail row, or
+            // either fare field missing/zero).
+            $query->where(function ($q) {
+                $q->whereDoesntHave('voucher_dispatch_detail')
+                    ->orWhereHas('voucher_dispatch_detail', function ($q2) {
+                        $q2->where(function ($q3) {
+                            $q3->where('total_fare', '<=', 0)
+                                ->orWhereNull('total_fare');
+                        })->orWhere(function ($q3) {
+                            $q3->where('freight_charges', '<=', 0)
+                                ->orWhereNull('freight_charges');
+                        });
+                    });
+            });
         }
         // 'all' — no additional filtering
     }
@@ -844,7 +846,17 @@ class FreightService extends BaseService implements FreightServiceInterface
         // the freight form must never clobber a rate/fare already saved on the
         // delivery note — the dialog is the authoritative source for these and the
         // freight bill amount is derived from them.
-        $fareFields = ['rate', 'total_fare', 'freight_charges', 'discount'];
+        $fareFields = [
+            'rate',
+            'total_fare',
+            'freight_charges',
+            'discount',
+            'loading_charges',
+            'unloading_charges',
+            'packing_charges',
+            'insurance_charges',
+            'other_charges',
+        ];
 
         $dispatchData = array_filter([
             'carrier_name' => $data['transporter'] ?? null,
@@ -861,6 +873,11 @@ class FreightService extends BaseService implements FreightServiceInterface
             'freight_basis' => $data['freight_basis'] ?? null,
             'rate' => $data['rate'] ?? null,
             'rate_unit_id' => $data['rate_unit_id'] ?? null,
+            'loading_charges' => $data['loading_charges'] ?? null,
+            'unloading_charges' => $data['unloading_charges'] ?? null,
+            'packing_charges' => $data['packing_charges'] ?? null,
+            'insurance_charges' => $data['insurance_charges'] ?? null,
+            'other_charges' => $data['other_charges'] ?? null,
             'freight_charges' => $data['freight_charges'] ?? null,
             'total_fare' => $data['total_fare'] ?? null,
             'discount' => $data['discount'] ?? null,

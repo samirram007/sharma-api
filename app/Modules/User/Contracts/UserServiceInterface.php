@@ -15,4 +15,8 @@ interface UserServiceInterface extends BaseServiceInterface
     public function updateNotificationPreferences(int $userId, array $preferences): Collection;
 
     public function shouldNotify(int $userId, string $type): bool;
+
+    public function getPrintPreferences(int $userId): ?array;
+
+    public function updatePrintPreferences(int $userId, array $preferences): array;
 }

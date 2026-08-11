@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Modules\User\Facades\UserFacade;
 use Modules\User\Requests\UserNotificationPreferenceRequest;
+use Modules\User\Requests\UserPrintPreferenceRequest;
 use Modules\User\Requests\UserRequest;
 use Modules\User\Resources\UserCollection;
 use Modules\User\Resources\UserResource;
@@ -95,5 +96,30 @@ class UserController extends Controller
             ]),
             'Notification preferences updated successfully'
         );
+    }
+
+    // ── Print Preferences ────────────────────────────────────────
+
+    /**
+     * Get print preferences (receipt section visibility) for the current user
+     */
+    public function printPreferences(): JsonResponse
+    {
+        $prefs = UserFacade::getPrintPreferences(Auth::id());
+
+        return response()->json([
+            'success' => true,
+            'data' => $prefs,
+        ]);
+    }
+
+    /**
+     * Update print preferences for the current user
+     */
+    public function updatePrintPreferences(UserPrintPreferenceRequest $request): JsonResponse
+    {
+        $prefs = UserFacade::updatePrintPreferences(Auth::id(), $request->validated());
+
+        return $this->successResponse($prefs, 'Print preferences updated successfully');
     }
 }

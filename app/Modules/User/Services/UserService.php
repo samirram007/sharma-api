@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Modules\User\Contracts\UserServiceInterface;
 use Modules\User\Models\User;
 use Modules\User\Models\UserNotificationPreference;
+use Modules\User\Models\UserPrintPreference;
 
 class UserService extends BaseService implements UserServiceInterface
 {
@@ -112,5 +113,46 @@ class UserService extends BaseService implements UserServiceInterface
 
         // Default to enabled if no preference set
         return $pref ? $pref->in_app : true;
+    }
+
+    // ── Print Preferences ─────────────────────────────────────────
+
+    /**
+     * Get the print receipt section visibility for a user, or null when the
+     * user hasn't saved any preference yet (the client keeps its local values
+     * until the first explicit save).
+     */
+    public function getPrintPreferences(int $userId): ?array
+    {
+        $prefs = UserPrintPreference::where('user_id', $userId)->first();
+
+        if (! $prefs) {
+            return null;
+        }
+
+        return [
+            'showFareDetails' => $prefs->show_fare_details,
+            'showDocumentInfo' => $prefs->show_document_info,
+            'showAuthorizations' => $prefs->show_authorizations,
+            'showPaidToAmount' => $prefs->show_paid_to_amount,
+        ];
+    }
+
+    /**
+     * Persist print section visibility for a user. Only the keys present in
+     * the payload are updated; missing keys keep their current value.
+     */
+    public function updatePrintPreferences(int $userId, array $preferences): array
+    {
+        $prefs = UserPrintPreference::firstOrCreate(['user_id' => $userId]);
+
+        $prefs->update([
+            'show_fare_details' => $preferences['show_fare_details'] ?? $prefs->show_fare_details,
+            'show_document_info' => $preferences['show_document_info'] ?? $prefs->show_document_info,
+            'show_authorizations' => $preferences['show_authorizations'] ?? $prefs->show_authorizations,
+            'show_paid_to_amount' => $preferences['show_paid_to_amount'] ?? $prefs->show_paid_to_amount,
+        ]);
+
+        return $this->getPrintPreferences($userId);
     }
 }

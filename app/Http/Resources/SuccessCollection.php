@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Pagination\AbstractPaginator;
 
 class SuccessCollection extends ResourceCollection
 {
@@ -35,26 +34,6 @@ class SuccessCollection extends ResourceCollection
             'success' => true,
             'code' => $this->successCode,
             'message' => $this->message.' ('.$recordCount.' record(s))',
-            'meta' => $this->paginationMeta(),
-        ];
-    }
-
-    /**
-     * Return minimal pagination metadata when the resource is a paginator.
-     * Only the fields needed for server-side pagination are exposed;
-     * the `from`/`to` range can be derived client-side from current_page/per_page/total.
-     */
-    protected function paginationMeta(): ?array
-    {
-        if (! $this->resource instanceof AbstractPaginator) {
-            return null;
-        }
-
-        return [
-            'current_page' => $this->resource->currentPage(),
-            'last_page' => $this->resource->lastPage(),
-            'per_page' => $this->resource->perPage(),
-            'total' => $this->resource->total(),
         ];
     }
 }
