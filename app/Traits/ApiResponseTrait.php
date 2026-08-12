@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 trait ApiResponseTrait
 {
@@ -36,7 +37,15 @@ trait ApiResponseTrait
 
     protected function resourceResponse($resource, string $message = 'Success', int $code = 200): JsonResponse
     {
-        return (new SuccessResource($resource))
+        // Never wrap a JsonResource inside another SuccessResource — that makes
+        // SuccessResource::toArray() call the inner resource's toArray() with no
+        // arguments (ArgumentCountError). If a resource instance is passed, use
+        // it directly; only wrap raw models/arrays in the envelope resource.
+        $resource = $resource instanceof JsonResource
+            ? $resource
+            : new SuccessResource($resource);
+
+        return $resource
             ->response()
             ->setStatusCode($code);
     }

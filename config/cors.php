@@ -15,7 +15,10 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    // `broadcasting/*` must be CORS-enabled so the SPA (served from a different
+    // origin in production) can POST to the Laravel channel-auth endpoint
+    // `/broadcasting/auth` (Laravel Echo private/presence channel authorization).
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'broadcasting/*'],
 
     'allowed_methods' => ['*'],
 
