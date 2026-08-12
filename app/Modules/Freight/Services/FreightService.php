@@ -3,6 +3,7 @@
 namespace Modules\Freight\Services;
 
 use App\Support\Services\BaseService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -64,7 +65,7 @@ class FreightService extends BaseService implements FreightServiceInterface
 
         // Stock journal hierarchy is eager-loaded so the frontend can auto-fill
         // the freight dispatch-details Weight from the delivery note's entries
-        // (same shape as getDeliveryNotesWithStockJournals()).
+        // (same shape as getDeliveryNotesWithStockJournalsQuery()).
         $query = Voucher::with(array_merge($this->defaultResource, [
             'stock_journal.stock_journal_entries.stock_item',
             'stock_journal.stock_journal_entries.stock_unit',
@@ -78,6 +79,9 @@ class FreightService extends BaseService implements FreightServiceInterface
 
         // Apply freight_status filter (pending = fare not entered yet, prepared = fare entered, all = both)
         $this->applyFreightStatusFilter($query, $filters);
+
+        // Zone filter (zone itself + its child godowns)
+        $this->applyZoneFilter($query, $filters);
 
         // Date range filter
         if (! empty($filters['date_from'])) {
@@ -107,13 +111,17 @@ class FreightService extends BaseService implements FreightServiceInterface
         }
 
         $vouchers = $query->select('vouchers.*')
-            ->distinct()
             ->orderBy('vouchers.voucher_date', 'desc')
             ->orderBy('vouchers.voucher_no', 'desc')
             ->paginate($perPage);
 
-        // Transform each voucher with ledger info
-        $vouchers->getCollection()->transform(fn ($voucher) => $this->voucherService->attachLedgerInfo($voucher));
+        // Attach computed ledger info (party/transaction ledger, amount,
+        // payment status) in bulk — a handful of grouped queries for the whole
+        // page instead of the per-voucher attachLedgerInfo() N+1 (4 ledger SUM
+        // queries + payment-status lookups per voucher).
+        $vouchers->setCollection(
+            $this->voucherService->attachListInfo($vouchers->getCollection())
+        );
 
         return $vouchers;
     }
@@ -129,6 +137,9 @@ class FreightService extends BaseService implements FreightServiceInterface
 
         // Apply freight_status filter
         $this->applyFreightStatusFilter($query, $filters);
+
+        // Zone filter (zone itself + its child godowns)
+        $this->applyZoneFilter($query, $filters);
 
         if (! empty($filters['date_from'])) {
             $query->where('vouchers.voucher_date', '>=', $filters['date_from']);
@@ -157,6 +168,52 @@ class FreightService extends BaseService implements FreightServiceInterface
         return (float) $query
             ->join('voucher_dispatch_details', 'vouchers.id', '=', 'voucher_dispatch_details.voucher_id')
             ->sum('voucher_dispatch_details.total_fare');
+    }
+
+    /**
+     * Apply the zone filter to the delivery note query.
+     *
+     * A delivery note belongs to a zone when any of its stock-journal godown
+     * entries reference a godown that is the zone itself or a child godown of
+     * the zone (the same godown resolution logic used by
+     * deliveryNoteGodownWiseReport()).
+     */
+    private function applyZoneFilter($query, array $filters): void
+    {
+        if (empty($filters['zone_id'])) {
+            return;
+        }
+
+        $zoneId = (int) $filters['zone_id'];
+
+        // Godowns belonging to the zone = the zone itself + child godowns.
+        $zoneGodownIds = $this->resolveZoneGodownIds($zoneId);
+
+        if (empty($zoneGodownIds)) {
+            // Zone doesn't exist (or has no godowns) — match nothing.
+            $query->whereRaw('1 = 0');
+
+            return;
+        }
+
+        $query->whereHas(
+            'stock_journal.stock_journal_entries.stock_journal_godown_entries',
+            fn ($q) => $q->whereIn('stock_journal_godown_entries.godown_id', $zoneGodownIds)
+        );
+    }
+
+    /**
+     * Resolve the godown ids belonging to a zone — the zone itself plus its
+     * child godowns (parent_id). Shared by the delivery-note godown-wise
+     * report and the delivery-note zone filter so zone membership is defined
+     * in exactly one place.
+     */
+    private function resolveZoneGodownIds(int $zoneId): array
+    {
+        return Godown::where(function ($q) use ($zoneId) {
+            $q->where('id', $zoneId)
+                ->orWhere('parent_id', $zoneId);
+        })->pluck('id')->toArray();
     }
 
     /**
@@ -201,10 +258,9 @@ class FreightService extends BaseService implements FreightServiceInterface
 
     public function godownWiseReport(): Collection
     {
-        $deliveryNotes = $this->getDeliveryNotesWithStockJournals();
         $godownData = [];
 
-        $this->processStockJournalEntries($deliveryNotes, function ($voucher, $godownEntry, $godown, $movementType, $quantity) use (&$godownData) {
+        $this->processStockJournalEntries(function ($voucher, $godownEntry, $godown, $movementType, $quantity) use (&$godownData) {
             $key = (string) $godown->id;
 
             if (! isset($godownData[$key])) {
@@ -228,19 +284,18 @@ class FreightService extends BaseService implements FreightServiceInterface
         $zoneIds = $zones->keys()->toArray();
 
         // Get freight (sales) vouchers instead of delivery notes
-        $freightVouchers = $this->getFreightVouchersWithReferencedData();
         $zoneData = [];
 
-        foreach ($freightVouchers as $freightVoucher) {
+        $this->processFreightVouchersInChunks(function ($freightVoucher) use (&$zoneData, $zoneIds, $zones) {
             // Each freight voucher references exactly one delivery note via voucher_references
             $reference = $freightVoucher->voucher_references->first();
             if (! $reference) {
-                continue;
+                return;
             }
 
             $deliveryNote = $reference->reference_voucher;
             if (! $deliveryNote || ! $deliveryNote->stock_journal) {
-                continue;
+                return;
             }
 
             $stockJournal = $deliveryNote->stock_journal;
@@ -285,7 +340,7 @@ class FreightService extends BaseService implements FreightServiceInterface
                     );
                 }
             }
-        }
+        });
 
         return new Collection($this->finalizeGroupedData($zoneData));
     }
@@ -299,10 +354,9 @@ class FreightService extends BaseService implements FreightServiceInterface
         $zones = Godown::where('storage_unit_type', 'ZONE')->get()->keyBy('id');
         $zoneIds = $zones->keys()->toArray();
 
-        $deliveryNotes = $this->getDeliveryNotesWithStockJournals();
         $zoneData = [];
 
-        $this->processStockJournalEntries($deliveryNotes, function ($voucher, $godownEntry, $godown, $movementType, $quantity) use (&$zoneData, $zoneIds, $zones) {
+        $this->processStockJournalEntries(function ($voucher, $godownEntry, $godown, $movementType, $quantity) use (&$zoneData, $zoneIds, $zones) {
             // Determine zone: godown itself is a zone, or its parent is a zone
             $zone = null;
             if (in_array($godown->id, $zoneIds)) {
@@ -347,18 +401,12 @@ class FreightService extends BaseService implements FreightServiceInterface
             $filteredGodownIds = [$godownId];
         } elseif ($zoneId) {
             // All godowns belonging to this zone (zone itself + child godowns)
-            $filteredGodownIds = Godown::where(function ($query) use ($zoneId) {
-                $query->where('id', $zoneId)
-                    ->orWhere('parent_id', $zoneId);
-            })
-                ->pluck('id')
-                ->toArray();
+            $filteredGodownIds = $this->resolveZoneGodownIds($zoneId);
         }
 
-        $deliveryNotes = $this->getDeliveryNotesWithStockJournals();
         $godownData = [];
 
-        $this->processStockJournalEntries($deliveryNotes, function ($voucher, $godownEntry, $godown, $movementType, $quantity) use (&$godownData, $filteredGodownIds) {
+        $this->processStockJournalEntries(function ($voucher, $godownEntry, $godown, $movementType, $quantity) use (&$godownData, $filteredGodownIds) {
             // Skip godowns not in the filtered list
             if (! in_array($godown->id, $filteredGodownIds)) {
                 return;
@@ -383,53 +431,60 @@ class FreightService extends BaseService implements FreightServiceInterface
     // ---- Shared helpers ----
 
     /**
-     * Get delivery notes with eager-loaded stock journal hierarchy, scoped to current fiscal year.
+     * Base query for delivery notes with the eager-loaded stock journal hierarchy,
+     * scoped to the user's fiscal year reporting period.
+     *
+     * The Voucher `default_order` global scope is disabled and rows are consumed
+     * via chunkById() so reports stay bounded in memory — hydrating the whole
+     * period at once previously exhausted PHP's memory_limit on large data sets.
      */
-    private function getDeliveryNotesWithStockJournals(): Collection
+    private function getDeliveryNotesWithStockJournalsQuery(): Builder
     {
         [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
 
-        return Voucher::with([
-            'stock_journal.stock_journal_entries.stock_item',
-            'stock_journal.stock_journal_entries.stock_unit',
-            'stock_journal.stock_journal_entries.stock_journal_godown_entries.godown',
-            'voucher_dispatch_detail',
-            'voucher_party',
-        ])
+        return Voucher::query()
+            ->withoutGlobalScope('default_order')
+            ->with([
+                'stock_journal.stock_journal_entries.stock_item',
+                'stock_journal.stock_journal_entries.stock_unit',
+                'stock_journal.stock_journal_entries.stock_journal_godown_entries.godown',
+                'voucher_dispatch_detail',
+                'voucher_party',
+            ])
             ->where('vouchers.voucher_type_id', $this->deliverNoteVoucherTypeID)
             ->whereNotNull('vouchers.stock_journal_id')
             ->where('vouchers.fiscal_year_id', $fiscalYearId)
-            ->whereBetween('vouchers.voucher_date', [$startDate, $endDate])
-            ->select('vouchers.*')
-            ->distinct()
-            ->get();
+            ->whereBetween('vouchers.voucher_date', [$startDate, $endDate]);
     }
 
     /**
-     * Get freight (sales) vouchers with eager-loaded referenced delivery note data
-     * (stock journal hierarchy, dispatch details, party) for zone-wise reporting.
+     * Base query for freight (sales) vouchers with eager-loaded referenced delivery
+     * note data (stock journal hierarchy, dispatch details, party) for zone-wise
+     * and transporter-wise reporting.
+     *
+     * The Voucher `default_order` global scope is disabled and rows are consumed
+     * via chunkById() so reports stay bounded in memory. Ordering is irrelevant
+     * here — consumers accumulate into buckets (transporter-wise re-sorts by
+     * voucher number at the end).
      */
-    private function getFreightVouchersWithReferencedData(): Collection
+    private function getFreightVouchersWithReferencedDataQuery(): Builder
     {
         [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
 
-        return Voucher::with([
-            'voucher_references.reference_voucher.stock_journal.stock_journal_entries.stock_item',
-            'voucher_references.reference_voucher.stock_journal.stock_journal_entries.stock_unit',
-            'voucher_references.reference_voucher.stock_journal.stock_journal_entries.stock_journal_godown_entries.godown',
-            'voucher_references.reference_voucher.voucher_dispatch_detail',
-            'voucher_references.reference_voucher.voucher_party',
-            'voucher_party',
-        ])
+        return Voucher::query()
+            ->withoutGlobalScope('default_order')
+            ->with([
+                'voucher_references.reference_voucher.stock_journal.stock_journal_entries.stock_item',
+                'voucher_references.reference_voucher.stock_journal.stock_journal_entries.stock_unit',
+                'voucher_references.reference_voucher.stock_journal.stock_journal_entries.stock_journal_godown_entries.godown',
+                'voucher_references.reference_voucher.voucher_dispatch_detail',
+                'voucher_references.reference_voucher.voucher_party',
+                'voucher_party',
+            ])
             ->where('vouchers.module', 'freight')
             ->where('vouchers.voucher_type_id', $this->salesVoucherTypeID)
             ->where('vouchers.fiscal_year_id', $fiscalYearId)
-            ->whereBetween('vouchers.voucher_date', [$startDate, $endDate])
-            ->select('vouchers.*')
-            ->distinct()
-            ->orderBy('vouchers.voucher_date', 'desc')
-            ->orderBy('vouchers.voucher_no', 'desc')
-            ->get();
+            ->whereBetween('vouchers.voucher_date', [$startDate, $endDate]);
     }
 
     /**
@@ -455,31 +510,49 @@ class FreightService extends BaseService implements FreightServiceInterface
     }
 
     /**
-     * Iterate stock journal entries across delivery notes, calling callback for each godown entry.
+     * Stream delivery notes through the callback in bounded chunks, so peak
+     * memory stays flat regardless of how much data the reporting period holds.
      * Callback receives: (Voucher $voucher, StockJournalGodownEntry $entry, Godown $godown, string $movementType, float $quantity)
      */
-    private function processStockJournalEntries(Collection $deliveryNotes, callable $callback): void
+    private function processStockJournalEntries(callable $callback, int $chunkSize = 200): void
     {
-        foreach ($deliveryNotes as $voucher) {
-            $stockJournal = $voucher->stock_journal;
-            if (! $stockJournal) {
-                continue;
-            }
-
-            foreach ($stockJournal->stock_journal_entries as $entry) {
-                foreach ($entry->stock_journal_godown_entries as $godownEntry) {
-                    $godown = $godownEntry->godown;
-                    if (! $godown) {
+        $this->getDeliveryNotesWithStockJournalsQuery()
+            ->chunkById($chunkSize, function ($vouchers) use ($callback) {
+                foreach ($vouchers as $voucher) {
+                    $stockJournal = $voucher->stock_journal;
+                    if (! $stockJournal) {
                         continue;
                     }
 
-                    $movementType = $godownEntry->movement_type?->value ?? '';
-                    $quantity = (float) ($godownEntry->actual_quantity ?? 0);
+                    foreach ($stockJournal->stock_journal_entries as $entry) {
+                        foreach ($entry->stock_journal_godown_entries as $godownEntry) {
+                            $godown = $godownEntry->godown;
+                            if (! $godown) {
+                                continue;
+                            }
 
-                    $callback($voucher, $godownEntry, $godown, $movementType, $quantity);
+                            $movementType = $godownEntry->movement_type?->value ?? '';
+                            $quantity = (float) ($godownEntry->actual_quantity ?? 0);
+
+                            $callback($voucher, $godownEntry, $godown, $movementType, $quantity);
+                        }
+                    }
                 }
-            }
-        }
+            });
+    }
+
+    /**
+     * Stream freight (sales) vouchers through the callback in bounded chunks.
+     * Callback receives: (Voucher $freightVoucher)
+     */
+    private function processFreightVouchersInChunks(callable $callback, int $chunkSize = 200): void
+    {
+        $this->getFreightVouchersWithReferencedDataQuery()
+            ->chunkById($chunkSize, function ($freightVouchers) use ($callback) {
+                foreach ($freightVouchers as $freightVoucher) {
+                    $callback($freightVoucher);
+                }
+            });
     }
 
     /**
@@ -641,26 +714,27 @@ class FreightService extends BaseService implements FreightServiceInterface
 
         $vouchers = $queryBuilder->get();
 
-        return $vouchers->map(fn ($voucher) => $this->voucherService->attachLedgerInfo($voucher));
-
+        // Attach computed ledger info (party/transaction ledger, amount,
+        // payment status) in bulk — a handful of grouped queries for the whole
+        // result set instead of the per-voucher attachLedgerInfo() N+1.
+        return $this->voucherService->attachListInfo($vouchers);
     }
 
     public function transporterItemWiseReport(): Collection
     {
         // Get freight vouchers with referenced delivery note data including stock journal items and dispatch details
-        $freightVouchers = $this->getFreightVouchersWithReferencedData();
         $transporterData = [];
 
-        foreach ($freightVouchers as $freightVoucher) {
+        $this->processFreightVouchersInChunks(function ($freightVoucher) use (&$transporterData) {
             // Each freight voucher references exactly one delivery note via voucher_references
             $reference = $freightVoucher->voucher_references->first();
             if (! $reference) {
-                continue;
+                return;
             }
 
             $deliveryNote = $reference->reference_voucher;
             if (! $deliveryNote || ! $deliveryNote->stock_journal) {
-                continue;
+                return;
             }
 
             $dispatch = $deliveryNote->voucher_dispatch_detail;
@@ -722,7 +796,7 @@ class FreightService extends BaseService implements FreightServiceInterface
                     'totalFare' => $totalFare,
                 ];
             }
-        }
+        });
 
         // Sort entries by voucher within each transporter so items from same invoice stay together
         $result = [];
@@ -778,7 +852,10 @@ class FreightService extends BaseService implements FreightServiceInterface
 
         $vouchers = $queryBuilder->get();
 
-        return $vouchers->map(fn ($voucher) => $this->voucherService->attachLedgerInfo($voucher));
+        // Attach computed ledger info (party/transaction ledger, amount,
+        // payment status) in bulk — a handful of grouped queries for the whole
+        // result set instead of the per-voucher attachLedgerInfo() N+1.
+        return $this->voucherService->attachListInfo($vouchers);
     }
 
     public function getById(int $id): ?Freight

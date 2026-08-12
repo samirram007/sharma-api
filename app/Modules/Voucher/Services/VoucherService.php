@@ -916,7 +916,7 @@ class VoucherService extends BaseService implements VoucherServiceInterface
      * grouped queries, instead of the per-voucher N+1 (4 ledger sums + 2-4
      * payment queries each) that the single-voucher paths run.
      */
-    protected function attachListInfo(Collection $vouchers): Collection
+    public function attachListInfo(Collection $vouchers): Collection
     {
         if ($vouchers->isEmpty()) {
             return $vouchers;

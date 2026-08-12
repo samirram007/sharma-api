@@ -5,6 +5,8 @@ namespace Modules\StockSummary\Services;
 use App\Enums\MovementType;
 use App\Support\Services\BaseService;
 use App\Support\Traits\HasItemAverageRate;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -359,19 +361,17 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     }
 
     /**
-     * Stock In Hand — item-level summary
-     * Formula: Closing Quantity = Opening Quantity + Operating Inward - Operating Outward
+     * Base query for the stock-in-hand report: stock items that have fiscal-year
+     * movements, with the same nested eager loads the report uses. The StockItem
+     * `orderByName` global scope is kept so per-chunk iteration preserves the
+     * by-name ordering callers already see.
      */
-    public function stockInHand(): array
+    protected function stockInHandQuery(): Builder
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
         $asOfDate = $this->getAsOfDate();
-        $fiscalYear = FiscalYear::find($fiscalYearId);
-        $periodStart = $this->getPeriodStart($fiscalYear);
-        $fyStart = $fiscalYear?->start_date ? Carbon::parse($fiscalYear->start_date) : null;
-        $startsAtFyStart = $this->startsAtFiscalYearStart($periodStart, $fyStart);
 
-        $items = StockItem::withWhereHas(
+        return StockItem::withWhereHas(
             'stock_journal_entries.stock_journal.voucher',
             fn ($q) => $q->where('fiscal_year_id', $fiscalYearId)
                 ->when($asOfDate, fn ($query) => $query->where('voucher_date', '<=', $asOfDate))
@@ -389,30 +389,299 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                         ]);
                 },
             ])
-            ->get();
+            // id tiebreaker keeps chunk() pagination stable when names collide
+            // (ORDER BY name, id — orderByName scope first, then id).
+            ->orderBy('id');
+    }
+
+    /**
+     * Base query for the item-wise stock-in-hand report (all items, with godown
+     * breakdown). Kept ordered by name so per-chunk iteration preserves order.
+     */
+    protected function stockInHandItemWiseQuery(): Builder
+    {
+        $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+        $asOfDate = $this->getAsOfDate();
+
+        return StockItem::with([
+            'stock_unit',
+            'stock_journal_entries' => function ($query) use ($fiscalYearId, $asOfDate) {
+                $query->whereHas('stock_journal.voucher', function ($q) use ($fiscalYearId, $asOfDate) {
+                    $q->where('fiscal_year_id', $fiscalYearId)
+                        ->when($asOfDate, fn ($query) => $query->where('voucher_date', '<=', $asOfDate));
+                })
+                    ->with([
+                        'stock_journal_godown_entries.godown',
+                        'stock_journal.voucher',
+                    ]);
+            },
+        ])
+            // id tiebreaker keeps chunk() pagination stable when names collide.
+            ->orderBy('id');
+    }
+
+    /**
+     * Base query for the voucher-wise stock-in-hand report (all items, with
+     * voucher and godown detail lines). Kept ordered by name.
+     */
+    protected function stockInHandVoucherWiseQuery(): Builder
+    {
+        $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+        $asOfDate = $this->getAsOfDate();
+
+        return StockItem::with([
+            'stock_unit',
+            'stock_journal_entries' => function ($query) use ($fiscalYearId, $asOfDate) {
+                $query->whereHas('stock_journal.voucher', function ($q) use ($fiscalYearId, $asOfDate) {
+                    $q->where('fiscal_year_id', $fiscalYearId)
+                        ->when($asOfDate, fn ($query) => $query->where('voucher_date', '<=', $asOfDate));
+                })->with([
+                    'stock_journal.voucher.voucher_type',
+                    'stock_journal_godown_entries',
+                ]);
+            },
+        ])
+            // id tiebreaker keeps chunk() pagination stable when names collide.
+            ->orderBy('id');
+    }
+
+    /**
+     * Base query for the godown running-balance report: godowns with fiscal-year
+     * godown entries, ordered by name.
+     */
+    protected function runningBalanceGodownsQuery(): Builder
+    {
+        $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+
+        return Godown::withWhereHas(
+            'stock_journal_godown_entries.stock_journal_entry.stock_journal.voucher',
+            fn ($q) => $q->where('fiscal_year_id', $fiscalYearId)->whereHas('stock_journal')
+        )
+            ->with([
+                'stock_journal_godown_entries' => fn ($q) => $q->whereHas(
+                    'stock_journal_entry.stock_journal.voucher',
+                    fn ($v) => $v->where('fiscal_year_id', $fiscalYearId)->whereHas('stock_journal')
+                ),
+            ])
+            // id tiebreaker keeps chunk() pagination stable when names collide.
+            ->orderBy('id');
+    }
+
+    /**
+     * Flat query over stock-journal godown entries for the godown/zone-wise
+     * stock-in-hand reports (direct joins, not_purged-aware). Rows are consumed
+     * in chunks so peak memory stays bounded regardless of movement volume.
+     */
+    protected function stockInHandGodownRowsQuery(int $fiscalYearId, ?Carbon $asOfDate, bool $includeParentId = false): QueryBuilder
+    {
+        // sjge.id is selected so chunkById can paginate on it (see the report methods).
+        $columns = [
+            'sjge.id',
+            'g.id as godown_id',
+            'g.name as godown_name',
+            'g.code as godown_code',
+            'v.voucher_date',
+            'si.id as stock_item_id',
+            'si.name as stock_item_name',
+            'su.code as unit_code',
+            'su.name as unit_name',
+            'su.no_of_decimal_places',
+            'sjge.actual_quantity',
+            'sjge.amount',
+            'sjge.movement_type',
+            'sj.type as stock_journal_type',
+        ];
+
+        if ($includeParentId) {
+            $columns[] = 'g.parent_id';
+        }
+
+        return DB::table('stock_journal_godown_entries as sjge')
+            ->join('stock_journal_entries as sje', 'sjge.stock_journal_entry_id', '=', 'sje.id')
+            ->join('stock_journals as sj', 'sje.stock_journal_id', '=', 'sj.id')
+            ->join('vouchers as v', 'v.stock_journal_id', '=', 'sj.id')
+            ->join('godowns as g', 'sjge.godown_id', '=', 'g.id')
+            ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
+            ->leftJoin('stock_units as su', 'si.stock_unit_id', '=', 'su.id')
+            ->where('v.fiscal_year_id', $fiscalYearId)
+            // Only include movements up to the as-of date (reporting period end)
+            ->when($asOfDate, fn ($q) => $q->where('v.voucher_date', '<=', $asOfDate))
+            // Respect Eloquent's not_purged global scope
+            ->whereNotExists(function ($q) {
+                $q->select(DB::raw('1'))
+                    ->from('stock_journal_godown_entry_purges')
+                    ->whereColumn('stock_journal_godown_entry_purges.stock_journal_godown_entry_id', 'sjge.id');
+            })
+            // Deterministic order — chunk() requires an orderBy and id-based
+            // pagination keeps offsets stable.
+            ->orderBy('sjge.id')
+            ->select($columns);
+    }
+
+    /**
+     * Accumulate one chunk of flat movement rows into per-godown → per-item
+     * aggregate counters (opening/operating in/out), so raw rows never stay in
+     * memory beyond their chunk.
+     */
+    protected function fillGodownItemBuckets(array &$godownBuckets, iterable $rows, ?Carbon $periodStart, bool $startsAtFyStart, bool $captureParent = false): void
+    {
+        foreach ($rows as $row) {
+            $godownId = (int) $row->godown_id;
+            $itemId = (int) $row->stock_item_id;
+
+            $bucket = &$godownBuckets[$godownId];
+            if (! isset($bucket)) {
+                $bucket = [
+                    'godown_id' => $godownId,
+                    'godown_name' => $row->godown_name,
+                    'godown_code' => $row->godown_code,
+                    'items' => [],
+                ];
+                if ($captureParent) {
+                    $bucket['parent_id'] = $row->parent_id;
+                }
+            }
+
+            $item = &$bucket['items'][$itemId];
+            if (! isset($item)) {
+                $item = [
+                    'item_id' => $itemId,
+                    'item_name' => $row->stock_item_name,
+                    'unit_code' => $row->unit_code,
+                    'unit_name' => $row->unit_name,
+                    // (int) null → 0 when the item has no stock unit — same as the
+                    // pre-chunk implementation, which emitted (int) $row->no_of_decimal_places.
+                    'no_of_decimal_places' => (int) $row->no_of_decimal_places,
+                    'opening_qty' => 0,
+                    'opening_amt' => 0,
+                    'in_qty' => 0,
+                    'in_amt' => 0,
+                    'out_qty' => 0,
+                    'out_amt' => 0,
+                ];
+            }
+
+            $isOpening = $this->isOpeningRow($row, $periodStart, $startsAtFyStart);
+            $isIn = $row->movement_type === 'in';
+            $qty = (float) $row->actual_quantity;
+            $amt = (float) $row->amount;
+
+            if ($isOpening) {
+                if ($isIn) {
+                    $item['opening_qty'] += $qty;
+                    $item['opening_amt'] += $amt;
+                } else {
+                    $item['opening_qty'] -= $qty;
+                    $item['opening_amt'] -= $amt;
+                }
+            } elseif ($isIn) {
+                $item['in_qty'] += $qty;
+                $item['in_amt'] += $amt;
+            } else {
+                $item['out_qty'] += $qty;
+                $item['out_amt'] += $amt;
+            }
+
+            unset($item, $bucket);
+        }
+    }
+
+    /**
+     * Finalize a godown bucket into per-item report rows plus godown totals.
+     *
+     * @return array{0: array<int, array<string, mixed>>, 1: array<string, float|int>} [items, totals]
+     */
+    protected function finalizeGodownBucketItems(array $bucket): array
+    {
+        $itemsCollection = [];
+        $totals = [
+            'opening_quantity' => 0,
+            'opening_amount' => 0,
+            'inward_quantity' => 0,
+            'inward_amount' => 0,
+            'outward_quantity' => 0,
+            'outward_amount' => 0,
+            'closing_quantity' => 0,
+            'closing_amount' => 0,
+        ];
+
+        foreach ($bucket['items'] as $item) {
+            $closingQty = $item['opening_qty'] + $item['in_qty'] - $item['out_qty'];
+            $closingAmt = $item['opening_amt'] + $item['in_amt'] - $item['out_amt'];
+
+            $itemsCollection[] = [
+                'item_id' => $item['item_id'],
+                'item_name' => $item['item_name'],
+                'unit_code' => $item['unit_code'],
+                'unit_name' => $item['unit_name'],
+                'no_of_decimal_places' => $item['no_of_decimal_places'],
+                'opening_quantity' => $item['opening_qty'],
+                'opening_amount' => $item['opening_amt'],
+                'inward_quantity' => $item['in_qty'],
+                'inward_amount' => $item['in_amt'],
+                'outward_quantity' => $item['out_qty'],
+                'outward_amount' => $item['out_amt'],
+                'closing_quantity' => $closingQty,
+                'closing_amount' => $closingAmt,
+            ];
+
+            $totals['opening_quantity'] += $item['opening_qty'];
+            $totals['opening_amount'] += $item['opening_amt'];
+            $totals['inward_quantity'] += $item['in_qty'];
+            $totals['inward_amount'] += $item['in_amt'];
+            $totals['outward_quantity'] += $item['out_qty'];
+            $totals['outward_amount'] += $item['out_amt'];
+            $totals['closing_quantity'] += $closingQty;
+            $totals['closing_amount'] += $closingAmt;
+        }
+
+        return [$itemsCollection, $totals];
+    }
+
+    /**
+     * Stock In Hand — item-level summary
+     * Formula: Closing Quantity = Opening Quantity + Operating Inward - Operating Outward
+     */
+    public function stockInHand(): array
+    {
+        $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+        $asOfDate = $this->getAsOfDate();
+        $fiscalYear = FiscalYear::find($fiscalYearId);
+        $periodStart = $this->getPeriodStart($fiscalYear);
+        $fyStart = $fiscalYear?->start_date ? Carbon::parse($fiscalYear->start_date) : null;
+        $startsAtFyStart = $this->startsAtFiscalYearStart($periodStart, $fyStart);
 
         $result = [];
-        foreach ($items as $index => $item) {
-            $stock = $this->calculateItemOpeningAndOperating(
-                $item->stock_journal_entries,
-                $periodStart,
-                $startsAtFyStart,
-            );
 
-            $result[$index]['item_id'] = $item->id;
-            $result[$index]['item_name'] = $item->name;
-            $result[$index]['unit_code'] = $item->stock_unit ? $item->stock_unit->code : null;
-            $result[$index]['unit_name'] = $item->stock_unit ? $item->stock_unit->name : null;
-            $result[$index]['no_of_decimal_places'] = $item->stock_unit ? $item->stock_unit->no_of_decimal_places : null;
-            $result[$index]['opening_quantity'] = $stock['opening'];
-            $result[$index]['opening_amount'] = $stock['opening_amount'];
-            $result[$index]['inward_quantity'] = $stock['operating_in'];
-            $result[$index]['inward_amount'] = $stock['operating_in_amount'];
-            $result[$index]['outward_quantity'] = $stock['operating_out'];
-            $result[$index]['outward_amount'] = $stock['operating_out_amount'];
-            $result[$index]['closing_quantity'] = $stock['closing'];
-            $result[$index]['closing_amount'] = $stock['closing_amount'];
-        }
+        // Offset-based chunk() (not chunkById) keeps the StockItem `orderByName`
+        // global scope, so per-chunk iteration preserves the by-name ordering
+        // callers already see — and only one batch of models is in memory at a
+        // time (previously the full item + movement tree was hydrated).
+        $this->stockInHandQuery()->chunk(200, function ($items) use (&$result, $periodStart, $startsAtFyStart) {
+            foreach ($items as $item) {
+                $stock = $this->calculateItemOpeningAndOperating(
+                    $item->stock_journal_entries,
+                    $periodStart,
+                    $startsAtFyStart,
+                );
+
+                $result[] = [
+                    'item_id' => $item->id,
+                    'item_name' => $item->name,
+                    'unit_code' => $item->stock_unit ? $item->stock_unit->code : null,
+                    'unit_name' => $item->stock_unit ? $item->stock_unit->name : null,
+                    'no_of_decimal_places' => $item->stock_unit ? $item->stock_unit->no_of_decimal_places : null,
+                    'opening_quantity' => $stock['opening'],
+                    'opening_amount' => $stock['opening_amount'],
+                    'inward_quantity' => $stock['operating_in'],
+                    'inward_amount' => $stock['operating_in_amount'],
+                    'outward_quantity' => $stock['operating_out'],
+                    'outward_amount' => $stock['operating_out_amount'],
+                    'closing_quantity' => $stock['closing'],
+                    'closing_amount' => $stock['closing_amount'],
+                ];
+            }
+        });
 
         return $result;
     }
@@ -429,123 +698,113 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
         $fyStart = $fiscalYear?->start_date ? Carbon::parse($fiscalYear->start_date) : null;
         $startsAtFyStart = $this->startsAtFiscalYearStart($periodStart, $fyStart);
 
-        $items = StockItem::with([
-            'stock_unit',
-            'stock_journal_entries' => function ($query) use ($fiscalYearId, $asOfDate) {
-                $query->whereHas('stock_journal.voucher', function ($q) use ($fiscalYearId, $asOfDate) {
-                    $q->where('fiscal_year_id', $fiscalYearId)
-                        ->when($asOfDate, fn ($query) => $query->where('voucher_date', '<=', $asOfDate));
-                })
-                    ->with([
-                        'stock_journal_godown_entries.godown',
-                        'stock_journal.voucher',
-                    ]);
-            },
-        ])->get();
-
         $result = [];
 
-        foreach ($items as $item) {
-            $allEntries = $item->stock_journal_entries;
+        // Stream items in chunks so only one batch of Eloquent models is in
+        // memory at a time.
+        $this->stockInHandItemWiseQuery()->chunk(200, function ($items) use (&$result, $periodStart, $startsAtFyStart) {
+            foreach ($items as $item) {
+                $allEntries = $item->stock_journal_entries;
 
-            // Separate opening vs operating entries
-            [$openingEntries, $operatingEntries] = $this->splitOpeningAndOperating($allEntries, $periodStart, $startsAtFyStart);
+                // Separate opening vs operating entries
+                [$openingEntries, $operatingEntries] = $this->splitOpeningAndOperating($allEntries, $periodStart, $startsAtFyStart);
 
-            // Item-level totals
-            $itemOpening = $this->sumMovement($openingEntries, 'in') - $this->sumMovement($openingEntries, 'out');
-            $itemOperatingIn = $this->sumMovement($operatingEntries, 'in');
-            $itemOperatingOut = $this->sumMovement($operatingEntries, 'out');
-            $itemClosing = $itemOpening + $itemOperatingIn - $itemOperatingOut;
+                // Item-level totals
+                $itemOpening = $this->sumMovement($openingEntries, 'in') - $this->sumMovement($openingEntries, 'out');
+                $itemOperatingIn = $this->sumMovement($operatingEntries, 'in');
+                $itemOperatingOut = $this->sumMovement($operatingEntries, 'out');
+                $itemClosing = $itemOpening + $itemOperatingIn - $itemOperatingOut;
 
-            $itemOpeningAmount = $this->sumMovementAmount($openingEntries, 'in') - $this->sumMovementAmount($openingEntries, 'out');
-            $itemOperatingInAmount = $this->sumMovementAmount($operatingEntries, 'in');
-            $itemOperatingOutAmount = $this->sumMovementAmount($operatingEntries, 'out');
-            $itemClosingAmount = $itemOpeningAmount + $itemOperatingInAmount - $itemOperatingOutAmount;
+                $itemOpeningAmount = $this->sumMovementAmount($openingEntries, 'in') - $this->sumMovementAmount($openingEntries, 'out');
+                $itemOperatingInAmount = $this->sumMovementAmount($operatingEntries, 'in');
+                $itemOperatingOutAmount = $this->sumMovementAmount($operatingEntries, 'out');
+                $itemClosingAmount = $itemOpeningAmount + $itemOperatingInAmount - $itemOperatingOutAmount;
 
-            // Godown-level breakdown
-            $godownCollection = [];
+                // Godown-level breakdown
+                $godownCollection = [];
 
-            // Process opening entries by godown
-            $allGodownEntries = $allEntries
-                ->flatMap(fn ($e) => $e->stock_journal_godown_entries)
-                ->groupBy('godown_id');
+                // Process opening entries by godown
+                $allGodownEntries = $allEntries
+                    ->flatMap(fn ($e) => $e->stock_journal_godown_entries)
+                    ->groupBy('godown_id');
 
-            foreach ($allGodownEntries as $godownId => $entries) {
-                [$openingGodown, $operatingGodown] = $this->splitOpeningOperatingGodownEntries($entries, $periodStart, $startsAtFyStart);
+                foreach ($allGodownEntries as $godownId => $entries) {
+                    [$openingGodown, $operatingGodown] = $this->splitOpeningOperatingGodownEntries($entries, $periodStart, $startsAtFyStart);
 
-                $openingQty = $this->sumMovement($openingGodown, 'in') - $this->sumMovement($openingGodown, 'out');
-                $operatingIn = $this->sumMovement($operatingGodown, 'in');
-                $operatingOut = $this->sumMovement($operatingGodown, 'out');
-                $closingQty = $openingQty + $operatingIn - $operatingOut;
+                    $openingQty = $this->sumMovement($openingGodown, 'in') - $this->sumMovement($openingGodown, 'out');
+                    $operatingIn = $this->sumMovement($operatingGodown, 'in');
+                    $operatingOut = $this->sumMovement($operatingGodown, 'out');
+                    $closingQty = $openingQty + $operatingIn - $operatingOut;
 
-                $openingAmt = $this->sumMovementAmount($openingGodown, 'in') - $this->sumMovementAmount($openingGodown, 'out');
-                $operatingInAmt = $this->sumMovementAmount($operatingGodown, 'in');
-                $operatingOutAmt = $this->sumMovementAmount($operatingGodown, 'out');
-                $closingAmt = $openingAmt + $operatingInAmt - $operatingOutAmt;
+                    $openingAmt = $this->sumMovementAmount($openingGodown, 'in') - $this->sumMovementAmount($openingGodown, 'out');
+                    $operatingInAmt = $this->sumMovementAmount($operatingGodown, 'in');
+                    $operatingOutAmt = $this->sumMovementAmount($operatingGodown, 'out');
+                    $closingAmt = $openingAmt + $operatingInAmt - $operatingOutAmt;
 
-                $godown = $entries->first()->godown;
+                    $godown = $entries->first()->godown;
 
-                $godownCollection[] = [
-                    'godown_id' => $godown->id,
-                    'godown_name' => $godown->name,
-                    'godown_code' => $godown->code,
-                    'opening_quantity' => $openingQty,
-                    'opening_amount' => $openingAmt,
-                    'inward_quantity' => $operatingIn,
-                    'inward_amount' => $operatingInAmt,
-                    'outward_quantity' => $operatingOut,
-                    'outward_amount' => $operatingOutAmt,
-                    'closing_quantity' => $closingQty,
-                    'closing_amount' => $closingAmt,
+                    $godownCollection[] = [
+                        'godown_id' => $godown->id,
+                        'godown_name' => $godown->name,
+                        'godown_code' => $godown->code,
+                        'opening_quantity' => $openingQty,
+                        'opening_amount' => $openingAmt,
+                        'inward_quantity' => $operatingIn,
+                        'inward_amount' => $operatingInAmt,
+                        'outward_quantity' => $operatingOut,
+                        'outward_amount' => $operatingOutAmt,
+                        'closing_quantity' => $closingQty,
+                        'closing_amount' => $closingAmt,
+                    ];
+                }
+
+                // Verify godown totals match item totals
+                $calculatedClosing = array_sum(array_column($godownCollection, 'closing_quantity'));
+                $calculatedInward = array_sum(array_column($godownCollection, 'inward_quantity'));
+                $calculatedOutward = array_sum(array_column($godownCollection, 'outward_quantity'));
+
+                $calculatedClosingAmt = array_sum(array_column($godownCollection, 'closing_amount'));
+                $calculatedInwardAmt = array_sum(array_column($godownCollection, 'inward_amount'));
+                $calculatedOutwardAmt = array_sum(array_column($godownCollection, 'outward_amount'));
+
+                if (
+                    abs($calculatedClosing - $itemClosing) > 0.001 ||
+                    abs($calculatedInward - $itemOperatingIn) > 0.001 ||
+                    abs($calculatedOutward - $itemOperatingOut) > 0.001
+                ) {
+                    $godownCollection[] = [
+                        'godown_id' => null,
+                        'godown_name' => 'Mismatch in total',
+                        'godown_code' => null,
+                        'opening_quantity' => $itemOpening - array_sum(array_column($godownCollection, 'opening_quantity')),
+                        'opening_amount' => $itemOpeningAmount - array_sum(array_column($godownCollection, 'opening_amount')),
+                        'inward_quantity' => $itemOperatingIn - $calculatedInward,
+                        'inward_amount' => $itemOperatingInAmount - $calculatedInwardAmt,
+                        'outward_quantity' => $itemOperatingOut - $calculatedOutward,
+                        'outward_amount' => $itemOperatingOutAmount - $calculatedOutwardAmt,
+                        'closing_quantity' => $itemClosing - $calculatedClosing,
+                        'closing_amount' => $itemClosingAmount - $calculatedClosingAmt,
+                    ];
+                }
+
+                $result[] = [
+                    'item_id' => $item->id,
+                    'item_name' => $item->name,
+                    'unit_code' => $item->stock_unit?->code,
+                    'unit_name' => $item->stock_unit?->name,
+                    'no_of_decimal_places' => $item->stock_unit?->no_of_decimal_places,
+                    'opening_quantity' => $itemOpening,
+                    'opening_amount' => $itemOpeningAmount,
+                    'inward_quantity' => $itemOperatingIn,
+                    'inward_amount' => $itemOperatingInAmount,
+                    'outward_quantity' => $itemOperatingOut,
+                    'outward_amount' => $itemOperatingOutAmount,
+                    'closing_quantity' => $itemClosing,
+                    'closing_amount' => $itemClosingAmount,
+                    'godown_details' => $godownCollection,
                 ];
             }
-
-            // Verify godown totals match item totals
-            $calculatedClosing = array_sum(array_column($godownCollection, 'closing_quantity'));
-            $calculatedInward = array_sum(array_column($godownCollection, 'inward_quantity'));
-            $calculatedOutward = array_sum(array_column($godownCollection, 'outward_quantity'));
-
-            $calculatedClosingAmt = array_sum(array_column($godownCollection, 'closing_amount'));
-            $calculatedInwardAmt = array_sum(array_column($godownCollection, 'inward_amount'));
-            $calculatedOutwardAmt = array_sum(array_column($godownCollection, 'outward_amount'));
-
-            if (
-                abs($calculatedClosing - $itemClosing) > 0.001 ||
-                abs($calculatedInward - $itemOperatingIn) > 0.001 ||
-                abs($calculatedOutward - $itemOperatingOut) > 0.001
-            ) {
-                $godownCollection[] = [
-                    'godown_id' => null,
-                    'godown_name' => 'Mismatch in total',
-                    'godown_code' => null,
-                    'opening_quantity' => $itemOpening - array_sum(array_column($godownCollection, 'opening_quantity')),
-                    'opening_amount' => $itemOpeningAmount - array_sum(array_column($godownCollection, 'opening_amount')),
-                    'inward_quantity' => $itemOperatingIn - $calculatedInward,
-                    'inward_amount' => $itemOperatingInAmount - $calculatedInwardAmt,
-                    'outward_quantity' => $itemOperatingOut - $calculatedOutward,
-                    'outward_amount' => $itemOperatingOutAmount - $calculatedOutwardAmt,
-                    'closing_quantity' => $itemClosing - $calculatedClosing,
-                    'closing_amount' => $itemClosingAmount - $calculatedClosingAmt,
-                ];
-            }
-
-            $result[] = [
-                'item_id' => $item->id,
-                'item_name' => $item->name,
-                'unit_code' => $item->stock_unit?->code,
-                'unit_name' => $item->stock_unit?->name,
-                'no_of_decimal_places' => $item->stock_unit?->no_of_decimal_places,
-                'opening_quantity' => $itemOpening,
-                'opening_amount' => $itemOpeningAmount,
-                'inward_quantity' => $itemOperatingIn,
-                'inward_amount' => $itemOperatingInAmount,
-                'outward_quantity' => $itemOperatingOut,
-                'outward_amount' => $itemOperatingOutAmount,
-                'closing_quantity' => $itemClosing,
-                'closing_amount' => $itemClosingAmount,
-                'godown_details' => $godownCollection,
-            ];
-        }
+        });
 
         return $result;
     }
@@ -562,125 +821,27 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
         $fyStart = $fiscalYear?->start_date ? Carbon::parse($fiscalYear->start_date) : null;
         $startsAtFyStart = $this->startsAtFiscalYearStart($periodStart, $fyStart);
 
-        // Single flat query using direct DB joins instead of deep Eloquent withWhereHas chains
-        $rows = DB::table('stock_journal_godown_entries as sjge')
-            ->join('stock_journal_entries as sje', 'sjge.stock_journal_entry_id', '=', 'sje.id')
-            ->join('stock_journals as sj', 'sje.stock_journal_id', '=', 'sj.id')
-            ->join('vouchers as v', 'v.stock_journal_id', '=', 'sj.id')
-            ->join('godowns as g', 'sjge.godown_id', '=', 'g.id')
-            ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
-            ->leftJoin('stock_units as su', 'si.stock_unit_id', '=', 'su.id')
-            ->where('v.fiscal_year_id', $fiscalYearId)
-            // Only include movements up to the as-of date (reporting period end)
-            ->when($asOfDate, fn ($q) => $q->where('v.voucher_date', '<=', $asOfDate))
-            // Respect Eloquent's not_purged global scope
-            ->whereNotExists(function ($q) {
-                $q->select(DB::raw('1'))
-                    ->from('stock_journal_godown_entry_purges')
-                    ->whereColumn('stock_journal_godown_entry_purges.stock_journal_godown_entry_id', 'sjge.id');
-            })
-            ->select([
-                'g.id as godown_id',
-                'g.name as godown_name',
-                'g.code as godown_code',
-                'v.voucher_date',
-                'si.id as stock_item_id',
-                'si.name as stock_item_name',
-                'su.code as unit_code',
-                'su.name as unit_name',
-                'su.no_of_decimal_places',
-                'sjge.actual_quantity',
-                'sjge.amount',
-                'sjge.movement_type',
-                'sj.type as stock_journal_type',
-            ])
-            ->get();
+        // Per-godown → per-item aggregate buckets, filled incrementally so only
+        // one chunk of raw rows is in memory at a time (the previous flat
+        // ->get() held every movement row for the whole period at once).
+        $godownBuckets = [];
 
-        // Group by godown
-        $godownGroups = $rows->groupBy('godown_id');
+        // chunkById paginates on sjge.id — buckets are order-independent aggregates,
+        // so id-based pagination is both deterministic and offset-free.
+        $this->stockInHandGodownRowsQuery($fiscalYearId, $asOfDate)
+            ->chunkById(200, function ($rows) use (&$godownBuckets, $periodStart, $startsAtFyStart) {
+                $this->fillGodownItemBuckets($godownBuckets, $rows, $periodStart, $startsAtFyStart);
+            }, 'sjge.id', 'id');
 
         $result = [];
 
-        foreach ($godownGroups as $godownId => $godownRows) {
-            $firstRow = $godownRows->first();
-
-            // Group by item within godown
-            $itemGroups = $godownRows->groupBy('stock_item_id');
-
-            $itemsCollection = [];
-            $godownTotals = [
-                'opening_quantity' => 0, 'opening_amount' => 0,
-                'inward_quantity' => 0, 'inward_amount' => 0,
-                'outward_quantity' => 0, 'outward_amount' => 0,
-                'closing_quantity' => 0, 'closing_amount' => 0,
-            ];
-
-            foreach ($itemGroups as $stockItemId => $itemRows) {
-                $firstItem = $itemRows->first();
-
-                $openingQty = 0;
-                $openingAmt = 0;
-                $operatingIn = 0;
-                $operatingInAmt = 0;
-                $operatingOut = 0;
-                $operatingOutAmt = 0;
-
-                foreach ($itemRows as $row) {
-                    $isOpening = $this->isOpeningRow($row, $periodStart, $startsAtFyStart);
-                    $isIn = $row->movement_type === 'in';
-                    $qty = (float) $row->actual_quantity;
-                    $amt = (float) $row->amount;
-
-                    if ($isOpening) {
-                        if ($isIn) {
-                            $openingQty += $qty;
-                            $openingAmt += $amt;
-                        } else {
-                            $openingQty -= $qty;
-                            $openingAmt -= $amt;
-                        }
-                    } elseif ($isIn) {
-                        $operatingIn += $qty;
-                        $operatingInAmt += $amt;
-                    } else {
-                        $operatingOut += $qty;
-                        $operatingOutAmt += $amt;
-                    }
-                }
-
-                $closingQty = $openingQty + $operatingIn - $operatingOut;
-                $closingAmt = $openingAmt + $operatingInAmt - $operatingOutAmt;
-
-                $itemsCollection[] = [
-                    'item_id' => (int) $stockItemId,
-                    'item_name' => $firstItem->stock_item_name,
-                    'unit_code' => $firstItem->unit_code,
-                    'unit_name' => $firstItem->unit_name,
-                    'no_of_decimal_places' => (int) $firstItem->no_of_decimal_places,
-                    'opening_quantity' => $openingQty,
-                    'opening_amount' => $openingAmt,
-                    'inward_quantity' => $operatingIn,
-                    'inward_amount' => $operatingInAmt,
-                    'outward_quantity' => $operatingOut,
-                    'outward_amount' => $operatingOutAmt,
-                    'closing_quantity' => $closingQty,
-                    'closing_amount' => $closingAmt,
-                ];
-
-                $godownTotals['opening_quantity'] += $openingQty;
-                $godownTotals['opening_amount'] += $openingAmt;
-                $godownTotals['inward_quantity'] += $operatingIn;
-                $godownTotals['inward_amount'] += $operatingInAmt;
-                $godownTotals['outward_quantity'] += $operatingOut;
-                $godownTotals['outward_amount'] += $operatingOutAmt;
-                $godownTotals['closing_quantity'] += $closingQty;
-                $godownTotals['closing_amount'] += $closingAmt;
-            }
+        foreach ($godownBuckets as $bucket) {
+            [$itemsCollection, $godownTotals] = $this->finalizeGodownBucketItems($bucket);
 
             $result[] = [
-                'godown_id' => (int) $firstRow->godown_id,
-                'godown_name' => $firstRow->godown_name,
-                'godown_code' => $firstRow->godown_code,
+                'godown_id' => $bucket['godown_id'],
+                'godown_name' => $bucket['godown_name'],
+                'godown_code' => $bucket['godown_code'],
                 'opening_quantity' => $godownTotals['opening_quantity'],
                 'opening_amount' => $godownTotals['opening_amount'],
                 'inward_quantity' => $godownTotals['inward_quantity'],
@@ -717,52 +878,20 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             ->orderBy('name')
             ->get();
 
-        // Single flat query for all godown entries with item info
-        $rows = DB::table('stock_journal_godown_entries as sjge')
-            ->join('stock_journal_entries as sje', 'sjge.stock_journal_entry_id', '=', 'sje.id')
-            ->join('stock_journals as sj', 'sje.stock_journal_id', '=', 'sj.id')
-            ->join('vouchers as v', 'v.stock_journal_id', '=', 'sj.id')
-            ->join('godowns as g', 'sjge.godown_id', '=', 'g.id')
-            ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
-            ->leftJoin('stock_units as su', 'si.stock_unit_id', '=', 'su.id')
-            ->where('v.fiscal_year_id', $fiscalYearId)
-            // Only include movements up to the as-of date (reporting period end)
-            ->when($asOfDate, fn ($q) => $q->where('v.voucher_date', '<=', $asOfDate))
-            // Respect Eloquent's not_purged global scope
-            ->whereNotExists(function ($q) {
-                $q->select(DB::raw('1'))
-                    ->from('stock_journal_godown_entry_purges')
-                    ->whereColumn('stock_journal_godown_entry_purges.stock_journal_godown_entry_id', 'sjge.id');
-            })
-            ->select([
-                'g.id as godown_id',
-                'g.name as godown_name',
-                'g.code as godown_code',
-                'v.voucher_date',
-                'g.parent_id',
-                'si.id as stock_item_id',
-                'si.name as stock_item_name',
-                'su.code as unit_code',
-                'su.name as unit_name',
-                'su.no_of_decimal_places',
-                'sjge.actual_quantity',
-                'sjge.amount',
-                'sjge.movement_type',
-                'sj.type as stock_journal_type',
-            ])
-            ->get();
+        // Per-godown → per-item aggregate buckets, filled incrementally so only
+        // one chunk of raw rows is in memory at a time.
+        $godownBuckets = [];
 
-        // Group by godown for efficient lookup
-        $godownGroups = $rows->groupBy('godown_id');
+        // chunkById paginates on sjge.id — buckets are order-independent aggregates,
+        // so id-based pagination is both deterministic and offset-free.
+        $this->stockInHandGodownRowsQuery($fiscalYearId, $asOfDate, includeParentId: true)
+            ->chunkById(200, function ($rows) use (&$godownBuckets, $periodStart, $startsAtFyStart) {
+                $this->fillGodownItemBuckets($godownBuckets, $rows, $periodStart, $startsAtFyStart, captureParent: true);
+            }, 'sjge.id', 'id');
 
         $result = [];
 
         foreach ($zones as $zone) {
-            // Filter godowns belonging to this zone by parent_id
-            $zoneGodownIds = $godownGroups->filter(function ($group) use ($zone) {
-                return $group->first()->parent_id == $zone->id;
-            })->keys()->toArray();
-
             $zoneGodowns = [];
             $zoneTotals = [
                 'opening_quantity' => 0, 'opening_amount' => 0,
@@ -771,88 +900,30 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 'closing_quantity' => 0, 'closing_amount' => 0,
             ];
 
-            foreach ($zoneGodownIds as $godownId) {
-                $godownRows = $godownGroups[$godownId];
-                $firstGodown = $godownRows->first();
+            foreach ($godownBuckets as $bucket) {
+                // Filter godowns belonging to this zone by parent_id
+                if ((int) $bucket['parent_id'] !== (int) $zone->id) {
+                    continue;
+                }
 
-                // Group by item within godown
-                $itemGroups = $godownRows->groupBy('stock_item_id');
-                $itemsCollection = [];
+                [$itemsCollection, $godownTotals] = $this->finalizeGodownBucketItems($bucket);
 
-                foreach ($itemGroups as $stockItemId => $itemRows) {
-                    $firstItem = $itemRows->first();
-
-                    $openingQty = 0;
-                    $openingAmt = 0;
-                    $operatingIn = 0;
-                    $operatingInAmt = 0;
-                    $operatingOut = 0;
-                    $operatingOutAmt = 0;
-
-                    foreach ($itemRows as $row) {
-                        $isOpening = $this->isOpeningRow($row, $periodStart, $startsAtFyStart);
-                        $isIn = $row->movement_type === 'in';
-                        $qty = (float) $row->actual_quantity;
-                        $amt = (float) $row->amount;
-
-                        if ($isOpening) {
-                            if ($isIn) {
-                                $openingQty += $qty;
-                                $openingAmt += $amt;
-                            } else {
-                                $openingQty -= $qty;
-                                $openingAmt -= $amt;
-                            }
-                        } elseif ($isIn) {
-                            $operatingIn += $qty;
-                            $operatingInAmt += $amt;
-                        } else {
-                            $operatingOut += $qty;
-                            $operatingOutAmt += $amt;
-                        }
-                    }
-
-                    $closingQty = $openingQty + $operatingIn - $operatingOut;
-                    $closingAmt = $openingAmt + $operatingInAmt - $operatingOutAmt;
-
-                    $itemsCollection[] = [
-                        'item_id' => (int) $stockItemId,
-                        'item_name' => $firstItem->stock_item_name,
-                        'unit_code' => $firstItem->unit_code,
-                        'unit_name' => $firstItem->unit_name,
-                        'no_of_decimal_places' => (int) $firstItem->no_of_decimal_places,
-                        'opening_quantity' => $openingQty,
-                        'opening_amount' => $openingAmt,
-                        'inward_quantity' => $operatingIn,
-                        'inward_amount' => $operatingInAmt,
-                        'outward_quantity' => $operatingOut,
-                        'outward_amount' => $operatingOutAmt,
-                        'closing_quantity' => $closingQty,
-                        'closing_amount' => $closingAmt,
-                    ];
-
-                    $zoneTotals['opening_quantity'] += $openingQty;
-                    $zoneTotals['opening_amount'] += $openingAmt;
-                    $zoneTotals['inward_quantity'] += $operatingIn;
-                    $zoneTotals['inward_amount'] += $operatingInAmt;
-                    $zoneTotals['outward_quantity'] += $operatingOut;
-                    $zoneTotals['outward_amount'] += $operatingOutAmt;
-                    $zoneTotals['closing_quantity'] += $closingQty;
-                    $zoneTotals['closing_amount'] += $closingAmt;
+                foreach ($godownTotals as $key => $value) {
+                    $zoneTotals[$key] += $value;
                 }
 
                 $zoneGodowns[] = [
-                    'godown_id' => (int) $firstGodown->godown_id,
-                    'godown_name' => $firstGodown->godown_name,
-                    'godown_code' => $firstGodown->godown_code,
-                    'opening_quantity' => array_sum(array_column($itemsCollection, 'opening_quantity')),
-                    'opening_amount' => array_sum(array_column($itemsCollection, 'opening_amount')),
-                    'inward_quantity' => array_sum(array_column($itemsCollection, 'inward_quantity')),
-                    'inward_amount' => array_sum(array_column($itemsCollection, 'inward_amount')),
-                    'outward_quantity' => array_sum(array_column($itemsCollection, 'outward_quantity')),
-                    'outward_amount' => array_sum(array_column($itemsCollection, 'outward_amount')),
-                    'closing_quantity' => array_sum(array_column($itemsCollection, 'closing_quantity')),
-                    'closing_amount' => array_sum(array_column($itemsCollection, 'closing_amount')),
+                    'godown_id' => $bucket['godown_id'],
+                    'godown_name' => $bucket['godown_name'],
+                    'godown_code' => $bucket['godown_code'],
+                    'opening_quantity' => $godownTotals['opening_quantity'],
+                    'opening_amount' => $godownTotals['opening_amount'],
+                    'inward_quantity' => $godownTotals['inward_quantity'],
+                    'inward_amount' => $godownTotals['inward_amount'],
+                    'outward_quantity' => $godownTotals['outward_quantity'],
+                    'outward_amount' => $godownTotals['outward_amount'],
+                    'closing_quantity' => $godownTotals['closing_quantity'],
+                    'closing_amount' => $godownTotals['closing_amount'],
                     'item_details' => $itemsCollection,
                 ];
             }
@@ -888,125 +959,117 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
         $fyStart = $fiscalYear?->start_date ? Carbon::parse($fiscalYear->start_date) : null;
         $startsAtFyStart = $this->startsAtFiscalYearStart($periodStart, $fyStart);
 
-        $items = StockItem::with([
-            'stock_unit',
-            'stock_journal_entries' => function ($query) use ($fiscalYearId, $asOfDate) {
-                $query->whereHas('stock_journal.voucher', function ($q) use ($fiscalYearId, $asOfDate) {
-                    $q->where('fiscal_year_id', $fiscalYearId)
-                        ->when($asOfDate, fn ($query) => $query->where('voucher_date', '<=', $asOfDate));
-                })->with([
-                    'stock_journal.voucher.voucher_type',
-                    'stock_journal_godown_entries',
-                ]);
-            },
-        ])->get();
-
         $result = [];
-        foreach ($items as $item) {
-            $allEntries = $item->stock_journal_entries
-                ->filter(fn ($e) => $e->stock_journal && $e->stock_journal->voucher);
 
-            // Separate opening vs operating
-            [$openingEntries, $operatingEntries] = $this->splitOpeningAndOperating($allEntries, $periodStart, $startsAtFyStart);
+        // Stream items in chunks so only one batch of Eloquent models is in
+        // memory at a time.
+        $this->stockInHandVoucherWiseQuery()->chunk(200, function ($items) use (&$result, $periodStart, $startsAtFyStart) {
+            foreach ($items as $item) {
+                $allEntries = $item->stock_journal_entries
+                    ->filter(fn ($e) => $e->stock_journal && $e->stock_journal->voucher);
 
-            // Item-level totals
-            $itemOpening = $this->sumMovement($openingEntries, 'in') - $this->sumMovement($openingEntries, 'out');
-            $itemOperatingIn = $this->sumMovement($operatingEntries, 'in');
-            $itemOperatingOut = $this->sumMovement($operatingEntries, 'out');
-            $itemClosing = $itemOpening + $itemOperatingIn - $itemOperatingOut;
+                // Separate opening vs operating
+                [$openingEntries, $operatingEntries] = $this->splitOpeningAndOperating($allEntries, $periodStart, $startsAtFyStart);
 
-            $itemOpeningAmount = $this->sumMovementAmount($openingEntries, 'in') - $this->sumMovementAmount($openingEntries, 'out');
-            $itemOperatingInAmount = $this->sumMovementAmount($operatingEntries, 'in');
-            $itemOperatingOutAmount = $this->sumMovementAmount($operatingEntries, 'out');
-            $itemClosingAmount = $itemOpeningAmount + $itemOperatingInAmount - $itemOperatingOutAmount;
+                // Item-level totals
+                $itemOpening = $this->sumMovement($openingEntries, 'in') - $this->sumMovement($openingEntries, 'out');
+                $itemOperatingIn = $this->sumMovement($operatingEntries, 'in');
+                $itemOperatingOut = $this->sumMovement($operatingEntries, 'out');
+                $itemClosing = $itemOpening + $itemOperatingIn - $itemOperatingOut;
 
-            // Voucher-wise breakdown
-            $voucherCollection = [];
+                $itemOpeningAmount = $this->sumMovementAmount($openingEntries, 'in') - $this->sumMovementAmount($openingEntries, 'out');
+                $itemOperatingInAmount = $this->sumMovementAmount($operatingEntries, 'in');
+                $itemOperatingOutAmount = $this->sumMovementAmount($operatingEntries, 'out');
+                $itemClosingAmount = $itemOpeningAmount + $itemOperatingInAmount - $itemOperatingOutAmount;
 
-            // Collect all vouchers grouped by voucher, then sort
-            $allByVoucher = $allEntries
-                ->groupBy(fn ($e) => $e->stock_journal->voucher->id);
+                // Voucher-wise breakdown
+                $voucherCollection = [];
 
-            // Sort by voucher type, date, no (same ordering as old code)
-            $allByVoucher = $allByVoucher->sortBy(function ($entries) {
-                $voucher = $entries->first()->stock_journal->voucher;
+                // Collect all vouchers grouped by voucher, then sort
+                $allByVoucher = $allEntries
+                    ->groupBy(fn ($e) => $e->stock_journal->voucher->id);
 
-                return sprintf(
-                    '%03d-%s-%s',
-                    $voucher->voucher_type_id,
-                    $voucher->voucher_date,
-                    $voucher->voucher_no
-                );
-            });
+                // Sort by voucher type, date, no (same ordering as old code)
+                $allByVoucher = $allByVoucher->sortBy(function ($entries) {
+                    $voucher = $entries->first()->stock_journal->voucher;
 
-            foreach ($allByVoucher as $voucherId => $entries) {
-                [$vOpening, $vOperating] = $this->splitOpeningAndOperating($entries, $periodStart, $startsAtFyStart);
+                    return sprintf(
+                        '%03d-%s-%s',
+                        $voucher->voucher_type_id,
+                        $voucher->voucher_date,
+                        $voucher->voucher_no
+                    );
+                });
 
-                $voucher = $entries->first()->stock_journal->voucher;
-                $openingQty = $this->sumMovement($vOpening, 'in') - $this->sumMovement($vOpening, 'out');
-                $operatingIn = $this->sumMovement($vOperating, 'in');
-                $operatingOut = $this->sumMovement($vOperating, 'out');
-                $net = $openingQty + $operatingIn - $operatingOut;
+                foreach ($allByVoucher as $voucherId => $entries) {
+                    [$vOpening, $vOperating] = $this->splitOpeningAndOperating($entries, $periodStart, $startsAtFyStart);
 
-                $openingAmt = $this->sumMovementAmount($vOpening, 'in') - $this->sumMovementAmount($vOpening, 'out');
-                $operatingInAmt = $this->sumMovementAmount($vOperating, 'in');
-                $operatingOutAmt = $this->sumMovementAmount($vOperating, 'out');
-                $netAmt = $openingAmt + $operatingInAmt - $operatingOutAmt;
+                    $voucher = $entries->first()->stock_journal->voucher;
+                    $openingQty = $this->sumMovement($vOpening, 'in') - $this->sumMovement($vOpening, 'out');
+                    $operatingIn = $this->sumMovement($vOperating, 'in');
+                    $operatingOut = $this->sumMovement($vOperating, 'out');
+                    $net = $openingQty + $operatingIn - $operatingOut;
 
-                // Batch / serial / godown-level detail lines for this voucher
-                // (e.g. SKADJ physical-count adjustments) so the report can show
-                // exactly which batch or serial number was moved.
-                $lineDetails = $entries
-                    ->flatMap(fn ($e) => $e->stock_journal_godown_entries->map(fn ($ge) => [
-                        'stock_item_id' => $e->stock_item_id,
-                        'batch_no' => $ge->batch_no,
-                        'serial_no' => $ge->serial_no,
-                        'mfg_date' => $ge->mfg_date?->format('Y-m-d'),
-                        'expiry_date' => $ge->expiry_date?->format('Y-m-d'),
-                        'movement_type' => $ge->movement_type,
-                        'quantity' => (float) $ge->actual_quantity,
-                        'rate' => (float) $ge->rate,
-                        'amount' => (float) $ge->amount,
-                        'remarks' => $ge->remarks,
-                    ]))
-                    ->values()
-                    ->toArray();
+                    $openingAmt = $this->sumMovementAmount($vOpening, 'in') - $this->sumMovementAmount($vOpening, 'out');
+                    $operatingInAmt = $this->sumMovementAmount($vOperating, 'in');
+                    $operatingOutAmt = $this->sumMovementAmount($vOperating, 'out');
+                    $netAmt = $openingAmt + $operatingInAmt - $operatingOutAmt;
 
-                $voucherCollection[] = [
-                    'voucher_id' => $voucher->id,
-                    'voucher_type' => $voucher->voucher_type->name,
-                    'stock_journal_type' => $entries->first()->stock_journal?->type ?? null,
-                    'voucher_no' => $voucher->voucher_no,
-                    'voucher_date' => $voucher->voucher_date,
-                    'opening_quantity' => $openingQty,
-                    'opening_amount' => $openingAmt,
-                    'inward_quantity' => $operatingIn,
-                    'inward_amount' => $operatingInAmt,
-                    'outward_quantity' => $operatingOut,
-                    'outward_amount' => $operatingOutAmt,
-                    'closing_quantity' => $net,
-                    'closing_amount' => $netAmt,
-                    'line_details' => $lineDetails,
+                    // Batch / serial / godown-level detail lines for this voucher
+                    // (e.g. SKADJ physical-count adjustments) so the report can show
+                    // exactly which batch or serial number was moved.
+                    $lineDetails = $entries
+                        ->flatMap(fn ($e) => $e->stock_journal_godown_entries->map(fn ($ge) => [
+                            'stock_item_id' => $e->stock_item_id,
+                            'batch_no' => $ge->batch_no,
+                            'serial_no' => $ge->serial_no,
+                            'mfg_date' => $ge->mfg_date?->format('Y-m-d'),
+                            'expiry_date' => $ge->expiry_date?->format('Y-m-d'),
+                            'movement_type' => $ge->movement_type,
+                            'quantity' => (float) $ge->actual_quantity,
+                            'rate' => (float) $ge->rate,
+                            'amount' => (float) $ge->amount,
+                            'remarks' => $ge->remarks,
+                        ]))
+                        ->values()
+                        ->toArray();
+
+                    $voucherCollection[] = [
+                        'voucher_id' => $voucher->id,
+                        'voucher_type' => $voucher->voucher_type->name,
+                        'stock_journal_type' => $entries->first()->stock_journal?->type ?? null,
+                        'voucher_no' => $voucher->voucher_no,
+                        'voucher_date' => $voucher->voucher_date,
+                        'opening_quantity' => $openingQty,
+                        'opening_amount' => $openingAmt,
+                        'inward_quantity' => $operatingIn,
+                        'inward_amount' => $operatingInAmt,
+                        'outward_quantity' => $operatingOut,
+                        'outward_amount' => $operatingOutAmt,
+                        'closing_quantity' => $net,
+                        'closing_amount' => $netAmt,
+                        'line_details' => $lineDetails,
+                    ];
+                }
+
+                $result[] = [
+                    'item_id' => $item->id,
+                    'item_name' => $item->name,
+                    'unit_code' => $item->stock_unit?->code,
+                    'unit_name' => $item->stock_unit?->name,
+                    'no_of_decimal_places' => $item->stock_unit?->no_of_decimal_places,
+                    'opening_quantity' => $itemOpening,
+                    'opening_amount' => $itemOpeningAmount,
+                    'inward_quantity' => $itemOperatingIn,
+                    'inward_amount' => $itemOperatingInAmount,
+                    'outward_quantity' => $itemOperatingOut,
+                    'outward_amount' => $itemOperatingOutAmount,
+                    'closing_quantity' => $itemClosing,
+                    'closing_amount' => $itemClosingAmount,
+                    'voucher_details' => $voucherCollection,
                 ];
             }
-
-            $result[] = [
-                'item_id' => $item->id,
-                'item_name' => $item->name,
-                'unit_code' => $item->stock_unit?->code,
-                'unit_name' => $item->stock_unit?->name,
-                'no_of_decimal_places' => $item->stock_unit?->no_of_decimal_places,
-                'opening_quantity' => $itemOpening,
-                'opening_amount' => $itemOpeningAmount,
-                'inward_quantity' => $itemOperatingIn,
-                'inward_amount' => $itemOperatingInAmount,
-                'outward_quantity' => $itemOperatingOut,
-                'outward_amount' => $itemOperatingOutAmount,
-                'closing_quantity' => $itemClosing,
-                'closing_amount' => $itemClosingAmount,
-                'voucher_details' => $voucherCollection,
-            ];
-        }
+        });
 
         return $result;
     }
@@ -1027,38 +1090,30 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
 
-        $godowns = Godown::withWhereHas(
-            'stock_journal_godown_entries.stock_journal_entry.stock_journal.voucher',
-            fn ($q) => $q->where('fiscal_year_id', $fiscalYearId)->whereHas('stock_journal')
-        )
-            ->with([
-                'stock_journal_godown_entries' => fn ($q) => $q->whereHas(
-                    'stock_journal_entry.stock_journal.voucher',
-                    fn ($v) => $v->where('fiscal_year_id', $fiscalYearId)->whereHas('stock_journal')
-                ),
-            ])
-            ->get();
-
         $result = [];
-        foreach ($godowns as $godown) {
-            $entries = $godown->stock_journal_godown_entries;
-            [$openingEntries, $operatingEntries] = $this->separateOpeningAndOperatingGodown($entries);
 
-            $opening = $this->sumMovement($openingEntries, 'in');
-            $inward = $this->sumMovement($operatingEntries, 'in');
-            $outward = $this->sumMovement($operatingEntries, 'out');
-            $closing = $opening + $inward - $outward;
+        // Stream godowns in chunks so peak memory stays bounded.
+        $this->runningBalanceGodownsQuery()->chunk(200, function ($godowns) use (&$result) {
+            foreach ($godowns as $godown) {
+                $entries = $godown->stock_journal_godown_entries;
+                [$openingEntries, $operatingEntries] = $this->separateOpeningAndOperatingGodown($entries);
 
-            $result[] = [
-                'godown_id' => $godown->id,
-                'godown_name' => $godown->name,
-                'godown_code' => $godown->code,
-                'opening_quantity' => $opening,
-                'inward_quantity' => $inward,
-                'outward_quantity' => $outward,
-                'closing_quantity' => $closing,
-            ];
-        }
+                $opening = $this->sumMovement($openingEntries, 'in');
+                $inward = $this->sumMovement($operatingEntries, 'in');
+                $outward = $this->sumMovement($operatingEntries, 'out');
+                $closing = $opening + $inward - $outward;
+
+                $result[] = [
+                    'godown_id' => $godown->id,
+                    'godown_name' => $godown->name,
+                    'godown_code' => $godown->code,
+                    'opening_quantity' => $opening,
+                    'inward_quantity' => $inward,
+                    'outward_quantity' => $outward,
+                    'closing_quantity' => $closing,
+                ];
+            }
+        });
 
         return $result;
     }

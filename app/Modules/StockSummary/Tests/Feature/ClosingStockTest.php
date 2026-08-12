@@ -574,6 +574,79 @@ test('stock_in_hand_item_wise() recalculates the opening balance for a mid-year 
     expect($result['godown_details'][0]['closing_quantity'])->toBe(160.0);
 });
 
+test('stock_in_hand_item_wise() aggregates correctly across chunk boundaries', function () {
+    // More items than the 200-row chunk size — forces multiple chunks.
+    foreach (range(1, 205) as $i) {
+        $bulkItem = StockItem::create(['name' => "Bulk Item {$i}", 'code' => "BULKITM{$i}", 'stock_unit_id' => $this->unit->id]);
+        createStockMovement("BULK-{$i}", '2025-06-15', $bulkItem, $this->unit, $this->mainGodown, $this->fiscalYear->id, 1, 10, $this->saleType, 'in', 'B1');
+    }
+
+    $result = $this->service->stock_in_hand_item_wise();
+
+    // 205 bulk items + the beforeEach 'Item A' and 'Item B' (which have no movements)
+    expect($result)->toHaveCount(207);
+    expect(array_sum(array_column($result, 'closing_quantity')))->toBe(205.0);
+    expect(array_sum(array_column($result, 'inward_quantity')))->toBe(205.0);
+});
+
+test('stock_in_hand_godown_wise() aggregates correctly across chunk boundaries', function () {
+    // More movement rows than the 200-row chunk size — forces multiple chunks.
+    foreach (range(1, 205) as $i) {
+        createStockMovement("BULK-{$i}", '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 1, 10, $this->saleType, 'in', 'B1');
+    }
+
+    $result = collect($this->service->stock_in_hand_godown_wise())->firstWhere('godown_id', $this->mainGodown->id);
+
+    expect($result)->not->toBeNull();
+    expect($result['inward_quantity'])->toBe(205.0);
+    expect($result['outward_quantity'])->toBe(0);
+    expect($result['closing_quantity'])->toBe(205.0);
+    expect($result['item_details'][0]['closing_quantity'])->toBe(205.0);
+});
+
+test('stock_in_hand_zone_wise() aggregates correctly across chunk boundaries', function () {
+    $zone = Godown::create(['name' => 'Zone A', 'code' => 'ZONEA', 'storage_unit_type' => 'zone']);
+    $zoneGodown = Godown::create(['name' => 'Zone Godown', 'code' => 'ZG1', 'parent_id' => $zone->id]);
+
+    // More movement rows than the 200-row chunk size — forces multiple chunks.
+    foreach (range(1, 205) as $i) {
+        createStockMovement("BULK-{$i}", '2025-06-15', $this->item, $this->unit, $zoneGodown, $this->fiscalYear->id, 1, 10, $this->saleType, 'in', 'B1');
+    }
+
+    $result = collect($this->service->stock_in_hand_zone_wise())->firstWhere('zone_id', $zone->id);
+
+    expect($result)->not->toBeNull();
+    expect($result['inward_quantity'])->toBe(205.0);
+    expect($result['closing_quantity'])->toBe(205.0);
+    expect($result['godowns'][0]['closing_quantity'])->toBe(205.0);
+});
+
+test('stock_in_hand_voucher_wise() aggregates correctly across chunk boundaries', function () {
+    // More items than the 200-row chunk size — forces multiple chunks.
+    foreach (range(1, 205) as $i) {
+        $bulkItem = StockItem::create(['name' => "Bulk Item {$i}", 'code' => "BULKITM{$i}", 'stock_unit_id' => $this->unit->id]);
+        createStockMovement("BULK-{$i}", '2025-06-15', $bulkItem, $this->unit, $this->mainGodown, $this->fiscalYear->id, 1, 10, $this->saleType, 'in', 'B1');
+    }
+
+    $result = $this->service->stock_in_hand_voucher_wise();
+
+    // 205 bulk items + the beforeEach 'Item A' and 'Item B' (which have no movements)
+    expect($result)->toHaveCount(207);
+    expect(array_sum(array_column($result, 'closing_quantity')))->toBe(205.0);
+    expect(array_sum(array_column($result, 'inward_quantity')))->toBe(205.0);
+
+    // A cross-chunk item carries exactly one voucher detail line
+    $bulkRow = collect($result)->firstWhere('item_name', 'Bulk Item 205');
+    expect($bulkRow['voucher_details'])->toHaveCount(1);
+    expect($bulkRow['voucher_details'][0]['voucher_no'])->toBe('BULK-205');
+    expect($bulkRow['voucher_details'][0]['inward_quantity'])->toBe(1.0);
+
+    // Items with no movements are preserved across chunks (empty voucher breakdown)
+    $emptyRow = collect($result)->firstWhere('item_name', 'Item A');
+    expect($emptyRow['closing_quantity'])->toBe(0.0);
+    expect($emptyRow['voucher_details'])->toBe([]);
+});
+
 // ---------------------------------------------------------------------------
 //  Resource output (camelCase)
 // ---------------------------------------------------------------------------

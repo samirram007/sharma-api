@@ -21,4 +21,12 @@ interface VoucherServiceInterface extends BaseServiceInterface
     public function getOpeningStockVoucherType(): array;
 
     public function attachLedgerInfo(Voucher $voucher): Voucher;
+
+    /**
+     * Bulk variant of attachLedgerInfo() for list responses: computes party
+     * ledger, transaction ledger, amount and payment status for a whole
+     * collection with a handful of grouped queries instead of the per-voucher
+     * N+1 (4 ledger sums + 2-4 payment queries each).
+     */
+    public function attachListInfo(Collection $vouchers): Collection;
 }

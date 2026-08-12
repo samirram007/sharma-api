@@ -8,6 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasColumn('menu', 'is_top_menu')) {
+            return;
+        }
         Schema::table('menu', function (Blueprint $table) {
             $table->boolean('is_top_menu')->default(false)->after('is_group');
         });

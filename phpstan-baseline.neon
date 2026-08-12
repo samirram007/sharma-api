@@ -1,18 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Call to an undefined method Illuminate\\Pagination\\AbstractPaginator\:\:lastPage\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Resources/SuccessCollection.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Pagination\\AbstractPaginator\:\:total\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Resources/SuccessCollection.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$accounting_effect\.$#'
 			identifier: property.notFound
 			count: 1
@@ -315,7 +303,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
 			identifier: property.notFound
-			count: 6
+			count: 5
 			path: app/Modules/Freight/Services/FreightService.php
 
 		-
@@ -326,12 +314,6 @@ parameters:
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Modules/Freight/Services/FreightService.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$payment_status\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Modules/Freight/Services/FreightService.php
@@ -349,12 +331,6 @@ parameters:
 			path: app/Modules/Freight/Services/FreightService.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$voucher_date\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Modules/Freight/Services/FreightService.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$voucher_entries\.$#'
 			identifier: property.notFound
 			count: 1
@@ -367,15 +343,9 @@ parameters:
 			path: app/Modules/Freight/Services/FreightService.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$voucher_no\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Modules/Freight/Services/FreightService.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$voucher_references\.$#'
 			identifier: property.notFound
-			count: 3
+			count: 1
 			path: app/Modules/Freight/Services/FreightService.php
 
 		-
@@ -885,19 +855,25 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$code\.$#'
 			identifier: property.notFound
+			count: 2
+			path: app/Modules/StockSummary/Services/StockSummaryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
 			count: 4
 			path: app/Modules/StockSummary/Services/StockSummaryService.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 5
 			path: app/Modules/StockSummary/Services/StockSummaryService.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$no_of_decimal_places\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 1
 			path: app/Modules/StockSummary/Services/StockSummaryService.php
 
 		-
@@ -907,15 +883,15 @@ parameters:
 			path: app/Modules/StockSummary/Services/StockSummaryService.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_item_id\.$#'
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Modules/StockSummary/Services/StockSummaryService.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal\.$#'
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal_entries\.$#'
 			identifier: property.notFound
-			count: 5
+			count: 3
 			path: app/Modules/StockSummary/Services/StockSummaryService.php
 
 		-
@@ -927,25 +903,31 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_journal_godown_entries\.$#'
 			identifier: property.notFound
-			count: 3
+			count: 2
+			path: app/Modules/StockSummary/Services/StockSummaryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock_unit\.$#'
+			identifier: property.notFound
+			count: 7
 			path: app/Modules/StockSummary/Services/StockSummaryService.php
 
 		-
 			message: '#^Access to an undefined property Modules\\Godown\\Models\\Godown\:\:\$code\.$#'
 			identifier: property.notFound
-			count: 2
+			count: 1
 			path: app/Modules/StockSummary/Services/StockSummaryService.php
 
 		-
 			message: '#^Access to an undefined property Modules\\Godown\\Models\\Godown\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 2
+			count: 1
 			path: app/Modules/StockSummary/Services/StockSummaryService.php
 
 		-
 			message: '#^Access to an undefined property Modules\\StockItem\\Models\\StockItem\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 1
 			path: app/Modules/StockSummary/Services/StockSummaryService.php
 
 		-
@@ -1036,6 +1018,30 @@ parameters:
 			message: '#^Access to an undefined property Modules\\User\\Models\\UserNotificationPreference\:\:\$in_app\.$#'
 			identifier: property.notFound
 			count: 1
+			path: app/Modules/User/Services/UserService.php
+
+		-
+			message: '#^Access to an undefined property Modules\\User\\Models\\UserPrintPreference\:\:\$show_authorizations\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/User/Services/UserService.php
+
+		-
+			message: '#^Access to an undefined property Modules\\User\\Models\\UserPrintPreference\:\:\$show_document_info\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/User/Services/UserService.php
+
+		-
+			message: '#^Access to an undefined property Modules\\User\\Models\\UserPrintPreference\:\:\$show_fare_details\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Modules/User/Services/UserService.php
+
+		-
+			message: '#^Access to an undefined property Modules\\User\\Models\\UserPrintPreference\:\:\$show_paid_to_amount\.$#'
+			identifier: property.notFound
+			count: 2
 			path: app/Modules/User/Services/UserService.php
 
 		-

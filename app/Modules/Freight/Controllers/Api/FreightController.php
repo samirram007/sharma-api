@@ -32,7 +32,7 @@ class FreightController extends Controller
     {
         $perPage = (int) $request->input('per_page', 10);
         $page = (int) $request->input('page', 1);
-        $filters = $request->only(['search', 'freight_status']);
+        $filters = $request->only(['search', 'freight_status', 'zone_id']);
         $data = FreightFacade::getDeliveryNote($page, $perPage, $filters);
         $overallTotalFare = FreightFacade::getDeliveryNoteOverallTotalFare($filters);
 
