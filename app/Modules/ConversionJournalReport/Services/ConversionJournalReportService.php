@@ -3,8 +3,8 @@
 namespace Modules\ConversionJournalReport\Services;
 
 use App\Support\Services\BaseService;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Modules\ConversionJournalReport\Contracts\ConversionJournalReportServiceInterface;
 use Modules\Voucher\Models\Voucher;
@@ -92,7 +92,7 @@ class ConversionJournalReportService extends BaseService implements ConversionJo
         $productionAmount = 0;
 
         foreach ($voucher->stock_journal->stock_journal_entries ?? [] as $entry) {
-            if (strtolower((string) $entry->movement_type) === 'in') {
+            if (($entry->movement_type?->value ?? '') === 'in') {
                 $productionQty += (float) $entry->actual_quantity;
                 $productionAmount += (float) $entry->amount;
             } else {
@@ -130,13 +130,13 @@ class ConversionJournalReportService extends BaseService implements ConversionJo
 
         $query->select(
             'stock_items.id as stock_item_id',
-                'stock_items.name as stock_item_name',
-                DB::raw('COUNT(DISTINCT vouchers.id) as voucher_count'),
-                DB::raw("SUM(CASE WHEN stock_journal_entries.movement_type = 'out' THEN stock_journal_entries.actual_quantity ELSE 0 END) as total_out_quantity"),
-                DB::raw("SUM(CASE WHEN stock_journal_entries.movement_type = 'in' THEN stock_journal_entries.actual_quantity ELSE 0 END) as total_in_quantity"),
-                DB::raw("SUM(CASE WHEN stock_journal_entries.movement_type = 'out' THEN stock_journal_entries.amount ELSE 0 END) as total_out_amount"),
-                DB::raw("SUM(CASE WHEN stock_journal_entries.movement_type = 'in' THEN stock_journal_entries.amount ELSE 0 END) as total_in_amount")
-            )
+            'stock_items.name as stock_item_name',
+            DB::raw('COUNT(DISTINCT vouchers.id) as voucher_count'),
+            DB::raw("SUM(CASE WHEN stock_journal_entries.movement_type = 'out' THEN stock_journal_entries.actual_quantity ELSE 0 END) as total_out_quantity"),
+            DB::raw("SUM(CASE WHEN stock_journal_entries.movement_type = 'in' THEN stock_journal_entries.actual_quantity ELSE 0 END) as total_in_quantity"),
+            DB::raw("SUM(CASE WHEN stock_journal_entries.movement_type = 'out' THEN stock_journal_entries.amount ELSE 0 END) as total_out_amount"),
+            DB::raw("SUM(CASE WHEN stock_journal_entries.movement_type = 'in' THEN stock_journal_entries.amount ELSE 0 END) as total_in_amount")
+        )
             ->groupBy('stock_items.id', 'stock_items.name')
             ->orderByDesc(DB::raw('SUM(stock_journal_entries.amount)'));
 
@@ -147,7 +147,7 @@ class ConversionJournalReportService extends BaseService implements ConversionJo
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
-        return $query->get();
+        return $query->get()->map(fn ($row) => (array) $row)->values();
     }
 
     public function getGroupedByGodown(array $params = []): Collection
@@ -172,11 +172,11 @@ class ConversionJournalReportService extends BaseService implements ConversionJo
 
         $query->select(
             'godowns.id as godown_id',
-                'godowns.name as godown_name',
-                DB::raw('COUNT(DISTINCT vouchers.id) as voucher_count'),
-                DB::raw("SUM(CASE WHEN stock_journal_godown_entries.movement_type = 'out' THEN stock_journal_godown_entries.actual_quantity ELSE 0 END) as total_out_quantity"),
-                DB::raw("SUM(CASE WHEN stock_journal_godown_entries.movement_type = 'in' THEN stock_journal_godown_entries.actual_quantity ELSE 0 END) as total_in_quantity")
-            )
+            'godowns.name as godown_name',
+            DB::raw('COUNT(DISTINCT vouchers.id) as voucher_count'),
+            DB::raw("SUM(CASE WHEN stock_journal_godown_entries.movement_type = 'out' THEN stock_journal_godown_entries.actual_quantity ELSE 0 END) as total_out_quantity"),
+            DB::raw("SUM(CASE WHEN stock_journal_godown_entries.movement_type = 'in' THEN stock_journal_godown_entries.actual_quantity ELSE 0 END) as total_in_quantity")
+        )
             ->groupBy('godowns.id', 'godowns.name')
             ->orderBy('godowns.name');
 
@@ -187,7 +187,7 @@ class ConversionJournalReportService extends BaseService implements ConversionJo
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
-        return $query->get();
+        return $query->get()->map(fn ($row) => (array) $row)->values();
     }
 
     public function getGroupedByDate(array $params = []): Collection
@@ -226,6 +226,6 @@ class ConversionJournalReportService extends BaseService implements ConversionJo
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
-        return $query->get();
+        return $query->get()->map(fn ($row) => (array) $row)->values();
     }
 }

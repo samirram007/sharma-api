@@ -9,6 +9,6 @@ class DayBookResource extends VoucherResource
 {
     public function toArray(Request $request): array
     {
-        return VoucherResource::toArray($request);
+        return parent::toArray($request);
     }
 }

@@ -21,3 +21,9 @@ parameters:
         - app/Modules/*/Resources/*
         - app/Modules/*/Requests/*
         - app/Modules/*/Facades/*
+
+services:
+    -
+        class: App\PHPStan\Rules\NoQualifiedTraitUseRule
+        tags:
+            - phpstan.rules.rule

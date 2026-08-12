@@ -2,6 +2,7 @@
 
 namespace Modules\User\Resources;
 
+use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Role\Resources\RoleResource;
@@ -9,9 +10,11 @@ use Modules\UserFiscalYear\Resources\UserFiscalYearResource;
 
 class UserResource extends JsonResource
 {
+    use CamelCaseResource;
+
     public function toArray(Request $request): array
     {
-        return [
+        return array_merge($this->toCamelCaseArray($request), [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
@@ -20,12 +23,13 @@ class UserResource extends JsonResource
             'role' => $this->user_type,
             'status' => $this->status,
             'userFiscalYear' => UserFiscalYearResource::make($this->whenLoaded('user_fiscal_year')),
-            // 'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'roleIds' => $this->whenLoaded(
                 'roles',
                 fn () => $this->roles->pluck('id')->values()
             ),
-        ];
+            'createdAt' => $this->created_at?->toISOString(),
+            'updatedAt' => $this->updated_at?->toISOString(),
+        ]);
     }
 }

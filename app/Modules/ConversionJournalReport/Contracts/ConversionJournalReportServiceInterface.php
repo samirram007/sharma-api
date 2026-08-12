@@ -4,7 +4,7 @@ namespace Modules\ConversionJournalReport\Contracts;
 
 use App\Support\Contracts\BaseServiceInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 interface ConversionJournalReportServiceInterface extends BaseServiceInterface
 {

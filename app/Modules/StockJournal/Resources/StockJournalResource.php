@@ -22,7 +22,13 @@ class StockJournalResource extends SuccessResource
             'voucherId' => $this->voucher_id,
             'type' => $this->type,
             'remarks' => $this->remarks,
-            'stockJournalEntries' => StockJournalEntryResource::collection($this->whenLoaded('stock_journal_entries')),
+            // List rows load stock_journal shallowly (no entries — they are
+            // fetched by id for edit screens); whenLoaded() on the missing
+            // relation serializes to nothing, which dropped the key entirely
+            // and broke consumers that expect an array. Emit [] instead.
+            'stockJournalEntries' => $this->relationLoaded('stock_journal_entries')
+                ? StockJournalEntryResource::collection($this->stock_journal_entries)
+                : [],
             'createdAt' => $this->created_at?->toISOString(),
             'updatedAt' => $this->updated_at?->toISOString(),
 

@@ -19,7 +19,11 @@ class UserFiscalYearResource extends SuccessResource
 
             'id' => $this->id,
             'userId' => $this->user_id,
-            'fiscalYearId' => $this->fiscal_year_id,
+            // MySQL returns fiscal_year_id as a string unless the model casts
+            // it; strict === comparisons against numeric ids (voucher
+            // fiscalYearId, fiscal year rows) would silently fail. Emit a
+            // real int so the frontend can compare ids reliably.
+            'fiscalYearId' => (int) $this->fiscal_year_id,
             'startDate' => $this->start_date,
             'endDate' => $this->end_date,
             'currentDate' => $this->current_date ?? now(),

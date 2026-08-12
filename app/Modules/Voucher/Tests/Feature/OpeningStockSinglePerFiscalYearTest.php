@@ -97,3 +97,41 @@ test('store allows an opening stock voucher when none exists yet', function () {
     expect($voucher->id)->not->toBeNull();
     expect($voucher->voucher_type_id)->toBe($this->opnskType->id);
 });
+
+test('store allows a non-opening-stock voucher when an opening stock voucher already exists', function () {
+    // The OPNSK voucher is already saved for this fiscal year.
+    Voucher::create([
+        'voucher_no' => 'OPNSK-0001',
+        'voucher_date' => '2026-04-01',
+        'voucher_type_id' => $this->opnskType->id,
+        'fiscal_year_id' => $this->fy->id,
+        'company_id' => $this->companyId,
+        'module' => 'opening_stock',
+        'status' => 'active',
+    ]);
+
+    // A receipt-note voucher for the same fiscal year must NOT be blocked by
+    // the one-opening-stock-per-FY guard (regression: the guard used to run
+    // for every voucher type, breaking all saves once an OPNSK voucher
+    // existed).
+    $receiptType = VoucherType::create([
+        'name' => 'Receipt Note',
+        'code' => 'RN',
+        'voucher_category_id' => $this->opnskType->voucher_category_id,
+        'is_system' => true,
+    ]);
+
+    $voucher = VoucherFacade::store([
+        'module' => 'receipt_note',
+        'voucher_type_id' => $receiptType->id,
+        'fiscal_year_id' => $this->fy->id,
+        'voucher_date' => '2026-04-05',
+        'status' => 'active',
+        'stock_journal' => null,
+        'voucher_entries' => [],
+    ]);
+
+    expect($voucher->id)->not->toBeNull();
+    expect($voucher->voucher_type_id)->toBe($receiptType->id);
+    expect($voucher->module)->toBe('receipt_note');
+});

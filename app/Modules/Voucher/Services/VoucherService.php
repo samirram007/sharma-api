@@ -210,8 +210,9 @@ class VoucherService extends BaseService implements VoucherServiceInterface
             // of the fiscal year — the entry date cannot be changed by the user.
             $data = $this->enforceOpeningStockRulesStep($data, $fiscalYearId);
 
-            // Only ONE opening stock voucher is allowed per fiscal year.
-            $this->enforceSingleOpeningStockVoucherPerFy($fiscalYearId);
+            // Only ONE opening stock voucher is allowed per fiscal year — and
+            // only when the voucher being saved IS an opening stock voucher.
+            $this->enforceSingleOpeningStockVoucherPerFy($fiscalYearId, $data);
 
             // Pipeline Step 1: Process Stock Journal
             $data = $this->processStockJournalStep($data);
@@ -539,28 +540,55 @@ class VoucherService extends BaseService implements VoucherServiceInterface
     }
 
     /**
-     * Opening Stock (OPNSK) vouchers are always dated on the first day of the
-     * fiscal year (the entry date cannot be changed by the user) and must
-     * always carry the canonical OPNSK voucher type id. Both are forced on
-     * every store/update.
+     * Whether the voucher being stored/updated is an Opening Stock (OPNSK)
+     * voucher.
      *
      * Detection uses BOTH the resolved type id and the module signal, so the
      * rules hold even if a client sends a wrong (but existing) type id.
      */
-    protected function enforceOpeningStockRulesStep(array $data, int $fiscalYearId, ?Voucher $voucher = null): array
+    protected function isOpeningStockVoucher(array $data, ?Voucher $voucher = null): bool
     {
         $openingStockType = VoucherType::where('code', 'OPNSK')->first();
+        if (! $openingStockType) {
+            return false;
+        }
 
-        $isOpeningStock = $openingStockType && (
-            (int) ($data['voucher_type_id'] ?? 0) === (int) $openingStockType->id
+        return (int) ($data['voucher_type_id'] ?? 0) === (int) $openingStockType->id
             || ($voucher && (int) $voucher->voucher_type_id === (int) $openingStockType->id)
-            || ($data['module'] ?? null) === 'opening_stock'
-        );
+            || ($data['module'] ?? null) === 'opening_stock';
+    }
+
+    /**
+     * Opening Stock (OPNSK) vouchers are always dated on the first day of the
+     * fiscal year (the entry date cannot be changed by the user) and must
+     * always carry the canonical OPNSK voucher type id. Both are forced on
+     * every store/update.
+     */
+    protected function enforceOpeningStockRulesStep(array $data, int $fiscalYearId, ?Voucher $voucher = null): array
+    {
+        $isOpeningStock = $this->isOpeningStockVoucher($data, $voucher);
 
         if ($isOpeningStock) {
+            $openingStockType = VoucherType::where('code', 'OPNSK')->first();
+
             // Stamp the canonical OPNSK id so the saved voucher always carries
             // the type that actually exists in this database.
             $data['voucher_type_id'] = (int) $openingStockType->id;
+
+            // Every OPNSK voucher carries an opening-stock stock journal —
+            // stamp its type with the module code ('OPNSK', following the
+            // per-module convention, e.g. 'conv' for conversion journals) so
+            // all OPNSK journals are consistent no matter what the client
+            // sends ('in', '' or anything else).
+            //
+            // Deliberately NOT 'OPENING' (the FiscalYearOpen unified journal
+            // code): StockSummaryService recognizes both 'OPENING' and 'OPNSK'
+            // as opening-stock types, so keeping OPNSK as 'OPNSK' reports
+            // opening stock in the Opening column without colliding with the
+            // FiscalYearOpen journal semantics.
+            if (isset($data['stock_journal']) && is_array($data['stock_journal'])) {
+                $data['stock_journal']['type'] = 'OPNSK';
+            }
 
             $fiscalYear = FiscalYear::find($fiscalYearId);
             if ($fiscalYear && $fiscalYear->start_date) {
@@ -576,11 +604,20 @@ class VoucherService extends BaseService implements VoucherServiceInterface
      * is the server-side guarantee — the frontend also blocks duplicates, but
      * a second voucher created through any other client must be rejected too.
      *
+     * The check ONLY applies when the voucher being saved IS an opening stock
+     * voucher (the OPNSK type id or the 'opening_stock' module signal) — a
+     * receipt note, purchase or any other voucher type must never be blocked
+     * by the existence of an OPNSK voucher.
+     *
      * Called on the STORE path (before the voucher is created); the update
      * path is exempt because it targets the one existing voucher.
      */
-    protected function enforceSingleOpeningStockVoucherPerFy(int $fiscalYearId): void
+    protected function enforceSingleOpeningStockVoucherPerFy(int $fiscalYearId, array $data): void
     {
+        if (! $this->isOpeningStockVoucher($data)) {
+            return;
+        }
+
         $openingStockType = VoucherType::where('code', 'OPNSK')->first();
         if (! $openingStockType) {
             return;

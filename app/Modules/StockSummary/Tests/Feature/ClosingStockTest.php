@@ -82,6 +82,69 @@ function createStockMovement(
     return $voucher;
 }
 
+/**
+ * Create an opening-stock (9010 / OPNSK) voucher → stock journal → entry → godown entry.
+ */
+function createOpeningStockMovement(
+    string $voucherNo,
+    string $voucherDate,
+    StockItem $item,
+    StockUnit $unit,
+    Godown $godown,
+    int $fiscalYearId,
+    float $quantity,
+    float $rate,
+    VoucherType $voucherType,
+    string $movementType = 'in',
+): Voucher {
+    $amount = round($quantity * $rate, 2);
+
+    $voucher = Voucher::create([
+        'voucher_no' => $voucherNo,
+        'voucher_date' => $voucherDate,
+        'voucher_type_id' => $voucherType->id,
+        'fiscal_year_id' => $fiscalYearId,
+        'company_id' => 1,
+        'module' => 'opening_stock',
+        'status' => 'active',
+    ]);
+
+    $journal = StockJournal::create([
+        'journal_no' => $voucherNo,
+        'journal_date' => $voucherDate,
+        'type' => 'OPNSK',
+        'remarks' => 'Opening stock',
+    ]);
+    $voucher->update(['stock_journal_id' => $journal->id]);
+
+    $entry = StockJournalEntry::create([
+        'stock_journal_id' => $journal->id,
+        'entry_order' => 1,
+        'stock_item_id' => $item->id,
+        'stock_unit_id' => $unit->id,
+        'actual_quantity' => $quantity,
+        'billing_quantity' => $quantity,
+        'rate' => $rate,
+        'rate_unit_id' => $unit->id,
+        'amount' => $amount,
+        'movement_type' => $movementType,
+    ]);
+
+    StockJournalGodownEntry::create([
+        'stock_journal_entry_id' => $entry->id,
+        'entry_order' => 1,
+        'godown_id' => $godown->id,
+        'batch_no' => null,
+        'actual_quantity' => $quantity,
+        'billing_quantity' => $quantity,
+        'rate' => $rate,
+        'amount' => $amount,
+        'movement_type' => $movementType,
+    ]);
+
+    return $voucher;
+}
+
 beforeEach(function () {
     $this->user = User::create([
         'name' => 'Closing Stock Test User',
@@ -124,6 +187,12 @@ beforeEach(function () {
     $this->clsskType = VoucherType::create([
         'name' => 'Closing Stock',
         'code' => 'CLSSK',
+        'voucher_category_id' => $this->category->id,
+        'is_system' => true,
+    ]);
+    $this->opnskType = VoucherType::create([
+        'name' => 'Opening Stock',
+        'code' => 'OPNSK',
         'voucher_category_id' => $this->category->id,
         'is_system' => true,
     ]);
@@ -379,6 +448,130 @@ test('stock_in_hand_voucher_wise() respects the reporting-period end date as the
     // Only the pre-as-of voucher appears in the voucher breakdown
     $voucherNos = array_column($result['voucher_details'], 'voucher_no');
     expect($voucherNos)->toBe(['SALE-0001']);
+});
+
+// ---------------------------------------------------------------------------
+//  Opening balance: 9010 at FY start, recalculated for mid-year periods
+// ---------------------------------------------------------------------------
+
+test('stockInHand() opening balance is the 9010 (OPNSK) opening voucher when the reporting period starts on the fiscal year first date', function () {
+    // Reporting period defaults to the full FY → starts on FY start (2025-04-01).
+    createOpeningStockMovement('OPNSK-0001', '2025-04-01', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 100, 10, $this->opnskType);
+    createStockMovement('SALE-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 50, 12, $this->saleType, 'in', 'B1');
+
+    $result = collect($this->service->stockInHand())->firstWhere('item_id', $this->item->id);
+
+    expect($result)->not->toBeNull();
+    expect($result['opening_quantity'])->toBe(100.0);
+    expect($result['opening_amount'])->toBe(1000.0);
+    expect($result['inward_quantity'])->toBe(50.0);
+    expect($result['closing_quantity'])->toBe(150.0);
+});
+
+test('stockInHand() recalculates the opening balance for a mid-year reporting period including the 9010 opening voucher', function () {
+    $this->userFiscalYear->update([
+        'start_date' => '2025-07-01',
+        'end_date' => '2025-09-30',
+    ]);
+    $service = new StockSummaryService(new UserFiscalYearService);
+
+    // Before the reporting period: 9010 opening +100, purchase +50, sale -30 → opening = 120
+    createOpeningStockMovement('OPNSK-0001', '2025-04-01', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 100, 10, $this->opnskType);
+    createStockMovement('SALE-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 50, 12, $this->saleType, 'in', 'B1');
+    createStockMovement('SALE-0002', '2025-06-20', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 30, 10, $this->saleType, 'out', 'B1');
+
+    // Within the period: purchase +20, sale -10 → inward = 20, outward = 10
+    createStockMovement('SALE-0003', '2025-08-01', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 20, 12, $this->saleType, 'in', 'B1');
+    createStockMovement('SALE-0004', '2025-09-05', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 10, 12, $this->saleType, 'out', 'B1');
+
+    $result = collect($service->stockInHand())->firstWhere('item_id', $this->item->id);
+
+    expect($result)->not->toBeNull();
+    expect($result['opening_quantity'])->toBe(120.0);
+    expect($result['inward_quantity'])->toBe(20.0);
+    expect($result['outward_quantity'])->toBe(10.0);
+    expect($result['closing_quantity'])->toBe(130.0);
+});
+
+test('stock_in_hand_godown_wise() recalculates the opening balance for a mid-year reporting period including the 9010 opening voucher', function () {
+    $this->userFiscalYear->update([
+        'start_date' => '2025-07-01',
+        'end_date' => '2025-09-30',
+    ]);
+    $service = new StockSummaryService(new UserFiscalYearService);
+
+    // Before the period: 9010 +100, purchase +50 → opening = 150
+    createOpeningStockMovement('OPNSK-0001', '2025-04-01', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 100, 10, $this->opnskType);
+    createStockMovement('SALE-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 50, 12, $this->saleType, 'in', 'B1');
+
+    // Within the period: +20 in, -10 out
+    createStockMovement('SALE-0002', '2025-08-01', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 20, 12, $this->saleType, 'in', 'B1');
+    createStockMovement('SALE-0003', '2025-08-10', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 10, 12, $this->saleType, 'out', 'B1');
+
+    $result = collect($service->stock_in_hand_godown_wise())->firstWhere('godown_id', $this->mainGodown->id);
+
+    expect($result)->not->toBeNull();
+    expect($result['opening_quantity'])->toBe(150.0);
+    expect($result['inward_quantity'])->toBe(20.0);
+    expect($result['outward_quantity'])->toBe(10.0);
+    expect($result['closing_quantity'])->toBe(160.0);
+    expect($result['item_details'][0]['opening_quantity'])->toBe(150.0);
+    expect($result['item_details'][0]['closing_quantity'])->toBe(160.0);
+});
+
+test('stock_in_hand_zone_wise() recalculates the opening balance for a mid-year reporting period including the 9010 opening voucher', function () {
+    $this->userFiscalYear->update([
+        'start_date' => '2025-07-01',
+        'end_date' => '2025-09-30',
+    ]);
+    $service = new StockSummaryService(new UserFiscalYearService);
+
+    $zone = Godown::create(['name' => 'Zone A', 'code' => 'ZONEA', 'storage_unit_type' => 'zone']);
+    $zoneGodown = Godown::create(['name' => 'Zone Godown', 'code' => 'ZG1', 'parent_id' => $zone->id]);
+
+    // Before the period: 9010 +100, purchase +50 → opening = 150
+    createOpeningStockMovement('OPNSK-0001', '2025-04-01', $this->item, $this->unit, $zoneGodown, $this->fiscalYear->id, 100, 10, $this->opnskType);
+    createStockMovement('SALE-0001', '2025-06-15', $this->item, $this->unit, $zoneGodown, $this->fiscalYear->id, 50, 12, $this->saleType, 'in', 'B1');
+
+    // Within the period: +20 in, -10 out
+    createStockMovement('SALE-0002', '2025-08-01', $this->item, $this->unit, $zoneGodown, $this->fiscalYear->id, 20, 12, $this->saleType, 'in', 'B1');
+    createStockMovement('SALE-0003', '2025-08-10', $this->item, $this->unit, $zoneGodown, $this->fiscalYear->id, 10, 12, $this->saleType, 'out', 'B1');
+
+    $result = collect($service->stock_in_hand_zone_wise())->firstWhere('zone_id', $zone->id);
+
+    expect($result)->not->toBeNull();
+    expect($result['opening_quantity'])->toBe(150.0);
+    expect($result['inward_quantity'])->toBe(20.0);
+    expect($result['outward_quantity'])->toBe(10.0);
+    expect($result['closing_quantity'])->toBe(160.0);
+    expect($result['godowns'][0]['opening_quantity'])->toBe(150.0);
+    expect($result['godowns'][0]['closing_quantity'])->toBe(160.0);
+});
+
+test('stock_in_hand_item_wise() recalculates the opening balance for a mid-year reporting period including the 9010 opening voucher', function () {
+    $this->userFiscalYear->update([
+        'start_date' => '2025-07-01',
+        'end_date' => '2025-09-30',
+    ]);
+    $service = new StockSummaryService(new UserFiscalYearService);
+
+    // Before the period: 9010 +100, purchase +50 → opening = 150
+    createOpeningStockMovement('OPNSK-0001', '2025-04-01', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 100, 10, $this->opnskType);
+    createStockMovement('SALE-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 50, 12, $this->saleType, 'in', 'B1');
+
+    // Within the period: +20 in, -10 out
+    createStockMovement('SALE-0002', '2025-08-01', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 20, 12, $this->saleType, 'in', 'B1');
+    createStockMovement('SALE-0003', '2025-08-10', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 10, 12, $this->saleType, 'out', 'B1');
+
+    $result = collect($service->stock_in_hand_item_wise())->firstWhere('item_id', $this->item->id);
+
+    expect($result)->not->toBeNull();
+    expect($result['opening_quantity'])->toBe(150.0);
+    expect($result['inward_quantity'])->toBe(20.0);
+    expect($result['outward_quantity'])->toBe(10.0);
+    expect($result['closing_quantity'])->toBe(160.0);
+    expect($result['godown_details'][0]['opening_quantity'])->toBe(150.0);
+    expect($result['godown_details'][0]['closing_quantity'])->toBe(160.0);
 });
 
 // ---------------------------------------------------------------------------

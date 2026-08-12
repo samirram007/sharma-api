@@ -64,17 +64,15 @@ class AccountLedgerController extends Controller
         return $this->deletedResponse($result, 'AccountLedger');
     }
 
-    public function ledger_balance(int $id): ?SuccessResource
+    public function ledger_balance(int $id): SuccessResource|JsonResponse
     {
         $data = AccountLedgerFacade::getLedgerBalance($id);
 
-        // dd($data);
-        return
-            new LedgerBalanceResource(
-                (object) $data,
-                'AccountLedger Balance retrieved successfully'
-            );
+        if ($data === null) {
+            return $this->errorResponse('AccountLedger not found', 404);
+        }
 
+        return new LedgerBalanceResource($data, 'AccountLedger Balance retrieved successfully');
     }
 
     public function purchase_ledgers(): SuccessCollection

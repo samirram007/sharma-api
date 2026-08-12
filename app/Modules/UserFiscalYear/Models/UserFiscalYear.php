@@ -30,6 +30,12 @@ class UserFiscalYear extends Model
     ];
 
     protected $casts = [
+        // The PHPDoc above declares int for these — MySQL returns them as
+        // strings without a cast, which silently broke strict comparisons
+        // against numeric ids (e.g. opening_stock one-per-FY checks). Casting
+        // here fixes the attribute everywhere, not just in the resource.
+        'user_id' => 'integer',
+        'fiscal_year_id' => 'integer',
         'start_date' => 'date',
         'end_date' => 'date',
         'current_date' => 'date',

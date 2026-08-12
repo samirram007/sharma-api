@@ -3,8 +3,8 @@
 namespace Modules\ReceiptNoteReport\Services;
 
 use App\Support\Services\BaseService;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Modules\ReceiptNoteReport\Contracts\ReceiptNoteReportServiceInterface;
 use Modules\Voucher\Contracts\VoucherServiceInterface;
@@ -173,7 +173,7 @@ class ReceiptNoteReportService extends BaseService implements ReceiptNoteReportS
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
-        return $query->get();
+        return $query->get()->map(fn ($row) => (array) $row)->values();
     }
 
     public function getGroupedByGodown(array $params = []): Collection
@@ -208,6 +208,6 @@ class ReceiptNoteReportService extends BaseService implements ReceiptNoteReportS
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
-        return $query->get();
+        return $query->get()->map(fn ($row) => (array) $row)->values();
     }
 }

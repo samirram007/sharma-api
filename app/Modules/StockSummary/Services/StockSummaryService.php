@@ -57,6 +57,40 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     }
 
     /**
+     * The reporting-period start date — the user's reporting-period start when
+     * set, otherwise the fiscal year start (full-year view).
+     */
+    protected function getPeriodStart(?FiscalYear $fiscalYear = null): ?Carbon
+    {
+        $fiscalYear ??= FiscalYear::find($this->userFiscalYear?->fiscal_year_id);
+
+        $periodStart = $this->userFiscalYear?->start_date ?? $fiscalYear?->start_date;
+
+        return $periodStart ? Carbon::parse($periodStart) : null;
+    }
+
+    /**
+     * Whether the reporting period starts on the fiscal year's first date.
+     *
+     * When true (or when no reporting period is set) the opening balance of the
+     * stock-in-hand reports is the 9010 / OPENING opening-stock entries only.
+     * When false (mid-year period) the opening balance is recalculated as the
+     * stock position at the start of the reporting period, including 9010.
+     */
+    protected function startsAtFiscalYearStart(?Carbon $periodStart, ?Carbon $fyStart): bool
+    {
+        if (! $periodStart) {
+            return true; // no reporting period → full fiscal-year view
+        }
+
+        if (! $fyStart) {
+            return true;
+        }
+
+        return $periodStart->equalTo($fyStart);
+    }
+
+    /**
      * Closing Stock — as of the current fiscal year.
      *
      * If a closing stock journal (CLSSK voucher) already exists for the fiscal year,
@@ -332,6 +366,10 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
         $asOfDate = $this->getAsOfDate();
+        $fiscalYear = FiscalYear::find($fiscalYearId);
+        $periodStart = $this->getPeriodStart($fiscalYear);
+        $fyStart = $fiscalYear?->start_date ? Carbon::parse($fiscalYear->start_date) : null;
+        $startsAtFyStart = $this->startsAtFiscalYearStart($periodStart, $fyStart);
 
         $items = StockItem::withWhereHas(
             'stock_journal_entries.stock_journal.voucher',
@@ -347,7 +385,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                             ->when($asOfDate, fn ($query) => $query->where('voucher_date', '<=', $asOfDate))
                     )
                         ->with([
-                            'stock_journal',
+                            'stock_journal.voucher',
                         ]);
                 },
             ])
@@ -355,7 +393,11 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
 
         $result = [];
         foreach ($items as $index => $item) {
-            $stock = $this->calculateItemOpeningAndOperating($item->stock_journal_entries);
+            $stock = $this->calculateItemOpeningAndOperating(
+                $item->stock_journal_entries,
+                $periodStart,
+                $startsAtFyStart,
+            );
 
             $result[$index]['item_id'] = $item->id;
             $result[$index]['item_name'] = $item->name;
@@ -382,6 +424,10 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
         $asOfDate = $this->getAsOfDate();
+        $fiscalYear = FiscalYear::find($fiscalYearId);
+        $periodStart = $this->getPeriodStart($fiscalYear);
+        $fyStart = $fiscalYear?->start_date ? Carbon::parse($fiscalYear->start_date) : null;
+        $startsAtFyStart = $this->startsAtFiscalYearStart($periodStart, $fyStart);
 
         $items = StockItem::with([
             'stock_unit',
@@ -392,7 +438,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 })
                     ->with([
                         'stock_journal_godown_entries.godown',
-                        'stock_journal',
+                        'stock_journal.voucher',
                     ]);
             },
         ])->get();
@@ -403,15 +449,15 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             $allEntries = $item->stock_journal_entries;
 
             // Separate opening vs operating entries
-            [$openingEntries, $operatingEntries] = $this->separateOpeningAndOperating($allEntries);
+            [$openingEntries, $operatingEntries] = $this->splitOpeningAndOperating($allEntries, $periodStart, $startsAtFyStart);
 
             // Item-level totals
-            $itemOpening = $this->sumMovement($openingEntries, 'in');
+            $itemOpening = $this->sumMovement($openingEntries, 'in') - $this->sumMovement($openingEntries, 'out');
             $itemOperatingIn = $this->sumMovement($operatingEntries, 'in');
             $itemOperatingOut = $this->sumMovement($operatingEntries, 'out');
             $itemClosing = $itemOpening + $itemOperatingIn - $itemOperatingOut;
 
-            $itemOpeningAmount = $this->sumMovementAmount($openingEntries, 'in');
+            $itemOpeningAmount = $this->sumMovementAmount($openingEntries, 'in') - $this->sumMovementAmount($openingEntries, 'out');
             $itemOperatingInAmount = $this->sumMovementAmount($operatingEntries, 'in');
             $itemOperatingOutAmount = $this->sumMovementAmount($operatingEntries, 'out');
             $itemClosingAmount = $itemOpeningAmount + $itemOperatingInAmount - $itemOperatingOutAmount;
@@ -425,14 +471,14 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 ->groupBy('godown_id');
 
             foreach ($allGodownEntries as $godownId => $entries) {
-                [$openingGodown, $operatingGodown] = $this->separateOpeningAndOperatingGodown($entries);
+                [$openingGodown, $operatingGodown] = $this->splitOpeningOperatingGodownEntries($entries, $periodStart, $startsAtFyStart);
 
-                $openingQty = $this->sumMovement($openingGodown, 'in');
+                $openingQty = $this->sumMovement($openingGodown, 'in') - $this->sumMovement($openingGodown, 'out');
                 $operatingIn = $this->sumMovement($operatingGodown, 'in');
                 $operatingOut = $this->sumMovement($operatingGodown, 'out');
                 $closingQty = $openingQty + $operatingIn - $operatingOut;
 
-                $openingAmt = $this->sumMovementAmount($openingGodown, 'in');
+                $openingAmt = $this->sumMovementAmount($openingGodown, 'in') - $this->sumMovementAmount($openingGodown, 'out');
                 $operatingInAmt = $this->sumMovementAmount($operatingGodown, 'in');
                 $operatingOutAmt = $this->sumMovementAmount($operatingGodown, 'out');
                 $closingAmt = $openingAmt + $operatingInAmt - $operatingOutAmt;
@@ -511,6 +557,10 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
         $asOfDate = $this->getAsOfDate();
+        $fiscalYear = FiscalYear::find($fiscalYearId);
+        $periodStart = $this->getPeriodStart($fiscalYear);
+        $fyStart = $fiscalYear?->start_date ? Carbon::parse($fiscalYear->start_date) : null;
+        $startsAtFyStart = $this->startsAtFiscalYearStart($periodStart, $fyStart);
 
         // Single flat query using direct DB joins instead of deep Eloquent withWhereHas chains
         $rows = DB::table('stock_journal_godown_entries as sjge')
@@ -533,6 +583,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 'g.id as godown_id',
                 'g.name as godown_name',
                 'g.code as godown_code',
+                'v.voucher_date',
                 'si.id as stock_item_id',
                 'si.name as stock_item_name',
                 'su.code as unit_code',
@@ -575,18 +626,25 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 $operatingOutAmt = 0;
 
                 foreach ($itemRows as $row) {
-                    $isOpening = $row->stock_journal_type === 'OPENING';
+                    $isOpening = $this->isOpeningRow($row, $periodStart, $startsAtFyStart);
                     $isIn = $row->movement_type === 'in';
+                    $qty = (float) $row->actual_quantity;
+                    $amt = (float) $row->amount;
 
                     if ($isOpening) {
-                        $openingQty += (float) $row->actual_quantity;
-                        $openingAmt += (float) $row->amount;
+                        if ($isIn) {
+                            $openingQty += $qty;
+                            $openingAmt += $amt;
+                        } else {
+                            $openingQty -= $qty;
+                            $openingAmt -= $amt;
+                        }
                     } elseif ($isIn) {
-                        $operatingIn += (float) $row->actual_quantity;
-                        $operatingInAmt += (float) $row->amount;
+                        $operatingIn += $qty;
+                        $operatingInAmt += $amt;
                     } else {
-                        $operatingOut += (float) $row->actual_quantity;
-                        $operatingOutAmt += (float) $row->amount;
+                        $operatingOut += $qty;
+                        $operatingOutAmt += $amt;
                     }
                 }
 
@@ -648,6 +706,10 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
         $asOfDate = $this->getAsOfDate();
+        $fiscalYear = FiscalYear::find($fiscalYearId);
+        $periodStart = $this->getPeriodStart($fiscalYear);
+        $fyStart = $fiscalYear?->start_date ? Carbon::parse($fiscalYear->start_date) : null;
+        $startsAtFyStart = $this->startsAtFiscalYearStart($periodStart, $fyStart);
 
         // Get all zones
         $zones = DB::table('godowns')
@@ -676,6 +738,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 'g.id as godown_id',
                 'g.name as godown_name',
                 'g.code as godown_code',
+                'v.voucher_date',
                 'g.parent_id',
                 'si.id as stock_item_id',
                 'si.name as stock_item_name',
@@ -727,18 +790,25 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                     $operatingOutAmt = 0;
 
                     foreach ($itemRows as $row) {
-                        $isOpening = $row->stock_journal_type === 'OPENING';
+                        $isOpening = $this->isOpeningRow($row, $periodStart, $startsAtFyStart);
                         $isIn = $row->movement_type === 'in';
+                        $qty = (float) $row->actual_quantity;
+                        $amt = (float) $row->amount;
 
                         if ($isOpening) {
-                            $openingQty += (float) $row->actual_quantity;
-                            $openingAmt += (float) $row->amount;
+                            if ($isIn) {
+                                $openingQty += $qty;
+                                $openingAmt += $amt;
+                            } else {
+                                $openingQty -= $qty;
+                                $openingAmt -= $amt;
+                            }
                         } elseif ($isIn) {
-                            $operatingIn += (float) $row->actual_quantity;
-                            $operatingInAmt += (float) $row->amount;
+                            $operatingIn += $qty;
+                            $operatingInAmt += $amt;
                         } else {
-                            $operatingOut += (float) $row->actual_quantity;
-                            $operatingOutAmt += (float) $row->amount;
+                            $operatingOut += $qty;
+                            $operatingOutAmt += $amt;
                         }
                     }
 
@@ -813,6 +883,10 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
         $asOfDate = $this->getAsOfDate();
+        $fiscalYear = FiscalYear::find($fiscalYearId);
+        $periodStart = $this->getPeriodStart($fiscalYear);
+        $fyStart = $fiscalYear?->start_date ? Carbon::parse($fiscalYear->start_date) : null;
+        $startsAtFyStart = $this->startsAtFiscalYearStart($periodStart, $fyStart);
 
         $items = StockItem::with([
             'stock_unit',
@@ -833,15 +907,15 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 ->filter(fn ($e) => $e->stock_journal && $e->stock_journal->voucher);
 
             // Separate opening vs operating
-            [$openingEntries, $operatingEntries] = $this->separateOpeningAndOperating($allEntries);
+            [$openingEntries, $operatingEntries] = $this->splitOpeningAndOperating($allEntries, $periodStart, $startsAtFyStart);
 
             // Item-level totals
-            $itemOpening = $this->sumMovement($openingEntries, 'in');
+            $itemOpening = $this->sumMovement($openingEntries, 'in') - $this->sumMovement($openingEntries, 'out');
             $itemOperatingIn = $this->sumMovement($operatingEntries, 'in');
             $itemOperatingOut = $this->sumMovement($operatingEntries, 'out');
             $itemClosing = $itemOpening + $itemOperatingIn - $itemOperatingOut;
 
-            $itemOpeningAmount = $this->sumMovementAmount($openingEntries, 'in');
+            $itemOpeningAmount = $this->sumMovementAmount($openingEntries, 'in') - $this->sumMovementAmount($openingEntries, 'out');
             $itemOperatingInAmount = $this->sumMovementAmount($operatingEntries, 'in');
             $itemOperatingOutAmount = $this->sumMovementAmount($operatingEntries, 'out');
             $itemClosingAmount = $itemOpeningAmount + $itemOperatingInAmount - $itemOperatingOutAmount;
@@ -866,15 +940,15 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             });
 
             foreach ($allByVoucher as $voucherId => $entries) {
-                [$vOpening, $vOperating] = $this->separateOpeningAndOperating($entries);
+                [$vOpening, $vOperating] = $this->splitOpeningAndOperating($entries, $periodStart, $startsAtFyStart);
 
                 $voucher = $entries->first()->stock_journal->voucher;
-                $openingQty = $this->sumMovement($vOpening, 'in');
+                $openingQty = $this->sumMovement($vOpening, 'in') - $this->sumMovement($vOpening, 'out');
                 $operatingIn = $this->sumMovement($vOperating, 'in');
                 $operatingOut = $this->sumMovement($vOperating, 'out');
                 $net = $openingQty + $operatingIn - $operatingOut;
 
-                $openingAmt = $this->sumMovementAmount($vOpening, 'in');
+                $openingAmt = $this->sumMovementAmount($vOpening, 'in') - $this->sumMovementAmount($vOpening, 'out');
                 $operatingInAmt = $this->sumMovementAmount($vOperating, 'in');
                 $operatingOutAmt = $this->sumMovementAmount($vOperating, 'out');
                 $netAmt = $openingAmt + $operatingInAmt - $operatingOutAmt;
@@ -1219,9 +1293,25 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     // ──────────────────────────────────────────────
 
     /**
+     * Whether a stock journal type represents an opening-stock entry.
+     *
+     * Two distinct producers write opening stock into stock journals:
+     *   - 'OPENING' — the unified opening entry created by FiscalYearOpen.
+     *   - 'OPNSK'   — the legacy Opening Stock (OPNSK) voucher flow.
+     *
+     * Both must be classified as opening in the stock reports; anything else
+     * (purchases, sales, conversions, adjustments, ...) is operating.
+     */
+    protected function isOpeningType(?string $type): bool
+    {
+        return in_array($type, ['OPENING', 'OPNSK'], true);
+    }
+
+    /**
      * Separate a collection of StockJournalEntry models into opening vs operating.
      *
-     * Opening entries are those whose StockJournal.type === 'OPENING' (created by FiscalYearOpen).
+     * Opening entries are those whose StockJournal.type is an opening type
+     * ('OPENING' created by FiscalYearOpen, or 'OPNSK' opening-stock vouchers).
      * Operating entries are everything else (purchases, sales, adjustments, etc.).
      *
      * @param  Collection  $entries  Collection of StockJournalEntry models
@@ -1229,8 +1319,8 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
      */
     protected function separateOpeningAndOperating($entries): array
     {
-        $opening = $entries->filter(fn ($e) => $e->stock_journal && $e->stock_journal->type === 'OPENING');
-        $operating = $entries->filter(fn ($e) => ! $e->stock_journal || $e->stock_journal->type !== 'OPENING');
+        $opening = $entries->filter(fn ($e) => $e->stock_journal && $this->isOpeningType($e->stock_journal->type));
+        $operating = $entries->filter(fn ($e) => ! $e->stock_journal || ! $this->isOpeningType($e->stock_journal->type));
 
         return [$opening, $operating];
     }
@@ -1245,11 +1335,11 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     {
         $opening = $entries->filter(fn ($e) => $e->stock_journal_entry
             && $e->stock_journal_entry->stock_journal
-            && $e->stock_journal_entry->stock_journal->type === 'OPENING');
+            && $this->isOpeningType($e->stock_journal_entry->stock_journal->type));
 
         $operating = $entries->filter(fn ($e) => ! $e->stock_journal_entry
             || ! $e->stock_journal_entry->stock_journal
-            || $e->stock_journal_entry->stock_journal->type !== 'OPENING');
+            || ! $this->isOpeningType($e->stock_journal_entry->stock_journal->type));
 
         return [$opening, $operating];
     }
@@ -1275,21 +1365,118 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     }
 
     /**
-     * Calculate item-level totals with opening balance separation
+     * Split a collection of StockJournalEntry models into opening vs operating
+     * for the stock-in-hand reports, honouring the reporting period.
+     *
+     * - When the reporting period starts on the fiscal year's first day (or no
+     *   reporting period is set), opening = the opening-stock entries only
+     *   (stock journal type 'OPENING' / 'OPNSK' — the 9010 opening voucher).
+     * - When the reporting period starts later, the opening balance is
+     *   recalculated as the stock position at the period's start: every
+     *   movement dated BEFORE the period start (including the 9010 opening
+     *   voucher) is opening, and operating covers movements inside the period.
+     *
+     * @param  Collection  $entries  Collection of StockJournalEntry models
+     * @return array [openingEntries, operatingEntries]
+     */
+    protected function splitOpeningAndOperating($entries, ?Carbon $periodStart, bool $startsAtFyStart): array
+    {
+        if ($startsAtFyStart) {
+            return $this->separateOpeningAndOperating($entries);
+        }
+
+        $isBeforePeriod = function ($entry) use ($periodStart) {
+            $date = $this->journalVoucherDate($entry);
+
+            return $date !== null && $periodStart !== null && $date->lt($periodStart);
+        };
+
+        $opening = $entries->filter($isBeforePeriod);
+        $operating = $entries->reject($isBeforePeriod);
+
+        return [$opening, $operating];
+    }
+
+    /**
+     * Same as splitOpeningAndOperating() but for a collection of
+     * StockJournalGodownEntry models (item-wise godown breakdown).
+     *
+     * @return array [openingEntries, operatingEntries]
+     */
+    protected function splitOpeningOperatingGodownEntries($entries, ?Carbon $periodStart, bool $startsAtFyStart): array
+    {
+        if ($startsAtFyStart) {
+            return $this->separateOpeningAndOperatingGodown($entries);
+        }
+
+        $isBeforePeriod = function ($godownEntry) use ($periodStart) {
+            $date = $this->godownEntryDate($godownEntry);
+
+            return $date !== null && $periodStart !== null && $date->lt($periodStart);
+        };
+
+        $opening = $entries->filter($isBeforePeriod);
+        $operating = $entries->reject($isBeforePeriod);
+
+        return [$opening, $operating];
+    }
+
+    /**
+     * Voucher date of a StockJournalEntry (via its stock journal's voucher).
+     */
+    protected function journalVoucherDate($entry): ?Carbon
+    {
+        $date = $entry->stock_journal?->voucher?->voucher_date;
+
+        return $date ? Carbon::parse($date) : null;
+    }
+
+    /**
+     * Voucher date of a StockJournalGodownEntry (via entry → journal → voucher).
+     */
+    protected function godownEntryDate($godownEntry): ?Carbon
+    {
+        $date = $godownEntry->stock_journal_entry?->stock_journal?->voucher?->voucher_date;
+
+        return $date ? Carbon::parse($date) : null;
+    }
+
+    /**
+     * Whether a flat DB row (godown/zone-wise views) is part of the opening
+     * balance — type-based at the FY start, date-based for mid-year periods.
+     */
+    protected function isOpeningRow($row, ?Carbon $periodStart, bool $startsAtFyStart): bool
+    {
+        if ($startsAtFyStart) {
+            return $this->isOpeningType($row->stock_journal_type ?? null);
+        }
+
+        $date = ! empty($row->voucher_date) ? Carbon::parse($row->voucher_date) : null;
+
+        return $date !== null && $periodStart !== null && $date->lt($periodStart);
+    }
+
+    /**
+     * Calculate item-level totals with opening balance separation.
+     *
+     * Opening is a NET balance: at the FY start it is the opening-stock
+     * (9010 / OPENING) entries; for mid-year reporting periods it is the
+     * recalculated stock position before the period start (including 9010),
+     * which may contain both inward and outward movements.
      *
      * @param  Collection  $stockJournalEntries  Collection of StockJournalEntry
      * @return array ['opening' => float, 'operating_in' => float, 'operating_out' => float, 'closing' => float, ...amount fields]
      */
-    protected function calculateItemOpeningAndOperating($stockJournalEntries): array
+    protected function calculateItemOpeningAndOperating($stockJournalEntries, ?Carbon $periodStart = null, bool $startsAtFyStart = true): array
     {
-        [$openingEntries, $operatingEntries] = $this->separateOpeningAndOperating($stockJournalEntries);
+        [$openingEntries, $operatingEntries] = $this->splitOpeningAndOperating($stockJournalEntries, $periodStart, $startsAtFyStart);
 
-        $opening = $this->sumMovement($openingEntries, 'in');
+        $opening = $this->sumMovement($openingEntries, 'in') - $this->sumMovement($openingEntries, 'out');
         $operatingIn = $this->sumMovement($operatingEntries, 'in');
         $operatingOut = $this->sumMovement($operatingEntries, 'out');
         $closing = $opening + $operatingIn - $operatingOut;
 
-        $openingAmount = $this->sumMovementAmount($openingEntries, 'in');
+        $openingAmount = $this->sumMovementAmount($openingEntries, 'in') - $this->sumMovementAmount($openingEntries, 'out');
         $operatingInAmount = $this->sumMovementAmount($operatingEntries, 'in');
         $operatingOutAmount = $this->sumMovementAmount($operatingEntries, 'out');
         $closingAmount = $openingAmount + $operatingInAmount - $operatingOutAmount;

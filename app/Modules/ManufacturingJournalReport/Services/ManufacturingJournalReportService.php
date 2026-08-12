@@ -3,8 +3,8 @@
 namespace Modules\ManufacturingJournalReport\Services;
 
 use App\Support\Services\BaseService;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Modules\ManufacturingJournalReport\Contracts\ManufacturingJournalReportServiceInterface;
 use Modules\Voucher\Models\Voucher;
@@ -84,7 +84,7 @@ class ManufacturingJournalReportService extends BaseService implements Manufactu
         $productionAmount = 0;
 
         foreach ($voucher->stock_journal->stock_journal_entries ?? [] as $entry) {
-            if (strtolower((string) $entry->movement_type) === 'in') {
+            if (($entry->movement_type?->value ?? '') === 'in') {
                 $productionQty += (float) $entry->actual_quantity;
                 $productionAmount += (float) $entry->amount;
             } else {
@@ -134,7 +134,7 @@ class ManufacturingJournalReportService extends BaseService implements Manufactu
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
-        return $query->get();
+        return $query->get()->map(fn ($row) => (array) $row)->values();
     }
 
     public function getGroupedByGodown(array $params = []): Collection
@@ -169,7 +169,7 @@ class ManufacturingJournalReportService extends BaseService implements Manufactu
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
-        return $query->get();
+        return $query->get()->map(fn ($row) => (array) $row)->values();
     }
 
     public function getGroupedByDate(array $params = []): Collection
@@ -203,6 +203,6 @@ class ManufacturingJournalReportService extends BaseService implements Manufactu
             $query->whereDate('vouchers.voucher_date', '<=', $params['to_date']);
         }
 
-        return $query->get();
+        return $query->get()->map(fn ($row) => (array) $row)->values();
     }
 }

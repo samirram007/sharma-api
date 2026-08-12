@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 use Modules\FiscalYear\Models\FiscalYear;
 use Modules\Godown\Models\Godown;
 use Modules\StockItem\Models\StockItem;
@@ -165,6 +165,8 @@ test('opening stock voucher saves end-to-end and loads back with its entries', f
         'stockJournal' => [
             'journalNo' => '',
             'journalDate' => '2026-04-01',
+            // Deliberately non-'OPNSK' — the backend must stamp the OPNSK
+            // module code on the stored journal regardless of the client.
             'type' => 'in',
             'remarks' => 'Opening stock',
             'stockJournalEntries' => [
@@ -215,7 +217,7 @@ test('opening stock voucher saves end-to-end and loads back with its entries', f
     // force the voucher date to the fiscal-year start (2026-04-01). The
     // response serializes it as a UTC ISO timestamp (app timezone shift),
     // so parse back in the app timezone before comparing the date.
-    expect(\Carbon\Carbon::parse($saved['voucherDate'])
+    expect(Carbon::parse($saved['voucherDate'])
         ->setTimezone(config('app.timezone'))->format('Y-m-d'))
         ->toBe('2026-04-01');
 
@@ -229,7 +231,12 @@ test('opening stock voucher saves end-to-end and loads back with its entries', f
         'fiscal_year_id' => $this->fy2->id,
         'module' => 'opening_stock',
     ]);
-    $this->assertDatabaseHas('stock_journals', ['id' => $saved['stockJournalId']]);
+    // The backend stamps the stock journal type to the OPNSK module code
+    // even though the client sent 'in'.
+    $this->assertDatabaseHas('stock_journals', [
+        'id' => $saved['stockJournalId'],
+        'type' => 'OPNSK',
+    ]);
     $this->assertDatabaseHas('stock_journal_entries', [
         'stock_journal_id' => $saved['stockJournalId'],
         'stock_item_id' => $this->item->id,
@@ -264,6 +271,94 @@ test('opening stock voucher saves end-to-end and loads back with its entries', f
     expect((float) $entry['amount'])->toBe(1000.0);
     expect($entry['stockJournalGodownEntries'])->toHaveCount(1);
     expect($entry['stockJournalGodownEntries'][0]['godownId'])->toBe($this->godown->id);
+});
+
+test('updating an opening stock voucher keeps the stamped OPNSK journal type', function () {
+    $opnskTypeId = $this->voucherTypes['OPNSK']->id;
+
+    // Save an opening stock voucher first (the store path stamps the journal
+    // type; the payload deliberately sends 'in').
+    $payload = [
+        'voucherTypeId' => $opnskTypeId,
+        'fiscalYearId' => $this->fy2->id,
+        'voucherDate' => '2026-04-01',
+        'module' => 'opening_stock',
+        'status' => 'active',
+        'remarks' => 'Opening stock E2E',
+        'stockJournal' => [
+            'journalNo' => '',
+            'journalDate' => '2026-04-01',
+            'type' => 'in',
+            'remarks' => 'Opening stock',
+            'stockJournalEntries' => [
+                [
+                    'stockItemId' => $this->item->id,
+                    'stockUnitId' => $this->unit->id,
+                    'itemCost' => 0,
+                    'actualQuantity' => 100,
+                    'billingQuantity' => 100,
+                    'rate' => 10,
+                    'rateUnitId' => $this->unit->id,
+                    'unitRatio' => 1,
+                    'discountPercentage' => 0,
+                    'discount' => 0,
+                    'amount' => 1000,
+                    'movementType' => 'in',
+                    'stockJournalGodownEntries' => [
+                        [
+                            'godownId' => $this->godown->id,
+                            'actualQuantity' => 100,
+                            'billingQuantity' => 100,
+                            'rate' => 10,
+                            'amount' => 1000,
+                            'movementType' => 'in',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'voucherEntries' => [],
+    ];
+
+    $saved = $this->withToken($this->token)
+        ->postJson('/api/vouchers', $payload)
+        ->assertStatus(201)
+        ->json('data');
+
+    // Update the voucher sending a deliberately wrong journal type ('in') —
+    // the backend must keep the OPNSK stamp on the UPDATE path too.
+    $updatePayload = [
+        'id' => $saved['id'],
+        'voucherNo' => $saved['voucherNo'],
+        'voucherTypeId' => $opnskTypeId,
+        'fiscalYearId' => $this->fy2->id,
+        'voucherDate' => '2026-04-01',
+        'module' => 'opening_stock',
+        'remarks' => 'Updated opening stock',
+        'stockJournal' => [
+            'id' => $saved['stockJournalId'],
+            'journalNo' => 'JRN-XXXX',
+            'journalDate' => '2026-04-01',
+            'type' => 'in',
+            'remarks' => 'Updated opening stock',
+        ],
+        'voucherEntries' => [],
+    ];
+
+    $this->withToken($this->token)
+        ->putJson('/api/vouchers/'.$saved['id'], $updatePayload)
+        ->assertStatus(200)
+        ->assertJsonPath('success', true);
+
+    $this->assertDatabaseHas('stock_journals', [
+        'id' => $saved['stockJournalId'],
+        'type' => 'OPNSK',
+    ]);
+
+    // Reloading the voucher (edit screen) exposes the stamped journal type.
+    $this->withToken($this->token)->getJson('/api/vouchers/'.$saved['id'])
+        ->assertOk()
+        ->assertJsonPath('data.stockJournal.type', 'OPNSK');
 });
 
 test('a second opening stock voucher for the same fiscal year is rejected with 422', function () {
