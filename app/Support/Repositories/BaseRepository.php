@@ -266,10 +266,22 @@ abstract class BaseRepository implements BaseRepositoryInterface
     public function update(array $data, int $id)
     {
         $model = $this->find($id);
-        $model->update($data);
+
+        // Run a real UPDATE instead of relying on Eloquent's dirty-check:
+        // the model may come from the (TTL-cached) find() above, and its
+        // cached attributes can be stale relative to the database. When the
+        // incoming values already match the cached ones the dirty-check skips
+        // the write entirely — the API reports the "new" value while the
+        // database keeps the old one. A query-builder UPDATE always writes.
+        // Mass-assignment semantics are kept by intersecting with fillable.
+        $fillable = $model->getFillable();
+        if (! empty($fillable)) {
+            $data = array_intersect_key($data, array_flip($fillable));
+        }
+        $model->newQuery()->whereKey($model->getKey())->update($data);
         $this->clearCache();
 
-        return $model;
+        return $model->fresh() ?? $model;
     }
 
     public function delete($id): bool

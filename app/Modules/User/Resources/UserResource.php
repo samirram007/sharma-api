@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'userType' => $this->user_type,
             'role' => $this->user_type,
             'status' => $this->status,
+            'avatar' => $this->avatar,
             'userFiscalYear' => UserFiscalYearResource::make($this->whenLoaded('user_fiscal_year')),
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'roleIds' => $this->whenLoaded(

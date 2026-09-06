@@ -45,4 +45,11 @@ class DashboardController extends Controller
 
         return new SuccessCollection($data, 'User-wise dashboard fetched successfully');
     }
+
+    public function monthlyTrend(): SuccessResource
+    {
+        $data = $this->service->monthlyTrend();
+
+        return new SuccessResource($data, 'Monthly dashboard trend fetched successfully');
+    }
 }

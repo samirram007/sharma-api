@@ -3,12 +3,14 @@
 namespace Modules\User\Models;
 
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Modules\Role\Models\Role;
 use Modules\UserFiscalYear\Models\UserFiscalYear;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
@@ -25,6 +27,7 @@ class User extends Authenticatable implements JWTSubject
         'user_type',
         'password',
         'status',
+        'avatar',
     ];
 
     protected $hidden = [
@@ -83,6 +86,20 @@ class User extends Authenticatable implements JWTSubject
         if ($roleId) {
             $this->roles()->syncWithoutDetaching([$roleId]);
         }
+    }
+
+    /**
+     * Users holding the DEVELOPER role are only visible to developers — every
+     * other role/user never sees them. Apply to any user-listing query so
+     * developer accounts stay invisible outside the developer's own view.
+     */
+    public function scopeExcludeDevelopersForNonDevelopers(Builder $query): Builder
+    {
+        if (Auth::check() && Auth::user()->roles()->where('code', 'DEVELOPER')->exists()) {
+            return $query;
+        }
+
+        return $query->whereDoesntHave('roles', fn (Builder $q) => $q->where('code', 'DEVELOPER'));
     }
 
     public function userable()

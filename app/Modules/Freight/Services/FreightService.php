@@ -256,7 +256,7 @@ class FreightService extends BaseService implements FreightServiceInterface
         // 'all' — no additional filtering
     }
 
-    public function godownWiseReport(): Collection
+    public function godownWiseReport(?string $startDate = null, ?string $endDate = null): Collection
     {
         $godownData = [];
 
@@ -272,12 +272,12 @@ class FreightService extends BaseService implements FreightServiceInterface
             }
 
             $this->accumulateEntry($godownData[$key], $voucher, $godownEntry, $godown, $movementType, $quantity, 'voucherDetails');
-        });
+        }, 200, $startDate, $endDate);
 
         return new Collection($this->finalizeGroupedData($godownData));
     }
 
-    public function zoneWiseReport(): Collection
+    public function zoneWiseReport(?string $startDate = null, ?string $endDate = null): Collection
     {
         // Get all zones and index by ID for fast lookup
         $zones = Godown::where('storage_unit_type', 'ZONE')->get()->keyBy('id');
@@ -340,7 +340,7 @@ class FreightService extends BaseService implements FreightServiceInterface
                     );
                 }
             }
-        });
+        }, 200, $startDate, $endDate);
 
         return new Collection($this->finalizeGroupedData($zoneData));
     }
@@ -434,13 +434,16 @@ class FreightService extends BaseService implements FreightServiceInterface
      * Base query for delivery notes with the eager-loaded stock journal hierarchy,
      * scoped to the user's fiscal year reporting period.
      *
+     * When $startDate/$endDate are given they override the user's reporting-period
+     * window (used by the dashboard, which always shows the whole fiscal year).
+     *
      * The Voucher `default_order` global scope is disabled and rows are consumed
      * via chunkById() so reports stay bounded in memory — hydrating the whole
      * period at once previously exhausted PHP's memory_limit on large data sets.
      */
-    private function getDeliveryNotesWithStockJournalsQuery(): Builder
+    private function getDeliveryNotesWithStockJournalsQuery(?string $startDate = null, ?string $endDate = null): Builder
     {
-        [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
+        [$fiscalYearId, $defaultStart, $defaultEnd] = $this->getUserFiscalYearPeriod();
 
         return Voucher::query()
             ->withoutGlobalScope('default_order')
@@ -454,7 +457,7 @@ class FreightService extends BaseService implements FreightServiceInterface
             ->where('vouchers.voucher_type_id', $this->deliverNoteVoucherTypeID)
             ->whereNotNull('vouchers.stock_journal_id')
             ->where('vouchers.fiscal_year_id', $fiscalYearId)
-            ->whereBetween('vouchers.voucher_date', [$startDate, $endDate]);
+            ->whereBetween('vouchers.voucher_date', [$startDate ?? $defaultStart, $endDate ?? $defaultEnd]);
     }
 
     /**
@@ -462,14 +465,17 @@ class FreightService extends BaseService implements FreightServiceInterface
      * note data (stock journal hierarchy, dispatch details, party) for zone-wise
      * and transporter-wise reporting.
      *
+     * When $startDate/$endDate are given they override the user's reporting-period
+     * window (used by the dashboard, which always shows the whole fiscal year).
+     *
      * The Voucher `default_order` global scope is disabled and rows are consumed
      * via chunkById() so reports stay bounded in memory. Ordering is irrelevant
      * here — consumers accumulate into buckets (transporter-wise re-sorts by
      * voucher number at the end).
      */
-    private function getFreightVouchersWithReferencedDataQuery(): Builder
+    private function getFreightVouchersWithReferencedDataQuery(?string $startDate = null, ?string $endDate = null): Builder
     {
-        [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
+        [$fiscalYearId, $defaultStart, $defaultEnd] = $this->getUserFiscalYearPeriod();
 
         return Voucher::query()
             ->withoutGlobalScope('default_order')
@@ -484,7 +490,7 @@ class FreightService extends BaseService implements FreightServiceInterface
             ->where('vouchers.module', 'freight')
             ->where('vouchers.voucher_type_id', $this->salesVoucherTypeID)
             ->where('vouchers.fiscal_year_id', $fiscalYearId)
-            ->whereBetween('vouchers.voucher_date', [$startDate, $endDate]);
+            ->whereBetween('vouchers.voucher_date', [$startDate ?? $defaultStart, $endDate ?? $defaultEnd]);
     }
 
     /**
@@ -514,9 +520,9 @@ class FreightService extends BaseService implements FreightServiceInterface
      * memory stays flat regardless of how much data the reporting period holds.
      * Callback receives: (Voucher $voucher, StockJournalGodownEntry $entry, Godown $godown, string $movementType, float $quantity)
      */
-    private function processStockJournalEntries(callable $callback, int $chunkSize = 200): void
+    private function processStockJournalEntries(callable $callback, int $chunkSize = 200, ?string $startDate = null, ?string $endDate = null): void
     {
-        $this->getDeliveryNotesWithStockJournalsQuery()
+        $this->getDeliveryNotesWithStockJournalsQuery($startDate, $endDate)
             ->chunkById($chunkSize, function ($vouchers) use ($callback) {
                 foreach ($vouchers as $voucher) {
                     $stockJournal = $voucher->stock_journal;
@@ -545,9 +551,9 @@ class FreightService extends BaseService implements FreightServiceInterface
      * Stream freight (sales) vouchers through the callback in bounded chunks.
      * Callback receives: (Voucher $freightVoucher)
      */
-    private function processFreightVouchersInChunks(callable $callback, int $chunkSize = 200): void
+    private function processFreightVouchersInChunks(callable $callback, int $chunkSize = 200, ?string $startDate = null, ?string $endDate = null): void
     {
-        $this->getFreightVouchersWithReferencedDataQuery()
+        $this->getFreightVouchersWithReferencedDataQuery($startDate, $endDate)
             ->chunkById($chunkSize, function ($freightVouchers) use ($callback) {
                 foreach ($freightVouchers as $freightVoucher) {
                     $callback($freightVoucher);
@@ -720,7 +726,7 @@ class FreightService extends BaseService implements FreightServiceInterface
         return $this->voucherService->attachListInfo($vouchers);
     }
 
-    public function transporterItemWiseReport(): Collection
+    public function transporterItemWiseReport(?string $startDate = null, ?string $endDate = null): Collection
     {
         // Get freight vouchers with referenced delivery note data including stock journal items and dispatch details
         $transporterData = [];
@@ -796,7 +802,7 @@ class FreightService extends BaseService implements FreightServiceInterface
                     'totalFare' => $totalFare,
                 ];
             }
-        });
+        }, 200, $startDate, $endDate);
 
         // Sort entries by voucher within each transporter so items from same invoice stay together
         $result = [];

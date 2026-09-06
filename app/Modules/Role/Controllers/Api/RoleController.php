@@ -7,7 +7,9 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Modules\Role\Facades\RoleFacade;
+use Modules\Role\Models\Role;
 use Modules\Role\Requests\RoleRequest;
 use Modules\Role\Resources\RoleCollection;
 use Modules\Role\Resources\RoleResource;
@@ -19,6 +21,18 @@ class RoleController extends Controller
     public function index(): SuccessCollection
     {
         $data = RoleFacade::getAll();
+
+        // The Developer role is only visible to users who hold the Developer
+        // role themselves — every other role never sees it in role lists.
+        $user = Auth::user();
+        $viewerIsDeveloper = $user !== null
+            && $user->roles()->where('code', 'DEVELOPER')->exists();
+
+        if (! $viewerIsDeveloper) {
+            $data = $data->reject(
+                fn (Role $role) => $role->code === 'DEVELOPER'
+            );
+        }
 
         return new RoleCollection($data);
     }

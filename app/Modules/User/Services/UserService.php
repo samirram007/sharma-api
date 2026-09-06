@@ -3,6 +3,7 @@
 namespace Modules\User\Services;
 
 use App\Support\Services\BaseService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Modules\User\Contracts\UserServiceInterface;
@@ -15,6 +16,33 @@ class UserService extends BaseService implements UserServiceInterface
     protected string $modelClass = User::class;
 
     protected array $defaultResource = ['roles'];
+
+    /**
+     * Developer visibility applies to every list path (paged, searched or
+     * plain collection) served by the users API — developer accounts only
+     * show for users who hold the DEVELOPER role themselves.
+     */
+    public function getAll(): Collection|LengthAwarePaginator
+    {
+        $perPage = request()->integer('per_page', 0);
+        $search = (string) request()->input('search', '');
+
+        $query = $this->queryWithResource()->excludeDevelopersForNonDevelopers();
+
+        if ($perPage > 0 || $search !== '') {
+            if ($search !== '') {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('username', 'like', "%{$search}%");
+                });
+            }
+
+            return $query->paginate($perPage > 0 ? $perPage : 15);
+        }
+
+        return $query->get();
+    }
 
     public function findOrCreateSocialUser($socialUser, string $provider): User
     {

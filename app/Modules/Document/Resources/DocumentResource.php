@@ -12,15 +12,20 @@ class DocumentResource extends SuccessResource
 
     public function toArray(Request $request): array
     {
-
         return array_merge($this->toCamelCaseArray($request), [
-
             'id' => $this->id,
-            'name' => $this->name,
-            'created_at' => $this->created_at?->toISOString(),
-            'updated_at' => $this->updated_at?->toISOString(),
-
+            'title' => $this->title,
+            'content' => $this->content,
+            'userId' => $this->user_id,
+            'companyId' => $this->company_id,
+            'branchId' => $this->branch_id,
+            'fiscalYearId' => $this->fiscal_year_id,
+            'voucherId' => $this->voucher_id,
+            'documentTypeId' => $this->document_type_id,
+            'documentStatusId' => $this->document_status_id,
+            'link' => $this->link,
+            'createdAt' => $this->created_at?->toISOString(),
+            'updatedAt' => $this->updated_at?->toISOString(),
         ]);
-
     }
 }

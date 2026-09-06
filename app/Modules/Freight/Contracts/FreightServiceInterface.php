@@ -16,9 +16,19 @@ interface FreightServiceInterface extends BaseServiceInterface
 
     public function getDeliveryNoteOverallTotalFare(array $filters = []): float;
 
-    public function godownWiseReport(): Collection;
+    /**
+     * Delivery-note godown-wise report.
+     * Optional date overrides replace the user's reporting-period window
+     * (used by the dashboard, which always shows the whole fiscal year).
+     */
+    public function godownWiseReport(?string $startDate = null, ?string $endDate = null): Collection;
 
-    public function zoneWiseReport(): Collection;
+    /**
+     * Freight zone-wise report.
+     * Optional date overrides replace the user's reporting-period window
+     * (used by the dashboard, which always shows the whole fiscal year).
+     */
+    public function zoneWiseReport(?string $startDate = null, ?string $endDate = null): Collection;
 
     public function deliveryNoteZoneWiseReport(): Collection;
 
@@ -26,7 +36,12 @@ interface FreightServiceInterface extends BaseServiceInterface
 
     public function transporterWiseReport(): Collection;
 
-    public function transporterItemWiseReport(): Collection;
+    /**
+     * Freight transporter item-wise report.
+     * Optional date overrides replace the user's reporting-period window
+     * (used by the dashboard, which always shows the whole fiscal year).
+     */
+    public function transporterItemWiseReport(?string $startDate = null, ?string $endDate = null): Collection;
 
     public function vehicleWiseReport(): Collection;
 

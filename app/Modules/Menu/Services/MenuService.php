@@ -369,6 +369,7 @@ class MenuService extends BaseService implements MenuServiceInterface
             'children' => function ($query) use ($allowedFeatureIds) {
                 $query->whereIn('app_module_feature_id', $allowedFeatureIds)
                     ->where('status', 'active')
+                    ->where('is_visible', true)
                     ->where('is_top_menu', false)
                     ->orderBy('sort_order');
             },
@@ -376,6 +377,7 @@ class MenuService extends BaseService implements MenuServiceInterface
             'children.children' => function ($query) use ($allowedFeatureIds) {
                 $query->whereIn('app_module_feature_id', $allowedFeatureIds)
                     ->where('status', 'active')
+                    ->where('is_visible', true)
                     ->where('is_top_menu', false)
                     ->orderBy('sort_order');
             },
@@ -383,6 +385,7 @@ class MenuService extends BaseService implements MenuServiceInterface
             'children.children.children' => function ($query) use ($allowedFeatureIds) {
                 $query->whereIn('app_module_feature_id', $allowedFeatureIds)
                     ->where('status', 'active')
+                    ->where('is_visible', true)
                     ->where('is_top_menu', false)
                     ->orderBy('sort_order');
             },
@@ -420,6 +423,7 @@ class MenuService extends BaseService implements MenuServiceInterface
                 'menuName' => $menu->menu_name,
                 'route' => $menu->route,
                 'icon' => $menu->icon,
+                'description' => $menu->description,
                 'isGroup' => $menu->is_group,
                 'isTopMenu' => $menu->is_top_menu,
                 'sortOrder' => $menu->sort_order,

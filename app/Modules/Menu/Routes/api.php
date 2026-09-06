@@ -11,8 +11,11 @@ use Modules\Menu\Controllers\Api\MenuController;
 
 Route::middleware(['jwt.cookies'])->group(function () {
 
-    // ── Search (must be before apiResource to avoid {menu} catch-all) ─
+    // ── Search / Import / Export (must be before apiResource so {menu}
+    //    doesn't catch their segments, e.g. GET /menus/export) ──
     Route::get('/menus/search', [MenuController::class, 'search']);
+    Route::get('/menus/export', [MenuController::class, 'export']);
+    Route::post('/menus/import', [MenuController::class, 'import']);
 
     // ── Menu CRUD ────────────────────────────────────────────────
     Route::apiResource('menus', MenuController::class);
@@ -29,10 +32,6 @@ Route::middleware(['jwt.cookies'])->group(function () {
 
     // ── Duplicate ───────────────────────────────────────────────
     Route::post('/menus/{id}/duplicate', [MenuController::class, 'duplicate']);
-
-    // ── Import / Export ──────────────────────────────────────────
-    Route::get('/menus/export', [MenuController::class, 'export']);
-    Route::post('/menus/import', [MenuController::class, 'import']);
 
     // ── User-facing endpoints (moved from Auth module) ──────────
     Route::get('/user/menu', [MenuController::class, 'userMenu']);

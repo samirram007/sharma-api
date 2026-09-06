@@ -103,10 +103,19 @@ trait Cacheable
     }
 
     /**
-     * Invalidate all cache for this repository by incrementing the version.
+     * Invalidate all cache for this repository by bumping the version.
+     *
+     * Note: version keys are deliberately written with Cache::put() instead of
+     * Cache::increment(). With the database cache driver, increment() on a
+     * non-existent key is a silent no-op (it never inserts the row), so the
+     * version would stay at the default 1 forever and cached lists would go
+     * stale after every write until a manual cache:clear.
      */
     public function clearCache(): void
     {
-        Cache::increment($this->getCachePrefix().'_version');
+        Cache::put(
+            $this->getCachePrefix().'_version',
+            $this->getCacheVersion() + 1
+        );
     }
 }

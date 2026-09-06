@@ -9,4 +9,5 @@ Route::middleware(['jwt.cookies'])->group(function () {
     Route::get('dashboard/godown_wise', [DashboardController::class, 'godownWise']);
     Route::get('dashboard/transporter_wise', [DashboardController::class, 'transporterWise']);
     Route::get('dashboard/user_wise', [DashboardController::class, 'userWise']);
+    Route::get('dashboard/monthly_trend', [DashboardController::class, 'monthlyTrend']);
 });

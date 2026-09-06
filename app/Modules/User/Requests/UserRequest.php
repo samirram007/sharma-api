@@ -19,6 +19,9 @@ class UserRequest extends FormRequest
             'username' => ['sometimes', 'required', 'string', 'max:255', 'unique:users,username'],
             'email' => ['required', 'string', 'max:255', 'unique:users,email'],
             'status' => ['sometimes', 'required', 'string', 'max:255'],
+            // Document-manager preview URLs ("Set as profile image"); also
+            // accepts any other URL the frontend already displays.
+            'avatar' => ['sometimes', 'nullable', 'string', 'max:2048'],
         ];
 
         // For update requests, make validation more flexible

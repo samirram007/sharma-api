@@ -12,16 +12,17 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
      * Fields that can be searched via the search() method.
      */
     protected array $searchableFields = [
-        'name',
-        'code',
-        'description',
+        'title', 'content', 'link',
     ];
 
     /**
      * Fields that can be filtered via the filter() method.
      */
     protected array $filterableFields = [
-        'status',
+        'document_type_id',
+        'document_status_id',
+        'user_id',
+        'company_id',
     ];
 
     public function __construct(Document $model)

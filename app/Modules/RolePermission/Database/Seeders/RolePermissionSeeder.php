@@ -10,9 +10,10 @@ class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        // Super Admin (id: 10000) gets ALL permissions granted.
+        // Roles with full (unrestricted) access — every feature is granted.
         $superAdminRoleId = 10000;
         $adminRoleId = 10001;
+        $developerRoleId = 10002;
         $employeeRoleId = 10004;
 
         $allFeatures = AppModuleFeature::all();
@@ -23,21 +24,17 @@ class RolePermissionSeeder extends Seeder
             return;
         }
 
+        $fullAccessRoleIds = [$superAdminRoleId, $adminRoleId, $developerRoleId];
+
         $count = 0;
         foreach ($allFeatures as $feature) {
-            // Grant all permissions to Super Admin
-            RolePermission::updateOrCreate(
-                ['role_id' => $superAdminRoleId, 'app_module_feature_id' => $feature->id],
-                ['is_allowed' => true]
-            );
-            $count++;
-
-            // Grant all permissions to Admin as well
-            RolePermission::updateOrCreate(
-                ['role_id' => $adminRoleId, 'app_module_feature_id' => $feature->id],
-                ['is_allowed' => true]
-            );
-            $count++;
+            foreach ($fullAccessRoleIds as $roleId) {
+                RolePermission::updateOrCreate(
+                    ['role_id' => $roleId, 'app_module_feature_id' => $feature->id],
+                    ['is_allowed' => true]
+                );
+                $count++;
+            }
         }
 
         // Employee role: grant transaction menu-view permissions so the
@@ -160,6 +157,6 @@ class RolePermissionSeeder extends Seeder
             }
         }
 
-        $this->command->info("RolePermissionSeeder: {$count} role permissions seeded for Super Admin, Admin, Employee, and module-specific Employee roles.");
+        $this->command->info("RolePermissionSeeder: {$count} role permissions seeded for Super Admin, Admin, Developer, Employee, and module-specific Employee roles.");
     }
 }

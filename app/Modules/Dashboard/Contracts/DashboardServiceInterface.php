@@ -21,4 +21,11 @@ interface DashboardServiceInterface extends BaseServiceInterface
     public function transporterWise(): Collection;
 
     public function userWise(): Collection;
+
+    /**
+     * Month-by-month activity for the dashboard trend chart.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function monthlyTrend(): array;
 }

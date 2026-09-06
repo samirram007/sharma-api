@@ -13,9 +13,15 @@ class MenuRequest extends FormRequest
 
     public function rules(): array
     {
+        // PATCH is used for quick single-field toggles (visibility, top menu,
+        // status) that send only the changed attribute — those fields must not
+        // be required then. Full create (POST) and update (PUT) still require
+        // the core fields.
+        $partial = $this->isMethod('PATCH');
+
         $rules = [
-            'app_module_feature_id' => ['required', 'numeric', 'exists:app_module_features,id'],
-            'menu_name' => ['required', 'string', 'max:255'],
+            'app_module_feature_id' => [$partial ? 'sometimes' : 'required', 'numeric', 'exists:app_module_features,id'],
+            'menu_name' => [$partial ? 'sometimes' : 'required', 'string', 'max:255'],
             'route' => ['nullable', 'string', 'max:500'],
             'icon' => ['nullable', 'string', 'max:100'],
             'parent_id' => ['nullable', 'numeric', 'exists:menu,id'],
