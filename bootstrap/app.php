@@ -3,6 +3,7 @@
 use App\Http\Middleware\JWTFromCookie;
 use App\Http\Middleware\NormalizeQueryParameters;
 use App\Http\Middleware\NormalizeRequestKeys;
+use App\Http\Middleware\RequireFeaturePermission;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -28,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'jwt.cookies' => JWTFromCookie::class,
+            'feature.permission' => RequireFeaturePermission::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

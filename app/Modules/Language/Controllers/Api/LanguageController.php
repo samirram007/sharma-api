@@ -3,6 +3,7 @@
 namespace Modules\Language\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Modules\Language\Facades\LanguageFacade;
@@ -21,35 +22,25 @@ class LanguageController extends Controller
         return (new LanguageCollection($data))->response();
     }
 
-    public function show(int $id): JsonResponse
+    public function show(int $id): SuccessResource
     {
         $data = LanguageFacade::getById($id);
 
-        return $this->resourceResponse(
-            new LanguageResource($data),
-            'Language retrieved successfully'
-        );
+        return new LanguageResource($data, 'Language retrieved successfully');
     }
 
-    public function store(LanguageRequest $request): JsonResponse
+    public function store(LanguageRequest $request): SuccessResource
     {
         $data = LanguageFacade::store($request->validated());
 
-        return $this->resourceResponse(
-            new LanguageResource($data),
-            'Language created successfully',
-            201
-        );
+        return new LanguageResource($data, 'Language created successfully');
     }
 
-    public function update(LanguageRequest $request, int $id): JsonResponse
+    public function update(LanguageRequest $request, int $id): SuccessResource
     {
         $data = LanguageFacade::update($request->validated(), $id);
 
-        return $this->resourceResponse(
-            new LanguageResource($data),
-            'Language updated successfully'
-        );
+        return new LanguageResource($data, 'Language updated successfully');
     }
 
     public function destroy(int $id): JsonResponse

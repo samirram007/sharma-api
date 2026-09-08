@@ -110,7 +110,6 @@ class MenuSeeder extends Seeder
         ]);
 
         $this->create(['menu_name' => 'Company', 'route' => '/masters/organization/company', 'app_module_feature_code' => 'COMPANY_MENU_VIEW', 'icon' => 'Building2', 'description' => 'Maintain the company profile and business details.', 'parent' => $org, 'sort_order' => 10]);
-        $this->create(['menu_name' => 'Branch', 'route' => '/masters/organization/branch', 'app_module_feature_code' => 'ORGANIZATION_MENU_VIEW', 'icon' => 'Building2', 'description' => 'Maintain branch details (currently hidden from the sidebar).', 'parent' => $org, 'sort_order' => 15, 'is_visible' => false]);
         $this->create(['menu_name' => 'Fiscal Year', 'route' => '/masters/organization/fiscal_year', 'app_module_feature_code' => 'FISCAL_YEAR_MENU_VIEW', 'icon' => 'ClipboardList', 'description' => 'Create and manage fiscal year periods.', 'parent' => $org, 'sort_order' => 20]);
         $this->create(['menu_name' => 'Currency', 'route' => '/masters/organization/currency', 'app_module_feature_code' => 'CURRENCY_MENU_VIEW', 'icon' => 'Coin', 'description' => 'Maintain the currencies used across the application.', 'parent' => $org, 'sort_order' => 30]);
         $this->create(['menu_name' => 'Country', 'route' => '/masters/organization/country', 'app_module_feature_code' => 'COUNTRY_MENU_VIEW', 'icon' => 'Map', 'description' => 'Maintain the countries used for addresses.', 'parent' => $org, 'sort_order' => 40]);

@@ -66,12 +66,10 @@ class VoucherNoController extends Controller
         $voucherTypeId = $request->input('voucher_type_id');
         $companyId = $request->input('company_id');
         $fiscalYearId = $request->input('fiscal_year_id');
-        $branchId = $request->input('branch_id');
 
-        $voucherNo = DB::transaction(function () use ($voucherTypeId, $companyId, $fiscalYearId, $branchId) {
+        $voucherNo = DB::transaction(function () use ($voucherTypeId, $companyId, $fiscalYearId) {
             $voucherNoRecord = VoucherNo::where('voucher_type_id', $voucherTypeId)
                 ->where('company_id', $companyId)
-                ->where('branch_id', $branchId)
                 ->where('fiscal_year_id', $fiscalYearId)
                 ->lockForUpdate()
                 ->first();
@@ -86,7 +84,6 @@ class VoucherNoController extends Controller
                     'prefix' => $prefix,
                     'voucher_type_id' => $voucherTypeId,
                     'company_id' => $companyId,
-                    'branch_id' => $branchId ?? null,
                     'fiscal_year_id' => $fiscalYearId,
                     'starting_no' => 1,
                     'current_no' => 1,

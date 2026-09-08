@@ -144,7 +144,6 @@ class VoucherNoTest extends TestCase
             'prefix' => 'PURC-',
             'voucher_type_id' => $voucherType->id,
             'company_id' => 1,
-            'branch_id' => null,
             'fiscal_year_id' => 2025,
             'starting_no' => 1,
             'current_no' => 5,
@@ -191,7 +190,6 @@ class VoucherNoTest extends TestCase
             'prefix' => 'PURC-',
             'voucher_type_id' => $voucherType->id,
             'company_id' => 1,
-            'branch_id' => null,
             'fiscal_year_id' => 2025,
             'starting_no' => 1,
             'current_no' => 100,
@@ -218,7 +216,6 @@ class VoucherNoTest extends TestCase
             'prefix' => 'PURC-',
             'voucher_type_id' => $voucherType->id,
             'company_id' => 1,
-            'branch_id' => null,
             'fiscal_year_id' => 2025,
             'starting_no' => 1,
             'current_no' => 50,
@@ -236,7 +233,6 @@ class VoucherNoTest extends TestCase
         DB::transaction(function () use ($voucherType, &$firstNumber) {
             $record = VoucherNo::where('voucher_type_id', $voucherType->id)
                 ->where('company_id', 1)
-                ->where('branch_id', null)
                 ->where('fiscal_year_id', 2025)
                 ->lockForUpdate()
                 ->first();

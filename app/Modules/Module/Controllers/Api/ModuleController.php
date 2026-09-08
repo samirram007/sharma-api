@@ -3,6 +3,7 @@
 namespace Modules\Module\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Modules\Module\Facades\ModuleFacade;
@@ -21,35 +22,25 @@ class ModuleController extends Controller
         return (new ModuleCollection($data))->response();
     }
 
-    public function show(int $id): JsonResponse
+    public function show(int $id): SuccessResource
     {
         $data = ModuleFacade::getById($id);
 
-        return $this->resourceResponse(
-            new ModuleResource($data),
-            'Module retrieved successfully'
-        );
+        return new ModuleResource($data, 'Module retrieved successfully');
     }
 
-    public function store(ModuleRequest $request): JsonResponse
+    public function store(ModuleRequest $request): SuccessResource
     {
         $data = ModuleFacade::store($request->validated());
 
-        return $this->resourceResponse(
-            new ModuleResource($data),
-            'Module created successfully',
-            201
-        );
+        return new ModuleResource($data, 'Module created successfully');
     }
 
-    public function update(ModuleRequest $request, int $id): JsonResponse
+    public function update(ModuleRequest $request, int $id): SuccessResource
     {
         $data = ModuleFacade::update($request->validated(), $id);
 
-        return $this->resourceResponse(
-            new ModuleResource($data),
-            'Module updated successfully'
-        );
+        return new ModuleResource($data, 'Module updated successfully');
     }
 
     public function destroy(int $id): JsonResponse

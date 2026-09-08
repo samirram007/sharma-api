@@ -14,12 +14,13 @@ class SettingRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
+            'property' => ['required', 'string', 'max:255'],
+            'value' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255'];
+            $rules['property'] = ['sometimes', 'required', 'string', 'max:255'];
         }
 
         return $rules;
@@ -28,9 +29,9 @@ class SettingRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'The name field is required.',
-            'name.string' => 'The name must be a string.',
-            'name.max' => 'The name may not be greater than 255 characters.',
+            'property.required' => 'The property field is required.',
+            'property.string' => 'The property must be a string.',
+            'property.max' => 'The property may not be greater than 255 characters.',
         ];
     }
 }

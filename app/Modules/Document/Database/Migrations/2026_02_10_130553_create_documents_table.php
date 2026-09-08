@@ -14,7 +14,6 @@ return new class extends Migration
             $table->text('content');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('company_id');
-            $table->unsignedBigInteger('branch_id');
             $table->unsignedBigInteger('fiscal_year_id');
             $table->unsignedBigInteger('voucher_id')->nullable();
             $table->unsignedBigInteger('document_type_id');

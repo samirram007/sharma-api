@@ -14,12 +14,18 @@ class JournalRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
+            'voucher_id' => ['required', 'integer'],
+            'entry_index' => ['required', 'integer'],
+            'account_ledger_id' => ['required', 'integer'],
+            'debit_amount' => ['sometimes', 'nullable', 'numeric'],
+            'credit_amount' => ['sometimes', 'nullable', 'numeric'],
         ];
 
         // For update requests, make validation more flexible
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
-            $rules['name'] = ['sometimes', 'required', 'string', 'max:255'];
+            $rules['voucher_id'] = ['sometimes', 'required', 'integer'];
+            $rules['entry_index'] = ['sometimes', 'required', 'integer'];
+            $rules['account_ledger_id'] = ['sometimes', 'required', 'integer'];
         }
 
         return $rules;
@@ -28,9 +34,9 @@ class JournalRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'The name field is required.',
-            'name.string' => 'The name must be a string.',
-            'name.max' => 'The name may not be greater than 255 characters.',
+            'voucher_id.required' => 'The voucher id field is required.',
+            'entry_index.required' => 'The entry index field is required.',
+            'account_ledger_id.required' => 'The account ledger id field is required.',
         ];
     }
 }

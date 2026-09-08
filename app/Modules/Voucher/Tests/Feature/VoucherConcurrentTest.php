@@ -145,7 +145,6 @@ class VoucherConcurrentTest extends TestCase
             'prefix' => 'SALE-',
             'voucher_type_id' => $this->voucherType->id,
             'company_id' => $this->fiscalYear->company_id,
-            'branch_id' => null,
             'fiscal_year_id' => $this->fiscalYear->id,
             'starting_no' => 1,
             'current_no' => 50,

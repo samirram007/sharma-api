@@ -18,7 +18,6 @@ class DocumentResource extends SuccessResource
             'content' => $this->content,
             'userId' => $this->user_id,
             'companyId' => $this->company_id,
-            'branchId' => $this->branch_id,
             'fiscalYearId' => $this->fiscal_year_id,
             'voucherId' => $this->voucher_id,
             'documentTypeId' => $this->document_type_id,

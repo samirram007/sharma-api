@@ -22,7 +22,6 @@ class TicketResource extends SuccessResource
             'createdBy' => $this->created_by,
             'assignedTo' => $this->assigned_to,
             'companyId' => $this->company_id,
-            'branchId' => $this->branch_id,
             'resolvedAt' => $this->resolved_at?->toISOString(),
             'createdAt' => $this->created_at?->toISOString(),
             'updatedAt' => $this->updated_at?->toISOString(),

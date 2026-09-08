@@ -2,15 +2,24 @@
 
 namespace Modules\User\Resources;
 
+use App\Http\Resources\SuccessResource;
 use App\Support\Traits\CamelCaseResource;
+use App\Traits\HasPolymorphicResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+
+use Modules\Role\Resources\RoleCollection;
 use Modules\Role\Resources\RoleResource;
 use Modules\UserFiscalYear\Resources\UserFiscalYearResource;
 
-class UserResource extends JsonResource
+class UserResource extends SuccessResource
 {
     use CamelCaseResource;
+    use HasPolymorphicResource;
+
+    // public function with(Request $request): array
+    // {
+    //     return [];
+    // }
 
     public function toArray(Request $request): array
     {
@@ -24,7 +33,7 @@ class UserResource extends JsonResource
             'status' => $this->status,
             'avatar' => $this->avatar,
             'userFiscalYear' => UserFiscalYearResource::make($this->whenLoaded('user_fiscal_year')),
-            'roles' => RoleResource::collection($this->whenLoaded('roles')),
+            'roles' => RoleCollection::make($this->whenLoaded('roles')),
             'roleIds' => $this->whenLoaded(
                 'roles',
                 fn () => $this->roles->pluck('id')->values()

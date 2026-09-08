@@ -190,6 +190,20 @@ class DocumentNode extends Model
     }
 
     /**
+     * Whether the user may subscribe to this folder's realtime channel:
+     * true exactly when the folder is reachable through ownership, a share,
+     * public visibility, or by being nested inside such a folder.
+     */
+    public static function userCanAccessFolder(int $userId, int $folderId): bool
+    {
+        $folder = static::query()->find($folderId);
+
+        return $folder !== null
+            && $folder->kind === self::KIND_FOLDER
+            && in_array($folderId, static::inheritedAccessFolderIds($userId), true);
+    }
+
+    /**
      * Nodes the signed-in user may browse: their own (any visibility),
      * everything nested inside folders they own (co-sharers' creations
      * included), company-public nodes, protected nodes explicitly shared

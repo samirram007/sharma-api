@@ -3,96 +3,107 @@
 namespace Modules\Country\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Modules\Country\Models\Country;
+use Modules\Role\Models\Role;
+use Modules\User\Models\User;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Tests\ActingAsSuperAdmin;
 use Tests\TestCase;
 
 class CountryTest extends TestCase
 {
+    use ActingAsSuperAdmin;
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->actAsSuperAdmin();
+    }
+
+    public function test_index_requires_authentication(): void
+    {
+        $this->getJson('/api/countries')
+            ->assertStatus(401);
+    }
+
+    public function test_index_denied_without_feature_permission(): void
+    {
+        $role = Role::create([
+            'name' => 'Gate Viewer', 'code' => 'GATE_VIEWER_COUNTRY', 'status' => 'active',
+        ]);
+        $user = User::create([
+            'name' => 'Gate Viewer User',
+            'email' => 'gate-viewer-countries@example.com',
+            'password' => 'password',
+        ]);
+        DB::table('user_roles')->insert([
+            'user_id' => $user->id, 'role_id' => $role->id,
+        ]);
+        $token = JWTAuth::fromUser($user);
+
+        // Authenticated but the role holds no COUNTRY_MENU_VIEW grant.
+        $this->withToken($token)->getJson('/api/countries')
+            ->assertStatus(403);
+    }
 
     public function test_can_list_countries(): void
     {
-        $response = $this->getJson('/api/countries');
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+        Country::create(['name' => 'Test Land', 'phone_code' => '+91', 'iso_code' => 'IN']);
+
+        $this->withToken($this->token)->getJson('/api/countries')
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
     }
 
-    public function test_can_create_country(): void
+    public function test_can_create_countries(): void
     {
-        $data = ['name' => 'Test Country'];
+        $data = ['name' => 'Test Land', 'phone_code' => '+91', 'iso_code' => 'IN'];
 
-        $response = $this->postJson('/api/countries', $data);
-        $response->assertStatus(201)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->postJson('/api/countries', $data)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
 
         $this->assertDatabaseHas('countries', $data);
     }
 
-    public function test_can_show_country(): void
+    public function test_can_show_countries(): void
     {
-        $Country = Country::factory()->create();
+        $country = Country::create(['name' => 'Test Land', 'phone_code' => '+91', 'iso_code' => 'IN']);
 
-        $response = $this->getJson('/api/countries/'.$Country->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'id',
-                    'name',
-                    'created_at',
-                    'updated_at',
-                ],
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->getJson('/api/countries/'.$country->id)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
     }
 
-    public function test_can_update_country(): void
+    public function test_can_update_countries(): void
     {
-        $Country = Country::factory()->create();
-        $data = ['name' => 'Updated Country'];
+        $country = Country::create(['name' => 'Test Land', 'phone_code' => '+91', 'iso_code' => 'IN']);
+        $data = ['phone_code' => '+44', 'iso_code' => 'GB'];
 
-        $response = $this->putJson('/api/countries/'.$Country->id, $data);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->putJson('/api/countries/'.$country->id, $data)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
 
         $this->assertDatabaseHas('countries', $data);
     }
 
-    public function test_can_delete_country(): void
+    public function test_can_delete_countries(): void
     {
-        $Country = Country::factory()->create();
+        $country = Country::create(['name' => 'Test Land', 'phone_code' => '+91', 'iso_code' => 'IN']);
 
-        $response = $this->deleteJson('/api/countries/'.$Country->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->deleteJson('/api/countries/'.$country->id)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
 
-        $this->assertDatabaseMissing('countries', ['id' => $Country->id]);
+        $this->assertDatabaseMissing('countries', ['id' => $country->id]);
     }
 
     public function test_validation_errors_on_create(): void
     {
-        $response = $this->postJson('/api/countries', []);
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name']);
+        $this->withToken($this->token)->postJson('/api/countries', [])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['name', 'phone_code', 'iso_code']);
     }
 }

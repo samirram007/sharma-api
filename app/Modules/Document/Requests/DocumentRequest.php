@@ -18,7 +18,6 @@ class DocumentRequest extends FormRequest
             'content' => ['sometimes', 'nullable', 'string'],
             'user_id' => ['sometimes', 'nullable', 'integer', 'exists:users,id'],
             'company_id' => ['sometimes', 'nullable', 'integer', 'exists:companies,id'],
-            'branch_id' => ['sometimes', 'nullable', 'integer', 'exists:branches,id'],
             'fiscal_year_id' => ['sometimes', 'nullable', 'integer', 'exists:fiscal_years,id'],
             'voucher_id' => ['sometimes', 'nullable', 'integer', 'exists:vouchers,id'],
             'document_type_id' => ['sometimes', 'nullable', 'integer'],

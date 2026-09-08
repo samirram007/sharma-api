@@ -22,7 +22,6 @@ class TicketRequest extends FormRequest
             'created_by' => ['sometimes', 'nullable', 'integer', 'exists:users,id'],
             'assigned_to' => ['sometimes', 'nullable', 'integer', 'exists:users,id'],
             'company_id' => ['sometimes', 'nullable', 'integer', 'exists:companies,id'],
-            'branch_id' => ['sometimes', 'nullable', 'integer', 'exists:branches,id'],
         ];
 
         // For update requests, make validation more flexible

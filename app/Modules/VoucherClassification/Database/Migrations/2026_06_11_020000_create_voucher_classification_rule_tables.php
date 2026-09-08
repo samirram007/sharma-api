@@ -13,9 +13,6 @@ return new class extends Migration
             if (! Schema::hasColumn('voucher_classifications', 'company_id')) {
                 $table->unsignedBigInteger('company_id')->after('id')->nullable();
             }
-            if (! Schema::hasColumn('voucher_classifications', 'branch_id')) {
-                $table->unsignedBigInteger('branch_id')->after('company_id')->nullable();
-            }
             if (! Schema::hasColumn('voucher_classifications', 'is_default')) {
                 $table->boolean('is_default')->default(false)->after('status');
             }
@@ -27,7 +24,9 @@ return new class extends Migration
             }
 
             // Remove the temporary JSON fields from previous turn to enforce normalization
-            $table->dropColumn(['inclusion_rules', 'exclusion_rules', 'default_value', 'percentage']);
+            if (Schema::hasColumn('voucher_classifications', 'inclusion_rules')) {
+                $table->dropColumn(['inclusion_rules', 'exclusion_rules', 'default_value', 'percentage']);
+            }
         });
 
         // 1. Scope Rules (Filters)

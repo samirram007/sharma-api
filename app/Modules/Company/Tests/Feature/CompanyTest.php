@@ -4,95 +4,120 @@ namespace Modules\Company\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Company\Models\Company;
-use Tests\TestCase;
+use Modules\CompanyType\Models\CompanyType;
+use Modules\User\Models\User;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
-class CompanyTest extends TestCase
-{
-    use RefreshDatabase;
+uses(RefreshDatabase::class);
 
-    public function test_can_list_companies(): void
-    {
-        $response = $this->getJson('/api/companies');
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
-    }
+beforeEach(function () {
+    $this->user = User::create([
+        'name' => 'Company Test User',
+        'email' => 'company-test@example.com',
+        'password' => 'password',
+    ]);
+    $this->token = JWTAuth::fromUser($this->user);
 
-    public function test_can_create_company(): void
-    {
-        $data = ['name' => 'Test Company'];
+    $this->companyType = CompanyType::create([
+        'name' => 'Private Limited',
+        'code' => 'PVT',
+    ]);
+});
 
-        $response = $this->postJson('/api/companies', $data);
-        $response->assertStatus(201)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+test('can list companies', function () {
+    $company = Company::create([
+        'name' => 'Test Company',
+        'code' => 'TC001',
+        'company_type_id' => $this->companyType->id,
+    ]);
 
-        $this->assertDatabaseHas('companies', $data);
-    }
+    $response = $this->withToken($this->token)->getJson('/api/companies');
 
-    public function test_can_show_company(): void
-    {
-        $Company = Company::factory()->create();
+    $response->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonStructure([
+            'success',
+            'code',
+            'message',
+            'data' => [['id', 'name', 'code', 'companyTypeId']],
+        ]);
 
-        $response = $this->getJson('/api/companies/'.$Company->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'id',
-                    'name',
-                    'created_at',
-                    'updated_at',
-                ],
-                'status',
-                'code',
-                'message',
-            ]);
-    }
+    expect($response->json('data.0.id'))->toBe($company->id);
+    expect($response->json('data.0.name'))->toBe('Test Company');
+    expect($response->json('data.0.companyTypeId'))->toBe($this->companyType->id);
 
-    public function test_can_update_company(): void
-    {
-        $Company = Company::factory()->create();
-        $data = ['name' => 'Updated Company'];
+    // camelCase only — no snake_case leakage
+    $response->assertJsonMissingPath('data.0.company_type_id');
+});
 
-        $response = $this->putJson('/api/companies/'.$Company->id, $data);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+test('can create company', function () {
+    $response = $this->withToken($this->token)->postJson('/api/companies', [
+        'name' => 'Created Company',
+        'code' => 'CC001',
+        'company_type_id' => $this->companyType->id,
+    ]);
 
-        $this->assertDatabaseHas('companies', $data);
-    }
+    $response->assertStatus(201)
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('data.name', 'Created Company')
+        ->assertJsonPath('data.companyTypeId', $this->companyType->id);
 
-    public function test_can_delete_company(): void
-    {
-        $Company = Company::factory()->create();
+    $this->assertDatabaseHas('companies', ['name' => 'Created Company']);
+});
 
-        $response = $this->deleteJson('/api/companies/'.$Company->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'status',
-                'code',
-                'message',
-            ]);
+test('can show company', function () {
+    $company = Company::create([
+        'name' => 'Show Company',
+        'code' => 'SC001',
+        'company_type_id' => $this->companyType->id,
+    ]);
 
-        $this->assertDatabaseMissing('companies', ['id' => $Company->id]);
-    }
+    $response = $this->withToken($this->token)->getJson("/api/companies/{$company->id}");
 
-    public function test_validation_errors_on_create(): void
-    {
-        $response = $this->postJson('/api/companies', []);
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name']);
-    }
-}
+    $response->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('data.id', $company->id)
+        ->assertJsonPath('data.name', 'Show Company');
+
+    $response->assertJsonMissingPath('data.company_type_id');
+});
+
+test('can update company', function () {
+    $company = Company::create([
+        'name' => 'Original Company',
+        'code' => 'OC001',
+        'company_type_id' => $this->companyType->id,
+    ]);
+
+    $response = $this->withToken($this->token)->putJson("/api/companies/{$company->id}", [
+        'name' => 'Updated Company',
+        'company_type_id' => $this->companyType->id,
+    ]);
+
+    $response->assertOk()->assertJsonPath('success', true);
+
+    $this->assertDatabaseHas('companies', ['id' => $company->id, 'name' => 'Updated Company']);
+});
+
+test('can delete company', function () {
+    $company = Company::create([
+        'name' => 'Doomed Company',
+        'code' => 'DC001',
+        'company_type_id' => $this->companyType->id,
+    ]);
+
+    $response = $this->withToken($this->token)->deleteJson("/api/companies/{$company->id}");
+
+    $response->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonStructure(['success', 'code', 'message']);
+
+    $this->assertDatabaseMissing('companies', ['id' => $company->id]);
+});
+
+test('validation errors on create', function () {
+    $response = $this->withToken($this->token)->postJson('/api/companies', []);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['name', 'company_type_id']);
+});

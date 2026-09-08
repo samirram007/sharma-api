@@ -17,7 +17,7 @@ class RolePermissionResource extends SuccessResource
 
         return array_merge($this->toCamelCaseArray($request), [
 
-            'id' => $this->id,
+            'id' => $this->id ?? null,
             'roleId' => $this->role_id,
             'appModuleFeatureId' => $this->app_module_feature_id,
             'isAllowed' => $this->is_allowed,

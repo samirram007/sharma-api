@@ -3,96 +3,107 @@
 namespace Modules\Post\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Modules\Post\Models\Post;
+use Modules\Role\Models\Role;
+use Modules\User\Models\User;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Tests\ActingAsSuperAdmin;
 use Tests\TestCase;
 
 class PostTest extends TestCase
 {
+    use ActingAsSuperAdmin;
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->actAsSuperAdmin();
+    }
+
+    public function test_index_requires_authentication(): void
+    {
+        $this->getJson('/api/posts')
+            ->assertStatus(401);
+    }
+
+    public function test_index_denied_without_feature_permission(): void
+    {
+        $role = Role::create([
+            'name' => 'Gate Viewer', 'code' => 'GATE_VIEWER_POST', 'status' => 'active',
+        ]);
+        $user = User::create([
+            'name' => 'Gate Viewer User',
+            'email' => 'gate-viewer-posts@example.com',
+            'password' => 'password',
+        ]);
+        DB::table('user_roles')->insert([
+            'user_id' => $user->id, 'role_id' => $role->id,
+        ]);
+        $token = JWTAuth::fromUser($user);
+
+        // Authenticated but the role holds no POST_MENU_VIEW grant.
+        $this->withToken($token)->getJson('/api/posts')
+            ->assertStatus(403);
+    }
 
     public function test_can_list_posts(): void
     {
-        $response = $this->getJson('/api/posts');
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+        Post::create(['name' => 'Test Post']);
+
+        $this->withToken($this->token)->getJson('/api/posts')
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
     }
 
-    public function test_can_create_post(): void
+    public function test_can_create_posts(): void
     {
         $data = ['name' => 'Test Post'];
 
-        $response = $this->postJson('/api/posts', $data);
-        $response->assertStatus(201)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->postJson('/api/posts', $data)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
 
         $this->assertDatabaseHas('posts', $data);
     }
 
-    public function test_can_show_post(): void
+    public function test_can_show_posts(): void
     {
-        $Post = Post::factory()->create();
+        $post = Post::create(['name' => 'Test Post']);
 
-        $response = $this->getJson('/api/posts/'.$Post->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'id',
-                    'name',
-                    'created_at',
-                    'updated_at',
-                ],
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->getJson('/api/posts/'.$post->id)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
     }
 
-    public function test_can_update_post(): void
+    public function test_can_update_posts(): void
     {
-        $Post = Post::factory()->create();
+        $post = Post::create(['name' => 'Test Post']);
         $data = ['name' => 'Updated Post'];
 
-        $response = $this->putJson('/api/posts/'.$Post->id, $data);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->putJson('/api/posts/'.$post->id, $data)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
 
         $this->assertDatabaseHas('posts', $data);
     }
 
-    public function test_can_delete_post(): void
+    public function test_can_delete_posts(): void
     {
-        $Post = Post::factory()->create();
+        $post = Post::create(['name' => 'Test Post']);
 
-        $response = $this->deleteJson('/api/posts/'.$Post->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->deleteJson('/api/posts/'.$post->id)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
 
-        $this->assertDatabaseMissing('posts', ['id' => $Post->id]);
+        $this->assertDatabaseMissing('posts', ['id' => $post->id]);
     }
 
     public function test_validation_errors_on_create(): void
     {
-        $response = $this->postJson('/api/posts', []);
-        $response->assertStatus(422)
+        $this->withToken($this->token)->postJson('/api/posts', [])
+            ->assertStatus(422)
             ->assertJsonValidationErrors(['name']);
     }
 }

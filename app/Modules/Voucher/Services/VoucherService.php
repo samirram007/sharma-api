@@ -668,12 +668,9 @@ class VoucherService extends BaseService implements VoucherServiceInterface
     {
         if (! isset($data['voucher_no']) || empty($data['voucher_no']) || $data['voucher_no'] === 'new') {
             $voucherTypeId = $data['voucher_type_id'];
-            $branchId = $data['branch_id'] ?? null;
-
             // Lock the VoucherNo row so concurrent requests queue up here
             $voucherNoRecord = VoucherNo::where('voucher_type_id', $voucherTypeId)
                 ->where('company_id', $companyId)
-                ->where('branch_id', $branchId)
                 ->where('fiscal_year_id', $fiscalYearId)
                 ->lockForUpdate()
                 ->first();
@@ -688,7 +685,6 @@ class VoucherService extends BaseService implements VoucherServiceInterface
                     'prefix' => $prefix,
                     'voucher_type_id' => $voucherTypeId,
                     'company_id' => $companyId,
-                    'branch_id' => $branchId ?? null,
                     'fiscal_year_id' => $fiscalYearId,
                     'starting_no' => 1,
                     'current_no' => 1,

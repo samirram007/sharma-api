@@ -12,7 +12,8 @@ class Setting extends Model
     protected $table = 'settings';
 
     protected $fillable = [
-        'name',
+        'property',
+        'value',
     ];
 
     protected $casts = [

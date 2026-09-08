@@ -32,6 +32,6 @@ class DocumentServiceProvider extends ServiceProvider
 
     private function loadMigrations(): void
     {
-        // $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
     }
 }

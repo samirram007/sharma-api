@@ -13,6 +13,11 @@ class Language extends Model
 
     protected $fillable = [
         'name',
+        'code',
+        'locale',
+        'direction',
+        'flag',
+        'is_default',
     ];
 
     protected $casts = [

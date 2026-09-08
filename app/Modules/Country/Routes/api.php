@@ -3,4 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Country\Controllers\Api\CountryController;
 
-Route::apiResource('countries', CountryController::class);
+Route::apiResource('countries', CountryController::class)->middleware([
+    'jwt.cookies',
+    'feature.permission:COUNTRY_MENU_VIEW',
+]);

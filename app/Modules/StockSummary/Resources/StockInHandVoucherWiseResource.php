@@ -28,7 +28,7 @@ class StockInHandVoucherWiseResource extends SuccessResource
             'outwardAmount' => $this['outward_amount'] ?? 0,
             'closingQuantity' => $this['closing_quantity'] ?? 0,
             'closingAmount' => $this['closing_amount'] ?? 0,
-            'voucherDetails' => StockInHandVoucherResource::collection($this['voucher_details'] ?? []),
+            'voucherDetails' => StockInHandVoucherResourceLite::collection($this['voucher_details'] ?? []),
 
         ]);
 

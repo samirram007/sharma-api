@@ -11,6 +11,7 @@ use Modules\AccountNature\Database\Seeders\AccountNatureSeeder;
 use Modules\AppModule\Database\Seeders\AppModuleSeeder;
 use Modules\AppModuleFeature\Database\Seeders\AppModuleFeatureSeeder;
 use Modules\AppModuleFeature\Database\Seeders\MenuFeatureSeeder;
+use Modules\AppModuleFeature\Database\Seeders\MenuViewFeatureSeeder;
 use Modules\Company\Database\Seeders\CompanySeeder;
 use Modules\CompanyType\Database\Seeders\CompanyTypeSeeder;
 use Modules\Country\Database\Seeders\CountrySeeder;
@@ -19,6 +20,7 @@ use Modules\Department\Database\Seeders\DepartmentSeeder;
 use Modules\Designation\Database\Seeders\DesignationSeeder;
 use Modules\Distributor\Database\Seeders\DistributorSeeder;
 use Modules\EmployeeGroup\Database\Seeders\EmployeeGroupSeeder;
+use Modules\Faq\Database\Seeders\FaqSeeder;
 use Modules\FiscalYear\Database\Seeders\FiscalYearSeeder;
 use Modules\Godown\Database\Seeders\GodownSeeder;
 use Modules\Grade\Database\Seeders\GradeSeeder;
@@ -55,6 +57,7 @@ class DatabaseSeeder extends Seeder
             AppModuleSeeder::class,
             AppModuleFeatureSeeder::class,
             MenuFeatureSeeder::class,
+            MenuViewFeatureSeeder::class,
             RoleSeeder::class,
             MenuSeeder::class,
             RolePermissionSeeder::class,
@@ -74,6 +77,9 @@ class DatabaseSeeder extends Seeder
 
             VoucherCategorySeeder::class,
             VoucherTypeSeeder::class,
+            // VoucherClassificationSeeder::class,
+
+            FaqSeeder::class,
             // VoucherClassificationSeeder::class,
 
             // UniqueQuantityCodeSeeder::class,

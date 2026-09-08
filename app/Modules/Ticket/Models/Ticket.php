@@ -23,7 +23,6 @@ class Ticket extends Model
         'created_by',
         'assigned_to',
         'company_id',
-        'branch_id',
         'resolved_at',
     ];
 

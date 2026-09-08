@@ -23,7 +23,6 @@ class VoucherClassificationRepository extends BaseRepository implements VoucherC
      */
     protected array $filterableFields = [
         // 'company_id',
-        // 'branch_id',
         // 'voucher_type_id',
         'status',
         // 'is_default',

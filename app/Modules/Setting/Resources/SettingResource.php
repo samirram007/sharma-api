@@ -2,11 +2,11 @@
 
 namespace Modules\Setting\Resources;
 
+use App\Http\Resources\SuccessResource;
 use App\Support\Traits\CamelCaseResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class SettingResource extends JsonResource
+class SettingResource extends SuccessResource
 {
     use CamelCaseResource;
 

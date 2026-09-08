@@ -3,6 +3,7 @@
 namespace Modules\Setting\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Modules\Setting\Facades\SettingFacade;
@@ -21,35 +22,25 @@ class SettingController extends Controller
         return (new SettingCollection($data))->response();
     }
 
-    public function show(int $id): JsonResponse
+    public function show(int $id): SuccessResource
     {
         $data = SettingFacade::getById($id);
 
-        return $this->resourceResponse(
-            new SettingResource($data),
-            'Setting retrieved successfully'
-        );
+        return new SettingResource($data, 'Setting retrieved successfully');
     }
 
-    public function store(SettingRequest $request): JsonResponse
+    public function store(SettingRequest $request): SuccessResource
     {
         $data = SettingFacade::store($request->validated());
 
-        return $this->resourceResponse(
-            new SettingResource($data),
-            'Setting created successfully',
-            201
-        );
+        return new SettingResource($data, 'Setting created successfully');
     }
 
-    public function update(SettingRequest $request, int $id): JsonResponse
+    public function update(SettingRequest $request, int $id): SuccessResource
     {
         $data = SettingFacade::update($request->validated(), $id);
 
-        return $this->resourceResponse(
-            new SettingResource($data),
-            'Setting updated successfully'
-        );
+        return new SettingResource($data, 'Setting updated successfully');
     }
 
     public function destroy(int $id): JsonResponse

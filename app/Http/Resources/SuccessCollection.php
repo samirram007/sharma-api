@@ -23,7 +23,7 @@ class SuccessCollection extends ResourceCollection
 
     public function toArray(Request $request): array
     {
-        return $this->collection->toArray();
+        return parent::toArray($request);
     }
 
     public function with(Request $request): array

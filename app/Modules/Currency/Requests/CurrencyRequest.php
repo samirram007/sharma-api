@@ -15,8 +15,8 @@ class CurrencyRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['sometimes', 'required', 'string', 'max:255', 'unique:currencies,name'],
-            'code' => ['sometimes', 'required', 'string', 'max:10', 'unique:currencies,code'],
+            'name' => ['required', 'string', 'max:255', 'unique:currencies,name'],
+            'code' => ['required', 'string', 'max:10', 'unique:currencies,code'],
             'symbol' => ['sometimes', 'nullable', 'string', 'max:5'],
             'country' => ['sometimes', 'nullable', 'string', 'max:255'],
             'exchange_rate' => ['sometimes', 'nullable', 'numeric', 'min:0'],

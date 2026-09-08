@@ -18,7 +18,6 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('assigned_to')->nullable();
             $table->unsignedBigInteger('company_id')->nullable();
-            $table->unsignedBigInteger('branch_id')->nullable();
             $table->timestamp('resolved_at')->nullable();
             $table->timestamps();
 

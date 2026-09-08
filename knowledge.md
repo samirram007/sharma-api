@@ -4,7 +4,7 @@ This file gives Freebuff context about the **AIPT backend** (Laravel API). See t
 
 ## What is this?
 
-Laravel 13 API for **AIPT** (Accounts | Inventory | Payroll | Tax). Modular monolith: ~112 self-contained domain modules under `app/Modules/` (112 controller files). Serves the `sharma-frontend` React SPA.
+Laravel 13 API for **AIPT** (Accounts | Inventory | Payroll | Tax). Modular monolith: ~114 self-contained domain modules under `app/Modules/` (incl. `Faq` + `Ticket` helpdesk). Serves the `sharma-frontend` React SPA.
 
 ## Quickstart / Commands
 
@@ -126,6 +126,10 @@ All responses use the unified envelope via `SuccessResource`/`SuccessCollection`
 - Controllers with custom endpoints return `SuccessResource`/`SuccessCollection` per-method (e.g., AccountLedger's `ledger_balance`, `purchase_ledgers`; Freight returns `VoucherCollection`).
 - Never return `JsonResponse` from service methods that declare a specific return type — throw exceptions (e.g., `AuthenticationException`) and let controllers format them.
 
+### Helpdesk modules (Faq + Ticket)
+- **`app/Modules/Faq/`** — standard BaseService CRUD over `faqs` (`question`, `answer`, `category`, `sort_order`, `is_published`, `user_id`). Routes: `Route::apiResource('faqs', ...)->middleware(['jwt.cookies'])`. Content is seeded by `FaqSeeder` (~40 Q&As across `general`/`masters`/`inventory`/`transactions`/`reports`/`administration` categories, matched on `question` via `firstOrCreate` so it is re-runnable). **Not wired into `DatabaseSeeder`** — run `php artisan db:seed --class='Modules\Faq\Database\Seeders\FaqSeeder'` (quoted, or add it to `DatabaseSeeder`) to fill the Help Center. Frontend: `features/modules/faq/` (Help Center UI with per-category color maps in `data/data.ts`).
+- **`app/Modules/Ticket/`** — `tickets` apiResource plus `POST /tickets/{ticket}/responses` and `PATCH /tickets/{ticket}/status`, all inside a `jwt.cookies` group.
+
 ### Multi-database support
 `ModuleConnectionResolver` + `config/module-database.php`: `default` connection for all modules, `map` array for per-module overrides (e.g., `'Analytics' => 'mysql'`).
 
@@ -171,22 +175,10 @@ The full inventory of **617 API routes** (auth, utility, 98 CRUD resources, cust
 - **Testing:** Pest 4; `phpunit.xml` uses SQLite `:memory:` for tests.
 
 ## Gotchas & Known Issues (verified during audit — needs fixing)
-1. **9 route files have NO `jwt.cookies`** → fully public CRUD (audit re-verified Aug 2026: `grep -L jwt.cookies` on every `app/Modules/*/Routes/api.php` AND `route:list` middleware resolution both agree on exactly these 9). Each exposes the full 5-route `apiResource` (index/store/show/update/destroy) with **no auth, no rate limiting, reachable in production**. `AppMaintenance`, `Country`, `Currency`, `Journal`, `Language`, `Module`, `Post`, `Setting`, `State`.
+1. ~~**9 route files have NO `jwt.cookies`**~~ — **Fixed (Sep 2026):** all 9 route files (`AppMaintenance`, `Country`, `Currency`, `Journal`, `Language`, `Module`, `Post`, `Setting`, `State`) now apply `->middleware(['jwt.cookies'])` (verified via `grep -L jwt.cookies app/Modules/*/Routes/api.php` → 0 results). NOTE: the backend still has no RBAC (item 2) — these routes are authenticated-only, **not permission-gated**.
 
-| Module | Table (real columns) | Unauthenticated writes | Read exposure | Risk |
-|---|---|---|---|---|
-| `Journal` | `journals` (voucher_id, entry_index, account_ledger_id, debit/credit_amount) | Writes 500 (fillable `name` is not a column) — **`DELETE` works** | Whitelisted `id`/`name` only (name→null) | **High** — financial rows deletable by anyone |
-| `Setting` | `settings` (property, value) | Writes 500 (same mismatch) — **`DELETE` works** | Whitelisted `id`/`name` only (name→null) | **High** — app config rows deletable by anyone |
-| `Currency` | `currencies` (code, exchange_rate, status, format, separators…) | **Yes — full CRUD works** | `CamelCaseResource` → **all columns** | **Med-high** — exchange_rate/status readable + tamperable |
-| `Language` | `languages` (code, locale, direction, is_default) | Partial (INSERT fails: unique NOT NULL code/locale) — `DELETE` works | Whitelisted `id`/`name` | Medium — can delete default language |
-| `Country` | `countries` (phone_code, iso_code) | **Yes — full CRUD works** | `CamelCaseResource` → all columns | Low-med (reference data) |
-| `State` | `states` (code, country_id, gst_code) | **Yes — full CRUD works** | `CamelCaseResource` → all columns | Low-med (GST reference) |
-| `AppMaintenance` | `app_maintenances` (name) | Yes — full CRUD | All columns | Low (scaffold) |
-| `Post` | `posts` (name) | Yes — full CRUD | `id`/`name` | Low (scaffold) |
-| `Module` | `modules` — **table doesn't exist anywhere** | No — every endpoint 500s | — | Low (broken scaffold) |
-
-Bottom line: `journals` + `settings` are the true red flags (destructive delete on financial/config data), `currencies` is a fully functional public CRUD, and the rest are mostly low-sensitivity scaffold/reference modules. Fix is a one-liner per file: add `->middleware(['jwt.cookies'])` to each of the 9 `Routes/api.php` (same as the other ~103 modules).
-2. **No server-side authorization/RBAC.** Frontend gates by permissions, backend enforces none — any authenticated user can hit `users`/`roles`/`permissions` CRUD directly (IDOR risk).
+Historical risk table (pre-fix, Aug 2026 audit) removed — the exposure is closed. Bottom line retained: the worst offenders were `journals` + `settings` (destructive unauthenticated deletes on financial/config rows) and `currencies` (fully public CRUD).
+2. **No server-side authorization/RBAC.** Frontend gates by permissions, backend enforces none — any authenticated user can hit `users`/`roles`/`permissions` CRUD directly (IDOR risk). This also applies to the formerly-public modules fixed in item 1: they are authenticated-only, not permission-gated.
 3. **CORS:** `config/cors.php` uses `allowed_origins => ['*']` with `supports_credentials => true` — invalid combo (wildcard + credentials is rejected by browsers). Should be explicit origins.
 4. **Utility routes:** `/api/clear` (any authenticated user can clear caches) and `/api/reload` (`migrate:refresh --seed` — **drops all tables**; only local-env guarded). `/api/cookie-test` echoes the JWT cookie.
 5. **Token exposure:** JWT returned in JSON body **and** logged via `Log::info('Login token generated', ['token' => $token])`; frontend stores in localStorage. Should be cookie-only.

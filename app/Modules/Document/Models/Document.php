@@ -18,7 +18,6 @@ class Document extends Model
         'content',
         'user_id',
         'company_id',
-        'branch_id',
         'fiscal_year_id',
         'voucher_id',
         'document_type_id',

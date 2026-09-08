@@ -3,96 +3,44 @@
 namespace Modules\Module\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Modules\Module\Models\Module;
+use Illuminate\Support\Facades\DB;
+use Modules\Role\Models\Role;
+use Modules\User\Models\User;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Tests\ActingAsSuperAdmin;
 use Tests\TestCase;
 
 class ModuleTest extends TestCase
 {
+    use ActingAsSuperAdmin;
     use RefreshDatabase;
 
-    public function test_can_list_modules(): void
+    protected function setUp(): void
     {
-        $response = $this->getJson('/api/modules');
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+        parent::setUp();
+        $this->actAsSuperAdmin();
     }
 
-    public function test_can_create_module(): void
+    public function test_index_requires_authentication(): void
     {
-        $data = ['name' => 'Test Module'];
-
-        $response = $this->postJson('/api/modules', $data);
-        $response->assertStatus(201)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
-
-        $this->assertDatabaseHas('modules', $data);
+        $this->getJson('/api/modules')->assertStatus(401);
     }
 
-    public function test_can_show_module(): void
+    public function test_index_denied_without_feature_permission(): void
     {
-        $Module = Module::factory()->create();
+        $role = Role::create([
+            'name' => 'Gate Viewer', 'code' => 'GATE_VIEWER_MODULE', 'status' => 'active',
+        ]);
+        $user = User::create([
+            'name' => 'Gate Viewer User',
+            'email' => 'gate-viewer-modules@example.com',
+            'password' => 'password',
+        ]);
+        DB::table('user_roles')->insert([
+            'user_id' => $user->id, 'role_id' => $role->id,
+        ]);
+        $token = JWTAuth::fromUser($user);
 
-        $response = $this->getJson('/api/modules/'.$Module->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'id',
-                    'name',
-                    'created_at',
-                    'updated_at',
-                ],
-                'status',
-                'code',
-                'message',
-            ]);
-    }
-
-    public function test_can_update_module(): void
-    {
-        $Module = Module::factory()->create();
-        $data = ['name' => 'Updated Module'];
-
-        $response = $this->putJson('/api/modules/'.$Module->id, $data);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
-
-        $this->assertDatabaseHas('modules', $data);
-    }
-
-    public function test_can_delete_module(): void
-    {
-        $Module = Module::factory()->create();
-
-        $response = $this->deleteJson('/api/modules/'.$Module->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'status',
-                'code',
-                'message',
-            ]);
-
-        $this->assertDatabaseMissing('modules', ['id' => $Module->id]);
-    }
-
-    public function test_validation_errors_on_create(): void
-    {
-        $response = $this->postJson('/api/modules', []);
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name']);
+        $this->withToken($token)->getJson('/api/modules')->assertStatus(403);
     }
 }

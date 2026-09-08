@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Modules\DocumentManager\Models\DocumentCategory;
 use Modules\DocumentManager\Models\DocumentNode;
 use Modules\DocumentManager\Models\DocumentNodeShare;
+use Modules\DocumentManager\Events\DocumentNodeChanged;
 use Modules\DocumentManager\Models\DocumentType;
 use Modules\Role\Models\Role;
 use Modules\User\Models\User;
@@ -188,7 +189,7 @@ class DocumentManagerService
     {
         $this->assertFolderWriteAccess($data['parent_id'] ?? null);
 
-        return DocumentNode::query()->create([
+        $node = DocumentNode::query()->create([
             'name' => trim($data['name']),
             'kind' => DocumentNode::KIND_FOLDER,
             'visibility' => $data['visibility'] ?? DocumentNode::VIS_PRIVATE,
@@ -198,6 +199,9 @@ class DocumentManagerService
             'type_id' => $data['type_id'] ?? null,
             'description' => $data['description'] ?? null,
         ]);
+        $this->broadcastNodeCreated($node);
+
+        return $node;
     }
 
     /**
@@ -216,7 +220,7 @@ class DocumentManagerService
             ? trim((string) $name)
             : $target->name;
 
-        return DocumentNode::query()->create([
+        $node = DocumentNode::query()->create([
             'name' => $label,
             'kind' => DocumentNode::KIND_SHORTCUT,
             'visibility' => DocumentNode::VIS_PRIVATE,
@@ -224,6 +228,9 @@ class DocumentManagerService
             'target_id' => $target->id,
             'owner_id' => Auth::id(),
         ]);
+        $this->broadcastNodeCreated($node);
+
+        return $node;
     }
 
     public function upload(array $data): DocumentNode
@@ -256,7 +263,7 @@ class DocumentManagerService
             throw new RuntimeException('Could not store the uploaded file.');
         }
 
-        return DocumentNode::query()->create([
+        $node = DocumentNode::query()->create([
             'name' => $uniqueName,
             'kind' => DocumentNode::KIND_FILE,
             'visibility' => $data['visibility'] ?? DocumentNode::VIS_PRIVATE,
@@ -270,6 +277,21 @@ class DocumentManagerService
             'storage_path' => $path,
             'size_bytes' => $file->getSize(),
         ]);
+        $this->broadcastNodeCreated($node);
+
+        return $node;
+    }
+
+    /**
+     * Fan out a creation to everyone with access to the destination folder:
+     * on a shared folder the owner and co-sharers all refresh their view
+     * (browsers listen via Echo on the document.folder.{id} channel).
+     */
+    private function broadcastNodeCreated(DocumentNode $node): void
+    {
+        if ($node->parent_id !== null) {
+            DocumentNodeChanged::dispatch($node);
+        }
     }
 
     public function updateNode(int $id, array $data): DocumentNode

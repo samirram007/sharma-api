@@ -12,7 +12,11 @@ class Journal extends Model
     protected $table = 'journals';
 
     protected $fillable = [
-        'name',
+        'voucher_id',
+        'entry_index',
+        'account_ledger_id',
+        'debit_amount',
+        'credit_amount',
     ];
 
     protected $casts = [

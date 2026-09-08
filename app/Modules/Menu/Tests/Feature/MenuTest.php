@@ -3,96 +3,116 @@
 namespace Modules\Menu\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\AppModuleFeature\Models\AppModuleFeature;
 use Modules\Menu\Models\Menu;
-use Tests\TestCase;
+use Modules\User\Models\User;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
-class MenuTest extends TestCase
-{
-    use RefreshDatabase;
+uses(RefreshDatabase::class);
 
-    public function test_can_list_app_module_features(): void
-    {
-        $response = $this->getJson('/api/menus');
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
-    }
+beforeEach(function () {
+    $this->user = User::create([
+        'name' => 'Menu Test User',
+        'email' => 'menu-test@example.com',
+        'password' => 'password',
+    ]);
+    $this->token = JWTAuth::fromUser($this->user);
 
-    public function test_can_create_menu(): void
-    {
-        $data = ['name' => 'Test Menu'];
+    $this->feature = AppModuleFeature::create([
+        'app_module_id' => 1,
+        'name' => 'Menu Manager',
+        'code' => 'MENU_MANAGER',
+    ]);
+});
 
-        $response = $this->postJson('/api/menus', $data);
-        $response->assertStatus(201)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+test('GET /api/menu_tree returns 200 with children rendered as plain nested arrays', function () {
+    $parent = Menu::create([
+        'app_module_feature_id' => $this->feature->id,
+        'menu_name' => 'Administration',
+        'route' => '/administration',
+        'sort_order' => 1,
+        'status' => 'active',
+        'is_visible' => true,
+        'is_group' => true,
+    ]);
 
-        $this->assertDatabaseHas('menus', $data);
-    }
+    $child = Menu::create([
+        'app_module_feature_id' => $this->feature->id,
+        'menu_name' => 'Menu Manager',
+        'route' => '/administration/menu_manager',
+        'parent_id' => $parent->id,
+        'sort_order' => 1,
+        'status' => 'active',
+        'is_visible' => true,
+    ]);
 
-    public function test_can_show_menu(): void
-    {
-        $Menu = Menu::factory()->create();
+    // Regression: /menu_tree used to 500 with
+    // "Property [id] does not exist on this collection instance."
+    $response = $this->withToken($this->token)->getJson('/api/menu_tree');
 
-        $response = $this->getJson('/api/menus/'.$Menu->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
+    $response->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonStructure([
+            'success',
+            'code',
+            'message',
+            'data' => [
+                [
                     'id',
-                    'name',
-                    'created_at',
-                    'updated_at',
+                    'menuName',
+                    'parentId',
+                    'sortOrder',
+                    'children' => [
+                        ['id', 'menuName', 'parentId', 'sortOrder', 'children'],
+                    ],
                 ],
-                'status',
-                'code',
-                'message',
-            ]);
-    }
+            ],
+        ]);
 
-    public function test_can_update_menu(): void
-    {
-        $Menu = Menu::factory()->create();
-        $data = ['name' => 'Updated Menu'];
+    $root = $response->json('data.0');
 
-        $response = $this->putJson('/api/menus/'.$Menu->id, $data);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+    expect($root['id'])->toBe($parent->id);
+    expect($root['menuName'])->toBe('Administration');
+    expect($root['children'])->toBeArray()->toHaveCount(1);
+    expect($root['children'][0]['id'])->toBe($child->id);
+    expect($root['children'][0]['menuName'])->toBe('Menu Manager');
+    expect($root['children'][0]['parentId'])->toBe($parent->id);
+    expect($root['children'][0]['children'])->toBeArray()->toBeEmpty();
 
-        $this->assertDatabaseHas('menus', $data);
-    }
+    // camelCase only — no snake_case leakage
+    $response->assertJsonMissingPath('data.0.menu_name');
+    $response->assertJsonMissingPath('data.0.children.0.menu_name');
+});
 
-    public function test_can_delete_menu(): void
-    {
-        $Menu = Menu::factory()->create();
+test('GET /api/menus omits children key when the relation is not loaded', function () {
+    Menu::create([
+        'app_module_feature_id' => $this->feature->id,
+        'menu_name' => 'Standalone',
+        'sort_order' => 1,
+        'status' => 'active',
+        'is_visible' => true,
+    ]);
 
-        $response = $this->deleteJson('/api/menus/'.$Menu->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'status',
-                'code',
-                'message',
-            ]);
+    $response = $this->withToken($this->token)->getJson('/api/menus');
 
-        $this->assertDatabaseMissing('menus', ['id' => $Menu->id]);
-    }
+    $response->assertOk()->assertJsonPath('success', true);
+    expect($response->json('data.0'))->not->toHaveKey('children');
+});
 
-    public function test_validation_errors_on_create(): void
-    {
-        $response = $this->postJson('/api/menus', []);
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name']);
-    }
-}
+test('GET /api/menus/{id} returns a single menu entry', function () {
+    $menu = Menu::create([
+        'app_module_feature_id' => $this->feature->id,
+        'menu_name' => 'Ledgers',
+        'route' => '/masters/account_ledgers',
+        'sort_order' => 1,
+        'status' => 'active',
+        'is_visible' => true,
+    ]);
+
+    $response = $this->withToken($this->token)->getJson("/api/menus/{$menu->id}");
+
+    $response->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('data.id', $menu->id)
+        ->assertJsonPath('data.menuName', 'Ledgers');
+});

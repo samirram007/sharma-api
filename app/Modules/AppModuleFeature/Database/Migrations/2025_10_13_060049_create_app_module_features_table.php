@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('status')->default('active');
             $table->string('action')->nullable(); // optional, like 'GET', 'POST'
-            $table->string('icon')->nullable()->after('action');
+            // ->after() is only valid in ALTER TABLE; plain column order on CREATE
+            $table->string('icon')->nullable();
             $table->timestamps();
             $table->unique(['app_module_id', 'code']);
             $table->unique(['app_module_id', 'name']);

@@ -3,96 +3,107 @@
 namespace Modules\AppMaintenance\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Modules\AppMaintenance\Models\AppMaintenance;
+use Modules\Role\Models\Role;
+use Modules\User\Models\User;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Tests\ActingAsSuperAdmin;
 use Tests\TestCase;
 
 class AppMaintenanceTest extends TestCase
 {
+    use ActingAsSuperAdmin;
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->actAsSuperAdmin();
+    }
+
+    public function test_index_requires_authentication(): void
+    {
+        $this->getJson('/api/app_maintenances')
+            ->assertStatus(401);
+    }
+
+    public function test_index_denied_without_feature_permission(): void
+    {
+        $role = Role::create([
+            'name' => 'Gate Viewer', 'code' => 'GATE_VIEWER_APPMAINTENANCE', 'status' => 'active',
+        ]);
+        $user = User::create([
+            'name' => 'Gate Viewer User',
+            'email' => 'gate-viewer-app_maintenances@example.com',
+            'password' => 'password',
+        ]);
+        DB::table('user_roles')->insert([
+            'user_id' => $user->id, 'role_id' => $role->id,
+        ]);
+        $token = JWTAuth::fromUser($user);
+
+        // Authenticated but the role holds no APP_MAINTENANCE_MENU_VIEW grant.
+        $this->withToken($token)->getJson('/api/app_maintenances')
+            ->assertStatus(403);
+    }
 
     public function test_can_list_app_maintenances(): void
     {
-        $response = $this->getJson('/api/app_maintenances');
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+        AppMaintenance::create(['name' => 'Test Maintenance']);
+
+        $this->withToken($this->token)->getJson('/api/app_maintenances')
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
     }
 
-    public function test_can_create_app_maintenance(): void
+    public function test_can_create_app_maintenances(): void
     {
-        $data = ['name' => 'Test AppMaintenance'];
+        $data = ['name' => 'Test Maintenance'];
 
-        $response = $this->postJson('/api/app_maintenances', $data);
-        $response->assertStatus(201)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->postJson('/api/app_maintenances', $data)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
 
         $this->assertDatabaseHas('app_maintenances', $data);
     }
 
-    public function test_can_show_app_maintenance(): void
+    public function test_can_show_app_maintenances(): void
     {
-        $AppMaintenance = AppMaintenance::factory()->create();
+        $maintenance = AppMaintenance::create(['name' => 'Test Maintenance']);
 
-        $response = $this->getJson('/api/app_maintenances/'.$AppMaintenance->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'id',
-                    'name',
-                    'created_at',
-                    'updated_at',
-                ],
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->getJson('/api/app_maintenances/'.$maintenance->id)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
     }
 
-    public function test_can_update_app_maintenance(): void
+    public function test_can_update_app_maintenances(): void
     {
-        $AppMaintenance = AppMaintenance::factory()->create();
-        $data = ['name' => 'Updated AppMaintenance'];
+        $maintenance = AppMaintenance::create(['name' => 'Test Maintenance']);
+        $data = ['name' => 'Updated Maintenance'];
 
-        $response = $this->putJson('/api/app_maintenances/'.$AppMaintenance->id, $data);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->putJson('/api/app_maintenances/'.$maintenance->id, $data)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
 
         $this->assertDatabaseHas('app_maintenances', $data);
     }
 
-    public function test_can_delete_app_maintenance(): void
+    public function test_can_delete_app_maintenances(): void
     {
-        $AppMaintenance = AppMaintenance::factory()->create();
+        $maintenance = AppMaintenance::create(['name' => 'Test Maintenance']);
 
-        $response = $this->deleteJson('/api/app_maintenances/'.$AppMaintenance->id);
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'status',
-                'code',
-                'message',
-            ]);
+        $this->withToken($this->token)->deleteJson('/api/app_maintenances/'.$maintenance->id)
+            ->assertSuccessful()
+            ->assertJsonPath('success', true);
 
-        $this->assertDatabaseMissing('app_maintenances', ['id' => $AppMaintenance->id]);
+        $this->assertDatabaseMissing('app_maintenances', ['id' => $maintenance->id]);
     }
 
     public function test_validation_errors_on_create(): void
     {
-        $response = $this->postJson('/api/app_maintenances', []);
-        $response->assertStatus(422)
+        $this->withToken($this->token)->postJson('/api/app_maintenances', [])
+            ->assertStatus(422)
             ->assertJsonValidationErrors(['name']);
     }
 }
