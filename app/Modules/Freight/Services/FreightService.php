@@ -92,23 +92,10 @@ class FreightService extends BaseService implements FreightServiceInterface
         }
 
         // Search filter - searches across multiple fields
-        if (! empty($filters['search'])) {
-            $search = $filters['search'];
-            $query->where(function ($q) use ($search) {
-                $q->where('vouchers.voucher_no', 'like', "%{$search}%")
-                    ->orWhere('vouchers.remarks', 'like', "%{$search}%")
-                    ->orWhereHas('voucher_dispatch_detail', function ($sq) use ($search) {
-                        $sq->where('carrier_name', 'like', "%{$search}%")
-                            ->orWhere('motor_vehicle_no', 'like', "%{$search}%")
-                            ->orWhere('source', 'like', "%{$search}%")
-                            ->orWhere('destination', 'like', "%{$search}%")
-                            ->orWhere('bill_of_lading_no', 'like', "%{$search}%");
-                    })
-                    ->orWhereHas('voucher_party', function ($sq) use ($search) {
-                        $sq->where('name', 'like', "%{$search}%");
-                    });
-            });
-        }
+        $this->applySearchFilter($query, $filters);
+
+        // Fare amount range filter (dispatch-detail total_fare)
+        $this->applyAmountRangeFilter($query, $filters);
 
         $vouchers = $query->select('vouchers.*')
             ->orderBy('vouchers.voucher_date', 'desc')
@@ -147,27 +134,80 @@ class FreightService extends BaseService implements FreightServiceInterface
         if (! empty($filters['date_to'])) {
             $query->where('vouchers.voucher_date', '<=', $filters['date_to']);
         }
-        if (! empty($filters['search'])) {
-            $search = $filters['search'];
-            $query->where(function ($q) use ($search) {
-                $q->where('vouchers.voucher_no', 'like', "%{$search}%")
-                    ->orWhere('vouchers.remarks', 'like', "%{$search}%")
-                    ->orWhereHas('voucher_dispatch_detail', function ($sq) use ($search) {
-                        $sq->where('carrier_name', 'like', "%{$search}%")
-                            ->orWhere('motor_vehicle_no', 'like', "%{$search}%")
-                            ->orWhere('source', 'like', "%{$search}%")
-                            ->orWhere('destination', 'like', "%{$search}%")
-                            ->orWhere('bill_of_lading_no', 'like', "%{$search}%");
-                    })
-                    ->orWhereHas('voucher_party', function ($sq) use ($search) {
-                        $sq->where('name', 'like', "%{$search}%");
-                    });
-            });
-        }
+        $this->applySearchFilter($query, $filters);
+        $this->applyAmountRangeFilter($query, $filters);
 
         return (float) $query
             ->join('voucher_dispatch_details', 'vouchers.id', '=', 'voucher_dispatch_details.voucher_id')
             ->sum('voucher_dispatch_details.total_fare');
+    }
+
+    /**
+     * Text search across the delivery-note list — one definition shared by
+     * getDeliveryNote() and getDeliveryNoteOverallTotalFare() so the list and
+     * its fare aggregate can never disagree about what matches.
+     *
+     * Matches (LIKE %term%):
+     * - voucher_no, remarks
+     * - dispatch details: carrier (transporter), motor vehicle no, source,
+     *   destination (incl. secondary), LR/bill-of-lading no, dispatched
+     *   through, order no, receipt doc no
+     * - party name (voucher_party)
+     * - stock item names carried on the delivery note's stock entries
+     */
+    private function applySearchFilter($query, array $filters): void
+    {
+        if (empty($filters['search'])) {
+            return;
+        }
+
+        $search = $filters['search'];
+        $query->where(function ($q) use ($search) {
+            $q->where('vouchers.voucher_no', 'like', "%{$search}%")
+                ->orWhere('vouchers.remarks', 'like', "%{$search}%")
+                ->orWhereHas('voucher_dispatch_detail', function ($sq) use ($search) {
+                    $sq->where('carrier_name', 'like', "%{$search}%")
+                        ->orWhere('motor_vehicle_no', 'like', "%{$search}%")
+                        ->orWhere('source', 'like', "%{$search}%")
+                        ->orWhere('destination', 'like', "%{$search}%")
+                        ->orWhere('destination_secondary', 'like', "%{$search}%")
+                        ->orWhere('bill_of_lading_no', 'like', "%{$search}%")
+                        ->orWhere('dispatched_through', 'like', "%{$search}%")
+                        ->orWhere('order_number', 'like', "%{$search}%")
+                        ->orWhere('receipt_doc_no', 'like', "%{$search}%");
+                })
+                ->orWhereHas('voucher_party', function ($sq) use ($search) {
+                    $sq->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('stock_journal.stock_journal_entries.stock_item', function ($sq) use ($search) {
+                    $sq->where('stock_items.name', 'like', "%{$search}%")
+                        ->orWhere('stock_items.code', 'like', "%{$search}%");
+                });
+        });
+    }
+
+    /**
+     * Fare amount range on the dispatch detail's total_fare. A voucher with
+     * no dispatch detail (fare not yet computed) only matches an unbounded
+     * lower edge — it can never match a minimum amount.
+     */
+    private function applyAmountRangeFilter($query, array $filters): void
+    {
+        $min = $filters['amount_min'] ?? null;
+        $max = $filters['amount_max'] ?? null;
+
+        if ($min === null && $max === null) {
+            return;
+        }
+
+        $query->whereHas('voucher_dispatch_detail', function ($q) use ($min, $max) {
+            if ($min !== null && $min !== '') {
+                $q->where('total_fare', '>=', (float) $min);
+            }
+            if ($max !== null && $max !== '') {
+                $q->where('total_fare', '<=', (float) $max);
+            }
+        });
     }
 
     /**
