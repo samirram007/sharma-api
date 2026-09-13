@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AddFrameAncestorsHeader;
 use Illuminate\Support\Facades\Route;
 use Modules\DocumentManager\Controllers\Api\DocumentManagerController;
 
@@ -23,7 +24,11 @@ Route::middleware('jwt.cookies')->prefix('document-manager')->group(function ():
     Route::delete('nodes/{node}', [DocumentManagerController::class, 'destroy']);
     Route::get('nodes/{node}/stats', [DocumentManagerController::class, 'nodeStats']);
     Route::get('nodes/{node}/download', [DocumentManagerController::class, 'download']);
-    Route::get('nodes/{node}/preview', [DocumentManagerController::class, 'preview']);
+    // frame-ancestors lets the SPA (often a different origin in production)
+    // embed the streamed preview in an <iframe> even when the web server
+    // sends X-Frame-Options: SAMEORIGIN — browsers honoring CSP ignore it.
+    Route::get('nodes/{node}/preview', [DocumentManagerController::class, 'preview'])
+        ->middleware(AddFrameAncestorsHeader::class);
     Route::get('nodes/{node}/text', [DocumentManagerController::class, 'showTextFile']);
     Route::put('nodes/{node}/text', [DocumentManagerController::class, 'updateTextFile']);
     Route::put('nodes/{node}/shares', [DocumentManagerController::class, 'syncShares']);

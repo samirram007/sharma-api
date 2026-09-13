@@ -56,6 +56,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Frame Ancestors
+    |--------------------------------------------------------------------------
+    |
+    | Space-separated origins allowed to embed this app's responses in an
+    | <iframe> via `Content-Security-Policy: frame-ancestors`. Modern browsers
+    | enforce this directive and ignore any server-level X-Frame-Options
+    | header on the same response, so this is how streaming endpoints (e.g.
+    | document-manager file preview) can render inside the SPA even when the
+    | web server sends X-Frame-Options: SAMEORIGIN.
+    |
+    | Leave empty to send no frame-ancestors header (server policy unchanged).
+    | Example: "https://sharmahardware.co.in https://www.sharmahardware.co.in"
+    |
+    */
+
+    'frame_ancestors' => env('FRAME_ANCESTORS', ''),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |
