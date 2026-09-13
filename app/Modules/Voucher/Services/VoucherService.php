@@ -61,6 +61,12 @@ class VoucherService extends BaseService implements VoucherServiceInterface
     ];
 
     /**
+     * Delivery Note (DLNT) voucher type id — seeded fixed id. Used to scope
+     * the reporting-period validation to delivery notes only.
+     */
+    protected int $deliveryNoteVoucherTypeId = 2001;
+
+    /**
      * Leaner eager-load set for the list endpoints (index). The full detail
      * graph above is only needed when editing a single voucher (getById),
      * where it is hydrated once — loading it for every voucher in a list
@@ -206,6 +212,11 @@ class VoucherService extends BaseService implements VoucherServiceInterface
 
             $this->validateFiscalYear($fiscalYearId);
 
+            // Delivery notes must be dated inside the user's reporting period —
+            // the Day Book and Freight lists are scoped to it, so a note dated
+            // outside would vanish from every list that shows delivery notes.
+            $this->validateReportingPeriodStep($data, $fiscalYearId);
+
             // Opening Stock (OPNSK) vouchers are always dated on the first day
             // of the fiscal year — the entry date cannot be changed by the user.
             $data = $this->enforceOpeningStockRulesStep($data, $fiscalYearId);
@@ -259,6 +270,10 @@ class VoucherService extends BaseService implements VoucherServiceInterface
 
             $fiscalYearId = $data['fiscal_year_id'] ?? $voucher->fiscal_year_id;
             $this->validateFiscalYear($fiscalYearId);
+
+            // Same reporting-period guard on updates (delivery notes only) —
+            // otherwise a date edit could push a note out of its lists.
+            $this->validateReportingPeriodStep($data, $fiscalYearId, $voucher);
 
             // Opening Stock (OPNSK) vouchers are always dated on the first day
             // of the fiscal year — the entry date cannot be changed by the user.
@@ -890,6 +905,46 @@ class VoucherService extends BaseService implements VoucherServiceInterface
     // ──────────────────────────────────────────────
     //  Helpers
     // ──────────────────────────────────────────────
+
+    /**
+     * Validate that a delivery note's voucher date falls within the user's
+     * reporting period (user_fiscal_years.start_date / end_date — the global
+     * period set from the header, NOT necessarily the whole fiscal year).
+     *
+     * The Day Book and Freight delivery-note lists are both scoped to this
+     * period via whereBetween('voucher_date', ...), so a note dated outside
+     * it would be saved successfully yet never appear in any list. Delivery
+     * notes only (voucher type 2001 / DLNT) — other voucher types keep the
+     * fiscal-year-only validation they have always had.
+     */
+    protected function validateReportingPeriodStep(array $data, int $fiscalYearId, ?Voucher $existing = null): void
+    {
+        $voucherTypeId = (int) ($data['voucher_type_id'] ?? $existing?->voucher_type_id ?? 0);
+        if ($voucherTypeId !== $this->deliveryNoteVoucherTypeId) {
+            return;
+        }
+
+        $voucherDate = $data['voucher_date'] ?? $existing?->voucher_date;
+        if (empty($voucherDate)) {
+            return;
+        }
+
+        $userFiscalYear = UserFiscalYearFacade::getByUserId(auth()->guard()->user()->id);
+        if (! $userFiscalYear || empty($userFiscalYear->start_date) || empty($userFiscalYear->end_date)) {
+            return;
+        }
+
+        $date = date('Y-m-d', strtotime((string) $voucherDate));
+        $start = date('Y-m-d', strtotime((string) $userFiscalYear->start_date));
+        $end = date('Y-m-d', strtotime((string) $userFiscalYear->end_date));
+
+        if ($date < $start || $date > $end) {
+            throw new \Exception(
+                "Delivery note date ({$date}) must be within the reporting period ({$start} to {$end}). "
+                .'Adjust the reporting period from the header to include this date.'
+            );
+        }
+    }
 
     /**
      * Validate that the fiscal year exists and is active.

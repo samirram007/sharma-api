@@ -208,7 +208,7 @@ class MenuSeeder extends Seeder
 
         $this->create(['menu_name' => 'Delivery Places', 'route' => '/masters/miscellaneous/delivery_places', 'app_module_feature_code' => 'DELIVERY_PLACES_MENU_VIEW', 'icon' => 'LocationBolt', 'description' => 'Maintain delivery place master records.', 'parent' => $misc, 'sort_order' => 10]);
         $this->create(['menu_name' => 'Delivery Routes', 'route' => '/masters/miscellaneous/delivery_routes', 'app_module_feature_code' => 'DELIVERY_ROUTES_MENU_VIEW', 'icon' => 'Route2', 'description' => 'Maintain delivery route master records.', 'parent' => $misc, 'sort_order' => 20]);
-        $this->create(['menu_name' => 'Delivery Vehicles', 'route' => '/masters/miscellaneous/delivery_vehicles', 'app_module_feature_code' => 'MISCELLANEOUS_MENU_VIEW', 'icon' => 'Truck', 'description' => 'Maintain delivery vehicle masters (currently hidden from the sidebar).', 'parent' => $misc, 'sort_order' => 30, 'is_visible' => false]);
+        $this->create(['menu_name' => 'Delivery Vehicles', 'route' => '/masters/miscellaneous/delivery_vehicles', 'app_module_feature_code' => 'MISCELLANEOUS_MENU_VIEW', 'icon' => 'Truck', 'description' => 'Maintain delivery vehicle master records.', 'parent' => $misc, 'sort_order' => 30]);
 
         // ── Administration ───────────────────────────────────────
         $admin = $this->create([

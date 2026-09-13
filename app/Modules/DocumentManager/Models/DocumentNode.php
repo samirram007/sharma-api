@@ -27,6 +27,7 @@ use Modules\User\Models\User;
  * @property int|null $category_id
  * @property int|null $type_id
  * @property string|null $description
+ * @property string|null $color
  * @property string|null $mime_type
  * @property string|null $extension
  * @property string|null $storage_path
@@ -71,6 +72,7 @@ class DocumentNode extends Model
         'category_id',
         'type_id',
         'description',
+        'color',
         'mime_type',
         'extension',
         'storage_path',

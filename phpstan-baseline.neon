@@ -1191,7 +1191,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property Modules\\Voucher\\Models\\Voucher\:\:\$voucher_type_id\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: app/Modules/Voucher/Services/VoucherService.php
 
 		-

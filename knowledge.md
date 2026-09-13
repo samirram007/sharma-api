@@ -15,8 +15,10 @@ Laravel 13 API for **AIPT** (Accounts | Inventory | Payroll | Tax). Modular mono
 | Dev | `composer run dev` (concurrently: `php artisan serve` + `queue:listen` + Vite) |
 | Test | `composer run test` (config:clear then `php artisan test`, Pest 4) |
 | Lint | `./vendor/bin/pint` |
-| Static analysis | `composer run phpstan` (PHPStan 2.x, `phpstan.neon` + baseline) |
+| Static analysis | `composer run phpstan` (PHPStan 2.x, `phpstan.neon` + baseline; also runs the trait-use linter) |
 | Regen PHPStan baseline | `composer run phpstan-baseline` |
+| Lint (trait use) | `composer run lint` (runs `scripts/lint-qualified-trait-use.php`) |
+| Health check | `composer run health:dashboard` (bash `../scripts/dashboard-health-check.sh`) |
 | Build assets | `npm run build` (Vite + Tailwind v4) |
 | Scaffold service | `php artisan make:module-service {Name}` (`--model=` / `--force`) |
 
@@ -27,7 +29,7 @@ Laravel 13 API for **AIPT** (Accounts | Inventory | Payroll | Tax). Modular mono
 ### Key directories
 ```
 app/
-  Modules/       — ~112 domain modules (the core)
+  Modules/       — ~114 domain modules (the core)
   Enums/         — PHP enums (GstType, CostingMethod, StorageUnitType, TypeOfSupply…)
   Events/        — AppNotificationCreated, etc.
   Helpers/       — ApiErrorResponse
@@ -48,7 +50,7 @@ routes/api.php   — utility routes only (clear, reload, enums, cookie-test)
 ```
 
 ### Module structure
-Each of the ~112 modules follows:
+Each of the ~114 modules follows:
 ```
 app/Modules/{Module}/
   Controllers/Api/{Module}Controller.php
@@ -103,7 +105,7 @@ app/Modules/{Module}/
 - **Controllers** either constructor-inject the *interface* (e.g., `AuthController`, `DashboardController`) or call the *facade* (`{Module}Facade::method()`). Never inject the concrete service.
 - **Services** may delegate data access to the repository through its facade by setting `protected string $repositoryFacadeClass = {Module}RepositoryFacade::class;` (see `VoucherEntryService`) — otherwise `BaseService` queries the model directly. `AccountGroup` is the proof-of-concept: service → `AccountGroupRepositoryFacade` → cached repository.
 
-**BaseService** (`app/Support/Services/BaseService.php`) — **~76 services** extend it, implementing `BaseServiceInterface` (`getAll/getById/store/update/delete`). Children set `$modelClass` + `$defaultResource`, override methods for specific return types, and add custom methods.
+**BaseService** (`app/Support/Services/BaseService.php`) — **112 services** extend it (verified Sep 2026), implementing `BaseServiceInterface` (`getAll/getById/store/update/delete`). Children set `$modelClass` + `$defaultResource`, override methods for specific return types, and add custom methods.
 - Delegation rule (avoids infinite recursion with the overridden children): **public** interface methods → delegate to **protected** helpers (`getAllRecords()`, `findOrFail()`, `createRecord()`, `updateRecord()`, `deleteRecord()`); the protected helpers → query directly.
 
 **BaseRepository** (`app/Support/Repositories/BaseRepository.php`) — implements `BaseRepositoryInterface` with caching via the `Cacheable` trait. Child repositories constructor-inject their Eloquent model (`__construct(AccountGroup $model) { parent::__construct($model); }` — the container auto-resolves it against `BaseRepository::__construct(Model $model, bool $cacheable = true)`; pass `false` to disable caching for that instance):
@@ -121,7 +123,7 @@ All responses use the unified envelope via `SuccessResource`/`SuccessCollection`
 ```json
 { "success": true, "code": 200, "message": "…", "data": … }
 ```
-- **~107 resources** use the `CamelCaseResource` trait (snake_case DB attrs → camelCase automatically). 9 skipped (don't extend `SuccessResource`/`SuccessCollection`).
+- **116 resource files** use the `CamelCaseResource` trait (snake_case DB attrs → camelCase automatically; verified Sep 2026). 9 skipped (don't extend `SuccessResource`/`SuccessCollection`).
 - **Delete responses:** 102 controllers use `$this->deletedResponse($result, 'EntityName')` from `ApiResponseTrait` (no old `status`/204 pattern).
 - Controllers with custom endpoints return `SuccessResource`/`SuccessCollection` per-method (e.g., AccountLedger's `ledger_balance`, `purchase_ledgers`; Freight returns `VoucherCollection`).
 - Never return `JsonResponse` from service methods that declare a specific return type — throw exceptions (e.g., `AuthenticationException`) and let controllers format them.
@@ -162,7 +164,7 @@ Related: `app/Modules/OpeningBalance/` also creates `OPNJL` vouchers (manual ope
 ## API Endpoint Inventory
 
 The full inventory of **617 API routes** (auth, utility, 98 CRUD resources, custom endpoints per module) lives in the repo-root `knowledge.md` under **"API Endpoint Inventory"** — regenerate with `php artisan route:list --path=api`. Highlights for this backend:
-- 98 `apiResource` CRUD resources (5 routes each) + 9 modules with **no `jwt.cookies` protection** (public CRUD — detailed audit + risk table in Gotchas item 1).
+- 98 `apiResource` CRUD resources (5 routes each), **all `jwt.cookies`-protected** (the 9 formerly-public modules were fixed in Sep 2026 — see Gotchas item 1; they are authenticated-only, not permission-gated).
 - Custom endpoints per module: AccountLedger filter lists, Freight report views (`freights_*_wise`), StockSummary stock reports, Menu bulk ops, FiscalYearClose/Open workflow, OpeningBalance, ReceiptNoteReport grouped views, Dashboard widgets, PhysicalStockCount workflow.
 
 ## Conventions

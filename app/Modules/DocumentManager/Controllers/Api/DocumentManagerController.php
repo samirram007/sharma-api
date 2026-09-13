@@ -63,6 +63,7 @@ class DocumentManagerController
             'visibility' => ['nullable', 'in:private,protected,public'],
             'category_id' => ['nullable', 'integer'],
             'description' => ['nullable', 'string', 'max:1000'],
+            'color' => ['nullable', 'string', 'max:20'],
         ]);
         $node = $this->service->createFolder($data);
 
@@ -241,6 +242,7 @@ class DocumentManagerController
             'category_id' => ['nullable', 'integer'],
             'type_id' => ['nullable', 'integer'],
             'description' => ['nullable', 'string', 'max:1000'],
+            'color' => ['nullable', 'string', 'max:20'],
             'parent_id' => ['nullable', 'integer'],
             'conflict' => ['nullable', 'in:replace,rename'],
         ]);
@@ -298,6 +300,61 @@ class DocumentManagerController
             'message' => 'Folder stats retrieved',
             'data' => $this->service->folderStats($node),
         ]);
+    }
+
+    /**
+     * POST /document-manager/text-files — create a text file with inline
+     * content (the "New › Markdown/Text file" flow). Body: { name, content,
+     * parent_id?, visibility? }
+     */
+    public function storeTextFile(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'parent_id' => ['nullable', 'integer'],
+            'visibility' => ['nullable', 'in:private,protected,public'],
+        ]);
+        $node = $this->service->createTextFile(
+            $data['name'],
+            $data['content'],
+            $data['parent_id'] ?? null,
+            $data['visibility'] ?? 'private'
+        );
+
+        return $this->resourceResponse(
+            new JsonResource($this->nodeShape($node)),
+            'File created'
+        );
+    }
+
+    /** GET /document-manager/nodes/{node}/text — raw text for the editor. */
+    public function showTextFile(int $node): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Text content retrieved',
+            'data' => [
+                'id' => $node,
+                'name' => $this->service->requireAccessible($node)->name,
+                'content' => $this->service->readTextFile($node),
+            ],
+        ]);
+    }
+
+    /** PUT /document-manager/nodes/{node}/text — save editor content. */
+    public function updateTextFile(Request $request, int $node): JsonResponse
+    {
+        $data = $request->validate([
+            'content' => ['required', 'string'],
+        ]);
+        $updated = $this->service->updateTextFile($node, $data['content']);
+
+        return $this->resourceResponse(
+            new JsonResource($this->nodeShape($updated)),
+            'File saved'
+        );
     }
 
     /** GET /document-manager/nodes/{node}/download */
@@ -404,6 +461,7 @@ class DocumentManagerController
                 ? ['id' => $node->type->id, 'name' => $node->type->name]
                 : null,
             'description' => $node->description,
+            'color' => $node->color,
             'mimeType' => $node->mime_type,
             'extension' => $node->extension,
             'sizeBytes' => $node->size_bytes,

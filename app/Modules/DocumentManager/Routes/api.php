@@ -13,6 +13,7 @@ Route::middleware('jwt.cookies')->prefix('document-manager')->group(function ():
     Route::get('folders', [DocumentManagerController::class, 'folders']);
     Route::post('folders', [DocumentManagerController::class, 'storeFolder']);
     Route::post('upload', [DocumentManagerController::class, 'upload']);
+    Route::post('text-files', [DocumentManagerController::class, 'storeTextFile']);
     Route::post('conflicts', [DocumentManagerController::class, 'conflicts']);
     Route::post('shortcuts', [DocumentManagerController::class, 'storeShortcut']);
     Route::get('shortcuts/{shortcut}/resolve', [DocumentManagerController::class, 'resolveShortcut']);
@@ -23,5 +24,7 @@ Route::middleware('jwt.cookies')->prefix('document-manager')->group(function ():
     Route::get('nodes/{node}/stats', [DocumentManagerController::class, 'nodeStats']);
     Route::get('nodes/{node}/download', [DocumentManagerController::class, 'download']);
     Route::get('nodes/{node}/preview', [DocumentManagerController::class, 'preview']);
+    Route::get('nodes/{node}/text', [DocumentManagerController::class, 'showTextFile']);
+    Route::put('nodes/{node}/text', [DocumentManagerController::class, 'updateTextFile']);
     Route::put('nodes/{node}/shares', [DocumentManagerController::class, 'syncShares']);
 });

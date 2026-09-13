@@ -198,6 +198,7 @@ class DocumentManagerService
             'category_id' => $data['category_id'] ?? null,
             'type_id' => $data['type_id'] ?? null,
             'description' => $data['description'] ?? null,
+            'color' => $data['color'] ?? null,
         ]);
         $this->broadcastNodeCreated($node);
 
@@ -231,6 +232,93 @@ class DocumentManagerService
         $this->broadcastNodeCreated($node);
 
         return $node;
+    }
+
+    /**
+     * Create a small text file (md/txt/csv/…) with inline content — the
+     * "New > Markdown file" flow. Same storage layout as uploads.
+     */
+    public function createTextFile(
+        string $name,
+        string $content,
+        ?int $parentId = null,
+        string $visibility = DocumentNode::VIS_PRIVATE
+    ): DocumentNode {
+        $this->assertFolderWriteAccess($parentId);
+
+        $displayName = $this->stripDuplicateCounter($name);
+        $extension = strtolower((string) pathinfo($displayName, PATHINFO_EXTENSION));
+        abort_if(
+            ! in_array($extension, ['md', 'txt', 'csv', 'json', 'log']),
+            422,
+            'Only md, txt, csv, json and log files can be created with content.'
+        );
+        abort_if(strlen($content) > 512 * 1024, 422, 'Text content exceeds the 512 KB limit.');
+
+        $uniqueName = $this->uniqueSiblingName($parentId, $displayName);
+        $objectName = date('Y/m/d').'/'.Str::uuid().'.'.$extension;
+        $path = 'documents/'.$objectName;
+        if (Storage::disk('local')->put($path, $content) === false) {
+            throw new RuntimeException('Could not store the text file.');
+        }
+
+        $node = DocumentNode::query()->create([
+            'name' => $uniqueName,
+            'kind' => DocumentNode::KIND_FILE,
+            'visibility' => $visibility,
+            'parent_id' => $parentId,
+            'owner_id' => Auth::id(),
+            'mime_type' => $extension === 'md' ? 'text/markdown' : 'text/plain',
+            'extension' => $extension,
+            'size_bytes' => strlen($content),
+            'storage_path' => $path,
+        ]);
+        $this->broadcastNodeCreated($node);
+
+        return $node;
+    }
+
+    /** Raw text of a text file (md/txt/csv/json/log) for the editor. */
+    public function readTextFile(int $id): string
+    {
+        $node = $this->requireAccessible($id);
+        abort_if($node->kind !== DocumentNode::KIND_FILE, 422, 'Only files have text content.');
+        abort_if(
+            ! in_array(strtolower((string) $node->extension), ['md', 'txt', 'csv', 'json', 'log']),
+            422,
+            'This file type cannot be opened in the text editor.'
+        );
+        abort_if(! $node->storage_path || ! Storage::disk('local')->exists($node->storage_path), 404, 'File is missing on storage.');
+        abort_if((int) $node->size_bytes > 512 * 1024, 422, 'File is too large for the text editor (512 KB limit).');
+
+        return (string) Storage::disk('local')->get($node->storage_path);
+    }
+
+    /** Replace the text content of a text file (editor save). */
+    public function updateTextFile(int $id, string $content): DocumentNode
+    {
+        $node = $this->requireEditable($id);
+        abort_if(
+            ! in_array(strtolower((string) $node->extension), ['md', 'txt', 'csv', 'json', 'log']),
+            422,
+            'This file type cannot be edited as text.'
+        );
+        abort_if(strlen($content) > 512 * 1024, 422, 'Text content exceeds the 512 KB limit.');
+
+        if ($node->storage_path && Storage::disk('local')->exists($node->storage_path)) {
+            Storage::disk('local')->put($node->storage_path, $content);
+        } else {
+            // Legacy/missing object — recreate it in the standard layout.
+            $extension = strtolower((string) $node->extension) ?: 'txt';
+            $objectName = date('Y/m/d').'/'.Str::uuid().'.'.$extension;
+            $node->storage_path = 'documents/'.$objectName;
+            Storage::disk('local')->put($node->storage_path, $content);
+        }
+
+        $node->size_bytes = strlen($content);
+        $node->save();
+
+        return $node->refresh();
     }
 
     public function upload(array $data): DocumentNode
@@ -324,6 +412,7 @@ class DocumentManagerService
             'category_id' => array_key_exists('category_id', $data) ? $data['category_id'] : $node->category_id,
             'type_id' => array_key_exists('type_id', $data) ? $data['type_id'] : $node->type_id,
             'description' => array_key_exists('description', $data) ? $data['description'] : $node->description,
+            'color' => array_key_exists('color', $data) ? $data['color'] : $node->color,
         ]);
 
         return $node->fresh(['owner:id,name', 'category:id,name,color', 'type:id,name', 'shares']);
