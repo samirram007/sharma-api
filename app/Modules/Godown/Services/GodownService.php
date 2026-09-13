@@ -121,7 +121,12 @@ class GodownService extends BaseService implements GodownServiceInterface
         $entries = $godown->stock_journal_godown_entries;
 
         // ⭐ GROUP BY BATCH (from Godown Entry)
+        // PHP casts numeric-string array keys to int (batch_no "12345" →
+        // group key 12345), which then serialized as a JSON number and
+        // crashed the frontend's batchNo.trim(). Cast back to string so the
+        // API contract is always a string (null → '').
         return $entries->groupBy('batch_no')->map(function ($batchEntries, $batchNo) {
+            $batchNo = $batchNo === null ? '' : (string) $batchNo;
 
             // Calculate IN - OUT quantity from godown entry
             $stock = $batchEntries->sum(function ($entry) {

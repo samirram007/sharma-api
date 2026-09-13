@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Modules\AppModuleFeature\Models\AppModuleFeature;
@@ -35,7 +34,17 @@ return new class extends Migration
         $featureId = AppModuleFeature::query()->where('code', 'MISCELLANEOUS_MENU_VIEW')->value('id');
 
         if (! $featureId) {
-            $adminModuleId = AppModuleFeature::query()->min('app_module_id');
+            // app_module_id is NOT NULL: reuse the Administration module when
+            // it exists, create it when the table is empty (fresh databases
+            // run migrations BEFORE seeders), and bail out when neither is
+            // possible — MenuFeatureSeeder will seed this feature anyway.
+            $adminModuleId = Schema::hasTable('app_modules')
+                ? DB::table('app_modules')->where('code', 'ADMIN')->value('id')
+                : null;
+
+            if (! $adminModuleId) {
+                return;
+            }
 
             $feature = AppModuleFeature::query()->create([
                 'app_module_id' => $adminModuleId,

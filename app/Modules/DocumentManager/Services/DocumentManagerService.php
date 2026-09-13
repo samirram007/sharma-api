@@ -7,14 +7,15 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Modules\DocumentManager\Events\DocumentNodeChanged;
 use Modules\DocumentManager\Models\DocumentCategory;
 use Modules\DocumentManager\Models\DocumentNode;
 use Modules\DocumentManager\Models\DocumentNodeShare;
-use Modules\DocumentManager\Events\DocumentNodeChanged;
 use Modules\DocumentManager\Models\DocumentType;
 use Modules\Role\Models\Role;
 use Modules\User\Models\User;
 use RuntimeException;
+use Throwable;
 
 class DocumentManagerService
 {
@@ -348,7 +349,10 @@ class DocumentManagerService
         $objectName = date('Y/m/d').'/'.Str::uuid().'.'.$extension;
         $path = $file->storeAs('documents', $objectName, 'local');
         if ($path === false) {
-            throw new RuntimeException('Could not store the uploaded file.');
+            throw new RuntimeException(sprintf(
+                'Could not store the uploaded file: the "local" disk rejected the write to %s (check storage/app/private permissions and free disk space).',
+                $objectName
+            ));
         }
 
         $node = DocumentNode::query()->create([
@@ -377,8 +381,18 @@ class DocumentManagerService
      */
     private function broadcastNodeCreated(DocumentNode $node): void
     {
-        if ($node->parent_id !== null) {
+        if ($node->parent_id === null) {
+            return;
+        }
+
+        try {
             DocumentNodeChanged::dispatch($node);
+        } catch (Throwable $e) {
+            // Realtime fan-out is best-effort: the upload itself succeeded.
+            // A Reverb outage (or any broadcast driver failure) must not turn
+            // into a 500 after the file is already stored — users would retry
+            // and create duplicate uploads.
+            report($e);
         }
     }
 
