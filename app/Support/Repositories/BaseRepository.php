@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
@@ -278,6 +279,33 @@ abstract class BaseRepository implements BaseRepositoryInterface
         if (! empty($fillable)) {
             $data = array_intersect_key($data, array_flip($fillable));
         }
+
+        // A query-builder UPDATE bypasses Eloquent's HasAttributes casts, so
+        // raw values would be written verbatim. That breaks timezone-annotated
+        // strings: a browser sends local IST midnight 17/5 as the instant
+        // "2026-05-16T18:30:00.000Z", and a DATE column written raw keeps the
+        // UTC calendar day — shifting the voucher one day back. Zonated
+        // strings are converted to the app timezone (Asia/Kolkata) first;
+        // everything else goes through the model's own fromDateTime cast.
+        foreach ($data as $key => $value) {
+            if (
+                $value !== null &&
+                $model->hasCast($key, ['date', 'datetime', 'custom_datetime', 'immutable_date', 'immutable_datetime']) &&
+                (is_string($value) || is_numeric($value))
+            ) {
+                $value = trim((string) $value);
+
+                if (preg_match('/(?:Z|[+-]\d{2}:?\d{2})$/i', $value)) {
+                    // Timezone-designated instant → render in app timezone.
+                    $value = Date::parse($value)
+                        ->setTimezone(config('app.timezone'))
+                        ->format($model->getDateFormat());
+                }
+
+                $data[$key] = $model->fromDateTime($value);
+            }
+        }
+
         $model->newQuery()->whereKey($model->getKey())->update($data);
         $this->clearCache();
 

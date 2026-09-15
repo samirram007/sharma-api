@@ -34,6 +34,7 @@ use Modules\VoucherEntry\Requests\VoucherEntryRequest;
 use Modules\VoucherNo\Models\VoucherNo;
 use Modules\VoucherParty\Contracts\VoucherPartyServiceInterface;
 use Modules\VoucherParty\Facades\VoucherPartyFacade;
+use Modules\VoucherParty\Models\VoucherParty;
 use Modules\VoucherParty\Requests\VoucherPartyRequest;
 use Modules\VoucherReference\Contracts\VoucherReferenceServiceInterface;
 use Modules\VoucherReference\Facades\VoucherReferenceFacade;
@@ -886,6 +887,13 @@ class VoucherService extends BaseService implements VoucherServiceInterface
 
     /**
      * Step 6 (update): Create or update party.
+     *
+     * The voucher_party relation is hasOne, so each voucher has at most one
+     * party row. When the payload carries no party id (e.g. the party was
+     * re-selected in the UI and the form rebuilt the object without its id),
+     * resolve the existing row via voucher_id and UPDATE it — blindly storing
+     * would create a duplicate row while the hasOne relation keeps serving
+     * the original, making the edit appear to silently do nothing.
      */
     protected function processPartyUpdateStep(array $data, Voucher $voucher): void
     {
@@ -894,8 +902,13 @@ class VoucherService extends BaseService implements VoucherServiceInterface
             $rules = (new VoucherPartyRequest)->rules();
             $validatedParty = Validator::make($data['party'], $rules)->validate();
 
-            if ($data['party']['id'] ?? false) {
-                VoucherPartyFacade::update($validatedParty, $data['party']['id']);
+            $partyId = $data['party']['id'] ?? null;
+            if (! $partyId) {
+                $partyId = VoucherParty::where('voucher_id', $voucher->id)->value('id');
+            }
+
+            if ($partyId) {
+                VoucherPartyFacade::update($validatedParty, $partyId);
             } else {
                 VoucherPartyFacade::store($validatedParty);
             }

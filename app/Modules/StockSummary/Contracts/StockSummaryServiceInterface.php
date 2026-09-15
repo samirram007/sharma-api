@@ -51,6 +51,26 @@ interface StockSummaryServiceInterface extends BaseServiceInterface
      */
     public function getGodownRunningBalanceItems(int $godownId): array;
 
+    /**
+     * Opening Stock report — the opening voucher's stock broken down item-wise
+     * and godown-wise, with batch detail lines. Optionally narrowed to one
+     * godown and/or item.
+     */
+    public function getOpeningStockReport(?int $godownId = null, ?int $itemId = null): array;
+
+    /**
+     * Distinct batch numbers (with item/godown context) for the batch-movement
+     * report's search suggestions. Optionally filtered by a search string.
+     */
+    public function getBatchList(?string $search = null, int $limit = 200): array;
+
+    /**
+     * Batch Movement report — full chronological movement of batches with a
+     * running balance, item and godown wise. Filters: search, item_id,
+     * godown_id, batch_no, from_date, to_date.
+     */
+    public function getBatchMovements(array $filters = []): array;
+
     public function netStock(array $data): StockSummary;
 
     public function purchaseOrderOutstanding(): StockSummary;

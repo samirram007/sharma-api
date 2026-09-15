@@ -1549,6 +1549,433 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     }
 
     // ──────────────────────────────────────────────
+    //  Opening Stock report (item-wise / godown-wise)
+    // ──────────────────────────────────────────────
+
+    /**
+     * Opening Stock report — the stock recorded by the fiscal year's opening
+     * voucher(s) (stock journal types 'OPENING' / 'OPNSK'), broken down
+     * item-wise and godown-wise with batch detail lines.
+     *
+     * Optionally narrowed to a single godown and/or item.
+     */
+    public function getOpeningStockReport(?int $godownId = null, ?int $itemId = null): array
+    {
+        $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+
+        $rows = DB::table('stock_journal_godown_entries as sjge')
+            ->join('stock_journal_entries as sje', 'sjge.stock_journal_entry_id', '=', 'sje.id')
+            ->join('stock_journals as sj', 'sje.stock_journal_id', '=', 'sj.id')
+            ->join('vouchers as v', 'sj.id', '=', 'v.stock_journal_id')
+            ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
+            ->leftJoin('stock_units as su', 'si.stock_unit_id', '=', 'su.id')
+            ->leftJoin('godowns as g', 'sjge.godown_id', '=', 'g.id')
+            ->where('v.fiscal_year_id', $fiscalYearId)
+            ->whereIn('sj.type', ['OPENING', 'OPNSK'])
+            ->when($godownId, fn ($q) => $q->where('sjge.godown_id', $godownId))
+            ->when($itemId, fn ($q) => $q->where('sje.stock_item_id', $itemId))
+            // Respect the purge scopes on both entry levels
+            ->whereNotExists(function ($q) {
+                $q->select(DB::raw('1'))
+                    ->from('stock_journal_godown_entry_purges')
+                    ->whereColumn('stock_journal_godown_entry_purges.stock_journal_godown_entry_id', 'sjge.id');
+            })
+            ->whereNotExists(function ($q) {
+                $q->select(DB::raw('1'))
+                    ->from('stock_journal_entry_purges')
+                    ->whereColumn('stock_journal_entry_purges.stock_journal_entry_id', 'sje.id');
+            })
+            ->orderBy('si.name')
+            ->orderBy('sjge.batch_no')
+            ->selectRaw('
+                sje.stock_item_id,
+                si.name as item_name,
+                si.code as item_code,
+                su.code as unit_code,
+                su.name as unit_name,
+                su.no_of_decimal_places,
+                sjge.godown_id,
+                g.name as godown_name,
+                g.code as godown_code,
+                sjge.batch_no,
+                sjge.mfg_date,
+                sjge.expiry_date,
+                sjge.actual_quantity,
+                sjge.rate,
+                sjge.amount,
+                sjge.remarks,
+                v.id as voucher_id,
+                v.voucher_no,
+                v.voucher_date
+            ')
+            ->get();
+
+        $openingVoucher = DB::table('stock_journals as sj')
+            ->join('vouchers as v', 'sj.id', '=', 'v.stock_journal_id')
+            ->where('v.fiscal_year_id', $fiscalYearId)
+            ->whereIn('sj.type', ['OPENING', 'OPNSK'])
+            ->orderBy('v.voucher_date')
+            ->select('v.id', 'v.voucher_no', 'v.voucher_date')
+            ->first();
+
+        // Item-wise: item → godown → batch lines
+        $items = [];
+        foreach ($rows->groupBy('stock_item_id') as $groupRows) {
+            $first = $groupRows->first();
+            $godowns = [];
+            $itemQty = 0.0;
+            $itemAmount = 0.0;
+
+            foreach ($groupRows->groupBy('godown_id') as $godownRows) {
+                $godownFirst = $godownRows->first();
+                $godownQty = 0.0;
+                $godownAmount = 0.0;
+                $batches = [];
+
+                foreach ($godownRows as $row) {
+                    $qty = (float) $row->actual_quantity;
+                    $amount = (float) $row->amount;
+                    $godownQty += $qty;
+                    $godownAmount += $amount;
+                    $batches[] = [
+                        'batchNo' => $row->batch_no,
+                        'mfgDate' => $this->formatDbDate($row->mfg_date),
+                        'expiryDate' => $this->formatDbDate($row->expiry_date),
+                        'quantity' => $qty,
+                        'rate' => (float) $row->rate,
+                        'amount' => $amount,
+                        'remarks' => $row->remarks,
+                    ];
+                }
+
+                $godowns[] = [
+                    'godownId' => (int) $godownFirst->godown_id,
+                    'godownName' => $godownFirst->godown_name,
+                    'godownCode' => $godownFirst->godown_code,
+                    'quantity' => $godownQty,
+                    'amount' => round($godownAmount, 2),
+                    'batches' => $batches,
+                ];
+
+                $itemQty += $godownQty;
+                $itemAmount += $godownAmount;
+            }
+
+            $items[] = [
+                'itemId' => (int) $first->stock_item_id,
+                'itemName' => $first->item_name,
+                'itemCode' => $first->item_code,
+                'unitCode' => $first->unit_code,
+                'unitName' => $first->unit_name,
+                'noOfDecimalPlaces' => (int) ($first->no_of_decimal_places ?? 2),
+                'quantity' => $itemQty,
+                'amount' => round($itemAmount, 2),
+                'godowns' => $godowns,
+            ];
+        }
+
+        // Godown-wise: godown → item → batch lines
+        $godowns = [];
+        foreach ($rows->groupBy('godown_id') as $groupRows) {
+            $godownFirst = $groupRows->first();
+            $godownQty = 0.0;
+            $godownAmount = 0.0;
+            $itemsInGodown = [];
+
+            foreach ($groupRows->groupBy('stock_item_id') as $itemRows) {
+                $itemFirst = $itemRows->first();
+                $itemQty = 0.0;
+                $itemAmount = 0.0;
+                $batches = [];
+
+                foreach ($itemRows as $row) {
+                    $qty = (float) $row->actual_quantity;
+                    $amount = (float) $row->amount;
+                    $itemQty += $qty;
+                    $itemAmount += $amount;
+                    $batches[] = [
+                        'batchNo' => $row->batch_no,
+                        'mfgDate' => $this->formatDbDate($row->mfg_date),
+                        'expiryDate' => $this->formatDbDate($row->expiry_date),
+                        'quantity' => $qty,
+                        'rate' => (float) $row->rate,
+                        'amount' => $amount,
+                    ];
+                }
+
+                $itemsInGodown[] = [
+                    'itemId' => (int) $itemFirst->stock_item_id,
+                    'itemName' => $itemFirst->item_name,
+                    'itemCode' => $itemFirst->item_code,
+                    'unitCode' => $itemFirst->unit_code,
+                    'noOfDecimalPlaces' => (int) ($itemFirst->no_of_decimal_places ?? 2),
+                    'quantity' => $itemQty,
+                    'amount' => round($itemAmount, 2),
+                    'batches' => $batches,
+                ];
+
+                $godownQty += $itemQty;
+                $godownAmount += $itemAmount;
+            }
+
+            usort($itemsInGodown, fn ($a, $b) => strcmp($a['itemName'], $b['itemName']));
+
+            $godowns[] = [
+                'godownId' => (int) $godownFirst->godown_id,
+                'godownName' => $godownFirst->godown_name,
+                'godownCode' => $godownFirst->godown_code,
+                'quantity' => $godownQty,
+                'amount' => round($godownAmount, 2),
+                'items' => $itemsInGodown,
+            ];
+        }
+
+        usort($godowns, fn ($a, $b) => strcmp($a['godownName'] ?? '', $b['godownName'] ?? ''));
+
+        return [
+            'openingVoucher' => $openingVoucher ? [
+                'voucherId' => (int) $openingVoucher->id,
+                'voucherNo' => $openingVoucher->voucher_no,
+                'voucherDate' => $this->formatDbDate($openingVoucher->voucher_date),
+            ] : null,
+            'items' => $items,
+            'godowns' => $godowns,
+            'totals' => [
+                'itemCount' => count($items),
+                'godownCount' => count($godowns),
+                'totalQuantity' => round((float) $rows->sum(fn ($r) => (float) $r->actual_quantity), 4),
+                'totalAmount' => round((float) $rows->sum(fn ($r) => (float) $r->amount), 2),
+            ],
+        ];
+    }
+
+    // ──────────────────────────────────────────────
+    //  Batch Movement report (full movement + balance)
+    // ──────────────────────────────────────────────
+
+    /**
+     * Distinct batch numbers for the batch-movement report's search dropdown.
+     * Returns batch_no + the item/godown contexts they appear in, optionally
+     * narrowed by a search string (batch no or item name prefix/substring).
+     */
+    public function getBatchList(?string $search = null, int $limit = 200): array
+    {
+        $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+
+        $rows = DB::table('stock_journal_godown_entries as sjge')
+            ->join('stock_journal_entries as sje', 'sjge.stock_journal_entry_id', '=', 'sje.id')
+            ->join('stock_journals as sj', 'sje.stock_journal_id', '=', 'sj.id')
+            ->join('vouchers as v', 'sj.id', '=', 'v.stock_journal_id')
+            ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
+            ->where('v.fiscal_year_id', $fiscalYearId)
+            ->whereNotNull('sjge.batch_no')
+            ->where('sjge.batch_no', '!=', '')
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->where('sjge.batch_no', 'like', "%{$search}%")
+                        ->orWhere('si.name', 'like', "%{$search}%");
+                });
+            })
+            ->whereNotExists(function ($q) {
+                $q->select(DB::raw('1'))
+                    ->from('stock_journal_godown_entry_purges')
+                    ->whereColumn('stock_journal_godown_entry_purges.stock_journal_godown_entry_id', 'sjge.id');
+            })
+            ->groupBy('sjge.batch_no', 'sje.stock_item_id', 'si.name', 'sjge.godown_id')
+            ->orderBy('sjge.batch_no')
+            ->limit($limit)
+            ->selectRaw('
+                sjge.batch_no,
+                sje.stock_item_id,
+                si.name as item_name,
+                sjge.godown_id
+            ')
+            ->get();
+
+        return $rows->map(fn ($row) => [
+            'batchNo' => $row->batch_no,
+            'itemId' => (int) $row->stock_item_id,
+            'itemName' => $row->item_name,
+            'godownId' => (int) $row->godown_id,
+        ])->values()->toArray();
+    }
+
+    /**
+     * Batch Movement report — the full chronological movement of one or more
+     * batches with a running balance, item and godown wise.
+     *
+     * Filters:
+     *  - search:    free text matched against batch_no / item name
+     *  - item_id:   restrict to one item
+     *  - godown_id: restrict to one godown
+     *  - batch_no:  exact batch number
+     *  - from_date / to_date: movement window (balances computed around it)
+     */
+    public function getBatchMovements(array $filters = []): array
+    {
+        $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+
+        $search = $filters['search'] ?? null;
+        $itemId = isset($filters['item_id']) ? (int) $filters['item_id'] : null;
+        $godownId = isset($filters['godown_id']) ? (int) $filters['godown_id'] : null;
+        $batchNo = $filters['batch_no'] ?? null;
+        $fromDate = ! empty($filters['from_date']) ? Carbon::parse($filters['from_date'])->startOfDay() : null;
+        $toDate = ! empty($filters['to_date']) ? Carbon::parse($filters['to_date'])->endOfDay() : null;
+
+        $rows = DB::table('stock_journal_godown_entries as sjge')
+            ->join('stock_journal_entries as sje', 'sjge.stock_journal_entry_id', '=', 'sje.id')
+            ->join('stock_journals as sj', 'sje.stock_journal_id', '=', 'sj.id')
+            ->join('vouchers as v', 'sj.id', '=', 'v.stock_journal_id')
+            ->leftJoin('voucher_types as vt', 'v.voucher_type_id', '=', 'vt.id')
+            ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
+            ->leftJoin('stock_units as su', 'si.stock_unit_id', '=', 'su.id')
+            ->leftJoin('godowns as g', 'sjge.godown_id', '=', 'g.id')
+            ->where('v.fiscal_year_id', $fiscalYearId)
+            ->whereNotNull('sjge.batch_no')
+            ->where('sjge.batch_no', '!=', '')
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->where('sjge.batch_no', 'like', "%{$search}%")
+                        ->orWhere('si.name', 'like', "%{$search}%");
+                });
+            })
+            ->when($itemId, fn ($q) => $q->where('sje.stock_item_id', $itemId))
+            ->when($godownId, fn ($q) => $q->where('sjge.godown_id', $godownId))
+            ->when($batchNo, fn ($q) => $q->where('sjge.batch_no', $batchNo))
+            ->whereNotExists(function ($q) {
+                $q->select(DB::raw('1'))
+                    ->from('stock_journal_godown_entry_purges')
+                    ->whereColumn('stock_journal_godown_entry_purges.stock_journal_godown_entry_id', 'sjge.id');
+            })
+            ->orderBy('si.name')
+            ->orderBy('sjge.godown_id')
+            ->orderBy('sjge.batch_no')
+            ->orderBy('v.voucher_date')
+            ->orderBy('v.id')
+            ->selectRaw('
+                sjge.id,
+                sje.stock_item_id,
+                si.name as item_name,
+                si.code as item_code,
+                su.code as unit_code,
+                su.no_of_decimal_places,
+                sjge.godown_id,
+                g.name as godown_name,
+                g.code as godown_code,
+                sjge.batch_no,
+                sjge.mfg_date,
+                sjge.expiry_date,
+                sjge.movement_type,
+                sjge.actual_quantity,
+                sjge.rate,
+                sjge.amount,
+                sjge.remarks,
+                v.id as voucher_id,
+                v.voucher_no,
+                v.voucher_date,
+                vt.name as voucher_type_name
+            ')
+            ->get();
+
+        // Group rows into batch buckets (item + godown + batch), computing
+        // opening (before from_date), inward/outward/closing inside the window,
+        // and a chronological movement list with a per-batch running balance.
+        $buckets = [];
+
+        foreach ($rows as $row) {
+            $key = $row->stock_item_id.'|'.$row->godown_id.'|'.$row->batch_no;
+
+            if (! isset($buckets[$key])) {
+                $buckets[$key] = [
+                    'itemId' => (int) $row->stock_item_id,
+                    'itemName' => $row->item_name,
+                    'itemCode' => $row->item_code,
+                    'unitCode' => $row->unit_code,
+                    'noOfDecimalPlaces' => (int) ($row->no_of_decimal_places ?? 2),
+                    'godownId' => (int) $row->godown_id,
+                    'godownName' => $row->godown_name,
+                    'godownCode' => $row->godown_code,
+                    'batchNo' => $row->batch_no,
+                    'mfgDate' => $this->formatDbDate($row->mfg_date),
+                    'expiryDate' => $this->formatDbDate($row->expiry_date),
+                    'openingQuantity' => 0.0,
+                    'inwardQuantity' => 0.0,
+                    'outwardQuantity' => 0.0,
+                    'closingQuantity' => 0.0,
+                    'movements' => [],
+                ];
+            }
+
+            $qty = (float) $row->actual_quantity;
+            $isIn = $row->movement_type === 'in';
+            $date = $row->voucher_date ? substr((string) $row->voucher_date, 0, 10) : null;
+            $isBeforeWindow = $fromDate !== null && $date !== null && $date < $fromDate->toDateString();
+            $isInWindow = ($fromDate === null || ($date !== null && $date >= $fromDate->toDateString()))
+                && ($toDate === null || ($date !== null && $date <= $toDate->toDateString()));
+
+            if ($isBeforeWindow) {
+                $buckets[$key]['openingQuantity'] += $isIn ? $qty : -$qty;
+            } elseif ($isInWindow) {
+                if ($isIn) {
+                    $buckets[$key]['inwardQuantity'] += $qty;
+                } else {
+                    $buckets[$key]['outwardQuantity'] += $qty;
+                }
+
+                $buckets[$key]['movements'][] = [
+                    'voucherId' => (int) $row->voucher_id,
+                    'voucherNo' => $row->voucher_no,
+                    'voucherDate' => $date,
+                    'voucherTypeName' => $row->voucher_type_name,
+                    'movementType' => $row->movement_type,
+                    'quantity' => $qty,
+                    'rate' => (float) $row->rate,
+                    'amount' => (float) $row->amount,
+                    'remarks' => $row->remarks,
+                    'serialNo' => $row->serial_no ?? null,
+                ];
+            }
+            // Rows after the window are ignored entirely.
+        }
+
+        $batches = [];
+        foreach ($buckets as &$bucket) {
+            usort($bucket['movements'], function ($a, $b) {
+                return [$a['voucherDate'], $a['voucherNo']] <=> [$b['voucherDate'], $b['voucherNo']];
+            });
+
+            // Running balance across the window's movements, starting from opening.
+            $running = $bucket['openingQuantity'];
+            foreach ($bucket['movements'] as &$movement) {
+                $running += $movement['movementType'] === 'in' ? $movement['quantity'] : -$movement['quantity'];
+                $movement['runningBalance'] = round($running, 4);
+            }
+            unset($movement);
+
+            $bucket['closingQuantity'] = round($running, 4);
+            $bucket['openingQuantity'] = round($bucket['openingQuantity'], 4);
+            $bucket['inwardQuantity'] = round($bucket['inwardQuantity'], 4);
+            $bucket['outwardQuantity'] = round($bucket['outwardQuantity'], 4);
+
+            $batches[] = $bucket;
+        }
+        unset($bucket);
+
+        usort($batches, fn ($a, $b) => [$a['itemName'], $a['batchNo']] <=> [$b['itemName'], $b['batchNo']]);
+
+        return [
+            'batches' => $batches,
+            'totals' => [
+                'batchCount' => count($batches),
+                'totalOpening' => round(array_sum(array_column($batches, 'openingQuantity')), 4),
+                'totalInward' => round(array_sum(array_column($batches, 'inwardQuantity')), 4),
+                'totalOutward' => round(array_sum(array_column($batches, 'outwardQuantity')), 4),
+                'totalClosing' => round(array_sum(array_column($batches, 'closingQuantity')), 4),
+            ],
+        ];
+    }
+
+    // ──────────────────────────────────────────────
     //  Stub methods (to be implemented as needed)
     // ──────────────────────────────────────────────
 

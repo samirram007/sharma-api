@@ -18,6 +18,9 @@ Route::group(['middleware' => ['jwt.cookies']], function () {
     Route::get('/stock_summaries/running_balance_godowns', [StockSummaryController::class, 'runningBalanceGodowns']);
     Route::get('/stock_summaries/running_balance_godowns/{godown_id}', [StockSummaryController::class, 'godownRunningBalanceItems']);
     Route::get('/stock_summaries/net_stock', [StockSummaryController::class, 'net_stock']);
+    Route::get('/stock_summaries/opening_stock', [StockSummaryController::class, 'opening_stock']);
+    Route::get('/stock_summaries/batch_list', [StockSummaryController::class, 'batch_list']);
+    Route::get('/stock_summaries/batch_movements', [StockSummaryController::class, 'batch_movements']);
     Route::get('/stock_summaries/purchase_order_outstanding', [StockSummaryController::class, 'purchase_order_outstanding']);
     Route::get('/stock_summaries/saleble_stock', [StockSummaryController::class, 'saleble_stock']);
     Route::get('/stock_summaries/sales_order_outstanding', [StockSummaryController::class, 'sales_order_outstanding']);

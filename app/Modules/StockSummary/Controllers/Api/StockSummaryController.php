@@ -96,6 +96,31 @@ class StockSummaryController extends Controller
         return new SuccessResource($data, 'Godown running balance items retrieved successfully.');
     }
 
+    public function opening_stock(): SuccessResource
+    {
+        $godownId = request()->integer('godown_id') ?: null;
+        $itemId = request()->integer('item_id') ?: null;
+        $data = StockSummaryFacade::getOpeningStockReport($godownId, $itemId);
+
+        return new SuccessResource($data, 'Opening stock report retrieved successfully.');
+    }
+
+    public function batch_list(): SuccessCollection
+    {
+        $search = request()->string('search')->toString() ?: null;
+        $data = StockSummaryFacade::getBatchList($search);
+
+        return new SuccessCollection($data, 'Batch list retrieved successfully.');
+    }
+
+    public function batch_movements(): SuccessResource
+    {
+        $filters = request()->only(['search', 'item_id', 'godown_id', 'batch_no', 'from_date', 'to_date']);
+        $data = StockSummaryFacade::getBatchMovements($filters);
+
+        return new SuccessResource($data, 'Batch movements retrieved successfully.');
+    }
+
     public function net_stock(StockSummaryRequest $request): SuccessResource
     {
         $data = StockSummaryFacade::netStock($request->validated());
