@@ -60,9 +60,10 @@ interface StockSummaryServiceInterface extends BaseServiceInterface
 
     /**
      * Distinct batch numbers (with item/godown context) for the batch-movement
-     * report's search suggestions. Optionally filtered by a search string.
+     * report's search suggestions. Optionally filtered by a search string
+     * and/or a specific item/godown so the suggestions match the chosen filters.
      */
-    public function getBatchList(?string $search = null, int $limit = 200): array;
+    public function getBatchList(?string $search = null, int $limit = 200, ?int $itemId = null, ?int $godownId = null): array;
 
     /**
      * Batch Movement report — full chronological movement of batches with a

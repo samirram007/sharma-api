@@ -108,7 +108,9 @@ class StockSummaryController extends Controller
     public function batch_list(): SuccessCollection
     {
         $search = request()->string('search')->toString() ?: null;
-        $data = StockSummaryFacade::getBatchList($search);
+        $itemId = request()->integer('item_id') ?: null;
+        $godownId = request()->integer('godown_id') ?: null;
+        $data = StockSummaryFacade::getBatchList($search, 200, $itemId, $godownId);
 
         return new SuccessCollection($data, 'Batch list retrieved successfully.');
     }

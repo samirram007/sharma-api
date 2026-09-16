@@ -1743,7 +1743,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             'totals' => [
                 'itemCount' => count($items),
                 'godownCount' => count($godowns),
-                'totalQuantity' => round((float) $rows->sum(fn ($r) => (float) $r->actual_quantity), 4),
+                'totalQuantity' => round((float) $rows->sum(fn ($r) => (float) $r->actual_quantity), 2),
                 'totalAmount' => round((float) $rows->sum(fn ($r) => (float) $r->amount), 2),
             ],
         ];
@@ -1756,9 +1756,11 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     /**
      * Distinct batch numbers for the batch-movement report's search dropdown.
      * Returns batch_no + the item/godown contexts they appear in, optionally
-     * narrowed by a search string (batch no or item name prefix/substring).
+     * narrowed by a search string (batch no or item name prefix/substring)
+     * and/or a specific item and godown (used by the UI to keep the
+     * suggestions consistent with the filters already chosen).
      */
-    public function getBatchList(?string $search = null, int $limit = 200): array
+    public function getBatchList(?string $search = null, int $limit = 200, ?int $itemId = null, ?int $godownId = null): array
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
 
@@ -1767,7 +1769,12 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             ->join('stock_journals as sj', 'sje.stock_journal_id', '=', 'sj.id')
             ->join('vouchers as v', 'sj.id', '=', 'v.stock_journal_id')
             ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
-            ->where('v.fiscal_year_id', $fiscalYearId)
+            ->leftJoin('godowns as g', 'sjge.godown_id', '=', 'g.id')
+            // No FY filter — a batch bought in a previous FY but still in
+            // stock (carried forward) must stay searchable here, matching the
+            // batch-movements report which builds its Opening from those rows.
+            // 'CLOSING' journals are year-end snapshots, not real stock.
+            ->where('sj.type', '!=', 'CLOSING')
             ->whereNotNull('sjge.batch_no')
             ->where('sjge.batch_no', '!=', '')
             ->when($search, function ($q) use ($search) {
@@ -1776,19 +1783,22 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                         ->orWhere('si.name', 'like', "%{$search}%");
                 });
             })
+            ->when($itemId, fn ($q) => $q->where('sje.stock_item_id', $itemId))
+            ->when($godownId, fn ($q) => $q->where('sjge.godown_id', $godownId))
             ->whereNotExists(function ($q) {
                 $q->select(DB::raw('1'))
                     ->from('stock_journal_godown_entry_purges')
                     ->whereColumn('stock_journal_godown_entry_purges.stock_journal_godown_entry_id', 'sjge.id');
             })
-            ->groupBy('sjge.batch_no', 'sje.stock_item_id', 'si.name', 'sjge.godown_id')
+            ->groupBy('sjge.batch_no', 'sje.stock_item_id', 'si.name', 'sjge.godown_id', 'g.name')
             ->orderBy('sjge.batch_no')
             ->limit($limit)
             ->selectRaw('
                 sjge.batch_no,
                 sje.stock_item_id,
                 si.name as item_name,
-                sjge.godown_id
+                sjge.godown_id,
+                g.name as godown_name
             ')
             ->get();
 
@@ -1797,6 +1807,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             'itemId' => (int) $row->stock_item_id,
             'itemName' => $row->item_name,
             'godownId' => (int) $row->godown_id,
+            'godownName' => $row->godown_name,
         ])->values()->toArray();
     }
 
@@ -1814,6 +1825,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
     public function getBatchMovements(array $filters = []): array
     {
         $fiscalYearId = $this->userFiscalYear->fiscal_year_id;
+        $fy = FiscalYear::find($fiscalYearId);
 
         $search = $filters['search'] ?? null;
         $itemId = isset($filters['item_id']) ? (int) $filters['item_id'] : null;
@@ -1821,6 +1833,15 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
         $batchNo = $filters['batch_no'] ?? null;
         $fromDate = ! empty($filters['from_date']) ? Carbon::parse($filters['from_date'])->startOfDay() : null;
         $toDate = ! empty($filters['to_date']) ? Carbon::parse($filters['to_date'])->endOfDay() : null;
+
+        // The movement window defaults to the fiscal year, but Opening is the
+        // TRUE carried-forward balance: rows from PREVIOUS fiscal years (and
+        // anything else before the window) roll into it. Batches purchased in
+        // FY1 but sold in FY2 may never appear in FY2's opening voucher
+        // (hand-made OPNSK covering only some items), so their Opening must
+        // be built from the FY1 rows themselves.
+        $windowStart = $fromDate ?? ($fy?->start_date ? Carbon::parse($fy->start_date)->startOfDay() : null);
+        $windowEnd = $toDate ?? ($fy?->end_date ? Carbon::parse($fy->end_date)->endOfDay() : null);
 
         $rows = DB::table('stock_journal_godown_entries as sjge')
             ->join('stock_journal_entries as sje', 'sjge.stock_journal_entry_id', '=', 'sje.id')
@@ -1830,9 +1851,18 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             ->join('stock_items as si', 'sje.stock_item_id', '=', 'si.id')
             ->leftJoin('stock_units as su', 'si.stock_unit_id', '=', 'su.id')
             ->leftJoin('godowns as g', 'sjge.godown_id', '=', 'g.id')
-            ->where('v.fiscal_year_id', $fiscalYearId)
+            // Any fiscal year — rows are classified per-row by date below:
+            // pre-window rows (earlier FYs included) roll into Opening, only
+            // in-window rows are reported as movements.
+            // 'CLOSING' journals are year-end snapshots, not movements —
+            // excluding them avoids double-counting when the next FY's
+            // OPENING journal also carries the same balance.
+            ->where('sj.type', '!=', 'CLOSING')
             ->whereNotNull('sjge.batch_no')
             ->where('sjge.batch_no', '!=', '')
+            // sj.type is needed to classify opening-stock rows ('OPENING' /
+            // 'OPNSK') — they roll into Opening, not Inward.
+            ->addSelect('sj.type as journal_type')
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($q) use ($search) {
                     $q->where('sjge.batch_no', 'like', "%{$search}%")
@@ -1865,6 +1895,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 sjge.batch_no,
                 sjge.mfg_date,
                 sjge.expiry_date,
+                sjge.serial_no,
                 sjge.movement_type,
                 sjge.actual_quantity,
                 sjge.rate,
@@ -1873,6 +1904,7 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 v.id as voucher_id,
                 v.voucher_no,
                 v.voucher_date,
+                v.fiscal_year_id,
                 vt.name as voucher_type_name
             ')
             ->get();
@@ -1899,22 +1931,75 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                     'mfgDate' => $this->formatDbDate($row->mfg_date),
                     'expiryDate' => $this->formatDbDate($row->expiry_date),
                     'openingQuantity' => 0.0,
+                    'openingAsPerJournal' => 0.0,
+                    'prePeriodNet' => 0.0,
+                    'openingRunning' => 0.0,
                     'inwardQuantity' => 0.0,
                     'outwardQuantity' => 0.0,
                     'closingQuantity' => 0.0,
                     'movements' => [],
+                    'openingMovements' => [],
                 ];
             }
 
             $qty = (float) $row->actual_quantity;
             $isIn = $row->movement_type === 'in';
+            $isOpening = $this->isOpeningType($row->journal_type);
             $date = $row->voucher_date ? substr((string) $row->voucher_date, 0, 10) : null;
-            $isBeforeWindow = $fromDate !== null && $date !== null && $date < $fromDate->toDateString();
-            $isInWindow = ($fromDate === null || ($date !== null && $date >= $fromDate->toDateString()))
-                && ($toDate === null || ($date !== null && $date <= $toDate->toDateString()));
+            // Pre-window rows (previous FYs included) roll into Opening; the
+            // window itself defaults to the fiscal year bounds.
+            $isBeforeWindow = $windowStart !== null && $date !== null && $date < $windowStart->toDateString();
+            $isInWindow = ($windowStart === null || ($date !== null && $date >= $windowStart->toDateString()))
+                && ($windowEnd === null || ($date !== null && $date <= $windowEnd->toDateString()));
 
-            if ($isBeforeWindow) {
-                $buckets[$key]['openingQuantity'] += $isIn ? $qty : -$qty;
+            if ($isBeforeWindow || ($isInWindow && $isOpening)) {
+                // Opening-stock rows (OPENING / OPNSK journals) always roll
+                // into the Opening balance — never into Inward — so a report
+                // over the whole fiscal year shows the true opening position.
+                // Pre-window rows from earlier FYs (carry-forward stock never
+                // re-recorded in this FY's opening voucher) fold in here too,
+                // silently — they are prior-year history for this batch.
+                $signed = $isIn ? $qty : -$qty;
+                $buckets[$key]['openingQuantity'] += $signed;
+
+                // Breakdown: 'journal' = this FY's opening stock journal
+                // (dated on the FY start, e.g. 1-Apr); 'prePeriod' = ordinary
+                // movements dated before the reporting-period start (between
+                // 1-Apr and the period start, plus prior-FY history).
+                // An earlier FY's own opening journal is prior-FY history,
+                // so it counts as prePeriod, not journal.
+                $isJournalRow = $isOpening && $row->fiscal_year_id == $fiscalYearId;
+                if ($isJournalRow) {
+                    $buckets[$key]['openingAsPerJournal'] += $signed;
+                } else {
+                    $buckets[$key]['prePeriodNet'] += $signed;
+                }
+
+                // Chronological running balance over the opening rows (rows
+                // arrive ordered by voucher date) — lets the UI show each
+                // opening detail row's balance without recomputing it.
+                $buckets[$key]['openingRunning'] += $signed;
+
+                // Keep the voucher detail so the UI can render the Opening
+                // as a real row (date / voucher / rate / amount), not just
+                // a bare carried-forward number. Rows from EARLIER fiscal
+                // years are balance-only (the FY1 trail would be noise in a
+                // FY2 report), so only current-FY detail is listed.
+                if ($row->fiscal_year_id == $fiscalYearId) {
+                    $buckets[$key]['openingMovements'][] = [
+                        'voucherId' => (int) $row->voucher_id,
+                        'voucherNo' => $row->voucher_no,
+                        'voucherDate' => $date,
+                        'voucherTypeName' => $row->voucher_type_name,
+                        'movementType' => $row->movement_type,
+                        'quantity' => $qty,
+                        'rate' => (float) $row->rate,
+                        'amount' => (float) $row->amount,
+                        'remarks' => $row->remarks,
+                        'kind' => $isJournalRow ? 'journal' : 'prePeriod',
+                        'balanceAfter' => round($buckets[$key]['openingRunning'], 4),
+                    ];
+                }
             } elseif ($isInWindow) {
                 if ($isIn) {
                     $buckets[$key]['inwardQuantity'] += $qty;
@@ -1943,6 +2028,9 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             usort($bucket['movements'], function ($a, $b) {
                 return [$a['voucherDate'], $a['voucherNo']] <=> [$b['voucherDate'], $b['voucherNo']];
             });
+            usort($bucket['openingMovements'], function ($a, $b) {
+                return [$a['voucherDate'], $a['voucherNo']] <=> [$b['voucherDate'], $b['voucherNo']];
+            });
 
             // Running balance across the window's movements, starting from opening.
             $running = $bucket['openingQuantity'];
@@ -1954,8 +2042,22 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
 
             $bucket['closingQuantity'] = round($running, 4);
             $bucket['openingQuantity'] = round($bucket['openingQuantity'], 4);
+            $bucket['openingAsPerJournal'] = round($bucket['openingAsPerJournal'], 4);
+            $bucket['prePeriodNet'] = round($bucket['openingQuantity'] - $bucket['openingAsPerJournal'], 4);
             $bucket['inwardQuantity'] = round($bucket['inwardQuantity'], 4);
             $bucket['outwardQuantity'] = round($bucket['outwardQuantity'], 4);
+            unset($bucket['openingRunning']);
+
+            // Carry-forward-only buckets (no opening-voucher row in this FY,
+            // no movement in the window, net zero) are pure history noise —
+            // skip them.
+            if ($bucket['openingQuantity'] == 0.0
+                && $bucket['inwardQuantity'] == 0.0
+                && $bucket['outwardQuantity'] == 0.0
+                && $bucket['closingQuantity'] == 0.0
+                && count($bucket['openingMovements']) === 0) {
+                continue;
+            }
 
             $batches[] = $bucket;
         }
@@ -1968,6 +2070,8 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             'totals' => [
                 'batchCount' => count($batches),
                 'totalOpening' => round(array_sum(array_column($batches, 'openingQuantity')), 4),
+                'totalOpeningAsPerJournal' => round(array_sum(array_column($batches, 'openingAsPerJournal')), 4),
+                'totalPrePeriodNet' => round(array_sum(array_column($batches, 'prePeriodNet')), 4),
                 'totalInward' => round(array_sum(array_column($batches, 'inwardQuantity')), 4),
                 'totalOutward' => round(array_sum(array_column($batches, 'outwardQuantity')), 4),
                 'totalClosing' => round(array_sum(array_column($batches, 'closingQuantity')), 4),
