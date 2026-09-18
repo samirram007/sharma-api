@@ -647,9 +647,184 @@ test('stock_in_hand_voucher_wise() aggregates correctly across chunk boundaries'
     expect($emptyRow['voucher_details'])->toBe([]);
 });
 
+/**
+ * Create an opening-stock (9010 / OPNSK) movement WITH a batch number —
+ * the batch-movement report's Opening journal row shape.
+ */
+function createBatchOpeningStockMovement(
+    string $voucherNo,
+    string $voucherDate,
+    StockItem $item,
+    StockUnit $unit,
+    Godown $godown,
+    int $fiscalYearId,
+    float $quantity,
+    float $rate,
+    VoucherType $voucherType,
+    string $batchNo,
+): Voucher {
+    $amount = round($quantity * $rate, 2);
+
+    $voucher = Voucher::create([
+        'voucher_no' => $voucherNo,
+        'voucher_date' => $voucherDate,
+        'voucher_type_id' => $voucherType->id,
+        'fiscal_year_id' => $fiscalYearId,
+        'company_id' => 1,
+        'module' => 'opening_stock',
+        'status' => 'active',
+    ]);
+
+    $journal = StockJournal::create([
+        'journal_no' => $voucherNo,
+        'journal_date' => $voucherDate,
+        'type' => 'OPNSK',
+        'remarks' => 'Opening stock',
+    ]);
+    $voucher->update(['stock_journal_id' => $journal->id]);
+
+    $entry = StockJournalEntry::create([
+        'stock_journal_id' => $journal->id,
+        'entry_order' => 1,
+        'stock_item_id' => $item->id,
+        'stock_unit_id' => $unit->id,
+        'actual_quantity' => $quantity,
+        'billing_quantity' => $quantity,
+        'rate' => $rate,
+        'rate_unit_id' => $unit->id,
+        'amount' => $amount,
+        'movement_type' => 'in',
+    ]);
+
+    StockJournalGodownEntry::create([
+        'stock_journal_entry_id' => $entry->id,
+        'entry_order' => 1,
+        'godown_id' => $godown->id,
+        'batch_no' => $batchNo,
+        'actual_quantity' => $quantity,
+        'billing_quantity' => $quantity,
+        'rate' => $rate,
+        'amount' => $amount,
+        'movement_type' => 'in',
+    ]);
+
+    return $voucher;
+}
+
 // ---------------------------------------------------------------------------
-//  Resource output (camelCase)
+//  Batch movements: opening = 9010 (OPNSK, as on 1-Apr) + pre-period fold-in
 // ---------------------------------------------------------------------------
+
+test('getBatchMovements() rolls the 9010 (OPNSK) opening voucher dated on 1-Apr into Opening for the full-FY window', function () {
+    // No explicit window → defaults to the FY bounds (2025-04-01 → 2026-03-31).
+    createBatchOpeningStockMovement('OPNSK-0001', '2025-04-01', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 100, 10, $this->opnskType, 'B1');
+    createStockMovement('PURC-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 50, 12, $this->saleType, 'in', 'B1');
+    createStockMovement('SALE-0001', '2025-09-05', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 30, 10, $this->saleType, 'out', 'B1');
+
+    $result = $this->service->getBatchMovements();
+
+    // asOnDate = the 9010 voucher's date (the FY first day); window = FY bounds.
+    expect($result['asOnDate'])->toBe('2025-04-01');
+    expect($result['fromDate'])->toBe('2025-04-01');
+    expect($result['toDate'])->toBe('2026-03-31');
+
+    expect($result['batches'])->toHaveCount(1);
+    $batch = $result['batches'][0];
+    expect($batch['batchNo'])->toBe('B1');
+    expect($batch['openingQuantity'])->toBe(100.0);
+    expect($batch['openingAsPerJournal'])->toBe(100.0);
+    expect($batch['prePeriodNet'])->toBe(0.0);
+    expect($batch['inwardQuantity'])->toBe(50.0);
+    expect($batch['outwardQuantity'])->toBe(30.0);
+    expect($batch['closingQuantity'])->toBe(120.0);
+
+    // The 9010 row is listed as the Opening journal row (as on 1-Apr).
+    expect($batch['openingMovements'])->toHaveCount(1);
+    expect($batch['openingMovements'][0]['kind'])->toBe('journal');
+    expect($batch['openingMovements'][0]['voucherDate'])->toBe('2025-04-01');
+    expect($batch['openingMovements'][0]['quantity'])->toBe(100.0);
+    expect($batch['openingMovements'][0]['balanceAfter'])->toBe(100.0);
+
+    expect($result['totals']['totalOpeningAsPerJournal'])->toBe(100.0);
+    expect($result['totals']['totalClosing'])->toBe(120.0);
+});
+
+test('getBatchMovements() folds pre-period movements into Opening for a mid-year reporting window', function () {
+    // Reporting period Jul–Sep — the window is passed explicitly (the UI sends
+    // the global reporting period as from_date/to_date).
+    createBatchOpeningStockMovement('OPNSK-0001', '2025-04-01', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 100, 10, $this->opnskType, 'B1');
+
+    // Pre-period (Apr–Jun): purchase +50, sale -30 → opening = 100 + 50 - 30 = 120
+    createStockMovement('PURC-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 50, 12, $this->saleType, 'in', 'B1');
+    createStockMovement('SALE-0001', '2025-06-20', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 30, 10, $this->saleType, 'out', 'B1');
+
+    // In-window: purchase +20, sale -10
+    createStockMovement('PURC-0002', '2025-08-01', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 20, 12, $this->saleType, 'in', 'B1');
+    createStockMovement('SALE-0002', '2025-09-05', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 10, 12, $this->saleType, 'out', 'B1');
+
+    $result = $this->service->getBatchMovements(['from_date' => '2025-07-01', 'to_date' => '2025-09-30']);
+
+    $batch = $result['batches'][0];
+    expect($batch['openingQuantity'])->toBe(120.0);
+    // Breakdown: 100 from the 9010 journal + 20 net pre-period movements.
+    expect($batch['openingAsPerJournal'])->toBe(100.0);
+    expect($batch['prePeriodNet'])->toBe(20.0);
+    expect($batch['inwardQuantity'])->toBe(20.0);
+    expect($batch['outwardQuantity'])->toBe(10.0);
+    expect($batch['closingQuantity'])->toBe(130.0);
+
+    // Opening trail (current FY rows, chronological): the 9010 journal row,
+    // then the pre-period movements with a running balanceAfter.
+    expect($batch['openingMovements'])->toHaveCount(3);
+    expect($batch['openingMovements'][0]['kind'])->toBe('journal');
+    expect($batch['openingMovements'][0]['balanceAfter'])->toBe(100.0);
+    expect($batch['openingMovements'][1]['kind'])->toBe('prePeriod');
+    expect($batch['openingMovements'][1]['balanceAfter'])->toBe(150.0);
+    expect($batch['openingMovements'][2]['kind'])->toBe('prePeriod');
+    expect($batch['openingMovements'][2]['balanceAfter'])->toBe(120.0);
+
+    // In-window movements start from the folded opening.
+    expect($batch['movements'][0]['runningBalance'])->toBe(140.0);
+    expect($batch['movements'][1]['runningBalance'])->toBe(130.0);
+});
+
+test('getBatchMovements() carries prior-FY batch history into Opening when the new FY has no opening voucher for the batch', function () {
+    // A batch purchased in FY 2025-26, never re-recorded in the next FY's
+    // opening voucher — its Opening must be built from the FY1 rows.
+    createStockMovement('PURC-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 40, 10, $this->saleType, 'in', 'B1');
+
+    $fy2 = FiscalYear::create([
+        'name' => 'FY 2026-27',
+        'start_date' => '2026-04-01',
+        'end_date' => '2027-03-31',
+        'status' => 'active',
+        'company_id' => 1,
+    ]);
+    $this->userFiscalYear->update([
+        'fiscal_year_id' => $fy2->id,
+        'start_date' => '2026-04-01',
+        'end_date' => '2027-03-31',
+    ]);
+    $service = new StockSummaryService(new UserFiscalYearService);
+
+    $result = $service->getBatchMovements();
+
+    expect($result['asOnDate'])->toBe('2026-04-01');
+
+    expect($result['batches'])->toHaveCount(1);
+    $batch = $result['batches'][0];
+    expect($batch['batchNo'])->toBe('B1');
+    expect($batch['openingQuantity'])->toBe(40.0);
+    // No 9010 voucher covered this batch in FY2 → journal part is 0 and the
+    // carried-forward 40 is classified as pre-period net.
+    expect($batch['openingAsPerJournal'])->toBe(0.0);
+    expect($batch['prePeriodNet'])->toBe(40.0);
+    expect($batch['closingQuantity'])->toBe(40.0);
+
+    // Prior-FY rows are balance-only — no opening detail trail in the FY2 report.
+    expect($batch['openingMovements'])->toHaveCount(0);
+    expect($batch['movements'])->toHaveCount(0);
+});
 
 test('closingStock() response is camelCased end-to-end through ClosingStockResource', function () {
     createStockMovement('SALE-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 100, 10, $this->saleType, 'in', 'B1');

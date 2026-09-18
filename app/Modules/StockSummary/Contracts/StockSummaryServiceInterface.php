@@ -69,6 +69,11 @@ interface StockSummaryServiceInterface extends BaseServiceInterface
      * Batch Movement report — full chronological movement of batches with a
      * running balance, item and godown wise. Filters: search, item_id,
      * godown_id, batch_no, from_date, to_date.
+     *
+     * Opening honours the 9010 / OPNSK opening voucher (one per fiscal year,
+     * dated on the FY first day) and, for a mid-year reporting period, folds
+     * pre-period movements in so Opening is the stock position as on the
+     * period start. Returns asOnDate (FY first day) + the effective window.
      */
     public function getBatchMovements(array $filters = []): array;
 

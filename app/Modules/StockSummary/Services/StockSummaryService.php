@@ -1641,6 +1641,9 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                         'batchNo' => $row->batch_no,
                         'mfgDate' => $this->formatDbDate($row->mfg_date),
                         'expiryDate' => $this->formatDbDate($row->expiry_date),
+                        // The opening voucher's date (normally the FY first
+                        // day, 1-Apr) — shown as "Opening as on" per row.
+                        'openingAsOnDate' => $this->formatDbDate($row->voucher_date),
                         'quantity' => $qty,
                         'rate' => (float) $row->rate,
                         'amount' => $amount,
@@ -1697,6 +1700,9 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                         'batchNo' => $row->batch_no,
                         'mfgDate' => $this->formatDbDate($row->mfg_date),
                         'expiryDate' => $this->formatDbDate($row->expiry_date),
+                        // The opening voucher's date (normally the FY first
+                        // day, 1-Apr) — shown as "Opening as on" per row.
+                        'openingAsOnDate' => $this->formatDbDate($row->voucher_date),
                         'quantity' => $qty,
                         'rate' => (float) $row->rate,
                         'amount' => $amount,
@@ -1785,6 +1791,13 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
             })
             ->when($itemId, fn ($q) => $q->where('sje.stock_item_id', $itemId))
             ->when($godownId, fn ($q) => $q->where('sjge.godown_id', $godownId))
+            // Purged entry lines (whole-entry purge) must not surface as
+            // batch suggestions — parity with the batch-movements report.
+            ->whereNotExists(function ($q) {
+                $q->select(DB::raw('1'))
+                    ->from('stock_journal_entry_purges')
+                    ->whereColumn('stock_journal_entry_purges.stock_journal_entry_id', 'sje.id');
+            })
             ->whereNotExists(function ($q) {
                 $q->select(DB::raw('1'))
                     ->from('stock_journal_godown_entry_purges')
@@ -1815,12 +1828,22 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
      * Batch Movement report — the full chronological movement of one or more
      * batches with a running balance, item and godown wise.
      *
+     * Opening semantics mirror the stock-in-hand reports: the 9010 / OPNSK
+     * (and 'OPENING') opening-stock voucher — one per fiscal year, dated on
+     * the FY first day (1-Apr) — always rolls into the Opening balance, and
+     * for a reporting period starting after 1-Apr the Opening additionally
+     * folds in every pre-period movement so it reflects the stock position
+     * as on the period start.
+     *
      * Filters:
      *  - search:    free text matched against batch_no / item name
      *  - item_id:   restrict to one item
      *  - godown_id: restrict to one godown
      *  - batch_no:  exact batch number
      *  - from_date / to_date: movement window (balances computed around it)
+     *
+     * The response also carries asOnDate (the FY first day — the opening
+     * voucher's date) and the effective fromDate / toDate window.
      */
     public function getBatchMovements(array $filters = []): array
     {
@@ -1842,6 +1865,12 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
         // be built from the FY1 rows themselves.
         $windowStart = $fromDate ?? ($fy?->start_date ? Carbon::parse($fy->start_date)->startOfDay() : null);
         $windowEnd = $toDate ?? ($fy?->end_date ? Carbon::parse($fy->end_date)->endOfDay() : null);
+
+        // The 9010 / OPNSK opening voucher is dated on the fiscal year's first
+        // day — the canonical "opening stock as on 1-Apr" date. Reported so
+        // the UI can label the opening row ("Opening as on 01-Apr-2025") even
+        // when no reporting period is set (window falls back to FY bounds).
+        $fiscalYearStart = $fy?->start_date ? Carbon::parse($fy->start_date)->toDateString() : null;
 
         $rows = DB::table('stock_journal_godown_entries as sjge')
             ->join('stock_journal_entries as sje', 'sjge.stock_journal_entry_id', '=', 'sje.id')
@@ -1876,6 +1905,13 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
                 $q->select(DB::raw('1'))
                     ->from('stock_journal_godown_entry_purges')
                     ->whereColumn('stock_journal_godown_entry_purges.stock_journal_godown_entry_id', 'sjge.id');
+            })
+            // Purged entry lines (whole-entry purge) must disappear from the
+            // movement trail too — parity with the opening-stock report.
+            ->whereNotExists(function ($q) {
+                $q->select(DB::raw('1'))
+                    ->from('stock_journal_entry_purges')
+                    ->whereColumn('stock_journal_entry_purges.stock_journal_entry_id', 'sje.id');
             })
             ->orderBy('si.name')
             ->orderBy('sjge.godown_id')
@@ -2066,6 +2102,13 @@ class StockSummaryService extends BaseService implements StockSummaryServiceInte
         usort($batches, fn ($a, $b) => [$a['itemName'], $a['batchNo']] <=> [$b['itemName'], $b['batchNo']]);
 
         return [
+            // The 9010 opening voucher's date (the FY first day) — the "opening
+            // stock as on" date for the UI's opening-row label.
+            'asOnDate' => $fiscalYearStart,
+            // Movement window actually used: the explicit from/to filters, or
+            // the fiscal-year bounds when the reporting period is unset.
+            'fromDate' => $windowStart?->toDateString(),
+            'toDate' => $windowEnd?->toDateString(),
             'batches' => $batches,
             'totals' => [
                 'batchCount' => count($batches),
