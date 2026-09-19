@@ -859,3 +859,113 @@ test('closingStock() response is camelCased end-to-end through ClosingStockResou
     $batch = $godown['batchDetails'][0];
     expect($batch)->toHaveKeys(['batchNo', 'mfgDate', 'expiryDate', 'quantity', 'amount', 'rate']);
 });
+
+// ---------------------------------------------------------------------------
+//  Opening-voucher completeness audit
+// ---------------------------------------------------------------------------
+
+test('getMissingOpeningVoucherBatches() lists prior-FY batches missing from the FY opening voucher and counts covered ones', function () {
+    // FY1 stock: B1 +40 @10, B2 +25 @8, B3 +100 @10 — all dated before FY2.
+    createStockMovement('PURC-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 40, 10, $this->saleType, 'in', 'B1');
+    createStockMovement('PURC-0002', '2025-08-10', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 25, 8, $this->saleType, 'in', 'B2');
+    createStockMovement('PURC-0003', '2025-12-20', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 100, 10, $this->saleType, 'in', 'B3');
+
+    $fy2 = FiscalYear::create([
+        'name' => 'FY 2026-27',
+        'start_date' => '2026-04-01',
+        'end_date' => '2027-03-31',
+        'status' => 'active',
+        'company_id' => 1,
+    ]);
+    $this->userFiscalYear->update([
+        'fiscal_year_id' => $fy2->id,
+        'start_date' => '2026-04-01',
+        'end_date' => '2027-03-31',
+    ]);
+    $service = new StockSummaryService(new UserFiscalYearService);
+
+    // FY2's opening voucher: covers B1 fully and B3 only partially (60 of 100).
+    // B2 is absent entirely.
+    createBatchOpeningStockMovement('OPNSK-0001', '2026-04-01', $this->item, $this->unit, $this->mainGodown, $fy2->id, 40, 10, $this->opnskType, 'B1');
+    createBatchOpeningStockMovement('OPNSK-0002', '2026-04-01', $this->item, $this->unit, $this->mainGodown, $fy2->id, 60, 10, $this->opnskType, 'B3');
+
+    $result = $service->getMissingOpeningVoucherBatches();
+
+    expect($result['fiscalYear']['startDate'])->toBe('2026-04-01');
+    expect($result['fiscalYear']['endDate'])->toBe('2027-03-31');
+
+    // B2 (fully missing) and B3 (partial) are listed; B1 is covered.
+    expect($result['totals']['missingCount'])->toBe(2);
+    expect($result['totals']['coveredCount'])->toBe(1);
+    expect($result['totals']['totalShortfall'])->toBe(65.0);
+    // prior value: B2 = 25*8 = 200, B3 = 100*10 = 1000.
+    expect($result['totals']['totalPriorValue'])->toBe(1200.0);
+
+    $b3 = collect($result['items'])->firstWhere('batchNo', 'B3');
+    expect($b3['itemCode'])->toBe('ITEMA');
+    expect($b3['itemName'])->toBe('Item A');
+    expect($b3['unitCode'])->toBe('KG');
+    expect($b3['godownName'])->toBe('Main Godown');
+    expect($b3['priorQty'])->toBe(100.0);
+    expect($b3['openingQty'])->toBe(60.0);
+    expect($b3['shortfallQty'])->toBe(40.0);
+    expect($b3['priorAmount'])->toBe(1000.0);
+
+    $b2 = collect($result['items'])->firstWhere('batchNo', 'B2');
+    expect($b2['priorQty'])->toBe(25.0);
+    expect($b2['openingQty'])->toBe(0.0);
+    expect($b2['shortfallQty'])->toBe(25.0);
+});
+
+test('getMissingOpeningVoucherBatches() filter by batch_no narrows the audit', function () {
+    createStockMovement('PURC-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 40, 10, $this->saleType, 'in', 'B1');
+    createStockMovement('PURC-0002', '2025-07-10', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 25, 8, $this->saleType, 'in', 'B2');
+
+    $fy2 = FiscalYear::create([
+        'name' => 'FY 2026-27',
+        'start_date' => '2026-04-01',
+        'end_date' => '2027-03-31',
+        'status' => 'active',
+        'company_id' => 1,
+    ]);
+    $this->userFiscalYear->update([
+        'fiscal_year_id' => $fy2->id,
+        'start_date' => '2026-04-01',
+        'end_date' => '2027-03-31',
+    ]);
+    $service = new StockSummaryService(new UserFiscalYearService);
+
+    $result = $service->getMissingOpeningVoucherBatches(['batch_no' => 'B2']);
+
+    expect($result['totals']['missingCount'])->toBe(1);
+    expect($result['totals']['coveredCount'])->toBe(0);
+    expect($result['items'][0]['batchNo'])->toBe('B2');
+    expect($result['items'][0]['shortfallQty'])->toBe(25.0);
+});
+
+test('getMissingOpeningVoucherBatches() returns zeroed totals when every prior-FY batch is covered', function () {
+    createStockMovement('PURC-0001', '2025-06-15', $this->item, $this->unit, $this->mainGodown, $this->fiscalYear->id, 40, 10, $this->saleType, 'in', 'B1');
+
+    $fy2 = FiscalYear::create([
+        'name' => 'FY 2026-27',
+        'start_date' => '2026-04-01',
+        'end_date' => '2027-03-31',
+        'status' => 'active',
+        'company_id' => 1,
+    ]);
+    $this->userFiscalYear->update([
+        'fiscal_year_id' => $fy2->id,
+        'start_date' => '2026-04-01',
+        'end_date' => '2027-03-31',
+    ]);
+    $service = new StockSummaryService(new UserFiscalYearService);
+
+    createBatchOpeningStockMovement('OPNSK-0001', '2026-04-01', $this->item, $this->unit, $this->mainGodown, $fy2->id, 40, 10, $this->opnskType, 'B1');
+
+    $result = $service->getMissingOpeningVoucherBatches();
+
+    expect($result['items'])->toBe([]);
+    expect($result['totals']['missingCount'])->toBe(0);
+    expect($result['totals']['coveredCount'])->toBe(1);
+    expect($result['totals']['totalShortfall'])->toBe(0.0);
+});

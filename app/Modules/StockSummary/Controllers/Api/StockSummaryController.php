@@ -7,6 +7,7 @@ use App\Http\Resources\SuccessCollection;
 use App\Http\Resources\SuccessResource;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Validation\ValidationException;
 use Modules\StockSummary\Facades\StockSummaryFacade;
 use Modules\StockSummary\Requests\StockSummaryRequest;
 use Modules\StockSummary\Resources\ClosingStockResource;
@@ -117,10 +118,61 @@ class StockSummaryController extends Controller
 
     public function batch_movements(): SuccessResource
     {
-        $filters = request()->only(['search', 'item_id', 'godown_id', 'batch_no', 'from_date', 'to_date']);
+        $filters = request()->only([
+            'search',
+            'item_id',
+            'godown_id',
+            'batch_no',
+            'voucher_type_id',
+            'from_date',
+            'to_date',
+            'expiry_status',
+            'expiry_within_days',
+            'in_stock_only',
+            'issue',
+            'sort_by',
+            'sort_dir',
+            'page',
+            'per_page',
+            'include_movements',
+        ]);
         $data = StockSummaryFacade::getBatchMovements($filters);
 
         return new SuccessResource($data, 'Batch movements retrieved successfully.');
+    }
+
+    public function batch_lifeline(): SuccessResource
+    {
+        $filters = request()->only([
+            'batch_no',
+            'item_id',
+            'godown_id',
+            'from_date',
+            'to_date',
+            'expiry_within_days',
+            'limit',
+            'include_snapshots',
+        ]);
+
+        // A lifeline is always *one* batch — without a batch number the query
+        // would be an unbounded dump of the whole ledger.
+        if (trim((string) ($filters['batch_no'] ?? '')) === '') {
+            throw ValidationException::withMessages([
+                'batch_no' => 'The batch no field is required for a batch lifeline.',
+            ]);
+        }
+
+        $data = StockSummaryFacade::getBatchLifeline($filters);
+
+        return new SuccessResource($data, 'Batch lifeline retrieved successfully.');
+    }
+
+    public function missing_opening_voucher_batches(): SuccessResource
+    {
+        $filters = request()->only(['item_id', 'godown_id', 'batch_no']);
+        $data = StockSummaryFacade::getMissingOpeningVoucherBatches($filters);
+
+        return new SuccessResource($data, 'Missing opening voucher batches retrieved successfully.');
     }
 
     public function net_stock(StockSummaryRequest $request): SuccessResource

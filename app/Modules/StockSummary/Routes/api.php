@@ -21,6 +21,8 @@ Route::group(['middleware' => ['jwt.cookies']], function () {
     Route::get('/stock_summaries/opening_stock', [StockSummaryController::class, 'opening_stock']);
     Route::get('/stock_summaries/batch_list', [StockSummaryController::class, 'batch_list']);
     Route::get('/stock_summaries/batch_movements', [StockSummaryController::class, 'batch_movements']);
+    Route::get('/stock_summaries/batch_lifeline', [StockSummaryController::class, 'batch_lifeline']);
+    Route::get('/stock_summaries/missing_opening_voucher_batches', [StockSummaryController::class, 'missing_opening_voucher_batches']);
     Route::get('/stock_summaries/purchase_order_outstanding', [StockSummaryController::class, 'purchase_order_outstanding']);
     Route::get('/stock_summaries/saleble_stock', [StockSummaryController::class, 'saleble_stock']);
     Route::get('/stock_summaries/sales_order_outstanding', [StockSummaryController::class, 'sales_order_outstanding']);
