@@ -2,6 +2,7 @@
 
 namespace Modules\Voucher\Models;
 
+use App\Enums\DeliveryLockReason;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,7 @@ use Modules\AccountsJournal\Models\AccountsJournal;
 use Modules\Company\Models\Company;
 use Modules\FiscalYear\Models\FiscalYear;
 use Modules\StockJournal\Models\StockJournal;
+use Modules\User\Models\User;
 use Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
 use Modules\VoucherEntry\Models\VoucherEntry;
 use Modules\VoucherParty\Models\VoucherParty;
@@ -44,6 +46,7 @@ class Voucher extends Model
         'remarks',
         'payment_mode',
         'status',
+
         'fiscal_year_id',
         'company_id',
         'stock_journal_id',
@@ -68,6 +71,7 @@ class Voucher extends Model
         'reference_date' => 'date',
         'is_effecting' => 'boolean',
         'is_optional' => 'boolean',
+
         'effects_account' => 'boolean',
         'effects_stock' => 'boolean',
     ];
@@ -123,7 +127,140 @@ class Voucher extends Model
         return $this->hasOne(VoucherDispatchDetail::class, 'voucher_id');
     }
 
-    protected $appends = ['party_ledger', 'transaction_ledger', 'amount', 'payment_status'];
+    /**
+     * Active (current) delivery lock — the row that marks the delivery note as
+     * postponed. Closed rows stay in `deliveryLocks()` as history.
+     */
+    public function delivery_lock(): HasOne
+    {
+        return $this->hasOne(DeliveryLock::class, 'voucher_id')
+            ->where('is_locked', true)
+            ->whereNull('unlocked_at')
+            ->latestOfMany();
+    }
+
+    /** Every lock/unlock record for this delivery note, newest first. */
+    public function deliveryLocks(): HasMany
+    {
+        return $this->hasMany(DeliveryLock::class, 'voucher_id')->latest('id');
+    }
+
+    /**
+     * The newest lock row regardless of its state — open while the delivery is
+     * postponed, closed once it has been released. Carries the release time
+     * and the user who performed the unlock.
+     */
+    public function latest_lock(): HasOne
+    {
+        return $this->hasOne(DeliveryLock::class, 'voucher_id')->latestOfMany();
+    }
+
+    /** The active lock row, or null when the delivery is not postponed. */
+    private function currentDeliveryLock(): ?DeliveryLock
+    {
+        if ($this->relationLoaded('delivery_lock')) {
+            return $this->getRelation('delivery_lock');
+        }
+
+        // Cache the lookup on the model so the delivery-lock accessors below
+        // don't each fire their own query for the same voucher.
+        $lock = $this->delivery_lock()->first();
+        $this->setRelation('delivery_lock', $lock);
+
+        return $lock;
+    }
+
+    /**
+     * Locked when an open lock row exists: locked_at set, is_locked true and
+     * unlocked_at null. Unlocking closes the row, so it no longer counts.
+     */
+    public function isDeliveryLocked(): bool
+    {
+        $lock = $this->currentDeliveryLock();
+
+        return $lock !== null && $lock->isLocked();
+    }
+
+    public function getDeliveryLockStatusAttribute(): string
+    {
+        return $this->isDeliveryLocked() ? 'locked' : 'unlocked';
+    }
+
+    /** Exposed on every voucher payload from the active delivery_locks row. */
+    public function getDeliveryLockedAttribute(): bool
+    {
+        return $this->isDeliveryLocked();
+    }
+
+    public function getDeliveryLockReasonAttribute(): ?string
+    {
+        $reason = $this->currentDeliveryLock()?->reason;
+
+        return $reason instanceof DeliveryLockReason ? $reason->value : $reason;
+    }
+
+    public function getDeliveryLockNoteAttribute(): ?string
+    {
+        return $this->currentDeliveryLock()?->note;
+    }
+
+    /** Postponement moment — kept after a release so the list can show both
+     *  the lock and the unlock time of the latest lock record. */
+    public function getDeliveryLockedAtAttribute(): mixed
+    {
+        return $this->currentDeliveryLock()?->locked_at
+            ?? $this->lastDeliveryLock()?->locked_at;
+    }
+
+    /** The newest lock row (open or closed), cached on the model. */
+    private function lastDeliveryLock(): ?DeliveryLock
+    {
+        if ($this->relationLoaded('latest_lock')) {
+            return $this->getRelation('latest_lock');
+        }
+
+        $lock = $this->latest_lock()->first();
+        $this->setRelation('latest_lock', $lock);
+
+        return $lock;
+    }
+
+    /** When the delivery was released — null while it is still postponed. */
+    public function getDeliveryUnlockedAtAttribute(): mixed
+    {
+        $lock = $this->lastDeliveryLock();
+
+        return $lock?->isUnlocked() ? $lock->unlocked_at : null;
+    }
+
+    /** Blameable: user who opened the current lock. */
+    public function getDeliveryLockedByAttribute(): ?int
+    {
+        return $this->currentDeliveryLock()?->created_by;
+    }
+
+    public function getDeliveryLockedByNameAttribute(): ?string
+    {
+        return $this->currentDeliveryLock()?->creator?->name
+            ?? $this->lastDeliveryLock()?->creator?->name;
+    }
+
+    /** Blameable: user who released the latest (closed) lock. */
+    public function getDeliveryUnlockedByAttribute(): ?int
+    {
+        $lock = $this->lastDeliveryLock();
+
+        return $lock?->isUnlocked() ? $lock->updated_by : null;
+    }
+
+    public function getDeliveryUnlockedByNameAttribute(): ?string
+    {
+        $lock = $this->lastDeliveryLock();
+
+        return $lock?->isUnlocked() ? $lock->updater?->name : null;
+    }
+
+    protected $appends = ['party_ledger', 'transaction_ledger', 'amount', 'payment_status', 'delivery_lock_status', 'delivery_locked'];
 
     public function voucher_references(): HasMany
     {

@@ -12,6 +12,7 @@ use Modules\Freight\Facades\FreightFacade;
 use Modules\Freight\Requests\FreightRequest;
 use Modules\Freight\Resources\FreightCollection;
 use Modules\Freight\Resources\FreightResource;
+use Modules\Voucher\Requests\DeliveryLockRequest;
 use Modules\Voucher\Resources\VoucherCollection;
 use Modules\Voucher\Resources\VoucherResource;
 
@@ -32,13 +33,17 @@ class FreightController extends Controller
     {
         $perPage = (int) $request->input('per_page', 10);
         $page = (int) $request->input('page', 1);
-        $filters = $request->only(['search', 'freight_status', 'zone_id', 'amount_min', 'amount_max']);
+        $filters = $request->only(['search', 'freight_status', 'zone_id', 'amount_min', 'amount_max', 'sort_by', 'sort_order', 'lock_history', 'date_from', 'date_to']);
         $data = FreightFacade::getDeliveryNote($page, $perPage, $filters);
         $overallTotalFare = FreightFacade::getDeliveryNoteOverallTotalFare($filters);
+        $postponedCount = FreightFacade::getDeliveryNotePostponedCount($filters);
 
         return (new VoucherCollection($data))->additional([
             'aggregates' => [
                 'total_fare' => $overallTotalFare,
+                // Postponed (locked) deliveries in the current scope — the
+                // header counter on the Freight screen.
+                'postponed_count' => $postponedCount,
             ],
         ]);
     }
@@ -104,6 +109,25 @@ class FreightController extends Controller
         return new VoucherCollection($data);
     }
 
+    public function delivery_lock_report(): SuccessCollection
+    {
+        $filters = request()->only(['search', 'zone_id', 'date_from', 'date_to']);
+        $data = FreightFacade::getDeliveryNote(
+            1,
+            10000,
+            array_merge($filters, ['withFreightStatus' => false])
+        );
+        $overallTotalFare = FreightFacade::getDeliveryNoteOverallTotalFare($filters, withFreightStatus: false);
+        $postponedCount = FreightFacade::getDeliveryNotePostponedCount($filters);
+
+        return (new VoucherCollection($data))->additional([
+            'aggregates' => [
+                'total_fare' => $overallTotalFare,
+                'postponed_count' => $postponedCount,
+            ],
+        ]);
+    }
+
     public function billing_preference(): SuccessCollection
     {
         $data = FreightFacade::billingPreferenceReport();
@@ -123,6 +147,25 @@ class FreightController extends Controller
         $data = FreightFacade::store($request->validated());
 
         return new VoucherResource($data, $messages = 'Freight created successfully');
+    }
+
+    /**
+     * Lock (postpone) a delivery note — reachable from the Freight screen even
+     * after the freight bill is prepared. Indicator only, no edits blocked.
+     */
+    public function lock(DeliveryLockRequest $request, int $id): SuccessResource
+    {
+        $data = FreightFacade::lockDelivery($id, $request->validated());
+
+        return new VoucherResource($data, 'Delivery locked successfully');
+    }
+
+    /** Unlock a previously postponed delivery. */
+    public function unlock(int $id): SuccessResource
+    {
+        $data = FreightFacade::unlockDelivery($id);
+
+        return new VoucherResource($data, 'Delivery unlocked successfully');
     }
 
     public function update(FreightRequest $request, int $id): SuccessResource

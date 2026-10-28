@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Modules\AccountLedger\Contracts\AccountLedgerServiceInterface;
 use Modules\AccountLedger\Models\AccountLedger;
 use Modules\Freight\Contracts\FreightServiceInterface;
@@ -17,6 +18,7 @@ use Modules\Godown\Models\Godown;
 use Modules\Voucher\Contracts\VoucherServiceInterface;
 use Modules\Voucher\Models\Voucher;
 use Modules\Voucher\Requests\VoucherRequest;
+use Modules\Voucher\Services\DeliveryLockService;
 use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
 use Modules\VoucherDispatchDetail\Models\VoucherDispatchDetail;
 use Modules\VoucherDispatchDetail\Requests\VoucherDispatchDetailRequest;
@@ -39,7 +41,8 @@ class FreightService extends BaseService implements FreightServiceInterface
         protected VoucherServiceInterface $voucherService,
         protected VoucherReferenceServiceInterface $voucherReferenceService,
         protected VoucherDispatchDetailServiceInterface $voucherDispatchDetailService,
-        protected GodownServiceInterface $godownService
+        protected GodownServiceInterface $godownService,
+        protected DeliveryLockService $deliveryLockService
     ) {
         $this->defaultResource = [
             'voucher_type',
@@ -50,6 +53,42 @@ class FreightService extends BaseService implements FreightServiceInterface
             'company',
             'fiscal_year',
         ];
+    }
+
+    /**
+     * Lock (postpone) a delivery note with a preset reason and optional note.
+     * Allowed before and after the freight bill is prepared; the lock is an
+     * indicator only and does not block any downstream action.
+     */
+    public function lockDelivery(int $id, array $data): Voucher
+    {
+        Voucher::findOrFail($id);
+
+        $this->deliveryLockService->lockOrUnlock($id, true, $data);
+
+        return Voucher::with(array_merge($this->defaultResource, [
+            'delivery_lock',
+            'delivery_lock.creator',
+            'latest_lock',
+            'latest_lock.creator',
+            'latest_lock.updater',
+        ]))->findOrFail($id);
+    }
+
+    /** Unlock a previously postponed delivery. */
+    public function unlockDelivery(int $id): Voucher
+    {
+        Voucher::findOrFail($id);
+
+        $this->deliveryLockService->lockOrUnlock($id, false, []);
+
+        return Voucher::with(array_merge($this->defaultResource, [
+            'delivery_lock',
+            'delivery_lock.creator',
+            'latest_lock',
+            'latest_lock.creator',
+            'latest_lock.updater',
+        ]))->findOrFail($id);
     }
 
     public function getAll(): Collection
@@ -67,6 +106,9 @@ class FreightService extends BaseService implements FreightServiceInterface
         // the freight dispatch-details Weight from the delivery note's entries
         // (same shape as getDeliveryNotesWithStockJournalsQuery()).
         $query = Voucher::with(array_merge($this->defaultResource, [
+            'delivery_lock.creator',
+            'latest_lock.creator',
+            'latest_lock.updater',
             'stock_journal.stock_journal_entries.stock_item',
             'stock_journal.stock_journal_entries.stock_unit',
             'stock_journal.stock_journal_entries.stock_journal_godown_entries.godown',
@@ -77,11 +119,115 @@ class FreightService extends BaseService implements FreightServiceInterface
             ->where('vouchers.fiscal_year_id', $fiscalYearId)
             ->whereBetween('vouchers.voucher_date', [$startDate, $endDate]);
 
-        // Apply freight_status filter (pending = fare not entered yet, prepared = fare entered, all = both)
-        $this->applyFreightStatusFilter($query, $filters);
+        // Shared list filters (freight_status, zone, dates, search, fare range)
+        $this->applyDeliveryNoteFilters($query, $filters);
+
+        $query->select('vouchers.*');
+        $this->applyDeliveryNoteSorting($query);
+
+        $vouchers = $query->paginate($perPage);
+
+        // Attach computed ledger info (party/transaction ledger, amount,
+        // payment status) in bulk — a handful of grouped queries for the whole
+        // page instead of the per-voucher attachLedgerInfo() N+1 (4 ledger SUM
+        // queries + payment-status lookups per voucher).
+        $vouchers->setCollection(
+            $this->voucherService->attachListInfo($vouchers->getCollection())
+        );
+
+        return $vouchers;
+    }
+
+    /**
+     * Column sorting for the delivery-note grid.
+     *
+     * `sort_by` is the grid's column id (camelCase) or a snake_case key and
+     * `sort_order` is asc/desc. Before this existed the list was hard-wired to
+     * newest-first, so clicking the Date header did nothing.
+     */
+    private function applyDeliveryNoteSorting(Builder $query): void
+    {
+        $sortBy = Str::snake((string) request()->input('sort_by', ''));
+        $direction = strtolower((string) request()->input('sort_order')) === 'asc' ? 'asc' : 'desc';
+
+        match ($sortBy) {
+            'voucher_date', 'date' => $query->orderBy('vouchers.voucher_date', $direction)
+                ->orderBy('vouchers.voucher_no', $direction),
+            'voucher_no', 'voucher_number', 'delivery_no' => $query->orderBy('vouchers.voucher_no', $direction),
+            'party', 'party_name', 'distributor' => $query->leftJoin('voucher_parties AS vp_sort', 'vp_sort.voucher_id', '=', 'vouchers.id')
+                ->reorder()
+                ->orderBy('vp_sort.name', $direction)
+                ->select('vouchers.*'),
+            // Default list order: newest delivery notes first.
+            default => $query->orderBy('vouchers.voucher_date', 'desc')
+                ->orderBy('vouchers.voucher_no', 'desc'),
+        };
+    }
+
+    public function getDeliveryNoteOverallTotalFare(array $filters = [], bool $withFreightStatus = true): float
+    {
+        [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
+
+        $query = Voucher::where('vouchers.voucher_type_id', $this->deliverNoteVoucherTypeID)
+            ->whereNotNull('vouchers.stock_journal_id')
+            ->where('vouchers.fiscal_year_id', $fiscalYearId)
+            ->whereBetween('vouchers.voucher_date', [$startDate, $endDate]);
+
+        // Shared list filters (freight_status, zone, dates, search, fare range)
+        $this->applyDeliveryNoteFilters($query, $filters, withFreightStatus: $withFreightStatus);
+
+        return (float) $query
+            ->join('voucher_dispatch_details', 'vouchers.id', '=', 'voucher_dispatch_details.voucher_id')
+            ->sum('voucher_dispatch_details.total_fare');
+    }
+
+    /**
+     * Count of currently postponed (locked) delivery notes for the Freight
+     * screen header.
+     *
+     * Deliberately ignores the freight_status toggle so the postponed counter
+     * stays stable while the user flips between Pending/Prepared/Postponed —
+     * zone, date, search and fare filters still apply.
+     */
+    public function getDeliveryNotePostponedCount(array $filters = []): int
+    {
+        [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
+
+        $query = Voucher::where('vouchers.voucher_type_id', $this->deliverNoteVoucherTypeID)
+            ->whereNotNull('vouchers.stock_journal_id')
+            ->where('vouchers.fiscal_year_id', $fiscalYearId)
+            ->whereBetween('vouchers.voucher_date', [$startDate, $endDate])
+            ->whereHas('delivery_lock');
+
+        $this->applyDeliveryNoteFilters($query, $filters, withFreightStatus: false);
+
+        return (int) $query->count('vouchers.id');
+    }
+
+    /**
+     * Filters shared by the delivery-note list, its fare aggregate and the
+     * postponed counter, so a filter can never mean one thing in the grid and
+     * another in its totals.
+     *
+     * @param  Builder  $query  vouchers query (delivery-note scoped by caller)
+     */
+    private function applyDeliveryNoteFilters($query, array $filters, bool $withFreightStatus = true): void
+    {
+        // freight_status: pending = fare not entered yet, prepared = fare entered,
+        // locked = postponed (delivery locked), all = both fare states.
+        if ($withFreightStatus) {
+            $this->applyFreightStatusFilter($query, $filters);
+        }
 
         // Zone filter (zone itself + its child godowns)
         $this->applyZoneFilter($query, $filters);
+
+        // Report scope: include active and released lock rows, but exclude
+        // deliveries that have never had a lock. A dedicated filter prevents
+        // the client from downloading the entire delivery-note period.
+        if (! empty($filters['lock_history'])) {
+            $query->whereHas('deliveryLocks');
+        }
 
         // Date range filter
         if (! empty($filters['date_from'])) {
@@ -96,50 +242,6 @@ class FreightService extends BaseService implements FreightServiceInterface
 
         // Fare amount range filter (dispatch-detail total_fare)
         $this->applyAmountRangeFilter($query, $filters);
-
-        $vouchers = $query->select('vouchers.*')
-            ->orderBy('vouchers.voucher_date', 'desc')
-            ->orderBy('vouchers.voucher_no', 'desc')
-            ->paginate($perPage);
-
-        // Attach computed ledger info (party/transaction ledger, amount,
-        // payment status) in bulk — a handful of grouped queries for the whole
-        // page instead of the per-voucher attachLedgerInfo() N+1 (4 ledger SUM
-        // queries + payment-status lookups per voucher).
-        $vouchers->setCollection(
-            $this->voucherService->attachListInfo($vouchers->getCollection())
-        );
-
-        return $vouchers;
-    }
-
-    public function getDeliveryNoteOverallTotalFare(array $filters = []): float
-    {
-        [$fiscalYearId, $startDate, $endDate] = $this->getUserFiscalYearPeriod();
-
-        $query = Voucher::where('vouchers.voucher_type_id', $this->deliverNoteVoucherTypeID)
-            ->whereNotNull('vouchers.stock_journal_id')
-            ->where('vouchers.fiscal_year_id', $fiscalYearId)
-            ->whereBetween('vouchers.voucher_date', [$startDate, $endDate]);
-
-        // Apply freight_status filter
-        $this->applyFreightStatusFilter($query, $filters);
-
-        // Zone filter (zone itself + its child godowns)
-        $this->applyZoneFilter($query, $filters);
-
-        if (! empty($filters['date_from'])) {
-            $query->where('vouchers.voucher_date', '>=', $filters['date_from']);
-        }
-        if (! empty($filters['date_to'])) {
-            $query->where('vouchers.voucher_date', '<=', $filters['date_to']);
-        }
-        $this->applySearchFilter($query, $filters);
-        $this->applyAmountRangeFilter($query, $filters);
-
-        return (float) $query
-            ->join('voucher_dispatch_details', 'vouchers.id', '=', 'voucher_dispatch_details.voucher_id')
-            ->sum('voucher_dispatch_details.total_fare');
     }
 
     /**
@@ -265,11 +367,21 @@ class FreightService extends BaseService implements FreightServiceInterface
      *   freight charges and the total fare are filled in (> 0).
      * - 'pending' (default): No fare computed yet — no dispatch detail row,
      *   or either fare field is missing/zero.
+     * - 'locked' (labelled Postponed on the Freight screen): the delivery has
+     *   been locked with a reason (vehicle failure, uncertain situation, …),
+     *   regardless of whether its fare is entered. 'postponed' is accepted as
+     *   an alias for the same filter.
      * - 'all' or any other value: No filtering on freight status.
      */
     private function applyFreightStatusFilter($query, array $filters): void
     {
         $status = $filters['freight_status'] ?? 'pending';
+
+        if ($status === 'locked' || $status === 'postponed') {
+            $query->whereHas('delivery_lock');
+
+            return;
+        }
 
         if ($status === 'prepared') {
             // Prepared = both fare fields are filled in on the dispatch detail.
@@ -971,8 +1083,10 @@ class FreightService extends BaseService implements FreightServiceInterface
         // freight bill amount is derived from them.
         $fareFields = [
             'rate',
+            'sender_rate',
             'total_fare',
             'freight_charges',
+            'sender_freight_charges',
             'discount',
             'loading_charges',
             'unloading_charges',
@@ -995,6 +1109,7 @@ class FreightService extends BaseService implements FreightServiceInterface
             'distance_unit_id' => $data['distance_unit_id'] ?? null,
             'freight_basis' => $data['freight_basis'] ?? null,
             'rate' => $data['rate'] ?? null,
+            'sender_rate' => $data['sender_rate'] ?? null,
             'rate_unit_id' => $data['rate_unit_id'] ?? null,
             'loading_charges' => $data['loading_charges'] ?? null,
             'unloading_charges' => $data['unloading_charges'] ?? null,
@@ -1002,6 +1117,7 @@ class FreightService extends BaseService implements FreightServiceInterface
             'insurance_charges' => $data['insurance_charges'] ?? null,
             'other_charges' => $data['other_charges'] ?? null,
             'freight_charges' => $data['freight_charges'] ?? null,
+            'sender_freight_charges' => $data['sender_freight_charges'] ?? null,
             'total_fare' => $data['total_fare'] ?? null,
             'discount' => $data['discount'] ?? null,
         ], function ($value, $key) use ($existing, $fareFields) {
@@ -1234,6 +1350,36 @@ class FreightService extends BaseService implements FreightServiceInterface
         $receiptVoucher = $this->voucherService->getById($receiptVoucherStored->id);
 
         return $receiptVoucher->load('company');
+    }
+
+    /**
+     * Persist only the lock columns on the voucher.
+     *
+     * Deliberately a query-builder update instead of $voucher->update():
+     * VoucherService::getById() → attachLedgerInfo() assigns a computed
+     * `amount` attribute (exposed through the model's $appends accessor) and
+     * vouchers has no amount column, so saving the model instance would try to
+     * write that phantom column and fail.
+     */
+
+    /**
+     * Fetch the voucher to lock/unlock and make sure it is a delivery note —
+     * the Freight screen only manages delivery notes, so any other voucher
+     * type is rejected instead of silently recording a lock on it.
+     */
+    protected function resolveDeliveryNote(int $id): Voucher
+    {
+        $voucher = $this->voucherService->getById($id);
+
+        if (! $voucher instanceof Voucher) {
+            abort(404, 'Delivery Note not found with ID: '.$id);
+        }
+
+        if ((int) $voucher->getAttribute('voucher_type_id') !== (int) $this->deliverNoteVoucherTypeID) {
+            abort(422, 'Only delivery notes can be locked or unlocked.');
+        }
+
+        return $voucher;
     }
 
     public function update(array $data, int $id): Freight

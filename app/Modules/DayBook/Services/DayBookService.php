@@ -6,7 +6,6 @@ use App\Support\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\DayBook\Contracts\DayBookServiceInterface;
-use Modules\DayBook\Facades\DayBookRepositoryFacade;
 use Modules\DayBook\Models\DayBook;
 use Modules\Voucher\Contracts\VoucherServiceInterface;
 use Modules\Voucher\Models\Voucher;
@@ -170,7 +169,7 @@ class DayBookService extends BaseService implements DayBookServiceInterface
         $query = Voucher::with($this->defaultResource)
             ->where('fiscal_year_id', $userFiscalYear->fiscal_year_id)
             ->whereBetween('voucher_date', [$startDate, $endDate])
-            ->where('created_by', auth()->id());
+            ->where('created_by', auth()->guard()->user()->id());
 
         // Search filter
         $search = request()->input('search');

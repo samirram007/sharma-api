@@ -36,6 +36,7 @@ class VoucherDispatchDetailResource extends SuccessResource
 
             'distanceUnitId' => $this->distance_unit_id,
             'rate' => $this->rate,
+            'senderRate' => $this->sender_rate,
             'rateUnitId' => $this->rate_unit_id,
             'quantity' => $this->quantity,
             'weight' => $this->weight,
@@ -50,6 +51,7 @@ class VoucherDispatchDetailResource extends SuccessResource
             'otherCharges' => $this->other_charges,
             'discount' => $this->discount,
             'freightCharges' => $this->freight_charges,
+            'senderFreightCharges' => $this->sender_freight_charges,
             'totalFare' => $this->total_fare,
             'weightUnit' => new StockUnitResource($this->whenLoaded('weightUnit')),
             'quantityUnit' => new StockUnitResource($this->whenLoaded('quantityUnit')),

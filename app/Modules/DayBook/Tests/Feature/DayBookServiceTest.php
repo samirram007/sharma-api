@@ -10,8 +10,10 @@ use Modules\FiscalYear\Models\FiscalYear;
 use Modules\User\Models\User;
 use Modules\UserFiscalYear\Models\UserFiscalYear;
 use Modules\Voucher\Models\Voucher;
+use Modules\VoucherCategory\Models\VoucherCategory;
 use Modules\VoucherEntry\Models\VoucherEntry;
 use Modules\VoucherType\Models\VoucherType;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Tests\TestCase;
 
 class DayBookServiceTest extends TestCase
@@ -28,12 +30,15 @@ class DayBookServiceTest extends TestCase
 
     private AccountGroup $assetGroup;
 
+    private string $token;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         // Fiscal year
         $this->fiscalYear = FiscalYear::create([
+            'company_id' => 1,
             'name' => 'FY 2025-26',
             'start_date' => '2025-04-01',
             'end_date' => '2026-03-31',
@@ -41,7 +46,11 @@ class DayBookServiceTest extends TestCase
         ]);
 
         // User with UserFiscalYear
-        $this->user = User::factory()->create();
+        $this->user = User::create([
+            'name' => 'Day Book Tester',
+            'email' => 'daybook-service-tester@example.com',
+            'password' => 'password',
+        ]);
         UserFiscalYear::create([
             'user_id' => $this->user->id,
             'fiscal_year_id' => $this->fiscalYear->id,
@@ -50,11 +59,20 @@ class DayBookServiceTest extends TestCase
             'current_date' => '2025-04-01',
         ]);
         $this->actingAs($this->user);
+        $this->token = JWTAuth::fromUser($this->user);
+
+        // Voucher category (required by voucher_types)
+        $voucherCategory = VoucherCategory::create([
+            'name' => 'Payment',
+            'code' => 'PAY',
+            'status' => 'active',
+        ]);
 
         // Voucher type
         $this->voucherType = VoucherType::create([
             'name' => 'Payment',
             'code' => 'PAYM',
+            'voucher_category_id' => $voucherCategory->id,
             'status' => 'active',
         ]);
 
@@ -68,11 +86,11 @@ class DayBookServiceTest extends TestCase
      */
     private function createVoucherWithEntry(array $overrides = []): Voucher
     {
-        $ledger = AccountLedger::create([
-            'name' => 'Cash Account',
-            'code' => 'CASH001',
-            'account_group_id' => $this->assetGroup->id,
-        ]);
+        // Reused across vouchers in the same test — the code is unique.
+        $ledger = AccountLedger::firstOrCreate(
+            ['code' => 'CASH001'],
+            ['name' => 'Cash Account', 'account_group_id' => $this->assetGroup->id]
+        );
 
         $voucher = Voucher::create(array_merge([
             'voucher_no' => 'PAYM-1',
@@ -107,18 +125,18 @@ class DayBookServiceTest extends TestCase
     {
         $this->createVoucherWithEntry();
 
-        $response = $this->getJson('/api/day_books?per_page=10');
+        $response = $this->withToken($this->token)->getJson('/api/day_books?per_page=10');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
                     '*' => [
                         'id',
-                        'voucher_no',
+                        'voucherNo',
                         'amount',
                     ],
                 ],
-                'status',
+                'success',
                 'code',
                 'message',
             ]);
@@ -126,40 +144,40 @@ class DayBookServiceTest extends TestCase
 
     public function test_get_all_returns_empty_result_when_no_vouchers_exist(): void
     {
-        $response = $this->getJson('/api/day_books?per_page=10');
+        $response = $this->withToken($this->token)->getJson('/api/day_books?per_page=10');
 
         $response->assertStatus(200);
-        $this->assertCount(0, $response->json('data.data'));
+        $this->assertCount(0, $response->json('data'));
     }
 
     public function test_get_all_filters_by_search_term(): void
     {
         $this->createVoucherWithEntry(['voucher_no' => 'PAYM-001', 'remarks' => 'Office supplies']);
 
-        $response = $this->getJson('/api/day_books?per_page=10&search=Office');
+        $response = $this->withToken($this->token)->getJson('/api/day_books?per_page=10&search=Office');
 
         $response->assertStatus(200);
-        $this->assertCount(1, $response->json('data.data'));
+        $this->assertCount(1, $response->json('data'));
     }
 
     public function test_get_all_filters_by_voucher_type_id(): void
     {
         $this->createVoucherWithEntry(['voucher_no' => 'PAYM-001']);
 
-        $response = $this->getJson('/api/day_books?per_page=10&voucher_type_id=' . $this->voucherType->id);
+        $response = $this->withToken($this->token)->getJson('/api/day_books?per_page=10&voucher_type_id=' . $this->voucherType->id);
 
         $response->assertStatus(200);
-        $this->assertCount(1, $response->json('data.data'));
+        $this->assertCount(1, $response->json('data'));
     }
 
     public function test_get_all_returns_correct_voucher_amount(): void
     {
         $this->createVoucherWithEntry(['voucher_no' => 'PAYM-001']);
 
-        $response = $this->getJson('/api/day_books?per_page=10');
+        $response = $this->withToken($this->token)->getJson('/api/day_books?per_page=10');
 
         $response->assertStatus(200);
-        $this->assertSame(1000, (int) $response->json('data.data.0.amount'));
+        $this->assertSame(1000, (int) $response->json('data.0.amount'));
     }
 
     // ──────────────────────────────────────────────
@@ -174,16 +192,20 @@ class DayBookServiceTest extends TestCase
         Voucher::where('voucher_no', 'PAYM-U1')->update(['created_by' => $this->user->id]);
 
         // Create a voucher by a different user
-        $otherUser = User::factory()->create();
+        $otherUser = User::create([
+            'name' => 'Other Day Book Tester',
+            'email' => 'daybook-service-other@example.com',
+            'password' => 'password',
+        ]);
         $this->createVoucherWithEntry(['voucher_no' => 'PAYM-U2']);
         Voucher::where('voucher_no', 'PAYM-U2')->update(['created_by' => $otherUser->id]);
 
-        $response = $this->getJson('/api/day-books-self?per_page=10');
+        $response = $this->withToken($this->token)->getJson('/api/day_books_self?per_page=10');
 
         $response->assertStatus(200);
-        $vouchers = $response->json('data.data');
+        $vouchers = $response->json('data');
         $this->assertCount(1, $vouchers);
-        $this->assertSame('PAYM-U1', $vouchers[0]['voucher_no']);
+        $this->assertSame('PAYM-U1', $vouchers[0]['voucherNo']);
     }
 
     // ──────────────────────────────────────────────
@@ -194,7 +216,7 @@ class DayBookServiceTest extends TestCase
     {
         $this->createVoucherWithEntry();
 
-        $response = $this->getJson('/api/day_books/used-voucher-types');
+        $response = $this->withToken($this->token)->getJson('/api/day_books_used_voucher_types');
 
         $response->assertStatus(200);
         $types = $response->json('data');
@@ -204,7 +226,7 @@ class DayBookServiceTest extends TestCase
 
     public function test_get_used_voucher_types_returns_empty_when_none_used(): void
     {
-        $response = $this->getJson('/api/day_books/used-voucher-types');
+        $response = $this->withToken($this->token)->getJson('/api/day_books_used_voucher_types');
 
         $response->assertStatus(200);
         $this->assertCount(0, $response->json('data'));
@@ -220,10 +242,56 @@ class DayBookServiceTest extends TestCase
         $this->createVoucherWithEntry(['voucher_no' => 'PAYM-002']);
         $this->createVoucherWithEntry(['voucher_no' => 'PAYM-003']);
 
-        $response = $this->getJson('/api/day_books?per_page=10');
+        $response = $this->withToken($this->token)->getJson('/api/day_books?per_page=10');
 
         $response->assertStatus(200);
-        $this->assertCount(3, $response->json('data.data'));
+        $this->assertCount(3, $response->json('data'));
+    }
+
+    // ──────────────────────────────────────────────
+    //  Column sorting (grid sends the column id, camelCase)
+    // ──────────────────────────────────────────────
+
+    public function test_get_all_sorts_by_voucher_date(): void
+    {
+        $this->createVoucherWithEntry(['voucher_no' => 'PAYM-LATE', 'voucher_date' => '2025-06-10']);
+        $this->createVoucherWithEntry(['voucher_no' => 'PAYM-EARLY', 'voucher_date' => '2025-05-01']);
+
+        $asc = collect($this->withToken($this->token)->getJson('/api/day_books?per_page=10&sort_by=voucher_date&sort_order=asc')
+            ->assertOk()
+            ->json('data'))->pluck('voucherNo');
+
+        expect($asc->all())->toBe(['PAYM-EARLY', 'PAYM-LATE']);
+
+        // The grid sends the column id — camelCase must work too.
+        $desc = collect($this->withToken($this->token)->getJson('/api/day_books?per_page=10&sort_by=voucherDate&sort_order=desc')
+            ->assertOk()
+            ->json('data'))->pluck('voucherNo');
+
+        expect($desc->all())->toBe(['PAYM-LATE', 'PAYM-EARLY']);
+    }
+
+    public function test_get_all_sorts_by_voucher_no(): void
+    {
+        $this->createVoucherWithEntry(['voucher_no' => 'PAYM-003']);
+        $this->createVoucherWithEntry(['voucher_no' => 'PAYM-001']);
+        $this->createVoucherWithEntry(['voucher_no' => 'PAYM-002']);
+
+        $asc = collect($this->withToken($this->token)->getJson('/api/day_books?per_page=10&sort_by=voucher_no&sort_order=asc')
+            ->assertOk()
+            ->json('data'))->pluck('voucherNo');
+
+        expect($asc->all())->toBe(['PAYM-001', 'PAYM-002', 'PAYM-003']);
+    }
+
+    public function test_get_all_ignores_unsupported_sort_fields(): void
+    {
+        $this->createVoucherWithEntry(['voucher_no' => 'PAYM-1']);
+
+        // An unknown column must not 500 the report — the natural order stays.
+        $this->withToken($this->token)->getJson('/api/day_books?per_page=10&sort_by=status&sort_order=asc')
+            ->assertOk()
+            ->assertJsonCount(1, 'data');
     }
 
     public function test_get_all_handles_vouchers_outside_fiscal_year(): void
@@ -234,9 +302,9 @@ class DayBookServiceTest extends TestCase
             'fiscal_year_id' => 999,         // Different FY
         ]);
 
-        $response = $this->getJson('/api/day_books?per_page=10');
+        $response = $this->withToken($this->token)->getJson('/api/day_books?per_page=10');
 
         $response->assertStatus(200);
-        $this->assertCount(0, $response->json('data.data'));
+        $this->assertCount(0, $response->json('data'));
     }
 }

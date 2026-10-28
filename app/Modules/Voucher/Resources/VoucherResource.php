@@ -2,7 +2,9 @@
 
 namespace Modules\Voucher\Resources;
 
+use App\Http\Middleware\RequireFeaturePermission;
 use App\Http\Resources\SuccessResource;
+use App\Support\DeliveryLockFeatures;
 use App\Support\Traits\CamelCaseResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -21,12 +23,22 @@ class VoucherResource extends SuccessResource
 
     protected function getCamelCaseExcludeFields(): array
     {
-        // List rows never render voucherEntries — skip converting them
-        // (the bulk of the work in a list payload) and override with [].
-        // (Mirrors the CamelCaseResource trait default + the entries relation.)
-        return $this->resource->isListMode ?? false
-            ? ['laravel_through_key', 'voucher_entries']
-            : ['laravel_through_key'];
+        // Exclude computed lock appends and nested lock relations from the
+        // generic conversion so the permission-gated fields are only included
+        // explicitly below. List rows also skip the heavy entries relation.
+        $excluded = [
+            'laravel_through_key',
+            'delivery_lock_status',
+            'delivery_locked',
+            'delivery_lock',
+            'latest_lock',
+        ];
+
+        if ($this->resource->isListMode ?? false) {
+            $excluded[] = 'voucher_entries';
+        }
+
+        return $excluded;
     }
 
     public function toArray(Request $request): array
@@ -40,7 +52,7 @@ class VoucherResource extends SuccessResource
             $this->resource->setRelation('voucher_entries', new Collection);
         }
 
-        return array_merge($this->toCamelCaseArray($request), [
+        $payload = array_merge($this->toCamelCaseArray($request), [
 
             'id' => $this->id,
             'voucherNo' => $this->voucher_no,
@@ -52,6 +64,7 @@ class VoucherResource extends SuccessResource
             'module' => $this->module,
             'remarks' => $this->remarks,
             'status' => $this->status,
+
             'fiscalYearId' => $this->fiscal_year_id,
             'companyId' => $this->company_id,
             'stockJournalId' => $this->stock_journal_id,
@@ -74,5 +87,49 @@ class VoucherResource extends SuccessResource
 
         ]);
 
+        // Delivery lock state is derived from the active `delivery_locks` row
+        // (see the accessors on the Voucher model). It is only sent to users
+        // holding DELIVERY_LOCK_VIEW — the reason/note is delivery information
+        // some roles are not meant to read at all, not just see hidden in UI.
+        if ($this->canViewDeliveryLock($request)) {
+            $payload = array_merge($payload, [
+                'deliveryLocked' => $this->delivery_locked,
+                'deliveryLockReason' => $this->delivery_lock_reason,
+                'deliveryLockNote' => $this->delivery_lock_note,
+                // Wall-clock values exactly as stored in `delivery_locks` (no UTC
+                // shift) so the grid shows the same time the database holds.
+                'deliveryLockedAt' => $this->delivery_locked_at?->format('Y-m-d\TH:i:s'),
+                'deliveryLockedBy' => $this->delivery_locked_by,
+                'deliveryLockedByName' => $this->delivery_locked_by_name,
+                'deliveryUnlockedAt' => $this->delivery_unlocked_at?->format('Y-m-d\TH:i:s'),
+                'deliveryUnlockedBy' => $this->delivery_unlocked_by,
+                'deliveryUnlockedByName' => $this->delivery_unlocked_by_name,
+                'deliveryLockStatus' => $this->delivery_lock_status,
+                'deliveryLock' => DeliveryLockResource::make($this->whenLoaded('delivery_lock')),
+                'latestDeliveryLock' => DeliveryLockResource::make($this->whenLoaded('latest_lock')),
+            ]);
+        }
+
+        return $payload;
+    }
+
+    /**
+     * DELIVERY_LOCK_VIEW, resolved once per request — a list page serializes
+     * hundreds of vouchers, so the role/permission lookup must not repeat.
+     */
+    private function canViewDeliveryLock(Request $request): bool
+    {
+        $cached = $request->attributes->get('delivery_lock_view');
+
+        if ($cached === null) {
+            $cached = RequireFeaturePermission::allows(
+                $request->user(),
+                DeliveryLockFeatures::VIEW,
+            );
+
+            $request->attributes->set('delivery_lock_view', $cached);
+        }
+
+        return (bool) $cached;
     }
 }

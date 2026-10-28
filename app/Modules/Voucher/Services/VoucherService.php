@@ -22,6 +22,9 @@ use Modules\UserFiscalYear\Contracts\UserFiscalYearServiceInterface;
 use Modules\UserFiscalYear\Facades\UserFiscalYearFacade;
 use Modules\Voucher\Contracts\VoucherServiceInterface;
 use Modules\Voucher\Facades\VoucherRepositoryFacade;
+use Modules\Voucher\Facades\DeliveryLockRepositoryFacade;
+use Modules\Voucher\Repositories\DeliveryLockRepository;
+use Modules\Voucher\Models\DeliveryLock;
 use Modules\Voucher\Models\Voucher;
 use Modules\Voucher\Resources\VoucherResource;
 use Modules\VoucherDispatchDetail\Contracts\VoucherDispatchDetailServiceInterface;
@@ -310,6 +313,8 @@ class VoucherService extends BaseService implements VoucherServiceInterface
     {
         return VoucherRepositoryFacade::delete($id);
     }
+
+
 
     // ──────────────────────────────────────────────
     //  Opening Stock — Previous Year Closing

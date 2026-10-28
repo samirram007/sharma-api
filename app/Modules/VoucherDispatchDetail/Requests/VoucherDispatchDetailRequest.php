@@ -32,6 +32,7 @@ class VoucherDispatchDetailRequest extends FormRequest
             'distance' => ['sometimes', 'nullable', 'numeric'],
             'distance_unit_id' => ['sometimes', 'nullable', 'numeric', 'exists:stock_units,id'],
             'rate' => ['sometimes', 'nullable', 'numeric'],
+            'sender_rate' => ['sometimes', 'nullable', 'numeric'],
             'rate_unit_id' => ['sometimes', 'nullable', 'numeric', 'exists:stock_units,id'],
             'quantity' => ['sometimes', 'nullable', 'numeric'],
             'weight' => ['sometimes', 'nullable', 'numeric'],
@@ -46,6 +47,7 @@ class VoucherDispatchDetailRequest extends FormRequest
             'other_charges' => ['sometimes', 'nullable', 'numeric'],
             'discount' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'freight_charges' => ['sometimes', 'nullable', 'numeric'],
+            'sender_freight_charges' => ['sometimes', 'nullable', 'numeric'],
             'total_fare' => ['sometimes', 'nullable', 'numeric'],
         ];
 

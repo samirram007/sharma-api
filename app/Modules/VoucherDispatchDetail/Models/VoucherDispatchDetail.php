@@ -34,6 +34,7 @@ class VoucherDispatchDetail extends Model
         'distance',
         'distance_unit_id',
         'rate',
+        'sender_rate',
         'rate_unit_id',
         'quantity',
         'quantity_unit_id',
@@ -49,6 +50,7 @@ class VoucherDispatchDetail extends Model
         'other_charges',
         'discount',
         'freight_charges',
+        'sender_freight_charges',
         'total_fare',
     ];
 
@@ -58,6 +60,7 @@ class VoucherDispatchDetail extends Model
         'bill_of_lading_date' => 'date',
         'distance' => 'decimal:4',
         'rate' => 'decimal:2',
+        'sender_rate' => 'decimal:2',
         'quantity' => 'decimal:4',
         'weight' => 'decimal:4',
         'volume' => 'decimal:4',
@@ -68,6 +71,7 @@ class VoucherDispatchDetail extends Model
         'other_charges' => 'decimal:2',
         'discount' => 'decimal:2',
         'freight_charges' => 'decimal:2',
+        'sender_freight_charges' => 'decimal:2',
         'total_fare' => 'decimal:2',
         'freight_basis' => QuantityType::class,
 

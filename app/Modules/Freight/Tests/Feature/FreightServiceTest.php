@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Modules\Freight\Facades\FreightFacade;
 use Modules\Freight\Models\Freight;
 
@@ -19,13 +21,13 @@ use Modules\Freight\Models\Freight;
 function createFreight(array $overrides = []): ?Freight
 {
     try {
-        $id = \Illuminate\Support\Facades\DB::table('freights')->insertGetId(array_merge([
+        $id = DB::table('freights')->insertGetId(array_merge([
             'created_at' => now(),
             'updated_at' => now(),
         ], $overrides));
 
         return Freight::find($id);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         return null;
     }
 }
@@ -35,7 +37,7 @@ describe('FreightFacade CRUD', function () {
         $result = FreightFacade::getAll();
 
         // Returns a Laravel Collection — check the type
-        expect($result)->toBeInstanceOf(\Illuminate\Database\Eloquent\Collection::class);
+        expect($result)->toBeInstanceOf(Collection::class);
     });
 
     it('returns a single freight by id via facade', function () {

@@ -39,6 +39,7 @@ use Modules\StockUnit\Database\Seeders\StockUnitSeeder;
 use Modules\Supplier\Database\Seeders\SupplierSeeder;
 use Modules\UniqueQuantityCode\Database\Seeders\UniqueQuantityCodeSeeder;
 use Modules\UserFiscalYear\Database\Seeders\UserFiscalYearSeeder;
+use Modules\Voucher\Database\Seeders\DeliveryLockFeatureSeeder;
 use Modules\VoucherCategory\Database\Seeders\VoucherCategorySeeder;
 use Modules\VoucherClassification\Database\Seeders\VoucherClassificationSeeder;
 use Modules\VoucherType\Database\Seeders\VoucherTypeSeeder;
@@ -61,6 +62,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             MenuSeeder::class,
             RolePermissionSeeder::class,
+            // Delivery lock (postpone) — view / postpone / release rights.
+            DeliveryLockFeatureSeeder::class,
 
             // GstRegistrationTypeSeeder::class,
 

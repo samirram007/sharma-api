@@ -4,9 +4,13 @@ namespace Modules\Voucher\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Voucher\Contracts\DeliveryLockRepositoryInterface;
+use Modules\Voucher\Contracts\DeliveryLockServiceInterface;
 use Modules\Voucher\Contracts\VoucherRepositoryInterface;
 use Modules\Voucher\Contracts\VoucherServiceInterface;
+use Modules\Voucher\Repositories\DeliveryLockRepository;
 use Modules\Voucher\Repositories\VoucherRepository;
+use Modules\Voucher\Services\DeliveryLockService;
 use Modules\Voucher\Services\VoucherService;
 
 class VoucherServiceProvider extends ServiceProvider
@@ -15,6 +19,9 @@ class VoucherServiceProvider extends ServiceProvider
     {
         $this->app->singleton(VoucherRepositoryInterface::class, VoucherRepository::class);
         $this->app->bind(VoucherServiceInterface::class, VoucherService::class);
+
+        $this->app->singleton(DeliveryLockRepositoryInterface::class, DeliveryLockRepository::class);
+        $this->app->bind(DeliveryLockServiceInterface::class, DeliveryLockService::class);
     }
 
     public function boot(): void

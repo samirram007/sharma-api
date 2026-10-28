@@ -17,6 +17,12 @@ interface FreightServiceInterface extends BaseServiceInterface
     public function getDeliveryNoteOverallTotalFare(array $filters = []): float;
 
     /**
+     * Count of postponed (locked) delivery notes in the current reporting
+     * scope — powers the Freight screen header counter.
+     */
+    public function getDeliveryNotePostponedCount(array $filters = []): int;
+
+    /**
      * Delivery-note godown-wise report.
      * Optional date overrides replace the user's reporting-period window
      * (used by the dashboard, which always shows the whole fiscal year).
@@ -52,6 +58,15 @@ interface FreightServiceInterface extends BaseServiceInterface
     public function getById(int $id): ?Freight;
 
     public function store(array $data): Voucher;
+
+    /**
+     * Lock (postpone) a delivery note with a reason — allowed even after the
+     * freight bill is prepared. Indicator only: no edits are blocked.
+     */
+    public function lockDelivery(int $id, array $data): Voucher;
+
+    /** Unlock a previously postponed delivery. */
+    public function unlockDelivery(int $id): Voucher;
 
     public function update(array $data, int $id): Freight;
 
