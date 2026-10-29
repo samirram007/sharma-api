@@ -28,7 +28,7 @@ class DayBookService extends BaseService implements DayBookServiceInterface
         'voucher_dispatch_detail',
         'voucher_references.reference_voucher.voucher_dispatch_detail',
         'referenced_by',
-        'company',
+        'company.currency',
         'fiscal_year',
     ];
 
