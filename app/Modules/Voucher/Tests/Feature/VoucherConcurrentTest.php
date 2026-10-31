@@ -36,6 +36,7 @@ class VoucherConcurrentTest extends TestCase
         $company = Company::create([
             'name' => 'Test Company',
             'code' => 'TST',
+            'company_type_id' => 1,
         ]);
 
         // Create an active fiscal year
@@ -48,7 +49,7 @@ class VoucherConcurrentTest extends TestCase
         ]);
 
         // Create a user
-        $this->user = User::factory()->create([
+        $this->user = User::create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => bcrypt('password'),

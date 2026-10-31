@@ -26,7 +26,7 @@ class DashboardServiceTest extends TestCase
 
     public function test_summary_returns_stat_card_counts(): void
     {
-        $user = User::factory()->create();
+        $user = User::create(['name' => 'Dashboard User', 'email' => 'dashboard-user@example.com', 'password' => 'password']);
 
         $this->actingAs($user);
 
@@ -62,7 +62,7 @@ class DashboardServiceTest extends TestCase
 
     public function test_summary_handles_missing_user_fiscal_year(): void
     {
-        $user = User::factory()->create();
+        $user = User::create(['name' => 'Dashboard User', 'email' => 'dashboard-user-'.uniqid().'@example.com', 'password' => 'password']);
 
         $this->actingAs($user);
 
@@ -76,7 +76,7 @@ class DashboardServiceTest extends TestCase
 
     public function test_user_wise_returns_collection(): void
     {
-        $user = User::factory()->create();
+        $user = User::create(['name' => 'Dashboard User', 'email' => 'dashboard-user-'.uniqid().'@example.com', 'password' => 'password']);
 
         $this->actingAs($user);
 

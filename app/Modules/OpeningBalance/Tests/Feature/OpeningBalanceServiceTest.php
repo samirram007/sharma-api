@@ -35,9 +35,10 @@ describe('OpeningBalanceFacade delegation', function () {
             'start_date' => '2026-04-01',
             'end_date' => '2027-03-31',
             'status' => 'active',
+            'company_id' => 1,
         ]);
 
-        $user = User::factory()->create();
+        $user = User::create(['name' => 'OB User', 'email' => 'ob-'.uniqid().'@example.com', 'password' => 'password']);
         UserFiscalYear::create([
             'user_id' => $user->id,
             'fiscal_year_id' => $fiscalYear->id,
@@ -68,9 +69,10 @@ describe('OpeningBalanceFacade delegation', function () {
             'start_date' => '2026-04-01',
             'end_date' => '2027-03-31',
             'status' => 'active',
+            'company_id' => 1,
         ]);
 
-        $user = User::factory()->create();
+        $user = User::create(['name' => 'OB User', 'email' => 'ob-'.uniqid().'@example.com', 'password' => 'password']);
         UserFiscalYear::create([
             'user_id' => $user->id,
             'fiscal_year_id' => $fiscalYear->id,
@@ -116,7 +118,7 @@ describe('OpeningBalanceService edge cases', function () {
     });
 
     it('throws exception when user has no UserFiscalYear set', function () {
-        $user = User::factory()->create();
+        $user = User::create(['name' => 'OB User', 'email' => 'ob-'.uniqid().'@example.com', 'password' => 'password']);
         $this->actingAs($user);
 
         // User exists but has no UserFiscalYear → service will fail

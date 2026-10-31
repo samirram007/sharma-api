@@ -10,6 +10,7 @@ use Modules\FiscalYear\Models\FiscalYear;
 use Modules\User\Models\User;
 use Modules\UserFiscalYear\Models\UserFiscalYear;
 use Modules\Voucher\Models\Voucher;
+use Modules\VoucherCategory\Models\VoucherCategory;
 use Modules\VoucherEntry\Models\VoucherEntry;
 use Modules\VoucherType\Models\VoucherType;
 use Tests\TestCase;
@@ -38,10 +39,15 @@ class ReceiptNoteReportServiceTest extends TestCase
             'start_date' => '2025-04-01',
             'end_date' => '2026-03-31',
             'status' => 'active',
+            'company_id' => 1,
         ]);
 
         // User with UserFiscalYear
-        $this->user = User::factory()->create();
+        $this->user = User::create([
+            'name' => 'Receipt Note Report User',
+            'email' => 'receipt-note-report@example.com',
+            'password' => 'password',
+        ]);
         UserFiscalYear::create([
             'user_id' => $this->user->id,
             'fiscal_year_id' => $this->fiscalYear->id,
@@ -51,13 +57,17 @@ class ReceiptNoteReportServiceTest extends TestCase
         ]);
         $this->actingAs($this->user);
 
-        // Receipt Note voucher type (id=2002 as used in the service)
-        $this->receiptNoteType = VoucherType::create([
-            'id' => 2002,
+        // Receipt Note voucher type (id=2002 as used in the service). The id is
+        // assigned explicitly because VoucherTypeSeeder pins this row to 2002
+        // and the report filters on it — 'id' is not mass assignable.
+        $this->receiptNoteType = new VoucherType([
             'name' => 'Receipt Note',
             'code' => 'RCPT',
             'status' => 'active',
+            'voucher_category_id' => VoucherCategory::create(['name' => 'System', 'code' => 'SYS'])->id,
         ]);
+        $this->receiptNoteType->id = 2002;
+        $this->receiptNoteType->save();
 
         // Account nature & group
         $this->assetNature = AccountNature::create(['name' => 'Asset', 'code' => 'AST', 'accounting_effect' => 'debit']);
@@ -69,11 +79,11 @@ class ReceiptNoteReportServiceTest extends TestCase
      */
     private function createReceiptNoteVoucher(array $overrides = []): Voucher
     {
-        $ledger = AccountLedger::create([
-            'name' => 'Receivables',
-            'code' => 'REC001',
-            'account_group_id' => $this->assetGroup->id,
-        ]);
+        // Tests that create several vouchers reuse the same ledger code.
+        $ledger = AccountLedger::query()->firstOrCreate(
+            ['code' => 'REC001'],
+            ['name' => 'Receivables', 'account_group_id' => $this->assetGroup->id],
+        );
 
         $voucher = Voucher::create(array_merge([
             'voucher_no' => 'RCPT-1',
@@ -108,7 +118,7 @@ class ReceiptNoteReportServiceTest extends TestCase
     {
         $this->createReceiptNoteVoucher();
 
-        $response = $this->getJson('/api/receipt_note_reports?per_page=10');
+        $response = $this->getJson('/api/receipt_note_report?per_page=10');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -119,7 +129,7 @@ class ReceiptNoteReportServiceTest extends TestCase
                         'amount',
                     ],
                 ],
-                'status',
+                'success',
                 'code',
                 'message',
             ]);
@@ -131,7 +141,7 @@ class ReceiptNoteReportServiceTest extends TestCase
         $this->createReceiptNoteVoucher(['voucher_no' => 'RCPT-001']);
 
         // Create a non-receipt-note voucher (different type — should be excluded)
-        $otherType = VoucherType::create(['name' => 'Payment', 'code' => 'PAYM', 'status' => 'active']);
+        $otherType = VoucherType::create(['name' => 'Payment', 'code' => 'PAYM', 'status' => 'active', 'voucher_category_id' => VoucherCategory::create(['name' => 'Payment', 'code' => 'PAY'])->id]);
         $ledger = AccountLedger::create(['name' => 'Bank', 'code' => 'BNK001', 'account_group_id' => $this->assetGroup->id]);
         $otherVoucher = Voucher::create([
             'voucher_no' => 'PAYM-001',
@@ -153,39 +163,39 @@ class ReceiptNoteReportServiceTest extends TestCase
             'credit' => 0,
         ]);
 
-        $response = $this->getJson('/api/receipt_note_reports?per_page=10');
+        $response = $this->getJson('/api/receipt_note_report?per_page=10');
 
         $response->assertStatus(200);
-        $this->assertCount(1, $response->json('data.data'));
-        $this->assertSame('RCPT-001', $response->json('data.data.0.voucher_no'));
+        $this->assertCount(1, $response->json('data'));
+        $this->assertSame('RCPT-001', $response->json('data.0.voucher_no'));
     }
 
     public function test_get_all_returns_empty_when_no_receipt_notes(): void
     {
-        $response = $this->getJson('/api/receipt_note_reports?per_page=10');
+        $response = $this->getJson('/api/receipt_note_report?per_page=10');
 
         $response->assertStatus(200);
-        $this->assertCount(0, $response->json('data.data'));
+        $this->assertCount(0, $response->json('data'));
     }
 
     public function test_get_all_returns_correct_amount(): void
     {
         $this->createReceiptNoteVoucher();
 
-        $response = $this->getJson('/api/receipt_note_reports?per_page=10');
+        $response = $this->getJson('/api/receipt_note_report?per_page=10');
 
         $response->assertStatus(200);
-        $this->assertSame(5000, (int) $response->json('data.data.0.amount'));
+        $this->assertSame(5000, (int) $response->json('data.0.amount'));
     }
 
     public function test_get_all_filters_by_search_term(): void
     {
         $this->createReceiptNoteVoucher(['voucher_no' => 'RCPT-001', 'remarks' => 'Goods received']);
 
-        $response = $this->getJson('/api/receipt_note_reports?per_page=10&search=Goods');
+        $response = $this->getJson('/api/receipt_note_report?per_page=10&search=Goods');
 
         $response->assertStatus(200);
-        $this->assertCount(1, $response->json('data.data'));
+        $this->assertCount(1, $response->json('data'));
     }
 
     public function test_get_all_paginates_correctly(): void
@@ -195,11 +205,11 @@ class ReceiptNoteReportServiceTest extends TestCase
             $this->createReceiptNoteVoucher(['voucher_no' => "RCPT-{$i}"]);
         }
 
-        $response = $this->getJson('/api/receipt_note_reports?per_page=2');
+        $response = $this->getJson('/api/receipt_note_report?per_page=2');
 
         $response->assertStatus(200);
-        $this->assertCount(2, $response->json('data.data'));
-        $this->assertSame(3, $response->json('data.total'));
+        $this->assertCount(2, $response->json('data'));
+        $this->assertSame(3, $response->json('meta.total'));
     }
 
     // ──────────────────────────────────────────────
@@ -211,10 +221,10 @@ class ReceiptNoteReportServiceTest extends TestCase
         $this->createReceiptNoteVoucher(['voucher_no' => 'RCPT-001']);
         $this->createReceiptNoteVoucher(['voucher_no' => 'RCPT-002']);
 
-        $response = $this->getJson('/api/receipt_note_reports?per_page=10');
+        $response = $this->getJson('/api/receipt_note_report?per_page=10');
 
         $response->assertStatus(200);
-        $this->assertCount(2, $response->json('data.data'));
+        $this->assertCount(2, $response->json('data'));
     }
 
     public function test_get_all_excludes_vouchers_outside_fiscal_year(): void
@@ -225,9 +235,9 @@ class ReceiptNoteReportServiceTest extends TestCase
             'fiscal_year_id' => 999,
         ]);
 
-        $response = $this->getJson('/api/receipt_note_reports?per_page=10');
+        $response = $this->getJson('/api/receipt_note_report?per_page=10');
 
         $response->assertStatus(200);
-        $this->assertCount(0, $response->json('data.data'));
+        $this->assertCount(0, $response->json('data'));
     }
 }

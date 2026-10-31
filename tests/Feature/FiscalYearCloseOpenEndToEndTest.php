@@ -385,7 +385,7 @@ test('open() carries forward balances and stock into the new fiscal year', funct
 
     // The user's fiscal year mapping moved to the new FY for this company.
     $userFy = UserFiscalYear::where('user_id', (string) $this->user->id)->first();
-    expect($userFy->fiscal_year_id)->toBe((string) $fy2->id);
+    expect($userFy->fiscal_year_id)->toBe($fy2->id);
     expect($userFy->start_date->format('Y-m-d'))->toBe('2026-04-01');
     expect($userFy->end_date->format('Y-m-d'))->toBe('2027-03-31');
 });
